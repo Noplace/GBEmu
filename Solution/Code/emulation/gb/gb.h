@@ -18,7 +18,8 @@ namespace gb {
 class Emu;
 class Memory;
 class Cartridge;
-
+class LCDDriver;
+class MemoryBankController;
 class Component {
  public:
   void Initialize(Emu* emu) {
@@ -32,6 +33,7 @@ class Component {
 }
 
 #include "cartridge.h"
-#include "cpu.h"
 #include "memory.h"
+#include "lcd_driver.h"
+#include "cpu.h"
 #include "emu.h"

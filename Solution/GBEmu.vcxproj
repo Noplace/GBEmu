@@ -192,6 +192,7 @@
     <ClCompile Include="Code\emulation\gb\cartridge.cpp" />
     <ClCompile Include="Code\emulation\gb\cpu.cpp" />
     <ClCompile Include="Code\emulation\gb\emu.cpp" />
+    <ClCompile Include="Code\emulation\gb\lcd_driver.cpp" />
     <ClCompile Include="Code\emulation\gb\memory.cpp" />
     <ClInclude Include="Code\audio2\directsound.h" />
     <ClInclude Include="Code\audio2\interface.h" />
@@ -201,6 +202,7 @@
     <ClInclude Include="Code\emulation\gb\cpu.h" />
     <ClInclude Include="Code\emulation\gb\emu.h" />
     <ClInclude Include="Code\emulation\gb\gb.h" />
+    <ClInclude Include="Code\emulation\gb\lcd_driver.h" />
     <ClInclude Include="Code\emulation\gb\memory.h" />
     <ClCompile Include="Code\audio\ds.cpp" />
     <ClCompile Include="Code\audio\wasapi.cpp" />

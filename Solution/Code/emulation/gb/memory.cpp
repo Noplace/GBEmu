@@ -29,7 +29,6 @@ void Memory::Initialize(Emu* emu) {
   Component::Initialize(emu);
   rom_ = emu_->cartridge()->rom();
   vram_ = new uint8_t[0x2000];
-	eram_ = new uint8_t[0x2000];
 	wram1_ = new uint8_t[0x1000];
 	wram2_ = new uint8_t[0x1000];
 	ZeroMemory(ioports_,sizeof(ioports_));
@@ -38,23 +37,25 @@ void Memory::Initialize(Emu* emu) {
 void Memory::Deinitialize() {
 	SafeDeleteArray(&wram2_);
 	SafeDeleteArray(&wram1_);
-	SafeDeleteArray(&eram_);
+
 	SafeDeleteArray(&vram_);
 }
 
 
 uint8_t Memory::Read8(uint16_t address) {
+  emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();
 	if (address >= 0x0000 && address <= 0x3FFF) {
-		if (ioports_[0x50] == 0)
-			return dmgrom[address&0xFF];
-		else
-			return rom_[address];
+		if (ioports_[0x50] == 0) {
+      if (address < 0x100)
+			  return dmgrom[address&0xFF];
+    }
+	  return emu_->cartridge()->Read(address);
 	} else if (address >= 0x4000 && address <= 0x7FFF) {
-		return rom_[address];
+		return emu_->cartridge()->Read(address);
 	} else if (address >= 0x8000 && address <= 0x9FFF) {
 		return vram_[address&0x1FFF];
 	} else if (address >= 0xA000 && address <= 0xBFFF) {
-		return eram_[address&0x1FFF];
+    return emu_->cartridge()->Read(address);//emu_->cartridge()->eram()[address&0x1FFF];
 	} else if (address >= 0xC000 && address <= 0xCFFF) {
 		return wram1_[address&0x0FFF];
 	} else if (address >= 0xD000 && address <= 0xDFFF) {
@@ -66,6 +67,10 @@ uint8_t Memory::Read8(uint16_t address) {
 	} else if (address >= 0xFEA0 && address <= 0xFEFF) {
 		int a = 1;
 	} else if (address >= 0xFF00 && address <= 0xFF7F) {
+
+    if (address >= 0xFF40 && address <= 0xFF4B)
+      return emu_->lcd_driver()->Read(address);
+
 		return ioports_[address-0xFF00];
 	} else if (address >= 0xFF80 && address <= 0xFFFE) {
 		return hram_[address-0xFF80];
@@ -77,25 +82,31 @@ uint8_t Memory::Read8(uint16_t address) {
 }
 
 void Memory::Write8(uint16_t address, uint8_t data) {
+  emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();
 	if (address >= 0x0000 && address <= 0x3FFF) {
-		//rom_[address];
+    emu_->cartridge()->Write(address,data);
 	} else if (address >= 0x4000 && address <= 0x7FFF) {
-		//return rom_[address];
+		emu_->cartridge()->Write(address,data);
 	} else if (address >= 0x8000 && address <= 0x9FFF) {
-		//return vram_[address&0x1FFF];
+		 vram_[address&0x1FFF] = data;
 	} else if (address >= 0xA000 && address <= 0xBFFF) {
-		//return eram_[address&0x1FFF];
+		emu_->cartridge()->Write(address,data);
 	} else if (address >= 0xC000 && address <= 0xCFFF) {
-		//return wram1_[address&0x0FFF];
+		wram1_[address&0x0FFF] = data;
 	} else if (address >= 0xD000 && address <= 0xDFFF) {
-		//return wram2_[address&0x0FFF];
+		wram2_[address&0x0FFF] = data;
 	} else if (address >= 0xE000 && address <= 0xFDFF) {
-		//return wram1_[address-0xE000];
+		 wram1_[address-0xE000] = data;
+
 	} else if (address >= 0xFE00 && address <= 0xFE9F) {
 		//return oam_[address-0xFE00];
+     int a = 1;
 	} else if (address >= 0xFEA0 && address <= 0xFEFF) {
 		//int a = 1;
+     int a = 1;
 	} else if (address >= 0xFF00 && address <= 0xFF7F) {
+
+
 
 		if (address == 0xFF01) {
 			char str[255];
@@ -105,10 +116,16 @@ void Memory::Write8(uint16_t address, uint8_t data) {
 
 		ioports_[address-0xFF00]=data;
 
+    switch (address) {
+      case 0xFF26: //sound enable/disable
+        break;
+    }
+    if (address >= 0xFF40 && address <= 0xFF4B)
+      emu_->lcd_driver()->Write(address,data);
 	} else if (address >= 0xFF80 && address <= 0xFFFE) {
-		//return hram_[address-0xFF80];
+		hram_[address-0xFF80] = data;
 	} else if (address == 0xFFFF) {
-		//return interrupt_enable_register_;
+		interrupt_enable_register_ = data;
 	}
 }
 
