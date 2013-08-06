@@ -10,7 +10,7 @@ union LCDControlRegister {
     uint8_t sprite_enable:1;
     uint8_t sprite_size:1;
     uint8_t bg_tile_map:1;
-    uint8_t bg_tile_data:1;
+    uint8_t tile_data:1;
     uint8_t window_enable:1;
     uint8_t window_tile_map:1;
     uint8_t lcd_enable:1;
@@ -35,6 +35,7 @@ union LCDStatusRegister {
 
 class LCDDriver : public Component {
  public:
+  uint32_t* frame_buffer;
   LCDDriver(){}
   ~LCDDriver() {}
   void Initialize(Emu* emu);
@@ -42,9 +43,16 @@ class LCDDriver : public Component {
   void Step(double dt);
   uint8_t Read(uint16_t address);
   void    Write(uint16_t address, uint8_t data);
+	void RenderBGLine();
+	void RenderWindowLine();
+	void RenderSpriteLine();
+	void RenderLine();
+
+	const LCDControlRegister& lcdc() { return lcdc_; }
+	const LCDStatusRegister& stat() { return stat_; }
  private:
-   LCDControlRegister lcdc;
-   LCDStatusRegister stat;
+   LCDControlRegister lcdc_;
+   LCDStatusRegister stat_;
    uint8_t scroll_x,scroll_y;
    uint8_t ly,lyc;
    uint8_t wx,wy;

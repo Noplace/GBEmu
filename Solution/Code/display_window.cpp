@@ -18,7 +18,7 @@ namespace IO {
 namespace app {
 
 DisplayWindow::DisplayWindow() : Window() {
-  output = new uint32_t[160*144];
+  output = new uint32_t[256*256];
 //  counter = 0;
   instance = GetModuleHandle(nullptr);
 }
@@ -38,18 +38,19 @@ void DisplayWindow::Init() {
 
   gfx.Initialize(handle(),0,0);
   
-  /*nes.set_on_render([this]() {
+  emu.set_on_render([this]() {
     //InvalidateRect(handle(),nullptr,true);
-    PostMessage(handle(),WM_PAINT,0,0);
+    //PostMessage(handle(),WM_PAINT,0,0);
+		Render();
   });
 
-  nes.set_on_vertical_blank([this]() {
-    MSG msg;
+  emu.set_on_vertical_blank([this]() {
+   /* MSG msg;
     while (PeekMessage(&msg,NULL,0,0,PM_REMOVE)!=0) {//while(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
       TranslateMessage(&msg);
       DispatchMessage(&msg);
-    }
-  });*/
+    }*/
+  });
 
   //auto a = glGetError();
   //glPixelZoom(1, -1);
@@ -105,12 +106,9 @@ void DisplayWindow::Step() {
     while (timing.span_accumulator >= dt) {
       timing.span_accumulator -= emu.Step(dt);
     }
-    
 
     timing.total_cycles += timing.current_cycles-timing.prev_cycles;
     timing.prev_cycles = timing.current_cycles;
-  
-
     //timing.render_time_span += time_span;
     //++timing.fps_counter;
     timing.fps_time_span += time_span;
@@ -262,18 +260,19 @@ int DisplayWindow::OnDropFiles(WPARAM wParam,LPARAM lParam) {
   return 0;
 }
 
-int DisplayWindow::OnPaint(WPARAM wParam,LPARAM lParam) {
+int DisplayWindow::Render() {
   switch(display_mode) {
     case ID_VIDEO_STD320X288:
       //glDrawPixels(256,240,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
       //glEnable(GL_TEXTURE_2D);
+			memcpy(output,emu.lcd_driver()->frame_buffer,256*256*4);
       glBindTexture( GL_TEXTURE_2D, texture );
-      glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,160,144,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
+			glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,256,256,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
       glBegin( GL_QUADS );
       glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
-      glTexCoord2d(1.0,0.0); glVertex2d(320,0.0);
-      glTexCoord2d(1.0,1.0); glVertex2d(320,288);
-      glTexCoord2d(0.0,1.0); glVertex2d(0.0,288);
+      glTexCoord2d(0.625,0.0); glVertex2d(320,0.0);
+      glTexCoord2d(0.625,0.5625); glVertex2d(320,288);
+      glTexCoord2d(0.0,0.5625); glVertex2d(0.0,288);
       glEnd();
     break;
       

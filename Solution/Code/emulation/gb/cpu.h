@@ -15,6 +15,7 @@ union CpuFlagRegister {
 	uint8_t raw;
 };
 
+enum CpuModes {ModeRegReg,Mode$RegReg,ModeReg$Reg,Mode$FF00RegReg,ModeReg$FF00Reg,ModeRegD16,Mode$RegRegLDI,Mode$RegRegLDD,ModeReg$RegLDI,ModeReg$RegLDD};
 enum CpuRegisterNames8 { RegF,RegA,RegC,RegB,RegE,RegD,RegL,RegH,RegSPl,RegSPh,RegPCl,RegPCh };
 enum CpuRegisterNames16 { RegAF,RegBC,RegDE,RegHL,RegSP,RegPC };
 enum CpuFlags { CpuFlagsUnused0 = 0, CpuFlagsC = 4,CpuFlagsH=5,CpuFlagsN=6,CpuFlagsZ=7 };
@@ -73,7 +74,7 @@ class Cpu : public Component {
  private: 
   typedef void (Cpu::*Instruction)();
   double dt;
-  Instruction instructions[0xFF];
+  Instruction instructions[0x100];
   CpuRegisters reg;
   Memory* mem_;
   bool ime;
@@ -116,11 +117,9 @@ class Cpu : public Component {
     } else if (mode == 1) {
       a = reg.raw8[dest];
       b = mem_->Read8(reg.raw16[src]);
-		  cycles += 4;
     } else if (mode == 2) {
       a = reg.raw8[dest];
       b = mem_->Read8(reg.PC++);
-		  cycles += 4;
     }
   }
 
@@ -129,6 +128,12 @@ class Cpu : public Component {
     push(reg.PC&0xFF);
   }
  
+
+  void pushSP() {
+    push((reg.SP&0xFF00)>>8);
+    push(reg.SP&0xFF);
+  }
+
   void NOP(); 
   void ILLEGAL();
   void RST();
@@ -138,6 +143,7 @@ class Cpu : public Component {
 	void ADD();
   template<uint8_t dest,uint8_t src>
   void ADD_16bit();
+	void ADD_SPr8();
 	template<uint8_t dest,uint8_t src,int mode>
 	void ADC();
 	template<uint8_t dest,uint8_t src,int mode>
@@ -154,8 +160,9 @@ class Cpu : public Component {
 	void HALT();
   void CPL();
 	void PREFIX_CB();
+	void JR();
   template<CpuFlags condbit,bool inv>
-  void JR();
+  void JR_cc();
 
   template<uint8_t dest,int mode>
   void INC_8bit();
@@ -198,6 +205,8 @@ class Cpu : public Component {
 
   void DI();
   void EI();
+
+	void RETI();
 };
 
 }

@@ -22,7 +22,7 @@ class DisplayWindow: public core::windows::Window {
     int OnCreate(WPARAM wParam,LPARAM lParam);
     int OnDestroy(WPARAM wParam,LPARAM lParam);
     int OnDropFiles(WPARAM wParam,LPARAM lParam);
-    int OnPaint(WPARAM wParam,LPARAM lParam);
+    int Render();
   private:
     std::thread* emu_th;
     std::atomic_bool exit_signal_;

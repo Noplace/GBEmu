@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GBEmu", "GBEmu.vcxproj", "{07B92AB7-3664-413D-81AA-2C2C705D4294}"
 	ProjectSection(ProjectDependencies) = postProject
 		{43AC74E9-A89D-4E31-8C01-FA2CCE27F5C2} = {43AC74E9-A89D-4E31-8C01-FA2CCE27F5C2}

@@ -4,12 +4,15 @@ namespace emulation {
 namespace gb {
 
 void Emu::Initialize() {
-  frame_buffer = new uint32_t[160*144];
   emulation::gb::CartridgeHeader header;
   cartridge_.Initialize(this);
   
-  cartridge_.ReadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\cpu_instrs\\individual\\01-special.gb",&header);
-  //cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\cpu_instrs\\cpu_instrs.gb",&header);
+
+	
+  //cartridge_.ReadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\cpu_instrs\\individual\\01-special.gb",&header);
+  cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\cpu_instrs\\individual\\01-special.gb",&header);
+	//cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\Runtime - Test Rom (PD).gb",&header);
+	//cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\opus5.gb",&header);
   //cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\Super Mario Land (World).gb",&header);
   lcd_driver_.Initialize(this);
   memory_.Initialize(this);
@@ -43,7 +46,6 @@ void Emu::Deinitialize() {
   memory_.Deinitialize();
   lcd_driver_.Deinitialize();
   cartridge_.Deinitialize();
-  delete [] frame_buffer;  
 }
 
 double Emu::Step(double dt) {

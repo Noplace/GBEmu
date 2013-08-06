@@ -100,7 +100,7 @@
       <BrowseInformation>true</BrowseInformation>
       <CallingConvention>Cdecl</CallingConvention>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>$(SolutionDir)..\Listing\</AssemblerListingLocation>
+      <AssemblerListingLocation>$(SolutionDir)..\Output\Listing\</AssemblerListingLocation>
       <FloatingPointExceptions>false</FloatingPointExceptions>
     </ClCompile>
     <Link>
@@ -203,11 +203,13 @@
     <ClInclude Include="Code\emulation\gb\emu.h" />
     <ClInclude Include="Code\emulation\gb\gb.h" />
     <ClInclude Include="Code\emulation\gb\lcd_driver.h" />
+    <ClInclude Include="Code\emulation\gb\mbc.h" />
     <ClInclude Include="Code\emulation\gb\memory.h" />
     <ClCompile Include="Code\audio\ds.cpp" />
     <ClCompile Include="Code\audio\wasapi.cpp" />
     <ClCompile Include="Code\audio\wave_output.cpp" />
     <ClCompile Include="Code\audio\WaveOut.cpp" />
+    <ClCompile Include="Code\emulation\gb\sound_controller.cpp" />
     <ClCompile Include="Code\graphics\eagle.cpp" />
     <ClCompile Include="Code\graphics\HQ2x.cpp" />
     <ClCompile Include="Code\winmain.cpp" />
@@ -216,6 +218,7 @@
     <ClInclude Include="Code\audio\ds.h" />
     <ClInclude Include="Code\audio\audio_interface.h" />
     <ClInclude Include="Code\audio\wasapi.h" />
+    <ClInclude Include="Code\emulation\gb\sound_controller.h" />
     <ClInclude Include="Code\utilities\ring_buffer.h" />
   </ItemGroup>
   <ItemGroup>

@@ -19,6 +19,8 @@ class Emu;
 class Memory;
 class Cartridge;
 class LCDDriver;
+class SoundController;
+class Cpu;
 class MemoryBankController;
 class Component {
  public:
@@ -35,5 +37,6 @@ class Component {
 #include "cartridge.h"
 #include "memory.h"
 #include "lcd_driver.h"
+#include "sound_controller.h"
 #include "cpu.h"
 #include "emu.h"

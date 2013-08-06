@@ -1,4 +1,5 @@
 #include "gb.h"
+#include "mbc.h"
 
 namespace emulation {
 namespace gb {
