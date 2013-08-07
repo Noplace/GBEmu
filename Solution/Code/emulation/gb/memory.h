@@ -3,6 +3,8 @@
 namespace emulation {
 namespace gb {
 
+enum JoypadKeys { JoypadRight=0,JoypadLeft=1,JoypadUp=2,JoypadDown=3,JoypadA=4,JoypadB=5,JoypadSelect=6,JoypadStart=7};
+
 class Memory : public Component {
  public:
   Memory(){}
@@ -22,6 +24,15 @@ class Memory : public Component {
 		nn |= Read8(address+1)<<8;
 		return nn;
 	}
+	void JoypadPress(JoypadKeys key) {
+		joypadflags[key] = true;
+		//ioports_[0] &= ~key;
+	}
+	void JoypadRelease(JoypadKeys key) {
+		//ioports_[0] |= key;
+		joypadflags[key] = false;
+	}
+	void Tick();
  private:
   const uint8_t* rom_;
   uint8_t* vram_;
@@ -31,6 +42,7 @@ class Memory : public Component {
   uint8_t ioports_[128];
   uint8_t hram_[127];
   uint8_t interrupt_enable_register_;
+	bool joypadflags[8];
 };
 
 }

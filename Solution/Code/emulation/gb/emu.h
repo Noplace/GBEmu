@@ -21,7 +21,7 @@ class Emu {
   Memory* memory() { return &memory_; }
   LCDDriver* lcd_driver() { return &lcd_driver_; }
 	SoundController* sc() { return &sc_; }
-
+	Timer* timer() { return &timer_; }
   std::function <void ()> on_render;
   void set_on_render(const  std::function <void ()>& on_render) {
     if (on_render != nullptr)
@@ -39,6 +39,7 @@ class Emu {
   Memory memory_;
   LCDDriver lcd_driver_;
 	SoundController sc_;
+	Timer timer_;
 
 };
 

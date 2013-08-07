@@ -50,17 +50,11 @@ PUBLIC	?digits@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits
 PUBLIC	?value@?$_Gcd@$00$00@std@@2_JB			; std::_Gcd<1,1>::value
 PUBLIC	?digits10@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits10
 PUBLIC	?_G2@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G2
-PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?is_signed@?$numeric_limits@I@std@@2_NB		; std::numeric_limits<unsigned int>::is_signed
 PUBLIC	?digits@?$numeric_limits@I@std@@2HB		; std::numeric_limits<unsigned int>::digits
 PUBLIC	?digits10@?$numeric_limits@I@std@@2HB		; std::numeric_limits<unsigned int>::digits10
-PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?is_monotonic@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_monotonic
 PUBLIC	?is_steady@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_steady
-PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
-PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
-PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
-PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?is_signed@?$numeric_limits@J@std@@2_NB		; std::numeric_limits<long>::is_signed
 PUBLIC	?digits@?$numeric_limits@J@std@@2HB		; std::numeric_limits<long>::digits
 PUBLIC	?digits10@?$numeric_limits@J@std@@2HB		; std::numeric_limits<long>::digits10
@@ -68,12 +62,18 @@ PUBLIC	?is_signed@?$numeric_limits@K@std@@2_NB		; std::numeric_limits<unsigned l
 PUBLIC	?digits@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits
 PUBLIC	?digits10@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits10
 PUBLIC	?is_signed@?$numeric_limits@_J@std@@2_NB	; std::numeric_limits<__int64>::is_signed
+PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?digits@?$numeric_limits@_J@std@@2HB		; std::numeric_limits<__int64>::digits
 PUBLIC	?digits10@?$numeric_limits@_J@std@@2HB		; std::numeric_limits<__int64>::digits10
+PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?value@?$integral_constant@H$0A@@std@@2HB	; std::integral_constant<int,0>::value
+PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?is_signed@?$numeric_limits@_K@std@@2_NB	; std::numeric_limits<unsigned __int64>::is_signed
+PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?digits@?$numeric_limits@_K@std@@2HB		; std::numeric_limits<unsigned __int64>::digits
 PUBLIC	?digits10@?$numeric_limits@_K@std@@2HB		; std::numeric_limits<unsigned __int64>::digits10
+PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
+PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?digits@?$numeric_limits@M@std@@2HB		; std::numeric_limits<float>::digits
 PUBLIC	?digits10@?$numeric_limits@M@std@@2HB		; std::numeric_limits<float>::digits10
 PUBLIC	?max_digits10@?$numeric_limits@M@std@@2HB	; std::numeric_limits<float>::max_digits10
@@ -190,13 +190,6 @@ CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@D@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@D@std@@2_NB DB 01H		; std::numeric_limits<char>::is_signed
-CONST	ENDS
-CONST	SEGMENT
-_colormap DD	0ffffffffH
-	DD	0ffaaaaaaH
-	DD	0ff545454H
-	DD	0ff000000H
-$SG130021 DB	'Code\emulation\gb\lcd_driver.cpp', 00H
 CONST	ENDS
 ;	COMDAT ?radix@_Num_float_base@std@@2HB
 CONST	SEGMENT
@@ -736,6 +729,14 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@M@std@@2HB DD 018H		; std::numeric_limits<float>::digits
 CONST	ENDS
+;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
+CONST	ENDS
+;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
+CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@_K@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@_K@std@@2HB DD 013H		; std::numeric_limits<unsigned __int64>::digits10
@@ -744,13 +745,25 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@_K@std@@2HB DD 040H		; std::numeric_limits<unsigned __int64>::digits
 CONST	ENDS
+;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@_K@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@_K@std@@2_NB DB 00H		; std::numeric_limits<unsigned __int64>::is_signed
 CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?value@?$integral_constant@H$0A@@std@@2HB
 CONST	SEGMENT
 ?value@?$integral_constant@H$0A@@std@@2HB DD 00H	; std::integral_constant<int,0>::value
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@_J@std@@2HB
 CONST	SEGMENT
@@ -759,6 +772,10 @@ CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@_J@std@@2HB
 CONST	SEGMENT
 ?digits@?$numeric_limits@_J@std@@2HB DD 03fH		; std::numeric_limits<__int64>::digits
+CONST	ENDS
+;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
+CONST	SEGMENT
+?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@_J@std@@2_NB
 CONST	SEGMENT
@@ -788,22 +805,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@J@std@@2_NB DB 01H		; std::numeric_limits<long>::is_signed
 CONST	ENDS
-;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
-CONST	ENDS
-;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
-CONST	ENDS
-;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?is_steady@system_clock@chrono@std@@2_NB
 CONST	SEGMENT
 ?is_steady@system_clock@chrono@std@@2_NB DB 00H		; std::chrono::system_clock::is_steady
@@ -811,10 +812,6 @@ CONST	ENDS
 ;	COMDAT ?is_monotonic@system_clock@chrono@std@@2_NB
 CONST	SEGMENT
 ?is_monotonic@system_clock@chrono@std@@2_NB DB 00H	; std::chrono::system_clock::is_monotonic
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@I@std@@2HB
 CONST	SEGMENT
@@ -827,10 +824,6 @@ CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@I@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@I@std@@2_NB DB 00H		; std::numeric_limits<unsigned int>::is_signed
-CONST	ENDS
-;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
-CONST	SEGMENT
-?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?_G2@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB
 CONST	SEGMENT
@@ -984,6 +977,13 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_modulo@?$numeric_limits@_N@std@@2_NB DB 00H		; std::numeric_limits<bool>::is_modulo
 CONST	ENDS
+CONST	SEGMENT
+_colormap DD	0ffffffffH
+	DD	0ffaaaaaaH
+	DD	0ff545454H
+	DD	0ff000000H
+$SG130094 DB	'Code\emulation\gb\lcd_driver.cpp', 00H
+CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@_W@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@_W@std@@2HB DD 04H		; std::numeric_limits<wchar_t>::digits10
@@ -997,13 +997,13 @@ CONST	SEGMENT
 ?is_signed@?$numeric_limits@_W@std@@2_NB DB 00H		; std::numeric_limits<wchar_t>::is_signed
 CONST	ENDS
 PUBLIC	??0_Ignore@std@@QAE@XZ				; std::_Ignore::_Ignore
-PUBLIC	?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
+PUBLIC	?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
 PUBLIC	?vram@Memory@gb@emulation@@QAEPAEXZ		; emulation::gb::Memory::vram
 PUBLIC	?oam@Memory@gb@emulation@@QAEPAEXZ		; emulation::gb::Memory::oam
 PUBLIC	?ioports@Memory@gb@emulation@@QAEPAEXZ		; emulation::gb::Memory::ioports
 PUBLIC	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ	; emulation::gb::Memory::interrupt_flag
-PUBLIC	?Initialize@LCDDriver@gb@emulation@@QAEXPAVEmu@23@@Z ; emulation::gb::LCDDriver::Initialize
-PUBLIC	?Deinitialize@LCDDriver@gb@emulation@@QAEXXZ	; emulation::gb::LCDDriver::Deinitialize
+PUBLIC	?Initialize@LCDDriver@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::LCDDriver::Initialize
+PUBLIC	?Deinitialize@LCDDriver@gb@emulation@@UAEXXZ	; emulation::gb::LCDDriver::Deinitialize
 PUBLIC	?Step@LCDDriver@gb@emulation@@QAEXN@Z		; emulation::gb::LCDDriver::Step
 PUBLIC	?Read@LCDDriver@gb@emulation@@QAEEG@Z		; emulation::gb::LCDDriver::Read
 PUBLIC	?Write@LCDDriver@gb@emulation@@QAEXGE@Z		; emulation::gb::LCDDriver::Write
@@ -1011,6 +1011,7 @@ PUBLIC	?RenderBGLine@LCDDriver@gb@emulation@@QAEXXZ	; emulation::gb::LCDDriver::
 PUBLIC	?RenderWindowLine@LCDDriver@gb@emulation@@QAEXXZ ; emulation::gb::LCDDriver::RenderWindowLine
 PUBLIC	?RenderSpriteLine@LCDDriver@gb@emulation@@QAEXXZ ; emulation::gb::LCDDriver::RenderSpriteLine
 PUBLIC	?RenderLine@LCDDriver@gb@emulation@@QAEXXZ	; emulation::gb::LCDDriver::RenderLine
+PUBLIC	?RenderAllBGTiles@LCDDriver@gb@emulation@@QAEXXZ ; emulation::gb::LCDDriver::RenderAllBGTiles
 PUBLIC	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ	; emulation::gb::Emu::memory
 PUBLIC	??R?$_Func_class@XU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@QBEXXZ ; std::_Func_class<void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::operator()
 PUBLIC	__real@0000000000000000
@@ -1056,12 +1057,147 @@ CRT$XCU	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\lcd_driver.cpp
 _TEXT	SEGMENT
-tv83 = -16						; size = 4
+tv82 = -16						; size = 4
 _d$1 = -10						; size = 1
 _tileindex$ = -9					; size = 1
 _bgtilemap$ = -8					; size = 4
 _this$ = -4						; size = 4
 ??R<lambda_97bc8e9b09435192667e87dfa941ef5a>@@QBEEXZ PROC ; <lambda_97bc8e9b09435192667e87dfa941ef5a>::operator()
+; _this$ = ecx
+
+; 214  : 	auto readTile = [&](){
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 16					; 00000010H
+	mov	eax, -858993460				; ccccccccH
+	mov	DWORD PTR [ebp-16], eax
+	mov	DWORD PTR [ebp-12], eax
+	mov	DWORD PTR [ebp-8], eax
+	mov	DWORD PTR [ebp-4], eax
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 215  : 		  uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax]
+	mov	dl, BYTE PTR [ecx+12]
+	shr	dl, 3
+	and	dl, 1
+	movzx	eax, dl
+	test	eax, eax
+	jne	SHORT $LN4@operator
+	mov	DWORD PTR tv82[ebp], 6144		; 00001800H
+	jmp	SHORT $LN5@operator
+$LN4@operator:
+	mov	DWORD PTR tv82[ebp], 7168		; 00001c00H
+$LN5@operator:
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx]
+	mov	ecx, DWORD PTR [edx+4]
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?vram@Memory@gb@emulation@@QAEPAEXZ	; emulation::gb::Memory::vram
+	add	eax, DWORD PTR tv82[ebp]
+	mov	DWORD PTR _bgtilemap$[ebp], eax
+
+; 216  : 			auto tileindex = bgtilemap[(mapoffset<<5) + lineoffset];
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+4]
+	mov	edx, DWORD PTR [ecx]
+	shl	edx, 5
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	add	edx, DWORD PTR [ecx]
+	mov	eax, DWORD PTR _bgtilemap$[ebp]
+	mov	cl, BYTE PTR [eax+edx]
+	mov	BYTE PTR _tileindex$[ebp], cl
+
+; 217  : 			if(lcdc_.tile_data == 0) {
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx]
+	mov	cl, BYTE PTR [eax+12]
+	shr	cl, 4
+	and	cl, 1
+	movzx	edx, cl
+	test	edx, edx
+	jne	SHORT $LN1@operator
+
+; 218  : 				int8_t d = tileindex;
+
+	mov	al, BYTE PTR _tileindex$[ebp]
+	mov	BYTE PTR _d$1[ebp], al
+
+; 219  : 				d+=128;
+
+	movsx	ecx, BYTE PTR _d$1[ebp]
+	add	ecx, 128				; 00000080H
+	mov	BYTE PTR _d$1[ebp], cl
+
+; 220  : 				tileindex = d;
+
+	mov	dl, BYTE PTR _d$1[ebp]
+	mov	BYTE PTR _tileindex$[ebp], dl
+$LN1@operator:
+
+; 221  : 			}
+; 222  : 			return tileindex;
+
+	mov	al, BYTE PTR _tileindex$[ebp]
+
+; 223  : 	};
+
+	add	esp, 16					; 00000010H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??R<lambda_97bc8e9b09435192667e87dfa941ef5a>@@QBEEXZ ENDP ; <lambda_97bc8e9b09435192667e87dfa941ef5a>::operator()
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\lcd_driver.cpp
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+__This$ = 8						; size = 4
+__Mapoffset$ = 12					; size = 4
+__Lineoffset$ = 16					; size = 4
+??0<lambda_97bc8e9b09435192667e87dfa941ef5a>@@QAE@PAVLCDDriver@gb@emulation@@AAH1@Z PROC ; <lambda_97bc8e9b09435192667e87dfa941ef5a>::<lambda_97bc8e9b09435192667e87dfa941ef5a>
+; _this$ = ecx
+
+; 223  : 	};
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR __This$[ebp]
+	mov	DWORD PTR [eax], ecx
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR __Mapoffset$[ebp]
+	mov	DWORD PTR [edx+4], eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR __Lineoffset$[ebp]
+	mov	DWORD PTR [ecx+8], edx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	esp, ebp
+	pop	ebp
+	ret	12					; 0000000cH
+??0<lambda_97bc8e9b09435192667e87dfa941ef5a>@@QAE@PAVLCDDriver@gb@emulation@@AAH1@Z ENDP ; <lambda_97bc8e9b09435192667e87dfa941ef5a>::<lambda_97bc8e9b09435192667e87dfa941ef5a>
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\lcd_driver.cpp
+_TEXT	SEGMENT
+tv82 = -16						; size = 4
+_d$1 = -10						; size = 1
+_tileindex$ = -9					; size = 1
+_bgtilemap$ = -8					; size = 4
+_this$ = -4						; size = 4
+??R<lambda_ce7ad4cd1412fe00586b4ffb596c5c8d>@@QBEEXZ PROC ; <lambda_ce7ad4cd1412fe00586b4ffb596c5c8d>::operator()
 ; _this$ = ecx
 
 ; 178  : 	auto readTile = [&](){
@@ -1076,39 +1212,36 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 179  : 		 uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
+; 179  : 		  uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax]
-	mov	dl, BYTE PTR [ecx+8]
+	mov	dl, BYTE PTR [ecx+12]
 	shr	dl, 3
 	and	dl, 1
 	movzx	eax, dl
 	test	eax, eax
 	jne	SHORT $LN4@operator
-	mov	DWORD PTR tv83[ebp], 6144		; 00001800H
+	mov	DWORD PTR tv82[ebp], 6144		; 00001800H
 	jmp	SHORT $LN5@operator
 $LN4@operator:
-	mov	DWORD PTR tv83[ebp], 7168		; 00001c00H
+	mov	DWORD PTR tv82[ebp], 7168		; 00001c00H
 $LN5@operator:
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx]
-	mov	ecx, DWORD PTR [edx]
+	mov	ecx, DWORD PTR [edx+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?vram@Memory@gb@emulation@@QAEPAEXZ	; emulation::gb::Memory::vram
-	add	eax, DWORD PTR tv83[ebp]
+	add	eax, DWORD PTR tv82[ebp]
 	mov	DWORD PTR _bgtilemap$[ebp], eax
 
-; 180  : 			auto tileindex = bgtilemap[(mapoffset<<5) + lineoffset];
+; 180  : 			auto tileindex = bgtilemap[(mapoffset<<5)];
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+4]
 	mov	edx, DWORD PTR [ecx]
 	shl	edx, 5
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+8]
-	add	edx, DWORD PTR [ecx]
 	mov	eax, DWORD PTR _bgtilemap$[ebp]
 	mov	cl, BYTE PTR [eax+edx]
 	mov	BYTE PTR _tileindex$[ebp], cl
@@ -1117,7 +1250,7 @@ $LN5@operator:
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR [edx]
-	mov	cl, BYTE PTR [eax+8]
+	mov	cl, BYTE PTR [eax+12]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
@@ -1154,7 +1287,7 @@ $LN1@operator:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-??R<lambda_97bc8e9b09435192667e87dfa941ef5a>@@QBEEXZ ENDP ; <lambda_97bc8e9b09435192667e87dfa941ef5a>::operator()
+??R<lambda_ce7ad4cd1412fe00586b4ffb596c5c8d>@@QBEEXZ ENDP ; <lambda_ce7ad4cd1412fe00586b4ffb596c5c8d>::operator()
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\lcd_driver.cpp
@@ -1162,8 +1295,7 @@ _TEXT	SEGMENT
 _this$ = -4						; size = 4
 __This$ = 8						; size = 4
 __Mapoffset$ = 12					; size = 4
-__Lineoffset$ = 16					; size = 4
-??0<lambda_97bc8e9b09435192667e87dfa941ef5a>@@QAE@PAVLCDDriver@gb@emulation@@AAH1@Z PROC ; <lambda_97bc8e9b09435192667e87dfa941ef5a>::<lambda_97bc8e9b09435192667e87dfa941ef5a>
+??0<lambda_ce7ad4cd1412fe00586b4ffb596c5c8d>@@QAE@PAVLCDDriver@gb@emulation@@AAH@Z PROC ; <lambda_ce7ad4cd1412fe00586b4ffb596c5c8d>::<lambda_ce7ad4cd1412fe00586b4ffb596c5c8d>
 ; _this$ = ecx
 
 ; 187  : 	};
@@ -1179,14 +1311,11 @@ __Lineoffset$ = 16					; size = 4
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR __Mapoffset$[ebp]
 	mov	DWORD PTR [edx+4], eax
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR __Lineoffset$[ebp]
-	mov	DWORD PTR [ecx+8], edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	esp, ebp
 	pop	ebp
-	ret	12					; 0000000cH
-??0<lambda_97bc8e9b09435192667e87dfa941ef5a>@@QAE@PAVLCDDriver@gb@emulation@@AAH1@Z ENDP ; <lambda_97bc8e9b09435192667e87dfa941ef5a>::<lambda_97bc8e9b09435192667e87dfa941ef5a>
+	ret	8
+??0<lambda_ce7ad4cd1412fe00586b4ffb596c5c8d>@@QAE@PAVLCDDriver@gb@emulation@@AAH@Z ENDP ; <lambda_ce7ad4cd1412fe00586b4ffb596c5c8d>::<lambda_ce7ad4cd1412fe00586b4ffb596c5c8d>
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\program files (x86)\microsoft visual studio 11.0\vc\include\functional
@@ -1248,7 +1377,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1136				; 00000470H
+	add	eax, 1144				; 00000478H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1257,11 +1386,275 @@ _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\lcd_driver.cpp
 _TEXT	SEGMENT
+tv139 = -64						; size = 4
+_tile$1 = -60						; size = 4
+_tileindex$2 = -56					; size = 4
+_i$3 = -52						; size = 4
+_tiledata$4 = -48					; size = 4
+_i$5 = -44						; size = 4
+_readTile$ = -36					; size = 8
+_x$ = -24						; size = 4
+_y$ = -20						; size = 4
+_mapoffset$ = -12					; size = 4
+_this$ = -4						; size = 4
+?RenderAllBGTiles@LCDDriver@gb@emulation@@QAEXXZ PROC	; emulation::gb::LCDDriver::RenderAllBGTiles
+; _this$ = ecx
+
+; 174  : void LCDDriver::RenderAllBGTiles() {
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 64					; 00000040H
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-64]
+	mov	ecx, 16					; 00000010H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 175  : 	auto mapoffset = ((ly)&0xFF) >> 3;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+16]
+	and	ecx, 255				; 000000ffH
+	sar	ecx, 3
+	mov	DWORD PTR _mapoffset$[ebp], ecx
+
+; 176  : 	auto y = (ly) & 7;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+16]
+	and	eax, 7
+	mov	DWORD PTR _y$[ebp], eax
+
+; 177  : 	auto x = 0;
+
+	mov	DWORD PTR _x$[ebp], 0
+
+; 178  : 	auto readTile = [&](){
+; 179  : 		  uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
+; 180  : 			auto tileindex = bgtilemap[(mapoffset<<5)];
+; 181  : 			if(lcdc_.tile_data == 0) {
+; 182  : 				int8_t d = tileindex;
+; 183  : 				d+=128;
+; 184  : 				tileindex = d;
+; 185  : 			}
+; 186  : 			return tileindex;
+; 187  : 	};
+
+	lea	ecx, DWORD PTR _mapoffset$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _this$[ebp]
+	push	edx
+	lea	ecx, DWORD PTR _readTile$[ebp]
+	call	??0<lambda_ce7ad4cd1412fe00586b4ffb596c5c8d>@@QAE@PAVLCDDriver@gb@emulation@@AAH@Z ; <lambda_ce7ad4cd1412fe00586b4ffb596c5c8d>::<lambda_ce7ad4cd1412fe00586b4ffb596c5c8d>
+
+; 188  : 
+; 189  : 	if (lcdc_.bgdisplay == 0) {
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+12]
+	and	cl, 1
+	movzx	edx, cl
+	test	edx, edx
+	jne	SHORT $LN9@RenderAllB
+
+; 190  : 		for (int i=0;i<256;++i) {
+
+	mov	DWORD PTR _i$5[ebp], 0
+	jmp	SHORT $LN8@RenderAllB
+$LN7@RenderAllB:
+	mov	eax, DWORD PTR _i$5[ebp]
+	add	eax, 1
+	mov	DWORD PTR _i$5[ebp], eax
+$LN8@RenderAllB:
+	cmp	DWORD PTR _i$5[ebp], 256		; 00000100H
+	jge	SHORT $LN6@RenderAllB
+
+; 191  : 			frame_buffer[((ly)<<8)+(i)] = colormap[0];
+
+	mov	ecx, 4
+	imul	ecx, 0
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+16]
+	shl	eax, 8
+	add	eax, DWORD PTR _i$5[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [edx+8]
+	mov	ecx, DWORD PTR _colormap[ecx]
+	mov	DWORD PTR [edx+eax*4], ecx
+
+; 192  : 		}
+
+	jmp	SHORT $LN7@RenderAllB
+$LN6@RenderAllB:
+	jmp	$LN10@RenderAllB
+$LN9@RenderAllB:
+
+; 193  : 	} else {
+; 194  : 		uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+12]
+	shr	al, 4
+	and	al, 1
+	movzx	ecx, al
+	test	ecx, ecx
+	jne	SHORT $LN12@RenderAllB
+	mov	DWORD PTR tv139[ebp], 2048		; 00000800H
+	jmp	SHORT $LN13@RenderAllB
+$LN12@RenderAllB:
+	mov	DWORD PTR tv139[ebp], 0
+$LN13@RenderAllB:
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [edx+4]
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?vram@Memory@gb@emulation@@QAEPAEXZ	; emulation::gb::Memory::vram
+	add	eax, DWORD PTR tv139[ebp]
+	mov	DWORD PTR _tiledata$4[ebp], eax
+
+; 195  : 		for (int i=0;i<256;++i) {
+
+	mov	DWORD PTR _i$3[ebp], 0
+	jmp	SHORT $LN4@RenderAllB
+$LN3@RenderAllB:
+	mov	eax, DWORD PTR _i$3[ebp]
+	add	eax, 1
+	mov	DWORD PTR _i$3[ebp], eax
+$LN4@RenderAllB:
+	cmp	DWORD PTR _i$3[ebp], 256		; 00000100H
+	jge	$LN10@RenderAllB
+
+; 196  : 			auto tileindex = (i>>3)+(ly>>3)*32;
+
+	mov	ecx, DWORD PTR _i$3[ebp]
+	sar	ecx, 3
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+16]
+	sar	eax, 3
+	shl	eax, 5
+	add	ecx, eax
+	mov	DWORD PTR _tileindex$2[ebp], ecx
+
+; 197  : 			uint8_t* tile = &tiledata[(tileindex<<4)];
+
+	mov	ecx, DWORD PTR _tileindex$2[ebp]
+	shl	ecx, 4
+	add	ecx, DWORD PTR _tiledata$4[ebp]
+	mov	DWORD PTR _tile$1[ebp], ecx
+
+; 198  : 			#define pixel(bit) ((tile[y<<1]>>(bit))&0x1+((tile[(y<<1)+1]>>(bit))<<1))
+; 199  : 			frame_buffer[((ly)<<8)+i] = colormap[bg_pal[pixel((7-x))]];
+
+	mov	edx, DWORD PTR _y$[ebp]
+	mov	eax, DWORD PTR _tile$1[ebp]
+	movzx	edx, BYTE PTR [eax+edx*2]
+	mov	ecx, 7
+	sub	ecx, DWORD PTR _x$[ebp]
+	sar	edx, cl
+	mov	eax, DWORD PTR _y$[ebp]
+	mov	ecx, DWORD PTR _tile$1[ebp]
+	movzx	eax, BYTE PTR [ecx+eax*2+1]
+	mov	ecx, 7
+	sub	ecx, DWORD PTR _x$[ebp]
+	sar	eax, cl
+	lea	ecx, DWORD PTR [eax+eax+1]
+	and	edx, ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+edx+20]
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+16]
+	shl	eax, 8
+	add	eax, DWORD PTR _i$3[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [edx+8]
+	mov	ecx, DWORD PTR _colormap[ecx*4]
+	mov	DWORD PTR [edx+eax*4], ecx
+
+; 200  : 			#undef pixel
+; 201  : 			++x;
+
+	mov	edx, DWORD PTR _x$[ebp]
+	add	edx, 1
+	mov	DWORD PTR _x$[ebp], edx
+
+; 202  : 			if (x==8) {
+
+	cmp	DWORD PTR _x$[ebp], 8
+	jne	SHORT $LN1@RenderAllB
+
+; 203  : 				x = 0;
+
+	mov	DWORD PTR _x$[ebp], 0
+$LN1@RenderAllB:
+
+; 204  : 			}
+; 205  : 		}
+
+	jmp	$LN3@RenderAllB
+$LN10@RenderAllB:
+
+; 206  : 	}
+; 207  : }
+
+	push	edx
+	mov	ecx, ebp
+	push	eax
+	lea	edx, DWORD PTR $LN17@RenderAllB
+	call	@_RTC_CheckStackVars@8
+	pop	eax
+	pop	edx
+	pop	edi
+	add	esp, 64					; 00000040H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+$LN17@RenderAllB:
+	DD	2
+	DD	$LN16@RenderAllB
+$LN16@RenderAllB:
+	DD	-12					; fffffff4H
+	DD	4
+	DD	$LN14@RenderAllB
+	DD	-36					; ffffffdcH
+	DD	8
+	DD	$LN15@RenderAllB
+$LN15@RenderAllB:
+	DB	114					; 00000072H
+	DB	101					; 00000065H
+	DB	97					; 00000061H
+	DB	100					; 00000064H
+	DB	84					; 00000054H
+	DB	105					; 00000069H
+	DB	108					; 0000006cH
+	DB	101					; 00000065H
+	DB	0
+$LN14@RenderAllB:
+	DB	109					; 0000006dH
+	DB	97					; 00000061H
+	DB	112					; 00000070H
+	DB	111					; 0000006fH
+	DB	102					; 00000066H
+	DB	102					; 00000066H
+	DB	115					; 00000073H
+	DB	101					; 00000065H
+	DB	116					; 00000074H
+	DB	0
+?RenderAllBGTiles@LCDDriver@gb@emulation@@QAEXXZ ENDP	; emulation::gb::LCDDriver::RenderAllBGTiles
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\lcd_driver.cpp
+_TEXT	SEGMENT
 _this$ = -4						; size = 4
 ?RenderLine@LCDDriver@gb@emulation@@QAEXXZ PROC		; emulation::gb::LCDDriver::RenderLine
 ; _this$ = ecx
 
-; 251  : void LCDDriver::RenderLine() {
+; 287  : void LCDDriver::RenderLine() {
 
 	push	ebp
 	mov	ebp, esp
@@ -1269,22 +1662,22 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 252  : 	RenderBGLine();
+; 288  : 	RenderBGLine();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?RenderBGLine@LCDDriver@gb@emulation@@QAEXXZ ; emulation::gb::LCDDriver::RenderBGLine
 
-; 253  : 	RenderWindowLine();
+; 289  : 	RenderWindowLine();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?RenderWindowLine@LCDDriver@gb@emulation@@QAEXXZ ; emulation::gb::LCDDriver::RenderWindowLine
 
-; 254  : 	RenderSpriteLine();
+; 290  : 	RenderSpriteLine();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?RenderSpriteLine@LCDDriver@gb@emulation@@QAEXXZ ; emulation::gb::LCDDriver::RenderSpriteLine
 
-; 255  : }
+; 291  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -1302,7 +1695,7 @@ _this$ = -4						; size = 4
 ?RenderSpriteLine@LCDDriver@gb@emulation@@QAEXXZ PROC	; emulation::gb::LCDDriver::RenderSpriteLine
 ; _this$ = ecx
 
-; 245  : void LCDDriver::RenderSpriteLine() {
+; 281  : void LCDDriver::RenderSpriteLine() {
 
 	push	ebp
 	mov	ebp, esp
@@ -1311,23 +1704,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 246  : 	if (lcdc_.sprite_enable == 1) {
+; 282  : 	if (lcdc_.sprite_enable == 1) {
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+8]
+	mov	cl, BYTE PTR [eax+12]
 	shr	cl, 1
 	and	cl, 1
 	movzx	edx, cl
 	cmp	edx, 1
 	jne	SHORT $LN2@RenderSpri
 
-; 247  : 		int a =1;
+; 283  : 		int a =1;
 
 	mov	DWORD PTR _a$1[ebp], 1
 $LN2@RenderSpri:
 
-; 248  : 	}
-; 249  : }
+; 284  : 	}
+; 285  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -1353,7 +1746,7 @@ _this$ = -4						; size = 4
 ?RenderWindowLine@LCDDriver@gb@emulation@@QAEXXZ PROC	; emulation::gb::LCDDriver::RenderWindowLine
 ; _this$ = ecx
 
-; 210  : void LCDDriver::RenderWindowLine() {
+; 246  : void LCDDriver::RenderWindowLine() {
 
 	push	ebp
 	mov	ebp, esp
@@ -1367,20 +1760,20 @@ _this$ = -4						; size = 4
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 211  : 	if (lcdc_.window_enable == 1) {
+; 247  : 	if (lcdc_.window_enable == 1) {
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+8]
+	mov	cl, BYTE PTR [eax+12]
 	shr	cl, 5
 	and	cl, 1
 	movzx	edx, cl
 	cmp	edx, 1
 	jne	$LN6@RenderWind
 
-; 212  : 		uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
+; 248  : 		uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+8]
+	mov	cl, BYTE PTR [eax+12]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
@@ -1392,17 +1785,17 @@ $LN8@RenderWind:
 	mov	DWORD PTR tv86[ebp], 0
 $LN9@RenderWind:
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?vram@Memory@gb@emulation@@QAEPAEXZ	; emulation::gb::Memory::vram
 	add	eax, DWORD PTR tv86[ebp]
 	mov	DWORD PTR _tiledata$10[ebp], eax
 
-; 213  : 		uint8_t* tilemap = &emu_->memory()->vram()[lcdc_.window_tile_map ==0?0x1800:0x1C00];
+; 249  : 		uint8_t* tilemap = &emu_->memory()->vram()[lcdc_.window_tile_map ==0?0x1800:0x1C00];
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+8]
+	mov	dl, BYTE PTR [ecx+12]
 	shr	dl, 6
 	and	dl, 1
 	movzx	eax, dl
@@ -1414,14 +1807,14 @@ $LN10@RenderWind:
 	mov	DWORD PTR tv137[ebp], 7168		; 00001c00H
 $LN11@RenderWind:
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx]
+	mov	ecx, DWORD PTR [ecx+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?vram@Memory@gb@emulation@@QAEPAEXZ	; emulation::gb::Memory::vram
 	add	eax, DWORD PTR tv137[ebp]
 	mov	DWORD PTR _tilemap$9[ebp], eax
 
-; 214  : 		for (int i=0;i<32;++i) {
+; 250  : 		for (int i=0;i<32;++i) {
 
 	mov	DWORD PTR _i$8[ebp], 0
 	jmp	SHORT $LN4@RenderWind
@@ -1433,21 +1826,21 @@ $LN4@RenderWind:
 	cmp	DWORD PTR _i$8[ebp], 32			; 00000020H
 	jge	$LN6@RenderWind
 
-; 215  : 			auto mapoffset = ((ly)&0xFF) >> 3;
+; 251  : 			auto mapoffset = ((ly)&0xFF) >> 3;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+12]
+	movzx	ecx, BYTE PTR [eax+16]
 	and	ecx, 255				; 000000ffH
 	sar	ecx, 3
 	mov	DWORD PTR _mapoffset$7[ebp], ecx
 
-; 216  : 			auto lineoffset = (i)&0x1F;
+; 252  : 			auto lineoffset = (i)&0x1F;
 
 	mov	edx, DWORD PTR _i$8[ebp]
 	and	edx, 31					; 0000001fH
 	mov	DWORD PTR _lineoffset$6[ebp], edx
 
-; 217  : 			auto tileindex = tilemap[(mapoffset<<5) + lineoffset];
+; 253  : 			auto tileindex = tilemap[(mapoffset<<5) + lineoffset];
 
 	mov	eax, DWORD PTR _mapoffset$7[ebp]
 	shl	eax, 5
@@ -1456,56 +1849,56 @@ $LN4@RenderWind:
 	mov	dl, BYTE PTR [ecx+eax]
 	mov	BYTE PTR _tileindex$5[ebp], dl
 
-; 218  : 			auto y = (ly) & 7;
+; 254  : 			auto y = (ly) & 7;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+12]
+	movzx	ecx, BYTE PTR [eax+16]
 	and	ecx, 7
 	mov	DWORD PTR _y$4[ebp], ecx
 
-; 219  : 			auto x = 0;
+; 255  : 			auto x = 0;
 
 	mov	DWORD PTR _x$3[ebp], 0
 
-; 220  : 			if(lcdc_.tile_data == 0) {
+; 256  : 			if(lcdc_.tile_data == 0) {
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+8]
+	mov	al, BYTE PTR [edx+12]
 	shr	al, 4
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
 	jne	SHORT $LN1@RenderWind
 
-; 221  : 				int8_t d = tileindex;
+; 257  : 				int8_t d = tileindex;
 
 	mov	dl, BYTE PTR _tileindex$5[ebp]
 	mov	BYTE PTR _d$2[ebp], dl
 
-; 222  : 				d+=128;
+; 258  : 				d+=128;
 
 	movsx	eax, BYTE PTR _d$2[ebp]
 	add	eax, 128				; 00000080H
 	mov	BYTE PTR _d$2[ebp], al
 
-; 223  : 				tileindex = d;
+; 259  : 				tileindex = d;
 
 	mov	cl, BYTE PTR _d$2[ebp]
 	mov	BYTE PTR _tileindex$5[ebp], cl
 $LN1@RenderWind:
 
-; 224  : 			}
-; 225  : 			uint8_t* tile = &tiledata[(tileindex<<4)];
+; 260  : 			}
+; 261  : 			uint8_t* tile = &tiledata[(tileindex<<4)];
 
 	movzx	edx, BYTE PTR _tileindex$5[ebp]
 	shl	edx, 4
 	add	edx, DWORD PTR _tiledata$10[ebp]
 	mov	DWORD PTR _tile$1[ebp], edx
 
-; 226  : 
-; 227  : 			#define pixel(bit) ((tile[y<<1]>>bit)&0x1+((tile[(y<<1)+1]>>bit)<<1))
-; 228  : 
-; 229  : 			frame_buffer[((ly)<<8)+((i<<3)+0)] = colormap[bg_pal[pixel(7)]];
+; 262  : 
+; 263  : 			#define pixel(bit) ((tile[y<<1]>>bit)&0x1+((tile[(y<<1)+1]>>bit)<<1))
+; 264  : 
+; 265  : 			frame_buffer[((ly)<<8)+((i<<3)+0)] = colormap[bg_pal[pixel(7)]];
 
 	mov	eax, DWORD PTR _y$4[ebp]
 	mov	ecx, DWORD PTR _tile$1[ebp]
@@ -1518,18 +1911,18 @@ $LN1@RenderWind:
 	lea	ecx, DWORD PTR [eax+eax+1]
 	and	edx, ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+16]
+	movzx	ecx, BYTE PTR [eax+edx+20]
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+12]
+	movzx	eax, BYTE PTR [edx+16]
 	shl	eax, 8
 	mov	edx, DWORD PTR _i$8[ebp]
 	lea	eax, DWORD PTR [eax+edx*8]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [edx+4]
+	mov	edx, DWORD PTR [edx+8]
 	mov	ecx, DWORD PTR _colormap[ecx*4]
 	mov	DWORD PTR [edx+eax*4], ecx
 
-; 230  : 			frame_buffer[((ly)<<8)+((i<<3)+1)] = colormap[bg_pal[pixel(6)]];
+; 266  : 			frame_buffer[((ly)<<8)+((i<<3)+1)] = colormap[bg_pal[pixel(6)]];
 
 	mov	edx, DWORD PTR _y$4[ebp]
 	mov	eax, DWORD PTR _tile$1[ebp]
@@ -1542,18 +1935,18 @@ $LN1@RenderWind:
 	lea	eax, DWORD PTR [edx+edx+1]
 	and	ecx, eax
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+ecx+16]
+	movzx	eax, BYTE PTR [edx+ecx+20]
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+12]
+	movzx	edx, BYTE PTR [ecx+16]
 	shl	edx, 8
 	mov	ecx, DWORD PTR _i$8[ebp]
 	lea	edx, DWORD PTR [edx+ecx*8+1]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+4]
+	mov	ecx, DWORD PTR [ecx+8]
 	mov	eax, DWORD PTR _colormap[eax*4]
 	mov	DWORD PTR [ecx+edx*4], eax
 
-; 231  : 			frame_buffer[((ly)<<8)+((i<<3)+2)] = colormap[bg_pal[pixel(5)]];
+; 267  : 			frame_buffer[((ly)<<8)+((i<<3)+2)] = colormap[bg_pal[pixel(5)]];
 
 	mov	ecx, DWORD PTR _y$4[ebp]
 	mov	edx, DWORD PTR _tile$1[ebp]
@@ -1566,18 +1959,18 @@ $LN1@RenderWind:
 	lea	edx, DWORD PTR [ecx+ecx+1]
 	and	eax, edx
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+16]
+	movzx	edx, BYTE PTR [ecx+eax+20]
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+12]
+	movzx	ecx, BYTE PTR [eax+16]
 	shl	ecx, 8
 	mov	eax, DWORD PTR _i$8[ebp]
 	lea	ecx, DWORD PTR [ecx+eax*8+2]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [eax+4]
+	mov	eax, DWORD PTR [eax+8]
 	mov	edx, DWORD PTR _colormap[edx*4]
 	mov	DWORD PTR [eax+ecx*4], edx
 
-; 232  : 			frame_buffer[((ly)<<8)+((i<<3)+3)] = colormap[bg_pal[pixel(4)]];
+; 268  : 			frame_buffer[((ly)<<8)+((i<<3)+3)] = colormap[bg_pal[pixel(4)]];
 
 	mov	eax, DWORD PTR _y$4[ebp]
 	mov	ecx, DWORD PTR _tile$1[ebp]
@@ -1590,20 +1983,20 @@ $LN1@RenderWind:
 	lea	ecx, DWORD PTR [eax+eax+1]
 	and	edx, ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+16]
+	movzx	ecx, BYTE PTR [eax+edx+20]
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+12]
+	movzx	eax, BYTE PTR [edx+16]
 	shl	eax, 8
 	mov	edx, DWORD PTR _i$8[ebp]
 	lea	eax, DWORD PTR [eax+edx*8+3]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [edx+4]
+	mov	edx, DWORD PTR [edx+8]
 	mov	ecx, DWORD PTR _colormap[ecx*4]
 	mov	DWORD PTR [edx+eax*4], ecx
 
-; 233  : 			
-; 234  : 			
-; 235  : 			frame_buffer[((ly)<<8)+((i<<3)+4)] = colormap[bg_pal[pixel(3)]];
+; 269  : 			
+; 270  : 			
+; 271  : 			frame_buffer[((ly)<<8)+((i<<3)+4)] = colormap[bg_pal[pixel(3)]];
 
 	mov	edx, DWORD PTR _y$4[ebp]
 	mov	eax, DWORD PTR _tile$1[ebp]
@@ -1616,18 +2009,18 @@ $LN1@RenderWind:
 	lea	eax, DWORD PTR [edx+edx+1]
 	and	ecx, eax
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+ecx+16]
+	movzx	eax, BYTE PTR [edx+ecx+20]
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+12]
+	movzx	edx, BYTE PTR [ecx+16]
 	shl	edx, 8
 	mov	ecx, DWORD PTR _i$8[ebp]
 	lea	edx, DWORD PTR [edx+ecx*8+4]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+4]
+	mov	ecx, DWORD PTR [ecx+8]
 	mov	eax, DWORD PTR _colormap[eax*4]
 	mov	DWORD PTR [ecx+edx*4], eax
 
-; 236  : 			frame_buffer[((ly)<<8)+((i<<3)+5)] = colormap[bg_pal[pixel(2)]];
+; 272  : 			frame_buffer[((ly)<<8)+((i<<3)+5)] = colormap[bg_pal[pixel(2)]];
 
 	mov	ecx, DWORD PTR _y$4[ebp]
 	mov	edx, DWORD PTR _tile$1[ebp]
@@ -1640,18 +2033,18 @@ $LN1@RenderWind:
 	lea	edx, DWORD PTR [ecx+ecx+1]
 	and	eax, edx
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+16]
+	movzx	edx, BYTE PTR [ecx+eax+20]
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+12]
+	movzx	ecx, BYTE PTR [eax+16]
 	shl	ecx, 8
 	mov	eax, DWORD PTR _i$8[ebp]
 	lea	ecx, DWORD PTR [ecx+eax*8+5]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [eax+4]
+	mov	eax, DWORD PTR [eax+8]
 	mov	edx, DWORD PTR _colormap[edx*4]
 	mov	DWORD PTR [eax+ecx*4], edx
 
-; 237  : 			frame_buffer[((ly)<<8)+((i<<3)+6)] = colormap[bg_pal[pixel(1)]];
+; 273  : 			frame_buffer[((ly)<<8)+((i<<3)+6)] = colormap[bg_pal[pixel(1)]];
 
 	mov	eax, DWORD PTR _y$4[ebp]
 	mov	ecx, DWORD PTR _tile$1[ebp]
@@ -1664,18 +2057,18 @@ $LN1@RenderWind:
 	lea	ecx, DWORD PTR [eax+eax+1]
 	and	edx, ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+16]
+	movzx	ecx, BYTE PTR [eax+edx+20]
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+12]
+	movzx	eax, BYTE PTR [edx+16]
 	shl	eax, 8
 	mov	edx, DWORD PTR _i$8[ebp]
 	lea	eax, DWORD PTR [eax+edx*8+6]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [edx+4]
+	mov	edx, DWORD PTR [edx+8]
 	mov	ecx, DWORD PTR _colormap[ecx*4]
 	mov	DWORD PTR [edx+eax*4], ecx
 
-; 238  : 			frame_buffer[((ly)<<8)+((i<<3)+7)] = colormap[bg_pal[pixel(0)]];
+; 274  : 			frame_buffer[((ly)<<8)+((i<<3)+7)] = colormap[bg_pal[pixel(0)]];
 
 	mov	edx, DWORD PTR _y$4[ebp]
 	mov	eax, DWORD PTR _tile$1[ebp]
@@ -1688,26 +2081,26 @@ $LN1@RenderWind:
 	lea	eax, DWORD PTR [edx+edx+1]
 	and	ecx, eax
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+ecx+16]
+	movzx	eax, BYTE PTR [edx+ecx+20]
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+12]
+	movzx	edx, BYTE PTR [ecx+16]
 	shl	edx, 8
 	mov	ecx, DWORD PTR _i$8[ebp]
 	lea	edx, DWORD PTR [edx+ecx*8+7]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+4]
+	mov	ecx, DWORD PTR [ecx+8]
 	mov	eax, DWORD PTR _colormap[eax*4]
 	mov	DWORD PTR [ecx+edx*4], eax
 
-; 239  : 
-; 240  : 			#undef pixel
-; 241  : 		}
+; 275  : 
+; 276  : 			#undef pixel
+; 277  : 		}
 
 	jmp	$LN3@RenderWind
 $LN6@RenderWind:
 
-; 242  : 	}
-; 243  : }
+; 278  : 	}
+; 279  : }
 
 	pop	edi
 	add	esp, 52					; 00000034H
@@ -1736,7 +2129,7 @@ _this$ = -4						; size = 4
 ?RenderBGLine@LCDDriver@gb@emulation@@QAEXXZ PROC	; emulation::gb::LCDDriver::RenderBGLine
 ; _this$ = ecx
 
-; 173  : void LCDDriver::RenderBGLine() {
+; 209  : void LCDDriver::RenderBGLine() {
 
 	push	ebp
 	mov	ebp, esp
@@ -1750,52 +2143,52 @@ _this$ = -4						; size = 4
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 174  : 	auto mapoffset = ((ly+scroll_y)&0xFF) >> 3;
+; 210  : 	auto mapoffset = ((ly+scroll_y)&0xFF) >> 3;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+12]
+	movzx	ecx, BYTE PTR [eax+16]
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+11]
+	movzx	eax, BYTE PTR [edx+15]
 	add	ecx, eax
 	and	ecx, 255				; 000000ffH
 	sar	ecx, 3
 	mov	DWORD PTR _mapoffset$[ebp], ecx
 
-; 175  : 	auto lineoffset = ((scroll_x>>3))&0x1F;
+; 211  : 	auto lineoffset = ((scroll_x>>3))&0x1F;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+10]
+	movzx	edx, BYTE PTR [ecx+14]
 	sar	edx, 3
 	and	edx, 31					; 0000001fH
 	mov	DWORD PTR _lineoffset$[ebp], edx
 
-; 176  : 	auto y = (ly + scroll_y) & 7;
+; 212  : 	auto y = (ly + scroll_y) & 7;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+12]
+	movzx	ecx, BYTE PTR [eax+16]
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+11]
+	movzx	eax, BYTE PTR [edx+15]
 	add	ecx, eax
 	and	ecx, 7
 	mov	DWORD PTR _y$[ebp], ecx
 
-; 177  : 	auto x = scroll_x & 7;
+; 213  : 	auto x = scroll_x & 7;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+10]
+	movzx	edx, BYTE PTR [ecx+14]
 	and	edx, 7
 	mov	DWORD PTR _x$[ebp], edx
 
-; 178  : 	auto readTile = [&](){
-; 179  : 		 uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
-; 180  : 			auto tileindex = bgtilemap[(mapoffset<<5) + lineoffset];
-; 181  : 			if(lcdc_.tile_data == 0) {
-; 182  : 				int8_t d = tileindex;
-; 183  : 				d+=128;
-; 184  : 				tileindex = d;
-; 185  : 			}
-; 186  : 			return tileindex;
-; 187  : 	};
+; 214  : 	auto readTile = [&](){
+; 215  : 		  uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
+; 216  : 			auto tileindex = bgtilemap[(mapoffset<<5) + lineoffset];
+; 217  : 			if(lcdc_.tile_data == 0) {
+; 218  : 				int8_t d = tileindex;
+; 219  : 				d+=128;
+; 220  : 				tileindex = d;
+; 221  : 			}
+; 222  : 			return tileindex;
+; 223  : 	};
 
 	lea	eax, DWORD PTR _lineoffset$[ebp]
 	push	eax
@@ -1806,17 +2199,17 @@ _this$ = -4						; size = 4
 	lea	ecx, DWORD PTR _readTile$[ebp]
 	call	??0<lambda_97bc8e9b09435192667e87dfa941ef5a>@@QAE@PAVLCDDriver@gb@emulation@@AAH1@Z ; <lambda_97bc8e9b09435192667e87dfa941ef5a>::<lambda_97bc8e9b09435192667e87dfa941ef5a>
 
-; 188  : 
-; 189  : 	if (lcdc_.bgdisplay == 0) {
+; 224  : 
+; 225  : 	if (lcdc_.bgdisplay == 0) {
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+8]
+	mov	cl, BYTE PTR [eax+12]
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
 	jne	SHORT $LN9@RenderBGLi
 
-; 190  : 		for (int i=0;i<256;++i) {
+; 226  : 		for (int i=0;i<256;++i) {
 
 	mov	DWORD PTR _i$5[ebp], 0
 	jmp	SHORT $LN8@RenderBGLi
@@ -1828,31 +2221,31 @@ $LN8@RenderBGLi:
 	cmp	DWORD PTR _i$5[ebp], 256		; 00000100H
 	jge	SHORT $LN6@RenderBGLi
 
-; 191  : 			frame_buffer[((ly)<<8)+(i)] = colormap[0];
+; 227  : 			frame_buffer[((ly)<<8)+(i)] = colormap[0];
 
 	mov	ecx, 4
 	imul	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+12]
+	movzx	eax, BYTE PTR [edx+16]
 	shl	eax, 8
 	add	eax, DWORD PTR _i$5[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [edx+4]
+	mov	edx, DWORD PTR [edx+8]
 	mov	ecx, DWORD PTR _colormap[ecx]
 	mov	DWORD PTR [edx+eax*4], ecx
 
-; 192  : 		}
+; 228  : 		}
 
 	jmp	SHORT $LN7@RenderBGLi
 $LN6@RenderBGLi:
 	jmp	$LN10@RenderBGLi
 $LN9@RenderBGLi:
 
-; 193  : 	} else {
-; 194  : 		uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
+; 229  : 	} else {
+; 230  : 		uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+8]
+	mov	al, BYTE PTR [edx+12]
 	shr	al, 4
 	and	al, 1
 	movzx	ecx, al
@@ -1864,14 +2257,14 @@ $LN12@RenderBGLi:
 	mov	DWORD PTR tv153[ebp], 0
 $LN13@RenderBGLi:
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx]
+	mov	ecx, DWORD PTR [edx+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?vram@Memory@gb@emulation@@QAEPAEXZ	; emulation::gb::Memory::vram
 	add	eax, DWORD PTR tv153[ebp]
 	mov	DWORD PTR _tiledata$4[ebp], eax
 
-; 195  : 		for (int i=0;i<256;++i) {
+; 231  : 		for (int i=0;i<256;++i) {
 
 	mov	DWORD PTR _i$3[ebp], 0
 	jmp	SHORT $LN4@RenderBGLi
@@ -1883,21 +2276,21 @@ $LN4@RenderBGLi:
 	cmp	DWORD PTR _i$3[ebp], 256		; 00000100H
 	jge	$LN10@RenderBGLi
 
-; 196  : 			auto tileindex = readTile();
+; 232  : 			auto tileindex = readTile();
 
 	lea	ecx, DWORD PTR _readTile$[ebp]
 	call	??R<lambda_97bc8e9b09435192667e87dfa941ef5a>@@QBEEXZ ; <lambda_97bc8e9b09435192667e87dfa941ef5a>::operator()
 	mov	BYTE PTR _tileindex$2[ebp], al
 
-; 197  : 			uint8_t* tile = &tiledata[(tileindex<<4)];
+; 233  : 			uint8_t* tile = &tiledata[(tileindex<<4)];
 
 	movzx	ecx, BYTE PTR _tileindex$2[ebp]
 	shl	ecx, 4
 	add	ecx, DWORD PTR _tiledata$4[ebp]
 	mov	DWORD PTR _tile$1[ebp], ecx
 
-; 198  : 			#define pixel(bit) ((tile[y<<1]>>(bit))&0x1+((tile[(y<<1)+1]>>(bit))<<1))
-; 199  : 			frame_buffer[((ly)<<8)+i] = colormap[bg_pal[pixel((7-x))]];
+; 234  : 			#define pixel(bit) ((tile[y<<1]>>(bit))&0x1+((tile[(y<<1)+1]>>(bit))<<1))
+; 235  : 			frame_buffer[((ly)<<8)+i] = colormap[bg_pal[pixel((7-x))]];
 
 	mov	edx, DWORD PTR _y$[ebp]
 	mov	eax, DWORD PTR _tile$1[ebp]
@@ -1914,33 +2307,33 @@ $LN4@RenderBGLi:
 	lea	ecx, DWORD PTR [eax+eax+1]
 	and	edx, ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+16]
+	movzx	ecx, BYTE PTR [eax+edx+20]
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+12]
+	movzx	eax, BYTE PTR [edx+16]
 	shl	eax, 8
 	add	eax, DWORD PTR _i$3[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [edx+4]
+	mov	edx, DWORD PTR [edx+8]
 	mov	ecx, DWORD PTR _colormap[ecx*4]
 	mov	DWORD PTR [edx+eax*4], ecx
 
-; 200  : 			#undef pixel
-; 201  : 			++x;
+; 236  : 			#undef pixel
+; 237  : 			++x;
 
 	mov	edx, DWORD PTR _x$[ebp]
 	add	edx, 1
 	mov	DWORD PTR _x$[ebp], edx
 
-; 202  : 			if (x==8) {
+; 238  : 			if (x==8) {
 
 	cmp	DWORD PTR _x$[ebp], 8
 	jne	SHORT $LN1@RenderBGLi
 
-; 203  : 				x = 0;
+; 239  : 				x = 0;
 
 	mov	DWORD PTR _x$[ebp], 0
 
-; 204  : 				lineoffset = (lineoffset+1)&0x1F;
+; 240  : 				lineoffset = (lineoffset+1)&0x1F;
 
 	mov	eax, DWORD PTR _lineoffset$[ebp]
 	add	eax, 1
@@ -1948,14 +2341,14 @@ $LN4@RenderBGLi:
 	mov	DWORD PTR _lineoffset$[ebp], eax
 $LN1@RenderBGLi:
 
-; 205  : 			}
-; 206  : 		}
+; 241  : 			}
+; 242  : 		}
 
 	jmp	$LN3@RenderBGLi
 $LN10@RenderBGLi:
 
-; 207  : 	}
-; 208  : }
+; 243  : 	}
+; 244  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -1971,7 +2364,6 @@ $LN10@RenderBGLi:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-	npad	1
 $LN18@RenderBGLi:
 	DD	3
 	DD	$LN17@RenderBGLi
@@ -2034,7 +2426,7 @@ _data$ = 12						; size = 1
 ?Write@LCDDriver@gb@emulation@@QAEXGE@Z PROC		; emulation::gb::LCDDriver::Write
 ; _this$ = ecx
 
-; 114  : void LCDDriver::Write(uint16_t address, uint8_t data) {
+; 115  : void LCDDriver::Write(uint16_t address, uint8_t data) {
 
 	push	ebp
 	mov	ebp, esp
@@ -2048,7 +2440,7 @@ _data$ = 12						; size = 1
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 115  :   switch (address) {
+; 116  :   switch (address) {
 
 	movzx	eax, WORD PTR _address$[ebp]
 	mov	DWORD PTR tv65[ebp], eax
@@ -2061,103 +2453,103 @@ _data$ = 12						; size = 1
 	jmp	DWORD PTR $LN20@Write[edx*4]
 $LN15@Write:
 
-; 116  :     case 0xFF40:
-; 117  :       lcdc_.raw = data;
+; 117  :     case 0xFF40:
+; 118  :       lcdc_.raw = data;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	cl, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [eax+8], cl
+	mov	BYTE PTR [eax+12], cl
 
-; 118  :       break;
+; 119  :       break;
 
 	jmp	$LN18@Write
 $LN14@Write:
 
-; 119  :     case 0xFF41:
-; 120  :       stat_.raw = (data & ~0x7) | (stat_.raw&0x7);
+; 120  :     case 0xFF41:
+; 121  :       stat_.raw = (data & ~0x7) | (stat_.raw&0x7);
 
 	movzx	edx, BYTE PTR _data$[ebp]
 	and	edx, -8					; fffffff8H
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+9]
+	movzx	ecx, BYTE PTR [eax+13]
 	and	ecx, 7
 	or	edx, ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+9], dl
+	mov	BYTE PTR [eax+13], dl
 
-; 121  :       break;
+; 122  :       break;
 
 	jmp	$LN18@Write
 $LN13@Write:
 
-; 122  :     case 0xFF42:
-; 123  :       scroll_y = data;
+; 123  :     case 0xFF42:
+; 124  :       scroll_y = data;
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	dl, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [ecx+11], dl
+	mov	BYTE PTR [ecx+15], dl
 
-; 124  :       break;
+; 125  :       break;
 
 	jmp	$LN18@Write
 $LN12@Write:
 
-; 125  :     case 0xFF43:
-; 126  :       scroll_x = data;
+; 126  :     case 0xFF43:
+; 127  :       scroll_x = data;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	cl, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [eax+10], cl
-
-; 127  :       break;
-
-	jmp	$LN18@Write
+	mov	BYTE PTR [eax+14], cl
 
 ; 128  :       break;
 
 	jmp	$LN18@Write
+
+; 129  :       break;
+
+	jmp	$LN18@Write
 $LN11@Write:
 
-; 129  :     case 0xFF44:
-; 130  :       ly = 0;
+; 130  :     case 0xFF44:
+; 131  :       ly = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+12], 0
+	mov	BYTE PTR [edx+16], 0
 
-; 131  :       break;
+; 132  :       break;
 
 	jmp	$LN18@Write
 $LN10@Write:
 
-; 132  :     case 0xFF45:
-; 133  :       lyc = data;
+; 133  :     case 0xFF45:
+; 134  :       lyc = data;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	cl, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [eax+13], cl
+	mov	BYTE PTR [eax+17], cl
 
-; 134  :       break;
+; 135  :       break;
 
 	jmp	$LN18@Write
 $LN9@Write:
 
-; 135  :     case 0xFF46: {
-; 136  :       uint16_t srcaddr = data<<8;
+; 136  :     case 0xFF46: {
+; 137  :       uint16_t srcaddr = data<<8;
 
 	movzx	edx, BYTE PTR _data$[ebp]
 	shl	edx, 8
 	mov	WORD PTR _srcaddr$3[ebp], dx
 
-; 137  :       auto dest = emu_->memory()->oam();
+; 138  :       auto dest = emu_->memory()->oam();
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?oam@Memory@gb@emulation@@QAEPAEXZ	; emulation::gb::Memory::oam
 	mov	DWORD PTR _dest$2[ebp], eax
 
-; 138  :       for (int i=0;i<160;++i)
+; 139  :       for (int i=0;i<160;++i)
 
 	mov	DWORD PTR _i$1[ebp], 0
 	jmp	SHORT $LN8@Write
@@ -2169,7 +2561,7 @@ $LN8@Write:
 	cmp	DWORD PTR _i$1[ebp], 160		; 000000a0H
 	jge	SHORT $LN6@Write
 
-; 139  :         dest[i] = emu_->memory()->Read8(srcaddr++);
+; 140  :         dest[i] = emu_->memory()->Read8(srcaddr++);
 
 	mov	dx, WORD PTR _srcaddr$3[ebp]
 	mov	WORD PTR tv140[ebp], dx
@@ -2179,7 +2571,7 @@ $LN8@Write:
 	movzx	ecx, WORD PTR tv140[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx]
+	mov	ecx, DWORD PTR [edx+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
@@ -2189,29 +2581,29 @@ $LN8@Write:
 	jmp	SHORT $LN7@Write
 $LN6@Write:
 
-; 140  :       break;
+; 141  :       break;
 
 	jmp	$LN18@Write
 $LN5@Write:
 
-; 141  :     }
-; 142  :     case 0xFF47:
-; 143  :       bg_pallete_data = data;
+; 142  :     }
+; 143  :     case 0xFF47:
+; 144  :       bg_pallete_data = data;
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	al, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [edx+28], al
+	mov	BYTE PTR [edx+32], al
 
-; 144  :       bg_pal[0] = data&0x3;
+; 145  :       bg_pal[0] = data&0x3;
 
 	movzx	ecx, BYTE PTR _data$[ebp]
 	and	ecx, 3
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+16], cl
+	mov	BYTE PTR [eax+edx+20], cl
 
-; 145  :       bg_pal[1] = (data>>2)&0x3;
+; 146  :       bg_pal[1] = (data>>2)&0x3;
 
 	movzx	ecx, BYTE PTR _data$[ebp]
 	sar	ecx, 2
@@ -2219,9 +2611,9 @@ $LN5@Write:
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+16], cl
+	mov	BYTE PTR [eax+edx+20], cl
 
-; 146  :       bg_pal[2] = (data>>4)&0x3;
+; 147  :       bg_pal[2] = (data>>4)&0x3;
 
 	movzx	ecx, BYTE PTR _data$[ebp]
 	sar	ecx, 4
@@ -2229,9 +2621,9 @@ $LN5@Write:
 	mov	edx, 1
 	shl	edx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+16], cl
+	mov	BYTE PTR [eax+edx+20], cl
 
-; 147  :       bg_pal[3] = (data>>6)&0x3;
+; 148  :       bg_pal[3] = (data>>6)&0x3;
 
 	movzx	ecx, BYTE PTR _data$[ebp]
 	sar	ecx, 6
@@ -2239,30 +2631,30 @@ $LN5@Write:
 	mov	edx, 1
 	imul	edx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+16], cl
+	mov	BYTE PTR [eax+edx+20], cl
 
-; 148  :       break;
+; 149  :       break;
 
 	jmp	$LN18@Write
 $LN4@Write:
 
-; 149  :     case 0xFF48:
-; 150  :       obj_pallete1_data = data;
+; 150  :     case 0xFF48:
+; 151  :       obj_pallete1_data = data;
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	dl, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [ecx+29], dl
+	mov	BYTE PTR [ecx+33], dl
 
-; 151  :       obj_pal1[0] = data&0x3;
+; 152  :       obj_pal1[0] = data&0x3;
 
 	movzx	eax, BYTE PTR _data$[ebp]
 	and	eax, 3
 	mov	ecx, 1
 	imul	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+20], al
+	mov	BYTE PTR [edx+ecx+24], al
 
-; 152  :       obj_pal1[1] = (data>>2)&0x3;
+; 153  :       obj_pal1[1] = (data>>2)&0x3;
 
 	movzx	eax, BYTE PTR _data$[ebp]
 	sar	eax, 2
@@ -2270,9 +2662,9 @@ $LN4@Write:
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+20], al
+	mov	BYTE PTR [edx+ecx+24], al
 
-; 153  :       obj_pal1[2] = (data>>4)&0x3;
+; 154  :       obj_pal1[2] = (data>>4)&0x3;
 
 	movzx	eax, BYTE PTR _data$[ebp]
 	sar	eax, 4
@@ -2280,9 +2672,9 @@ $LN4@Write:
 	mov	ecx, 1
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+20], al
+	mov	BYTE PTR [edx+ecx+24], al
 
-; 154  :       obj_pal1[3] = (data>>6)&0x3;
+; 155  :       obj_pal1[3] = (data>>6)&0x3;
 
 	movzx	eax, BYTE PTR _data$[ebp]
 	sar	eax, 6
@@ -2290,30 +2682,30 @@ $LN4@Write:
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+20], al
+	mov	BYTE PTR [edx+ecx+24], al
 
-; 155  :       break;
+; 156  :       break;
 
 	jmp	SHORT $LN18@Write
 $LN3@Write:
 
-; 156  :     case 0xFF49:
-; 157  :       obj_pallete2_data = data;
+; 157  :     case 0xFF49:
+; 158  :       obj_pallete2_data = data;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	cl, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [eax+30], cl
+	mov	BYTE PTR [eax+34], cl
 
-; 158  :       obj_pal2[0] = data&0x3;
+; 159  :       obj_pal2[0] = data&0x3;
 
 	movzx	edx, BYTE PTR _data$[ebp]
 	and	edx, 3
 	mov	eax, 1
 	imul	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+eax+24], dl
+	mov	BYTE PTR [ecx+eax+28], dl
 
-; 159  :       obj_pal2[1] = (data>>2)&0x3;
+; 160  :       obj_pal2[1] = (data>>2)&0x3;
 
 	movzx	edx, BYTE PTR _data$[ebp]
 	sar	edx, 2
@@ -2321,9 +2713,9 @@ $LN3@Write:
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+eax+24], dl
+	mov	BYTE PTR [ecx+eax+28], dl
 
-; 160  :       obj_pal2[2] = (data>>4)&0x3;
+; 161  :       obj_pal2[2] = (data>>4)&0x3;
 
 	movzx	edx, BYTE PTR _data$[ebp]
 	sar	edx, 4
@@ -2331,9 +2723,9 @@ $LN3@Write:
 	mov	eax, 1
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+eax+24], dl
+	mov	BYTE PTR [ecx+eax+28], dl
 
-; 161  :       obj_pal2[3] = (data>>6)&0x3;
+; 162  :       obj_pal2[3] = (data>>6)&0x3;
 
 	movzx	edx, BYTE PTR _data$[ebp]
 	sar	edx, 6
@@ -2341,36 +2733,36 @@ $LN3@Write:
 	mov	eax, 1
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+eax+24], dl
+	mov	BYTE PTR [ecx+eax+28], dl
 
-; 162  :       break;
+; 163  :       break;
 
 	jmp	SHORT $LN18@Write
 $LN2@Write:
 
-; 163  :     case 0xFF4A:
-; 164  :       wy = data;
+; 164  :     case 0xFF4A:
+; 165  :       wy = data;
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	al, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [edx+15], al
+	mov	BYTE PTR [edx+19], al
 
-; 165  :       break;
+; 166  :       break;
 
 	jmp	SHORT $LN18@Write
 $LN1@Write:
 
-; 166  :     case 0xFF4B:
-; 167  :       wx = data;
+; 167  :     case 0xFF4B:
+; 168  :       wx = data;
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	dl, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [ecx+14], dl
+	mov	BYTE PTR [ecx+18], dl
 $LN18@Write:
 
-; 168  :       break;
-; 169  :   }
-; 170  : }
+; 169  :       break;
+; 170  :   }
+; 171  : }
 
 	add	esp, 24					; 00000018H
 	cmp	ebp, esp
@@ -2378,7 +2770,7 @@ $LN18@Write:
 	mov	esp, ebp
 	pop	ebp
 	ret	8
-	npad	3
+	npad	1
 $LN20@Write:
 	DD	$LN15@Write
 	DD	$LN14@Write
@@ -2403,7 +2795,7 @@ _address$ = 8						; size = 2
 ?Read@LCDDriver@gb@emulation@@QAEEG@Z PROC		; emulation::gb::LCDDriver::Read
 ; _this$ = ecx
 
-; 85   : uint8_t LCDDriver::Read(uint16_t address) {
+; 86   : uint8_t LCDDriver::Read(uint16_t address) {
 
 	push	ebp
 	mov	ebp, esp
@@ -2412,8 +2804,8 @@ _address$ = 8						; size = 2
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 86   : 
-; 87   :   switch (address) {
+; 87   : 
+; 88   :   switch (address) {
 
 	movzx	eax, WORD PTR _address$[ebp]
 	mov	DWORD PTR tv65[ebp], eax
@@ -2426,101 +2818,101 @@ _address$ = 8						; size = 2
 	jmp	DWORD PTR $LN16@Read[edx*4]
 $LN11@Read:
 
-; 88   :     case 0xFF40:
-; 89   :       return lcdc_.raw;
+; 89   :     case 0xFF40:
+; 90   :       return lcdc_.raw;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [eax+8]
+	mov	al, BYTE PTR [eax+12]
 	jmp	SHORT $LN14@Read
 $LN10@Read:
 
-; 90   :     case 0xFF41:
-; 91   :       return stat_.raw;
+; 91   :     case 0xFF41:
+; 92   :       return stat_.raw;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [ecx+9]
+	mov	al, BYTE PTR [ecx+13]
 	jmp	SHORT $LN14@Read
 $LN9@Read:
 
-; 92   :     case 0xFF42:
-; 93   :       return scroll_y;
+; 93   :     case 0xFF42:
+; 94   :       return scroll_y;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+11]
+	mov	al, BYTE PTR [edx+15]
 	jmp	SHORT $LN14@Read
 $LN8@Read:
 
-; 94   :     case 0xFF43:
-; 95   :       return scroll_x;
+; 95   :     case 0xFF43:
+; 96   :       return scroll_x;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [eax+10]
+	mov	al, BYTE PTR [eax+14]
 	jmp	SHORT $LN14@Read
 $LN7@Read:
 
-; 96   :     case 0xFF44:
-; 97   :       return ly;
+; 97   :     case 0xFF44:
+; 98   :       return ly;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [ecx+12]
+	mov	al, BYTE PTR [ecx+16]
 	jmp	SHORT $LN14@Read
 $LN6@Read:
 
-; 98   :     case 0xFF45:
-; 99   :       return lyc;
+; 99   :     case 0xFF45:
+; 100  :       return lyc;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+13]
+	mov	al, BYTE PTR [edx+17]
 	jmp	SHORT $LN14@Read
 $LN5@Read:
 
-; 100  :     case 0xFF47:
-; 101  :       return bg_pallete_data;
+; 101  :     case 0xFF47:
+; 102  :       return bg_pallete_data;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [eax+28]
+	mov	al, BYTE PTR [eax+32]
 	jmp	SHORT $LN14@Read
 $LN4@Read:
 
-; 102  :     case 0xFF48:
-; 103  :       return obj_pallete1_data;
+; 103  :     case 0xFF48:
+; 104  :       return obj_pallete1_data;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [ecx+29]
+	mov	al, BYTE PTR [ecx+33]
 	jmp	SHORT $LN14@Read
 $LN3@Read:
 
-; 104  :     case 0xFF49:
-; 105  :       return obj_pallete2_data;
+; 105  :     case 0xFF49:
+; 106  :       return obj_pallete2_data;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+30]
+	mov	al, BYTE PTR [edx+34]
 	jmp	SHORT $LN14@Read
 $LN2@Read:
 
-; 106  :     case 0xFF4A:
-; 107  :       return wy;
+; 107  :     case 0xFF4A:
+; 108  :       return wy;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [eax+15]
+	mov	al, BYTE PTR [eax+19]
 	jmp	SHORT $LN14@Read
 $LN1@Read:
 
-; 108  :     case 0xFF4B:
-; 109  :       return wx;
+; 109  :     case 0xFF4B:
+; 110  :       return wx;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [ecx+14]
+	mov	al, BYTE PTR [ecx+18]
 	jmp	SHORT $LN14@Read
 $LN12@Read:
 
-; 110  :   }
-; 111  : 	return 0;
+; 111  :   }
+; 112  : 	return 0;
 
 	xor	al, al
 $LN14@Read:
 
-; 112  : }
+; 113  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -2544,12 +2936,12 @@ _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\lcd_driver.cpp
 _TEXT	SEGMENT
-tv247 = -36						; size = 4
-tv241 = -32						; size = 4
+tv250 = -36						; size = 4
+tv244 = -32						; size = 4
 tv156 = -28						; size = 4
-tv224 = -24						; size = 4
-tv216 = -20						; size = 4
-tv208 = -16						; size = 4
+tv227 = -24						; size = 4
+tv219 = -20						; size = 4
+tv211 = -16						; size = 4
 tv82 = -12						; size = 4
 tv71 = -5						; size = 1
 _this$ = -4						; size = 4
@@ -2577,9 +2969,9 @@ _dt$ = 8						; size = 8
 ; 29   : 	stat_.coincidence = lyc == ly;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+13]
+	movzx	ecx, BYTE PTR [eax+17]
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+12]
+	movzx	eax, BYTE PTR [edx+16]
 	cmp	ecx, eax
 	jne	SHORT $LN16@Step
 	mov	BYTE PTR tv71[ebp], 1
@@ -2591,47 +2983,48 @@ $LN17@Step:
 	and	cl, 1
 	shl	cl, 2
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+9]
+	mov	al, BYTE PTR [edx+13]
 	and	al, 251					; 000000fbH
 	or	al, cl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+9], al
+	mov	BYTE PTR [ecx+13], al
 
 ; 30   :   
 ; 31   : 
 ; 32   : 	switch (stat_.mode) {
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+9]
+	mov	al, BYTE PTR [edx+13]
 	and	al, 3
-	movzx	ecx, al
-	mov	DWORD PTR tv82[ebp], ecx
-	cmp	DWORD PTR tv82[ebp], 3
-	ja	$LN12@Step
-	mov	edx, DWORD PTR tv82[ebp]
-	jmp	DWORD PTR $LN18@Step[edx*4]
+	mov	BYTE PTR tv82[ebp], al
+	je	SHORT $LN11@Step
+	cmp	BYTE PTR tv82[ebp], 2
+	je	SHORT $LN9@Step
+	cmp	BYTE PTR tv82[ebp], 3
+	je	SHORT $LN7@Step
+	jmp	$LN12@Step
 $LN11@Step:
 
 ; 33   : 		case 0:
 ; 34   : 			if (counter2==204)
 
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR tv208[ebp], eax
-	mov	ecx, DWORD PTR tv208[ebp]
-	cmp	DWORD PTR [ecx+40], 204			; 000000ccH
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR tv211[ebp], ecx
+	mov	edx, DWORD PTR tv211[ebp]
+	cmp	DWORD PTR [edx+48], 204			; 000000ccH
 	jne	SHORT $LN10@Step
-	mov	edx, DWORD PTR tv208[ebp]
-	cmp	DWORD PTR [edx+44], 0
+	mov	eax, DWORD PTR tv211[ebp]
+	cmp	DWORD PTR [eax+52], 0
 	jne	SHORT $LN10@Step
 
 ; 35   : 				stat_.mode = 2;
 
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [ecx+13]
+	and	dl, 252					; 000000fcH
+	or	dl, 2
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+9]
-	and	cl, 252					; 000000fcH
-	or	cl, 2
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+9], cl
+	mov	BYTE PTR [eax+13], dl
 $LN10@Step:
 
 ; 36   : 			break;
@@ -2642,22 +3035,22 @@ $LN9@Step:
 ; 37   : 		case 2:
 ; 38   : 			if (counter2==284)
 
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR tv216[ebp], eax
-	mov	ecx, DWORD PTR tv216[ebp]
-	cmp	DWORD PTR [ecx+40], 284			; 0000011cH
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR tv219[ebp], ecx
+	mov	edx, DWORD PTR tv219[ebp]
+	cmp	DWORD PTR [edx+48], 284			; 0000011cH
 	jne	SHORT $LN8@Step
-	mov	edx, DWORD PTR tv216[ebp]
-	cmp	DWORD PTR [edx+44], 0
+	mov	eax, DWORD PTR tv219[ebp]
+	cmp	DWORD PTR [eax+52], 0
 	jne	SHORT $LN8@Step
 
 ; 39   : 				stat_.mode = 3;
 
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [ecx+13]
+	or	dl, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+9]
-	or	cl, 3
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+9], cl
+	mov	BYTE PTR [eax+13], dl
 $LN8@Step:
 
 ; 40   : 			break;
@@ -2668,14 +3061,14 @@ $LN7@Step:
 ; 41   : 		case 3:
 ; 42   : 		  if (counter2 == 456) {
 
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR tv224[ebp], eax
-	mov	ecx, DWORD PTR tv224[ebp]
-	cmp	DWORD PTR [ecx+40], 456			; 000001c8H
-	jne	SHORT $LN6@Step
-	mov	edx, DWORD PTR tv224[ebp]
-	cmp	DWORD PTR [edx+44], 0
-	jne	SHORT $LN6@Step
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR tv227[ebp], ecx
+	mov	edx, DWORD PTR tv227[ebp]
+	cmp	DWORD PTR [edx+48], 456			; 000001c8H
+	jne	SHORT $LN12@Step
+	mov	eax, DWORD PTR tv227[ebp]
+	cmp	DWORD PTR [eax+52], 0
+	jne	SHORT $LN12@Step
 
 ; 43   : 	  		RenderLine();
 
@@ -2684,172 +3077,169 @@ $LN7@Step:
 
 ; 44   : 				stat_.mode = 0;
 
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [ecx+13]
+	and	dl, 252					; 000000fcH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+9]
-	and	cl, 252					; 000000fcH
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+9], cl
+	mov	BYTE PTR [eax+13], dl
 
 ; 45   : 				if (ly == 143) 
 
-	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+12]
-	cmp	ecx, 143				; 0000008fH
-	jne	SHORT $LN6@Step
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+16]
+	cmp	edx, 143				; 0000008fH
+	jne	SHORT $LN5@Step
 
 ; 46   : 					stat_.mode = 1;//vblank period
 
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+13]
+	and	cl, 252					; 000000fcH
+	or	cl, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+9]
-	and	al, 252					; 000000fcH
-	or	al, 1
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+9], al
-$LN6@Step:
+	mov	BYTE PTR [edx+13], cl
+$LN5@Step:
 
-; 47   : 			}
-; 48   : 			break;
+; 47   : 					emu_->memory()->interrupt_flag() |= 1;
 
-	jmp	SHORT $LN12@Step
-$LN4@Step:
-
-; 49   : 		case 1:
-; 50   : 			emu_->memory()->interrupt_flag() |= 1;
-
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ ; emulation::gb::Memory::interrupt_flag
 	mov	DWORD PTR tv156[ebp], eax
+	mov	ecx, DWORD PTR tv156[ebp]
+	movzx	edx, BYTE PTR [ecx]
+	or	edx, 1
 	mov	eax, DWORD PTR tv156[ebp]
-	movzx	ecx, BYTE PTR [eax]
-	or	ecx, 1
-	mov	edx, DWORD PTR tv156[ebp]
-	mov	BYTE PTR [edx], cl
+	mov	BYTE PTR [eax], dl
 $LN12@Step:
 
-; 51   : 			break;
-; 52   : 	}
-; 53   : 
-; 54   : 	
-; 55   :   if (counter2 == 456) {
-
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR tv241[ebp], eax
-	mov	ecx, DWORD PTR tv241[ebp]
-	cmp	DWORD PTR [ecx+40], 456			; 000001c8H
-	jne	$LN3@Step
-	mov	edx, DWORD PTR tv241[ebp]
-	cmp	DWORD PTR [edx+44], 0
-	jne	$LN3@Step
-
-; 56   : 		if (ly == 153 && counter2 == 456) {
-
-	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+12]
-	cmp	ecx, 153				; 00000099H
-	jne	SHORT $LN2@Step
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR tv247[ebp], edx
-	mov	eax, DWORD PTR tv247[ebp]
-	cmp	DWORD PTR [eax+40], 456			; 000001c8H
-	jne	SHORT $LN2@Step
-	mov	ecx, DWORD PTR tv247[ebp]
-	cmp	DWORD PTR [ecx+44], 0
-	jne	SHORT $LN2@Step
-
-; 57   : 			emu_->on_render();
-
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx]
-	call	??R?$_Func_class@XU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@QBEXXZ ; std::_Func_class<void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::operator()
-
-; 58   : 			stat_.mode = 0;
-
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+9]
-	and	cl, 252					; 000000fcH
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+9], cl
-
-; 59   : 			ly = 0;
-
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+12], 0
-
-; 60   : 			counter1 = 0;
+; 48   : 			}
+; 49   : 			break;
+; 50   : 		case 1:
+; 51   : 			
+; 52   : 			break;
+; 53   : 	}
+; 54   : 
+; 55   : 	
+; 56   :   if (counter2 == 456) {
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+32], 0
-	mov	DWORD PTR [ecx+36], 0
+	mov	DWORD PTR tv244[ebp], ecx
+	mov	edx, DWORD PTR tv244[ebp]
+	cmp	DWORD PTR [edx+48], 456			; 000001c8H
+	jne	$LN3@Step
+	mov	eax, DWORD PTR tv244[ebp]
+	cmp	DWORD PTR [eax+52], 0
+	jne	$LN3@Step
 
-; 61   : 			counter2 = 0;
+; 57   : 		if (ly == 153 && counter2 == 456) {
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+16]
+	cmp	edx, 153				; 00000099H
+	jne	SHORT $LN2@Step
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR tv250[ebp], eax
+	mov	ecx, DWORD PTR tv250[ebp]
+	cmp	DWORD PTR [ecx+48], 456			; 000001c8H
+	jne	SHORT $LN2@Step
+	mov	edx, DWORD PTR tv250[ebp]
+	cmp	DWORD PTR [edx+52], 0
+	jne	SHORT $LN2@Step
+
+; 58   : 			emu_->on_render();
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+4]
+	call	??R?$_Func_class@XU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@QBEXXZ ; std::_Func_class<void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::operator()
+
+; 59   : 			stat_.mode = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [ecx+13]
+	and	dl, 252					; 000000fcH
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+13], dl
+
+; 60   : 			ly = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+16], 0
+
+; 61   : 			counter1 = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [edx+40], 0
 	mov	DWORD PTR [edx+44], 0
 
-; 62   : 		} else
+; 62   : 			counter2 = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+48], 0
+	mov	DWORD PTR [eax+52], 0
+
+; 63   : 		} else
 
 	jmp	SHORT $LN1@Step
 $LN2@Step:
 
-; 63   : 			++ly;
+; 64   : 			++ly;
 
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [ecx+16]
+	add	dl, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+12]
-	add	cl, 1
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+12], cl
+	mov	BYTE PTR [eax+16], dl
 $LN1@Step:
 
-; 64   : 		counter2 = 0;
+; 65   : 		counter2 = 0;
 
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+40], 0
-	mov	DWORD PTR [eax+44], 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [ecx+48], 0
+	mov	DWORD PTR [ecx+52], 0
 $LN3@Step:
 
-; 65   : 	}
-; 66   : 
-; 67   :   ++counter2; //line clock
-
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [ecx+40]
-	add	edx, 1
-	mov	eax, DWORD PTR [ecx+44]
-	adc	eax, 0
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+40], edx
-	mov	DWORD PTR [ecx+44], eax
-
-; 68   :   ++counter1;//screen clock
+; 66   : 	}
+; 67   : 
+; 68   :   ++counter2; //line clock
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+32]
+	mov	eax, DWORD PTR [edx+48]
 	add	eax, 1
-	mov	ecx, DWORD PTR [edx+36]
+	mov	ecx, DWORD PTR [edx+52]
 	adc	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+32], eax
-	mov	DWORD PTR [edx+36], ecx
+	mov	DWORD PTR [edx+48], eax
+	mov	DWORD PTR [edx+52], ecx
 
-; 69   : 
-; 70   : 	/*hsync += dt;
-; 71   :   if (hsync >= 0.10871928680147858230050010871929) {
-; 72   :     hsync = 0;
-; 73   :   }
-; 74   : 
-; 75   :   vsync += dt;
-; 76   :   if (vsync >= 16.742005692281935375858027791729) {
-; 77   : 
-; 78   : 		
-; 79   :     vsync = 0;
-; 80   :     
-; 81   : 		
-; 82   :   }*/
-; 83   : }
+; 69   :   ++counter1;//screen clock
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+40]
+	add	ecx, 1
+	mov	edx, DWORD PTR [eax+44]
+	adc	edx, 0
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+40], ecx
+	mov	DWORD PTR [eax+44], edx
+
+; 70   : 
+; 71   : 	/*hsync += dt;
+; 72   :   if (hsync >= 0.10871928680147858230050010871929) {
+; 73   :     hsync = 0;
+; 74   :   }
+; 75   : 
+; 76   :   vsync += dt;
+; 77   :   if (vsync >= 16.742005692281935375858027791729) {
+; 78   : 
+; 79   : 		
+; 80   :     vsync = 0;
+; 81   :     
+; 82   : 		
+; 83   :   }*/
+; 84   : }
 
 	add	esp, 36					; 00000024H
 	cmp	ebp, esp
@@ -2857,11 +3247,6 @@ $LN3@Step:
 	mov	esp, ebp
 	pop	ebp
 	ret	8
-$LN18@Step:
-	DD	$LN11@Step
-	DD	$LN4@Step
-	DD	$LN9@Step
-	DD	$LN7@Step
 ?Step@LCDDriver@gb@emulation@@QAEXN@Z ENDP		; emulation::gb::LCDDriver::Step
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
@@ -2870,7 +3255,7 @@ _TEXT	SEGMENT
 $T1 = -12						; size = 4
 _ioports$ = -8						; size = 4
 _this$ = -4						; size = 4
-?Deinitialize@LCDDriver@gb@emulation@@QAEXXZ PROC	; emulation::gb::LCDDriver::Deinitialize
+?Deinitialize@LCDDriver@gb@emulation@@UAEXXZ PROC	; emulation::gb::LCDDriver::Deinitialize
 ; _this$ = ecx
 
 ; 23   : void LCDDriver::Deinitialize() {
@@ -2886,7 +3271,7 @@ _this$ = -4						; size = 4
 ; 24   :   auto ioports = emu_->memory()->ioports();
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?ioports@Memory@gb@emulation@@QAEPAEXZ	; emulation::gb::Memory::ioports
@@ -2895,7 +3280,7 @@ _this$ = -4						; size = 4
 ; 25   :   delete [] frame_buffer;  
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [ecx+4]
+	mov	edx, DWORD PTR [ecx+8]
 	mov	DWORD PTR $T1[ebp], edx
 	mov	eax, DWORD PTR $T1[ebp]
 	push	eax
@@ -2910,7 +3295,7 @@ _this$ = -4						; size = 4
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-?Deinitialize@LCDDriver@gb@emulation@@QAEXXZ ENDP	; emulation::gb::LCDDriver::Deinitialize
+?Deinitialize@LCDDriver@gb@emulation@@UAEXXZ ENDP	; emulation::gb::LCDDriver::Deinitialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\lcd_driver.cpp
@@ -2918,7 +3303,7 @@ _TEXT	SEGMENT
 $T1 = -8						; size = 4
 _this$ = -4						; size = 4
 _emu$ = 8						; size = 4
-?Initialize@LCDDriver@gb@emulation@@QAEXPAVEmu@23@@Z PROC ; emulation::gb::LCDDriver::Initialize
+?Initialize@LCDDriver@gb@emulation@@UAEXPAVEmu@23@@Z PROC ; emulation::gb::LCDDriver::Initialize
 ; _this$ = ecx
 
 ; 9    : void LCDDriver::Initialize(Emu* emu) {
@@ -2935,12 +3320,12 @@ _emu$ = 8						; size = 4
 	mov	eax, DWORD PTR _emu$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	call	?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
+	call	?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
 
 ; 11   :   frame_buffer = new uint32_t[256*256];
 
 	push	11					; 0000000bH
-	push	OFFSET $SG130021
+	push	OFFSET $SG130094
 	push	1
 	push	262144					; 00040000H
 	call	??_U@YAPAXIHPBDH@Z			; operator new[]
@@ -2948,62 +3333,62 @@ _emu$ = 8						; size = 4
 	mov	DWORD PTR $T1[ebp], eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR $T1[ebp]
-	mov	DWORD PTR [ecx+4], edx
+	mov	DWORD PTR [ecx+8], edx
 
 ; 12   :   lcdc_.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+8], 0
+	mov	BYTE PTR [eax+12], 0
 
 ; 13   :   stat_.raw = 0;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+9], 0
+	mov	BYTE PTR [ecx+13], 0
 
 ; 14   :   ly = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+12], 0
+	mov	BYTE PTR [edx+16], 0
 
 ; 15   :   lyc = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+13], 0
+	mov	BYTE PTR [eax+17], 0
 
 ; 16   :   scroll_x = scroll_y = 0;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+11], 0
+	mov	BYTE PTR [ecx+15], 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+10], 0
+	mov	BYTE PTR [edx+14], 0
 
 ; 17   :   wx = wy = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+15], 0
+	mov	BYTE PTR [eax+19], 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+14], 0
+	mov	BYTE PTR [ecx+18], 0
 
 ; 18   :   counter1 = counter2 = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+40], 0
-	mov	DWORD PTR [edx+44], 0
+	mov	DWORD PTR [edx+48], 0
+	mov	DWORD PTR [edx+52], 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+32], 0
-	mov	DWORD PTR [eax+36], 0
+	mov	DWORD PTR [eax+40], 0
+	mov	DWORD PTR [eax+44], 0
 
 ; 19   :   vsync = 0;
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	movsd	xmm0, QWORD PTR __real@0000000000000000
-	movsd	QWORD PTR [ecx+48], xmm0
+	movsd	QWORD PTR [ecx+56], xmm0
 
 ; 20   :   hsync = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
 	movsd	xmm0, QWORD PTR __real@0000000000000000
-	movsd	QWORD PTR [edx+56], xmm0
+	movsd	QWORD PTR [edx+64], xmm0
 
 ; 21   : }
 
@@ -3013,7 +3398,7 @@ _emu$ = 8						; size = 4
 	mov	esp, ebp
 	pop	ebp
 	ret	4
-?Initialize@LCDDriver@gb@emulation@@QAEXPAVEmu@23@@Z ENDP ; emulation::gb::LCDDriver::Initialize
+?Initialize@LCDDriver@gb@emulation@@UAEXPAVEmu@23@@Z ENDP ; emulation::gb::LCDDriver::Initialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\memory.h
@@ -3023,7 +3408,7 @@ _this$ = -4						; size = 4
 ?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ PROC	; emulation::gb::Memory::interrupt_flag, COMDAT
 ; _this$ = ecx
 
-; 18   :   uint8_t& interrupt_flag() {  return ioports_[0x0F]; }
+; 20   :   uint8_t& interrupt_flag() {  return ioports_[0x0F]; }
 
 	push	ebp
 	mov	ebp, esp
@@ -3033,7 +3418,7 @@ _this$ = -4						; size = 4
 	mov	eax, 1
 	imul	eax, 15					; 0000000fH
 	mov	ecx, DWORD PTR _this$[ebp]
-	lea	eax, DWORD PTR [ecx+eax+180]
+	lea	eax, DWORD PTR [ecx+eax+184]
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -3047,7 +3432,7 @@ _this$ = -4						; size = 4
 ?ioports@Memory@gb@emulation@@QAEPAEXZ PROC		; emulation::gb::Memory::ioports, COMDAT
 ; _this$ = ecx
 
-; 16   :   uint8_t* ioports() { return ioports_; }
+; 18   :   uint8_t* ioports() { return ioports_; }
 
 	push	ebp
 	mov	ebp, esp
@@ -3055,7 +3440,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 180				; 000000b4H
+	add	eax, 184				; 000000b8H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -3069,7 +3454,7 @@ _this$ = -4						; size = 4
 ?oam@Memory@gb@emulation@@QAEPAEXZ PROC			; emulation::gb::Memory::oam, COMDAT
 ; _this$ = ecx
 
-; 15   :   uint8_t* oam() { return oam_; }
+; 17   :   uint8_t* oam() { return oam_; }
 
 	push	ebp
 	mov	ebp, esp
@@ -3077,7 +3462,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 20					; 00000014H
+	add	eax, 24					; 00000018H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -3091,7 +3476,7 @@ _this$ = -4						; size = 4
 ?vram@Memory@gb@emulation@@QAEPAEXZ PROC		; emulation::gb::Memory::vram, COMDAT
 ; _this$ = ecx
 
-; 14   : 	uint8_t* vram() { return vram_; }
+; 16   : 	uint8_t* vram() { return vram_; }
 
 	push	ebp
 	mov	ebp, esp
@@ -3099,7 +3484,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [eax+8]
+	mov	eax, DWORD PTR [eax+12]
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -3107,14 +3492,14 @@ _this$ = -4						; size = 4
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\gb.h
-;	COMDAT ?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z
+;	COMDAT ?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z
 _TEXT	SEGMENT
 _this$ = -4						; size = 4
 _emu$ = 8						; size = 4
-?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z PROC ; emulation::gb::Component::Initialize, COMDAT
+?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z PROC ; emulation::gb::Component::Initialize, COMDAT
 ; _this$ = ecx
 
-; 27   :   void Initialize(Emu* emu) {
+; 28   :   virtual void Initialize(Emu* emu) {
 
 	push	ebp
 	mov	ebp, esp
@@ -3122,18 +3507,18 @@ _emu$ = 8						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 28   :     emu_ = emu;
+; 29   :     emu_ = emu;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _emu$[ebp]
-	mov	DWORD PTR [eax], ecx
+	mov	DWORD PTR [eax+4], ecx
 
-; 29   :   }
+; 30   :   }
 
 	mov	esp, ebp
 	pop	ebp
 	ret	4
-?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z ENDP ; emulation::gb::Component::Initialize
+?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ENDP ; emulation::gb::Component::Initialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\program files (x86)\microsoft visual studio 11.0\vc\include\tuple

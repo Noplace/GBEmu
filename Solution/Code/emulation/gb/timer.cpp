@@ -4,20 +4,21 @@
 namespace emulation {
 namespace gb {
 
-void SoundController::Initialize(Emu* emu) {
+
+void Timer::Initialize(Emu* emu) {
   Component::Initialize(emu);
 	ioports = emu_->memory()->ioports();
 }
 
-void SoundController::Deinitialize() {
+void Timer::Deinitialize() {
  
 }
 
-void SoundController::Step(double dt) {
+void Timer::Tick() {
 
 }
 
-uint8_t SoundController::Read(uint16_t address) {
+uint8_t Timer::Read(uint16_t address) {
 
   switch (address) {
     case 0xFF40:
@@ -27,7 +28,7 @@ uint8_t SoundController::Read(uint16_t address) {
 	return 0;
 }
 
-void SoundController::Write(uint16_t address, uint8_t data) {
+void Timer::Write(uint16_t address, uint8_t data) {
   switch (address) {
     case 0xFF10:
      

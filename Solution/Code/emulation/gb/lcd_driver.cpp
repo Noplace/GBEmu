@@ -44,10 +44,11 @@ void LCDDriver::Step(double dt) {
 				stat_.mode = 0;
 				if (ly == 143) 
 					stat_.mode = 1;//vblank period
+					emu_->memory()->interrupt_flag() |= 1;
 			}
 			break;
 		case 1:
-			emu_->memory()->interrupt_flag() |= 1;
+			
 			break;
 	}
 
@@ -170,13 +171,48 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
 }
 
 
+void LCDDriver::RenderAllBGTiles() {
+	auto mapoffset = ((ly)&0xFF) >> 3;
+	auto y = (ly) & 7;
+	auto x = 0;
+	auto readTile = [&](){
+		  uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
+			auto tileindex = bgtilemap[(mapoffset<<5)];
+			if(lcdc_.tile_data == 0) {
+				int8_t d = tileindex;
+				d+=128;
+				tileindex = d;
+			}
+			return tileindex;
+	};
+
+	if (lcdc_.bgdisplay == 0) {
+		for (int i=0;i<256;++i) {
+			frame_buffer[((ly)<<8)+(i)] = colormap[0];
+		}
+	} else {
+		uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
+		for (int i=0;i<256;++i) {
+			auto tileindex = (i>>3)+(ly>>3)*32;
+			uint8_t* tile = &tiledata[(tileindex<<4)];
+			#define pixel(bit) ((tile[y<<1]>>(bit))&0x1+((tile[(y<<1)+1]>>(bit))<<1))
+			frame_buffer[((ly)<<8)+i] = colormap[bg_pal[pixel((7-x))]];
+			#undef pixel
+			++x;
+			if (x==8) {
+				x = 0;
+			}
+		}
+	}
+}
+
 void LCDDriver::RenderBGLine() {
 	auto mapoffset = ((ly+scroll_y)&0xFF) >> 3;
 	auto lineoffset = ((scroll_x>>3))&0x1F;
 	auto y = (ly + scroll_y) & 7;
 	auto x = scroll_x & 7;
 	auto readTile = [&](){
-		 uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
+		  uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
 			auto tileindex = bgtilemap[(mapoffset<<5) + lineoffset];
 			if(lcdc_.tile_data == 0) {
 				int8_t d = tileindex;

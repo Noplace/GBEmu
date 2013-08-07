@@ -47,7 +47,7 @@ class LCDDriver : public Component {
 	void RenderWindowLine();
 	void RenderSpriteLine();
 	void RenderLine();
-
+	void RenderAllBGTiles();
 	const LCDControlRegister& lcdc() { return lcdc_; }
 	const LCDStatusRegister& stat() { return stat_; }
  private:

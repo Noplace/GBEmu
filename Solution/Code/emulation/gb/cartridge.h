@@ -79,7 +79,7 @@ class Cartridge : public Component {
   ~Cartridge() {  }
   void Initialize(Emu* emu);
   void Deinitialize();
-  void ReadFile(const char* filename, CartridgeHeader* header);
+  void LoadFile(const char* filename, CartridgeHeader* header);
   const uint8_t* rom() { return rom_; }
 
   uint8_t Read(uint16_t address);

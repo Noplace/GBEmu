@@ -137,6 +137,19 @@ class Cpu : public Component {
   void NOP(); 
   void ILLEGAL();
   void RST();
+	template<uint8_t dest,uint8_t src>
+	void LDrr();
+	template<uint8_t dest,uint8_t src>
+	void LD$rr();
+	template<uint8_t dest,uint8_t src>
+	void LDr$r();
+	template<uint8_t dest,uint8_t src>
+	void LD$FF00rr();
+	template<uint8_t dest,uint8_t src>
+	void LDr$FF00r();
+	template<uint8_t dest>
+	void LDrd16();
+
 	template<uint8_t dest,uint8_t src,int mode>
 	void LD();
 	template<uint8_t dest,uint8_t src,int mode>

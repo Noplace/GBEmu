@@ -20,21 +20,15 @@ PUBLIC	?is_signed@?$numeric_limits@C@std@@2_NB		; std::numeric_limits<signed cha
 PUBLIC	?digits@?$numeric_limits@C@std@@2HB		; std::numeric_limits<signed char>::digits
 PUBLIC	?digits10@?$numeric_limits@C@std@@2HB		; std::numeric_limits<signed char>::digits10
 PUBLIC	?is_signed@?$numeric_limits@E@std@@2_NB		; std::numeric_limits<unsigned char>::is_signed
-PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?digits@?$numeric_limits@E@std@@2HB		; std::numeric_limits<unsigned char>::digits
 PUBLIC	?digits10@?$numeric_limits@E@std@@2HB		; std::numeric_limits<unsigned char>::digits10
 PUBLIC	?value@?$integral_constant@I$0A@@std@@2IB	; std::integral_constant<unsigned int,0>::value
-PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?value@?$_Abs@$0GE@@std@@2_JB			; std::_Abs<100>::value
-PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?value@?$_Abs@$0DLJKMKAA@@std@@2_JB		; std::_Abs<1000000000>::value
 PUBLIC	?is_signed@?$numeric_limits@F@std@@2_NB		; std::numeric_limits<short>::is_signed
-PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?digits@?$numeric_limits@F@std@@2HB		; std::numeric_limits<short>::digits
 PUBLIC	?value@?$integral_constant@_N$0A@@std@@2_NB	; std::integral_constant<bool,0>::value
 PUBLIC	?digits10@?$numeric_limits@F@std@@2HB		; std::numeric_limits<short>::digits10
-PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
-PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?value@?$_GcdX@$0GE@$0A@@std@@2_JB		; std::_GcdX<100,0>::value
 PUBLIC	?value@?$integral_constant@_N$00@std@@2_NB	; std::integral_constant<bool,1>::value
 PUBLIC	?value@?$_GcdX@$0DLJKMKAA@$0GE@@std@@2_JB	; std::_GcdX<1000000000,100>::value
@@ -44,16 +38,22 @@ PUBLIC	?value@?$_GcdX@$0GE@$0DLJKMKAA@@std@@2_JB	; std::_GcdX<100,1000000000>::v
 PUBLIC	?_STATE_SYNCHRONIZE@_CancellationTokenRegistration@details@Concurrency@@0JB ; Concurrency::details::_CancellationTokenRegistration::_STATE_SYNCHRONIZE
 PUBLIC	?_STATE_CALLED@_CancellationTokenRegistration@details@Concurrency@@0JB ; Concurrency::details::_CancellationTokenRegistration::_STATE_CALLED
 PUBLIC	?value@?$_Gcd@$0GE@$0DLJKMKAA@@std@@2_JB	; std::_Gcd<100,1000000000>::value
+PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?is_signed@?$numeric_limits@G@std@@2_NB		; std::numeric_limits<unsigned short>::is_signed
 PUBLIC	?digits@?$numeric_limits@G@std@@2HB		; std::numeric_limits<unsigned short>::digits
 PUBLIC	?_G1@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G1
 PUBLIC	?digits10@?$numeric_limits@G@std@@2HB		; std::numeric_limits<unsigned short>::digits10
 PUBLIC	?value@?$_Abs@$00@std@@2_JB			; std::_Abs<1>::value
+PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?value@?$_GcdX@$00$0A@@std@@2_JB		; std::_GcdX<1,0>::value
+PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?value@?$_GcdX@$00$00@std@@2_JB			; std::_GcdX<1,1>::value
+PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?is_signed@?$numeric_limits@H@std@@2_NB		; std::numeric_limits<int>::is_signed
 PUBLIC	?digits@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits
 PUBLIC	?value@?$_Gcd@$00$00@std@@2_JB			; std::_Gcd<1,1>::value
+PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
+PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?digits10@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits10
 PUBLIC	?_G2@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G2
 PUBLIC	?is_signed@?$numeric_limits@I@std@@2_NB		; std::numeric_limits<unsigned int>::is_signed
@@ -809,6 +809,14 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits10@?$numeric_limits@H@std@@2HB DD 09H		; std::numeric_limits<int>::digits10
 CONST	ENDS
+;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
+CONST	ENDS
+;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
+CONST	ENDS
 ;	COMDAT ?value@?$_Gcd@$00$00@std@@2_JB
 CONST	SEGMENT
 ?value@?$_Gcd@$00$00@std@@2_JB DQ 0000000000000001H	; std::_Gcd<1,1>::value
@@ -821,13 +829,25 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@H@std@@2_NB DB 01H		; std::numeric_limits<int>::is_signed
 CONST	ENDS
+;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?value@?$_GcdX@$00$00@std@@2_JB
 CONST	SEGMENT
 ?value@?$_GcdX@$00$00@std@@2_JB DQ 0000000000000001H	; std::_GcdX<1,1>::value
 CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?value@?$_GcdX@$00$0A@@std@@2_JB
 CONST	SEGMENT
 ?value@?$_GcdX@$00$0A@@std@@2_JB DQ 0000000000000001H	; std::_GcdX<1,0>::value
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?value@?$_Abs@$00@std@@2_JB
 CONST	SEGMENT
@@ -848,6 +868,10 @@ CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@G@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@G@std@@2_NB DB 00H		; std::numeric_limits<unsigned short>::is_signed
+CONST	ENDS
+;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
+CONST	SEGMENT
+?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?value@?$_Gcd@$0GE@$0DLJKMKAA@@std@@2_JB
 CONST	SEGMENT
@@ -885,14 +909,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?value@?$_GcdX@$0GE@$0A@@std@@2_JB DQ 0000000000000064H	; std::_GcdX<100,0>::value
 CONST	ENDS
-;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
-CONST	ENDS
-;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
-CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@F@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@F@std@@2HB DD 04H		; std::numeric_limits<short>::digits10
@@ -905,10 +921,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@F@std@@2HB DD 0fH		; std::numeric_limits<short>::digits
 CONST	ENDS
-;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@F@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@F@std@@2_NB DB 01H		; std::numeric_limits<short>::is_signed
@@ -917,17 +929,9 @@ CONST	ENDS
 CONST	SEGMENT
 ?value@?$_Abs@$0DLJKMKAA@@std@@2_JB DQ 000000003b9aca00H ; std::_Abs<1000000000>::value
 CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?value@?$_Abs@$0GE@@std@@2_JB
 CONST	SEGMENT
 ?value@?$_Abs@$0GE@@std@@2_JB DQ 0000000000000064H	; std::_Abs<100>::value
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?value@?$integral_constant@I$0A@@std@@2IB
 CONST	SEGMENT
@@ -940,10 +944,6 @@ CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@E@std@@2HB
 CONST	SEGMENT
 ?digits@?$numeric_limits@E@std@@2HB DD 08H		; std::numeric_limits<unsigned char>::digits
-CONST	ENDS
-;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
-CONST	SEGMENT
-?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@E@std@@2_NB
 CONST	SEGMENT
@@ -990,10 +990,10 @@ CONST	SEGMENT
 ?is_signed@?$numeric_limits@_W@std@@2_NB DB 00H		; std::numeric_limits<wchar_t>::is_signed
 CONST	ENDS
 PUBLIC	??0_Ignore@std@@QAE@XZ				; std::_Ignore::_Ignore
-PUBLIC	?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
+PUBLIC	?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
 PUBLIC	?ioports@Memory@gb@emulation@@QAEPAEXZ		; emulation::gb::Memory::ioports
-PUBLIC	?Initialize@SoundController@gb@emulation@@QAEXPAVEmu@23@@Z ; emulation::gb::SoundController::Initialize
-PUBLIC	?Deinitialize@SoundController@gb@emulation@@QAEXXZ ; emulation::gb::SoundController::Deinitialize
+PUBLIC	?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::SoundController::Initialize
+PUBLIC	?Deinitialize@SoundController@gb@emulation@@UAEXXZ ; emulation::gb::SoundController::Deinitialize
 PUBLIC	?Step@SoundController@gb@emulation@@QAEXN@Z	; emulation::gb::SoundController::Step
 PUBLIC	?Read@SoundController@gb@emulation@@QAEEG@Z	; emulation::gb::SoundController::Read
 PUBLIC	?Write@SoundController@gb@emulation@@QAEXGE@Z	; emulation::gb::SoundController::Write
@@ -1043,7 +1043,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1136				; 00000470H
+	add	eax, 1144				; 00000478H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1059,7 +1059,7 @@ _data$ = 12						; size = 1
 ?Write@SoundController@gb@emulation@@QAEXGE@Z PROC	; emulation::gb::SoundController::Write
 ; _this$ = ecx
 
-; 32   : void SoundController::Write(uint16_t address, uint8_t data) {
+; 30   : void SoundController::Write(uint16_t address, uint8_t data) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1068,17 +1068,17 @@ _data$ = 12						; size = 1
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 33   :   switch (address) {
+; 31   :   switch (address) {
 
 	movzx	eax, WORD PTR _address$[ebp]
 	mov	DWORD PTR tv65[ebp], eax
 
-; 34   :     case 0xFF10:
-; 35   :      
-; 36   :       break;
-; 37   :  
-; 38   :   }
-; 39   : }
+; 32   :     case 0xFF10:
+; 33   :      
+; 34   :       break;
+; 35   :  
+; 36   :   }
+; 37   : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -1094,7 +1094,7 @@ _address$ = 8						; size = 2
 ?Read@SoundController@gb@emulation@@QAEEG@Z PROC	; emulation::gb::SoundController::Read
 ; _this$ = ecx
 
-; 22   : uint8_t SoundController::Read(uint16_t address) {
+; 20   : uint8_t SoundController::Read(uint16_t address) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1103,8 +1103,8 @@ _address$ = 8						; size = 2
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 23   : 
-; 24   :   switch (address) {
+; 21   : 
+; 22   :   switch (address) {
 
 	movzx	eax, WORD PTR _address$[ebp]
 	mov	DWORD PTR tv65[ebp], eax
@@ -1113,21 +1113,21 @@ _address$ = 8						; size = 2
 	jmp	SHORT $LN2@Read
 $LN1@Read:
 
-; 25   :     case 0xFF40:
-; 26   :       return 0;
+; 23   :     case 0xFF40:
+; 24   :       return 0;
 
 	xor	al, al
 	jmp	SHORT $LN4@Read
 $LN2@Read:
 
-; 27   :  
-; 28   :   }
-; 29   : 	return 0;
+; 25   :  
+; 26   :   }
+; 27   : 	return 0;
 
 	xor	al, al
 $LN4@Read:
 
-; 30   : }
+; 28   : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -1142,7 +1142,7 @@ _dt$ = 8						; size = 8
 ?Step@SoundController@gb@emulation@@QAEXN@Z PROC	; emulation::gb::SoundController::Step
 ; _this$ = ecx
 
-; 18   : void SoundController::Step(double dt) {
+; 16   : void SoundController::Step(double dt) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1150,8 +1150,8 @@ _dt$ = 8						; size = 8
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 19   : 
-; 20   : }
+; 17   : 
+; 18   : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -1162,10 +1162,10 @@ _TEXT	ENDS
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\sound_controller.cpp
 _TEXT	SEGMENT
 _this$ = -4						; size = 4
-?Deinitialize@SoundController@gb@emulation@@QAEXXZ PROC	; emulation::gb::SoundController::Deinitialize
+?Deinitialize@SoundController@gb@emulation@@UAEXXZ PROC	; emulation::gb::SoundController::Deinitialize
 ; _this$ = ecx
 
-; 14   : void SoundController::Deinitialize() {
+; 12   : void SoundController::Deinitialize() {
 
 	push	ebp
 	mov	ebp, esp
@@ -1173,23 +1173,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 15   :  
-; 16   : }
+; 13   :  
+; 14   : }
 
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-?Deinitialize@SoundController@gb@emulation@@QAEXXZ ENDP	; emulation::gb::SoundController::Deinitialize
+?Deinitialize@SoundController@gb@emulation@@UAEXXZ ENDP	; emulation::gb::SoundController::Deinitialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\sound_controller.cpp
 _TEXT	SEGMENT
 _this$ = -4						; size = 4
 _emu$ = 8						; size = 4
-?Initialize@SoundController@gb@emulation@@QAEXPAVEmu@23@@Z PROC ; emulation::gb::SoundController::Initialize
+?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z PROC ; emulation::gb::SoundController::Initialize
 ; _this$ = ecx
 
-; 9    : void SoundController::Initialize(Emu* emu) {
+; 7    : void SoundController::Initialize(Emu* emu) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1197,24 +1197,24 @@ _emu$ = 8						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 10   :   Component::Initialize(emu);
+; 8    :   Component::Initialize(emu);
 
 	mov	eax, DWORD PTR _emu$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	call	?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
+	call	?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
 
-; 11   : 	ioports = emu_->memory()->ioports();
+; 9    : 	ioports = emu_->memory()->ioports();
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx]
+	mov	ecx, DWORD PTR [ecx+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?ioports@Memory@gb@emulation@@QAEPAEXZ	; emulation::gb::Memory::ioports
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+4], eax
+	mov	DWORD PTR [edx+8], eax
 
-; 12   : }
+; 10   : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -1222,7 +1222,7 @@ _emu$ = 8						; size = 4
 	mov	esp, ebp
 	pop	ebp
 	ret	4
-?Initialize@SoundController@gb@emulation@@QAEXPAVEmu@23@@Z ENDP ; emulation::gb::SoundController::Initialize
+?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z ENDP ; emulation::gb::SoundController::Initialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\memory.h
@@ -1232,7 +1232,7 @@ _this$ = -4						; size = 4
 ?ioports@Memory@gb@emulation@@QAEPAEXZ PROC		; emulation::gb::Memory::ioports, COMDAT
 ; _this$ = ecx
 
-; 16   :   uint8_t* ioports() { return ioports_; }
+; 18   :   uint8_t* ioports() { return ioports_; }
 
 	push	ebp
 	mov	ebp, esp
@@ -1240,7 +1240,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 180				; 000000b4H
+	add	eax, 184				; 000000b8H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1248,14 +1248,14 @@ _this$ = -4						; size = 4
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\gb.h
-;	COMDAT ?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z
+;	COMDAT ?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z
 _TEXT	SEGMENT
 _this$ = -4						; size = 4
 _emu$ = 8						; size = 4
-?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z PROC ; emulation::gb::Component::Initialize, COMDAT
+?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z PROC ; emulation::gb::Component::Initialize, COMDAT
 ; _this$ = ecx
 
-; 27   :   void Initialize(Emu* emu) {
+; 28   :   virtual void Initialize(Emu* emu) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1263,18 +1263,18 @@ _emu$ = 8						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 28   :     emu_ = emu;
+; 29   :     emu_ = emu;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _emu$[ebp]
-	mov	DWORD PTR [eax], ecx
+	mov	DWORD PTR [eax+4], ecx
 
-; 29   :   }
+; 30   :   }
 
 	mov	esp, ebp
 	pop	ebp
 	ret	4
-?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z ENDP ; emulation::gb::Component::Initialize
+?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ENDP ; emulation::gb::Component::Initialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\program files (x86)\microsoft visual studio 11.0\vc\include\tuple

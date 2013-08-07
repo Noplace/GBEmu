@@ -22,11 +22,16 @@ class LCDDriver;
 class SoundController;
 class Cpu;
 class MemoryBankController;
+class Timer;
 class Component {
  public:
-  void Initialize(Emu* emu) {
+  virtual void Initialize(Emu* emu) {
     emu_ = emu;
   }
+	virtual void Deinitialize() {
+	}
+	virtual void Reset() {
+	}
  protected:
    Emu* emu_;
 };
@@ -38,5 +43,6 @@ class Component {
 #include "memory.h"
 #include "lcd_driver.h"
 #include "sound_controller.h"
+#include "timer.h"
 #include "cpu.h"
 #include "emu.h"

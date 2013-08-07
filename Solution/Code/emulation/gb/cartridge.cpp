@@ -17,8 +17,12 @@ void Cartridge::Deinitialize() {
   SafeDelete(&mbc);
 }
 
-void Cartridge::ReadFile(const char* filename, CartridgeHeader* header) {
-  core::io::DestroyFileBuffer(&rom_);
+void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
+	SafeDeleteArray(&rom_);
+  if (mbc) {
+    mbc->Deinitialize();
+		delete mbc;
+	}
   uint8_t* data;
   size_t length;
   core::io::ReadWholeFileBinary(filename,&data,length);
@@ -34,7 +38,9 @@ void Cartridge::ReadFile(const char* filename, CartridgeHeader* header) {
     mbc = new MBCNone();
   } else if (header->cartridge_type == 1) {
     mbc = new MBC1();
-  }
+  } else {
+		DebugBreak();
+	}
   mbc->Initialize(this);
   core::io::DestroyFileBuffer(&data);
 

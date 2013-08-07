@@ -85,21 +85,15 @@ PUBLIC	?is_signed@?$numeric_limits@G@std@@2_NB		; std::numeric_limits<unsigned s
 PUBLIC	?digits@?$numeric_limits@G@std@@2HB		; std::numeric_limits<unsigned short>::digits
 PUBLIC	?digits10@?$numeric_limits@G@std@@2HB		; std::numeric_limits<unsigned short>::digits10
 PUBLIC	?is_signed@?$numeric_limits@H@std@@2_NB		; std::numeric_limits<int>::is_signed
-PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?digits@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits
 PUBLIC	?digits10@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits10
 PUBLIC	?value@?$integral_constant@I$0A@@std@@2IB	; std::integral_constant<unsigned int,0>::value
 PUBLIC	?value@?$_Abs@$0GE@@std@@2_JB			; std::_Abs<100>::value
-PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
-PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?value@?$_Abs@$0DLJKMKAA@@std@@2_JB		; std::_Abs<1000000000>::value
 PUBLIC	?is_signed@?$numeric_limits@I@std@@2_NB		; std::numeric_limits<unsigned int>::is_signed
-PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?digits@?$numeric_limits@I@std@@2HB		; std::numeric_limits<unsigned int>::digits
 PUBLIC	?digits10@?$numeric_limits@I@std@@2HB		; std::numeric_limits<unsigned int>::digits10
-PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
 PUBLIC	?value@?$_GcdX@$0GE@$0A@@std@@2_JB		; std::_GcdX<100,0>::value
-PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?value@?$_GcdX@$0DLJKMKAA@$0GE@@std@@2_JB	; std::_GcdX<1000000000,100>::value
 PUBLIC	?_STATE_CLEAR@_CancellationTokenRegistration@details@Concurrency@@0JB ; Concurrency::details::_CancellationTokenRegistration::_STATE_CLEAR
 PUBLIC	?_STATE_DEFER_DELETE@_CancellationTokenRegistration@details@Concurrency@@0JB ; Concurrency::details::_CancellationTokenRegistration::_STATE_DEFER_DELETE
@@ -108,16 +102,22 @@ PUBLIC	?_STATE_SYNCHRONIZE@_CancellationTokenRegistration@details@Concurrency@@0
 PUBLIC	?_STATE_CALLED@_CancellationTokenRegistration@details@Concurrency@@0JB ; Concurrency::details::_CancellationTokenRegistration::_STATE_CALLED
 PUBLIC	?value@?$_Gcd@$0GE@$0DLJKMKAA@@std@@2_JB	; std::_Gcd<100,1000000000>::value
 PUBLIC	?is_signed@?$numeric_limits@J@std@@2_NB		; std::numeric_limits<long>::is_signed
+PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?digits@?$numeric_limits@J@std@@2HB		; std::numeric_limits<long>::digits
 PUBLIC	?_G1@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G1
 PUBLIC	?digits10@?$numeric_limits@J@std@@2HB		; std::numeric_limits<long>::digits10
 PUBLIC	?value@?$_Abs@$00@std@@2_JB			; std::_Abs<1>::value
+PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?value@?$_GcdX@$00$0A@@std@@2_JB		; std::_GcdX<1,0>::value
+PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?value@?$_GcdX@$00$00@std@@2_JB			; std::_GcdX<1,1>::value
+PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?is_signed@?$numeric_limits@K@std@@2_NB		; std::numeric_limits<unsigned long>::is_signed
 PUBLIC	?value@?$_Gcd@$00$00@std@@2_JB			; std::_Gcd<1,1>::value
 PUBLIC	?digits@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits
+PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
 PUBLIC	?digits10@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits10
+PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?_G2@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G2
 PUBLIC	?value@?$integral_constant@_N$0A@@std@@2_NB	; std::integral_constant<bool,0>::value
 PUBLIC	?is_signed@?$numeric_limits@_J@std@@2_NB	; std::numeric_limits<__int64>::is_signed
@@ -423,9 +423,17 @@ CONST	ENDS
 CONST	SEGMENT
 ?_G2@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB DQ 0000000000000001H ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G2
 CONST	ENDS
+;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
+CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@K@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@K@std@@2HB DD 09H		; std::numeric_limits<unsigned long>::digits10
+CONST	ENDS
+;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
 CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@K@std@@2HB
 CONST	SEGMENT
@@ -439,13 +447,25 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@K@std@@2_NB DB 00H		; std::numeric_limits<unsigned long>::is_signed
 CONST	ENDS
+;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?value@?$_GcdX@$00$00@std@@2_JB
 CONST	SEGMENT
 ?value@?$_GcdX@$00$00@std@@2_JB DQ 0000000000000001H	; std::_GcdX<1,1>::value
 CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?value@?$_GcdX@$00$0A@@std@@2_JB
 CONST	SEGMENT
 ?value@?$_GcdX@$00$0A@@std@@2_JB DQ 0000000000000001H	; std::_GcdX<1,0>::value
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?value@?$_Abs@$00@std@@2_JB
 CONST	SEGMENT
@@ -462,6 +482,10 @@ CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@J@std@@2HB
 CONST	SEGMENT
 ?digits@?$numeric_limits@J@std@@2HB DD 01fH		; std::numeric_limits<long>::digits
+CONST	ENDS
+;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
+CONST	SEGMENT
+?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@J@std@@2_NB
 CONST	SEGMENT
@@ -495,17 +519,9 @@ CONST	ENDS
 CONST	SEGMENT
 ?value@?$_GcdX@$0DLJKMKAA@$0GE@@std@@2_JB DQ 0000000000000064H ; std::_GcdX<1000000000,100>::value
 CONST	ENDS
-;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
-CONST	ENDS
 ;	COMDAT ?value@?$_GcdX@$0GE@$0A@@std@@2_JB
 CONST	SEGMENT
 ?value@?$_GcdX@$0GE@$0A@@std@@2_JB DQ 0000000000000064H	; std::_GcdX<100,0>::value
-CONST	ENDS
-;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@I@std@@2HB
 CONST	SEGMENT
@@ -515,10 +531,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@I@std@@2HB DD 020H		; std::numeric_limits<unsigned int>::digits
 CONST	ENDS
-;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@I@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@I@std@@2_NB DB 00H		; std::numeric_limits<unsigned int>::is_signed
@@ -526,14 +538,6 @@ CONST	ENDS
 ;	COMDAT ?value@?$_Abs@$0DLJKMKAA@@std@@2_JB
 CONST	SEGMENT
 ?value@?$_Abs@$0DLJKMKAA@@std@@2_JB DQ 000000003b9aca00H ; std::_Abs<1000000000>::value
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?value@?$_Abs@$0GE@@std@@2_JB
 CONST	SEGMENT
@@ -550,10 +554,6 @@ CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@H@std@@2HB
 CONST	SEGMENT
 ?digits@?$numeric_limits@H@std@@2HB DD 01fH		; std::numeric_limits<int>::digits
-CONST	ENDS
-;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
-CONST	SEGMENT
-?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@H@std@@2_NB
 CONST	SEGMENT

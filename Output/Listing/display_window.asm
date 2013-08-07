@@ -120,15 +120,9 @@ PUBLIC	?digits10@?$numeric_limits@_J@std@@2HB		; std::numeric_limits<__int64>::d
 PUBLIC	?value@?$integral_constant@_N$00@std@@2_NB	; std::integral_constant<bool,1>::value
 PUBLIC	?is_monotonic@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_monotonic
 PUBLIC	?is_steady@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_steady
-PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
-PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?is_signed@?$numeric_limits@_K@std@@2_NB	; std::numeric_limits<unsigned __int64>::is_signed
 PUBLIC	?digits@?$numeric_limits@_K@std@@2HB		; std::numeric_limits<unsigned __int64>::digits
-PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?digits10@?$numeric_limits@_K@std@@2HB		; std::numeric_limits<unsigned __int64>::digits10
-PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
-PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
-PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?digits@?$numeric_limits@M@std@@2HB		; std::numeric_limits<float>::digits
 PUBLIC	?digits10@?$numeric_limits@M@std@@2HB		; std::numeric_limits<float>::digits10
 PUBLIC	?max_digits10@?$numeric_limits@M@std@@2HB	; std::numeric_limits<float>::max_digits10
@@ -136,15 +130,21 @@ PUBLIC	?max_exponent@?$numeric_limits@M@std@@2HB	; std::numeric_limits<float>::m
 PUBLIC	?max_exponent10@?$numeric_limits@M@std@@2HB	; std::numeric_limits<float>::max_exponent10
 PUBLIC	?min_exponent@?$numeric_limits@M@std@@2HB	; std::numeric_limits<float>::min_exponent
 PUBLIC	?min_exponent10@?$numeric_limits@M@std@@2HB	; std::numeric_limits<float>::min_exponent10
+PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?value@?$_Sizeof@U_Nil@std@@U12@U12@U12@U12@U12@U12@U12@@std@@2IB ; std::_Sizeof<std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::value
+PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?digits@?$numeric_limits@N@std@@2HB		; std::numeric_limits<double>::digits
 PUBLIC	?digits10@?$numeric_limits@N@std@@2HB		; std::numeric_limits<double>::digits10
 PUBLIC	?max_digits10@?$numeric_limits@N@std@@2HB	; std::numeric_limits<double>::max_digits10
+PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?max_exponent@?$numeric_limits@N@std@@2HB	; std::numeric_limits<double>::max_exponent
 PUBLIC	?value@?$integral_constant@H$0A@@std@@2HB	; std::integral_constant<int,0>::value
+PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?max_exponent10@?$numeric_limits@N@std@@2HB	; std::numeric_limits<double>::max_exponent10
 PUBLIC	?min_exponent@?$numeric_limits@N@std@@2HB	; std::numeric_limits<double>::min_exponent
 PUBLIC	?min_exponent10@?$numeric_limits@N@std@@2HB	; std::numeric_limits<double>::min_exponent10
+PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
+PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?digits@?$numeric_limits@O@std@@2HB		; std::numeric_limits<long double>::digits
 PUBLIC	?digits10@?$numeric_limits@O@std@@2HB		; std::numeric_limits<long double>::digits10
 PUBLIC	?max_digits10@?$numeric_limits@O@std@@2HB	; std::numeric_limits<long double>::max_digits10
@@ -315,6 +315,14 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@O@std@@2HB DD 035H		; std::numeric_limits<long double>::digits
 CONST	ENDS
+;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
+CONST	ENDS
+;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
+CONST	ENDS
 ;	COMDAT ?min_exponent10@?$numeric_limits@N@std@@2HB
 CONST	SEGMENT
 ?min_exponent10@?$numeric_limits@N@std@@2HB DD 0fffffecdH ; std::numeric_limits<double>::min_exponent10
@@ -327,6 +335,10 @@ CONST	ENDS
 CONST	SEGMENT
 ?max_exponent10@?$numeric_limits@N@std@@2HB DD 0134H	; std::numeric_limits<double>::max_exponent10
 CONST	ENDS
+;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?value@?$integral_constant@H$0A@@std@@2HB
 CONST	SEGMENT
 ?value@?$integral_constant@H$0A@@std@@2HB DD 00H	; std::integral_constant<int,0>::value
@@ -334,6 +346,10 @@ CONST	ENDS
 ;	COMDAT ?max_exponent@?$numeric_limits@N@std@@2HB
 CONST	SEGMENT
 ?max_exponent@?$numeric_limits@N@std@@2HB DD 0400H	; std::numeric_limits<double>::max_exponent
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
 CONST	ENDS
 ;	COMDAT ?max_digits10@?$numeric_limits@N@std@@2HB
 CONST	SEGMENT
@@ -347,9 +363,17 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@N@std@@2HB DD 035H		; std::numeric_limits<double>::digits
 CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
+CONST	ENDS
 ;	COMDAT ?value@?$_Sizeof@U_Nil@std@@U12@U12@U12@U12@U12@U12@U12@@std@@2IB
 CONST	SEGMENT
 ?value@?$_Sizeof@U_Nil@std@@U12@U12@U12@U12@U12@U12@U12@@std@@2IB DD 00H ; std::_Sizeof<std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::value
+CONST	ENDS
+;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
+CONST	SEGMENT
+?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?min_exponent10@?$numeric_limits@M@std@@2HB
 CONST	SEGMENT
@@ -379,25 +403,9 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@M@std@@2HB DD 018H		; std::numeric_limits<float>::digits
 CONST	ENDS
-;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
-CONST	ENDS
-;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
-CONST	ENDS
-;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@_K@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@_K@std@@2HB DD 013H		; std::numeric_limits<unsigned __int64>::digits10
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
 CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@_K@std@@2HB
 CONST	SEGMENT
@@ -406,14 +414,6 @@ CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@_K@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@_K@std@@2_NB DB 00H		; std::numeric_limits<unsigned __int64>::is_signed
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
-CONST	ENDS
-;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
-CONST	SEGMENT
-?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?is_steady@system_clock@chrono@std@@2_NB
 CONST	SEGMENT
@@ -571,6 +571,17 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@G@std@@2_NB DB 00H		; std::numeric_limits<unsigned short>::is_signed
 CONST	ENDS
+CONST	SEGMENT
+$SG137584 DB	'Code\display_window.cpp', 00H
+$SG137592 DB	'GBEmu', 00H
+	ORG $+2
+$SG137664 DB	'GBEmu - FPS: %02d', 00H, 00H
+	ORG $+1
+$SG137742 DB	'Code\display_window.cpp', 00H
+$SG137751 DB	'.nes', 00H
+	ORG $+7
+_clockspeed DQ	04150000000000000r		; 4.1943e+006
+CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@F@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@F@std@@2HB DD 04H		; std::numeric_limits<short>::digits10
@@ -594,17 +605,6 @@ CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@E@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@E@std@@2_NB DB 00H		; std::numeric_limits<unsigned char>::is_signed
-CONST	ENDS
-CONST	SEGMENT
-$SG137511 DB	'Code\display_window.cpp', 00H
-$SG137519 DB	'GBEmu', 00H
-	ORG $+2
-$SG137591 DB	'GBEmu - FPS: %02d', 00H, 00H
-	ORG $+1
-$SG137653 DB	'Code\display_window.cpp', 00H
-$SG137662 DB	'.nes', 00H
-	ORG $+7
-_clockspeed DQ	04150000000000000r		; 4.1943e+006
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@C@std@@2HB
 CONST	SEGMENT
@@ -1034,16 +1034,25 @@ PUBLIC	?_Atomic_store_1@std@@YAXPCEEW4memory_order@1@@Z ; std::_Atomic_store_1
 PUBLIC	??4atomic_bool@std@@QAE_N_N@Z			; std::atomic_bool::operator=
 PUBLIC	?atomic_store_explicit@std@@YAXPAUatomic_bool@1@_NW4memory_order@1@@Z ; std::atomic_store_explicit
 PUBLIC	?atomic_store@std@@YAXPAUatomic_bool@1@_N@Z	; std::atomic_store
+PUBLIC	?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
+PUBLIC	?Deinitialize@Component@gb@emulation@@UAEXXZ	; emulation::gb::Component::Deinitialize
+PUBLIC	?Reset@Component@gb@emulation@@UAEXXZ		; emulation::gb::Component::Reset
+PUBLIC	??0Component@gb@emulation@@QAE@XZ		; emulation::gb::Component::Component
 PUBLIC	??0Cartridge@gb@emulation@@QAE@XZ		; emulation::gb::Cartridge::Cartridge
 PUBLIC	??1Cartridge@gb@emulation@@QAE@XZ		; emulation::gb::Cartridge::~Cartridge
 PUBLIC	??0Memory@gb@emulation@@QAE@XZ			; emulation::gb::Memory::Memory
 PUBLIC	??1Memory@gb@emulation@@QAE@XZ			; emulation::gb::Memory::~Memory
+PUBLIC	?JoypadPress@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadPress
+PUBLIC	?JoypadRelease@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadRelease
 PUBLIC	??0LCDDriver@gb@emulation@@QAE@XZ		; emulation::gb::LCDDriver::LCDDriver
 PUBLIC	??1LCDDriver@gb@emulation@@QAE@XZ		; emulation::gb::LCDDriver::~LCDDriver
 PUBLIC	??0SoundController@gb@emulation@@QAE@XZ		; emulation::gb::SoundController::SoundController
 PUBLIC	??1SoundController@gb@emulation@@QAE@XZ		; emulation::gb::SoundController::~SoundController
+PUBLIC	??0Timer@gb@emulation@@QAE@XZ			; emulation::gb::Timer::Timer
+PUBLIC	??1Timer@gb@emulation@@QAE@XZ			; emulation::gb::Timer::~Timer
 PUBLIC	??0Emu@gb@emulation@@QAE@XZ			; emulation::gb::Emu::Emu
 PUBLIC	??1Emu@gb@emulation@@QAE@XZ			; emulation::gb::Emu::~Emu
+PUBLIC	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ	; emulation::gb::Emu::memory
 PUBLIC	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
 PUBLIC	?_Empty@?$_Func_class@XU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@QBE_NXZ ; std::_Func_class<void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::_Empty
 PUBLIC	??1?$_Func_class@XU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@QAE@XZ ; std::_Func_class<void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::~_Func_class<void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>
@@ -1155,12 +1164,48 @@ PUBLIC	??_C@_0CI@FNPHFCCM@Standard?5C?$CL?$CL?5Libraries?5Invalid?5A@ ; `string'
 PUBLIC	??_C@_1FO@GJIHNDLM@?$AA?$CC?$AAS?$AAt?$AAa?$AAn?$AAd?$AAa?$AAr?$AAd?$AA?5?$AAC?$AA?$CL?$AA?$CL?$AA?5?$AAL?$AAi?$AAb?$AAr?$AAa?$AAr?$AAi?$AAe?$AAs?$AA?5?$AAI?$AAn?$AAv?$AAa?$AAl?$AAi?$AAd?$AA?5@ ; `string'
 PUBLIC	??_C@_1CG@JNLFBNGN@?$AA?$CC?$AAi?$AAn?$AAv?$AAa?$AAl?$AAi?$AAd?$AA?5?$AAa?$AAr?$AAg?$AAu?$AAm?$AAe?$AAn?$AAt?$AA?$CC?$AA?$AA@ ; `string'
 PUBLIC	??_C@_1CK@CDMMNGHP@?$AAs?$AAt?$AAd?$AA?3?$AA?3?$AA_?$AAA?$AAt?$AAo?$AAm?$AAi?$AAc?$AA_?$AAs?$AAt?$AAo?$AAr?$AAe?$AA_?$AA1?$AA?$AA@ ; `string'
+PUBLIC	??_7Component@gb@emulation@@6B@			; emulation::gb::Component::`vftable'
+PUBLIC	??_7Cartridge@gb@emulation@@6B@			; emulation::gb::Cartridge::`vftable'
+PUBLIC	??_7Memory@gb@emulation@@6B@			; emulation::gb::Memory::`vftable'
+PUBLIC	??_7LCDDriver@gb@emulation@@6B@			; emulation::gb::LCDDriver::`vftable'
+PUBLIC	??_7SoundController@gb@emulation@@6B@		; emulation::gb::SoundController::`vftable'
+PUBLIC	??_7Timer@gb@emulation@@6B@			; emulation::gb::Timer::`vftable'
 PUBLIC	??_7DisplayWindow@app@@6B@			; app::DisplayWindow::`vftable'
 PUBLIC	??_7?$_Func_base@XU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@6B@ ; std::_Func_base<void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::`vftable'
 PUBLIC	??_7?$_Func_impl@U?$_Callable_obj@V<lambda_9eb754bdeb4f4749f734e866e5cd8484>@@$0A@@std@@V?$allocator@V?$_Func_class@XU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@@2@XU_Nil@2@U42@U42@U42@U42@U42@U42@@std@@6B@ ; std::_Func_impl<std::_Callable_obj<<lambda_9eb754bdeb4f4749f734e866e5cd8484>,0>,std::allocator<std::_Func_class<void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil> >,void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::`vftable'
 PUBLIC	??_7?$_Func_impl@U?$_Callable_obj@V<lambda_5d8c5ab464462ebb691e185ac4dda097>@@$0A@@std@@V?$allocator@V?$_Func_class@XU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@@2@XU_Nil@2@U42@U42@U42@U42@U42@U42@@std@@6B@ ; std::_Func_impl<std::_Callable_obj<<lambda_5d8c5ab464462ebb691e185ac4dda097>,0>,std::allocator<std::_Func_class<void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil> >,void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::`vftable'
 PUBLIC	??_R0?AV<lambda_9eb754bdeb4f4749f734e866e5cd8484>@@@8 ; <lambda_9eb754bdeb4f4749f734e866e5cd8484> `RTTI Type Descriptor'
 PUBLIC	??_R0?AV<lambda_5d8c5ab464462ebb691e185ac4dda097>@@@8 ; <lambda_5d8c5ab464462ebb691e185ac4dda097> `RTTI Type Descriptor'
+PUBLIC	??_R4Memory@gb@emulation@@6B@			; emulation::gb::Memory::`RTTI Complete Object Locator'
+PUBLIC	??_R0?AVMemory@gb@emulation@@@8			; emulation::gb::Memory `RTTI Type Descriptor'
+PUBLIC	??_R3Memory@gb@emulation@@8			; emulation::gb::Memory::`RTTI Class Hierarchy Descriptor'
+PUBLIC	??_R2Memory@gb@emulation@@8			; emulation::gb::Memory::`RTTI Base Class Array'
+PUBLIC	??_R1A@?0A@EA@Memory@gb@emulation@@8		; emulation::gb::Memory::`RTTI Base Class Descriptor at (0,-1,0,64)'
+PUBLIC	??_R1A@?0A@EA@Component@gb@emulation@@8		; emulation::gb::Component::`RTTI Base Class Descriptor at (0,-1,0,64)'
+PUBLIC	??_R0?AVComponent@gb@emulation@@@8		; emulation::gb::Component `RTTI Type Descriptor'
+PUBLIC	??_R3Component@gb@emulation@@8			; emulation::gb::Component::`RTTI Class Hierarchy Descriptor'
+PUBLIC	??_R2Component@gb@emulation@@8			; emulation::gb::Component::`RTTI Base Class Array'
+PUBLIC	??_R4Cartridge@gb@emulation@@6B@		; emulation::gb::Cartridge::`RTTI Complete Object Locator'
+PUBLIC	??_R0?AVCartridge@gb@emulation@@@8		; emulation::gb::Cartridge `RTTI Type Descriptor'
+PUBLIC	??_R3Cartridge@gb@emulation@@8			; emulation::gb::Cartridge::`RTTI Class Hierarchy Descriptor'
+PUBLIC	??_R2Cartridge@gb@emulation@@8			; emulation::gb::Cartridge::`RTTI Base Class Array'
+PUBLIC	??_R1A@?0A@EA@Cartridge@gb@emulation@@8		; emulation::gb::Cartridge::`RTTI Base Class Descriptor at (0,-1,0,64)'
+PUBLIC	??_R4LCDDriver@gb@emulation@@6B@		; emulation::gb::LCDDriver::`RTTI Complete Object Locator'
+PUBLIC	??_R0?AVLCDDriver@gb@emulation@@@8		; emulation::gb::LCDDriver `RTTI Type Descriptor'
+PUBLIC	??_R3LCDDriver@gb@emulation@@8			; emulation::gb::LCDDriver::`RTTI Class Hierarchy Descriptor'
+PUBLIC	??_R2LCDDriver@gb@emulation@@8			; emulation::gb::LCDDriver::`RTTI Base Class Array'
+PUBLIC	??_R1A@?0A@EA@LCDDriver@gb@emulation@@8		; emulation::gb::LCDDriver::`RTTI Base Class Descriptor at (0,-1,0,64)'
+PUBLIC	??_R4SoundController@gb@emulation@@6B@		; emulation::gb::SoundController::`RTTI Complete Object Locator'
+PUBLIC	??_R0?AVSoundController@gb@emulation@@@8	; emulation::gb::SoundController `RTTI Type Descriptor'
+PUBLIC	??_R3SoundController@gb@emulation@@8		; emulation::gb::SoundController::`RTTI Class Hierarchy Descriptor'
+PUBLIC	??_R2SoundController@gb@emulation@@8		; emulation::gb::SoundController::`RTTI Base Class Array'
+PUBLIC	??_R1A@?0A@EA@SoundController@gb@emulation@@8	; emulation::gb::SoundController::`RTTI Base Class Descriptor at (0,-1,0,64)'
+PUBLIC	??_R4Timer@gb@emulation@@6B@			; emulation::gb::Timer::`RTTI Complete Object Locator'
+PUBLIC	??_R0?AVTimer@gb@emulation@@@8			; emulation::gb::Timer `RTTI Type Descriptor'
+PUBLIC	??_R3Timer@gb@emulation@@8			; emulation::gb::Timer::`RTTI Class Hierarchy Descriptor'
+PUBLIC	??_R2Timer@gb@emulation@@8			; emulation::gb::Timer::`RTTI Base Class Array'
+PUBLIC	??_R1A@?0A@EA@Timer@gb@emulation@@8		; emulation::gb::Timer::`RTTI Base Class Descriptor at (0,-1,0,64)'
+PUBLIC	??_R4Component@gb@emulation@@6B@		; emulation::gb::Component::`RTTI Complete Object Locator'
 PUBLIC	??_R4?$_Func_base@XU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@6B@ ; std::_Func_base<void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::`RTTI Complete Object Locator'
 PUBLIC	??_R0?AV?$_Func_base@XU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@@8 ; std::_Func_base<void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil> `RTTI Type Descriptor'
 PUBLIC	??_R3?$_Func_base@XU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@8 ; std::_Func_base<void,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::`RTTI Class Hierarchy Descriptor'
@@ -1231,6 +1276,16 @@ EXTRN	__imp__DragAcceptFiles@8:PROC
 EXTRN	__imp__sprintf:PROC
 EXTRN	__imp_?_Debug_message@std@@YAXPB_W0I@Z:PROC
 EXTRN	__imp_?_Xbad_alloc@std@@YAXXZ:PROC
+EXTRN	?Initialize@Cartridge@gb@emulation@@UAEXPAVEmu@23@@Z:PROC ; emulation::gb::Cartridge::Initialize
+EXTRN	?Deinitialize@Cartridge@gb@emulation@@UAEXXZ:PROC ; emulation::gb::Cartridge::Deinitialize
+EXTRN	?Initialize@Memory@gb@emulation@@UAEXPAVEmu@23@@Z:PROC ; emulation::gb::Memory::Initialize
+EXTRN	?Deinitialize@Memory@gb@emulation@@UAEXXZ:PROC	; emulation::gb::Memory::Deinitialize
+EXTRN	?Initialize@LCDDriver@gb@emulation@@UAEXPAVEmu@23@@Z:PROC ; emulation::gb::LCDDriver::Initialize
+EXTRN	?Deinitialize@LCDDriver@gb@emulation@@UAEXXZ:PROC ; emulation::gb::LCDDriver::Deinitialize
+EXTRN	?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z:PROC ; emulation::gb::SoundController::Initialize
+EXTRN	?Deinitialize@SoundController@gb@emulation@@UAEXXZ:PROC ; emulation::gb::SoundController::Deinitialize
+EXTRN	?Initialize@Timer@gb@emulation@@UAEXPAVEmu@23@@Z:PROC ; emulation::gb::Timer::Initialize
+EXTRN	?Deinitialize@Timer@gb@emulation@@UAEXXZ:PROC	; emulation::gb::Timer::Deinitialize
 EXTRN	??0Cpu@gb@emulation@@QAE@XZ:PROC		; emulation::gb::Cpu::Cpu
 EXTRN	??1Cpu@gb@emulation@@QAE@XZ:PROC		; emulation::gb::Cpu::~Cpu
 EXTRN	?Initialize@Emu@gb@emulation@@QAEXXZ:PROC	; emulation::gb::Emu::Initialize
@@ -1506,6 +1561,221 @@ rdata$r	SEGMENT
 	DD	FLAT:??_R0?AV?$_Func_base@XU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@@8
 	DD	FLAT:??_R3?$_Func_base@XU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@8
 rdata$r	ENDS
+;	COMDAT ??_R4Component@gb@emulation@@6B@
+rdata$r	SEGMENT
+??_R4Component@gb@emulation@@6B@ DD 00H			; emulation::gb::Component::`RTTI Complete Object Locator'
+	DD	00H
+	DD	00H
+	DD	FLAT:??_R0?AVComponent@gb@emulation@@@8
+	DD	FLAT:??_R3Component@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R1A@?0A@EA@Timer@gb@emulation@@8
+rdata$r	SEGMENT
+??_R1A@?0A@EA@Timer@gb@emulation@@8 DD FLAT:??_R0?AVTimer@gb@emulation@@@8 ; emulation::gb::Timer::`RTTI Base Class Descriptor at (0,-1,0,64)'
+	DD	01H
+	DD	00H
+	DD	0ffffffffH
+	DD	00H
+	DD	040H
+	DD	FLAT:??_R3Timer@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R2Timer@gb@emulation@@8
+rdata$r	SEGMENT
+??_R2Timer@gb@emulation@@8 DD FLAT:??_R1A@?0A@EA@Timer@gb@emulation@@8 ; emulation::gb::Timer::`RTTI Base Class Array'
+	DD	FLAT:??_R1A@?0A@EA@Component@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R3Timer@gb@emulation@@8
+rdata$r	SEGMENT
+??_R3Timer@gb@emulation@@8 DD 00H			; emulation::gb::Timer::`RTTI Class Hierarchy Descriptor'
+	DD	00H
+	DD	02H
+	DD	FLAT:??_R2Timer@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R0?AVTimer@gb@emulation@@@8
+_DATA	SEGMENT
+??_R0?AVTimer@gb@emulation@@@8 DD FLAT:??_7type_info@@6B@ ; emulation::gb::Timer `RTTI Type Descriptor'
+	DD	00H
+	DB	'.?AVTimer@gb@emulation@@', 00H
+_DATA	ENDS
+;	COMDAT ??_R4Timer@gb@emulation@@6B@
+rdata$r	SEGMENT
+??_R4Timer@gb@emulation@@6B@ DD 00H			; emulation::gb::Timer::`RTTI Complete Object Locator'
+	DD	00H
+	DD	00H
+	DD	FLAT:??_R0?AVTimer@gb@emulation@@@8
+	DD	FLAT:??_R3Timer@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R1A@?0A@EA@SoundController@gb@emulation@@8
+rdata$r	SEGMENT
+??_R1A@?0A@EA@SoundController@gb@emulation@@8 DD FLAT:??_R0?AVSoundController@gb@emulation@@@8 ; emulation::gb::SoundController::`RTTI Base Class Descriptor at (0,-1,0,64)'
+	DD	01H
+	DD	00H
+	DD	0ffffffffH
+	DD	00H
+	DD	040H
+	DD	FLAT:??_R3SoundController@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R2SoundController@gb@emulation@@8
+rdata$r	SEGMENT
+??_R2SoundController@gb@emulation@@8 DD FLAT:??_R1A@?0A@EA@SoundController@gb@emulation@@8 ; emulation::gb::SoundController::`RTTI Base Class Array'
+	DD	FLAT:??_R1A@?0A@EA@Component@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R3SoundController@gb@emulation@@8
+rdata$r	SEGMENT
+??_R3SoundController@gb@emulation@@8 DD 00H		; emulation::gb::SoundController::`RTTI Class Hierarchy Descriptor'
+	DD	00H
+	DD	02H
+	DD	FLAT:??_R2SoundController@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R0?AVSoundController@gb@emulation@@@8
+_DATA	SEGMENT
+??_R0?AVSoundController@gb@emulation@@@8 DD FLAT:??_7type_info@@6B@ ; emulation::gb::SoundController `RTTI Type Descriptor'
+	DD	00H
+	DB	'.?AVSoundController@gb@emulation@@', 00H
+_DATA	ENDS
+;	COMDAT ??_R4SoundController@gb@emulation@@6B@
+rdata$r	SEGMENT
+??_R4SoundController@gb@emulation@@6B@ DD 00H		; emulation::gb::SoundController::`RTTI Complete Object Locator'
+	DD	00H
+	DD	00H
+	DD	FLAT:??_R0?AVSoundController@gb@emulation@@@8
+	DD	FLAT:??_R3SoundController@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R1A@?0A@EA@LCDDriver@gb@emulation@@8
+rdata$r	SEGMENT
+??_R1A@?0A@EA@LCDDriver@gb@emulation@@8 DD FLAT:??_R0?AVLCDDriver@gb@emulation@@@8 ; emulation::gb::LCDDriver::`RTTI Base Class Descriptor at (0,-1,0,64)'
+	DD	01H
+	DD	00H
+	DD	0ffffffffH
+	DD	00H
+	DD	040H
+	DD	FLAT:??_R3LCDDriver@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R2LCDDriver@gb@emulation@@8
+rdata$r	SEGMENT
+??_R2LCDDriver@gb@emulation@@8 DD FLAT:??_R1A@?0A@EA@LCDDriver@gb@emulation@@8 ; emulation::gb::LCDDriver::`RTTI Base Class Array'
+	DD	FLAT:??_R1A@?0A@EA@Component@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R3LCDDriver@gb@emulation@@8
+rdata$r	SEGMENT
+??_R3LCDDriver@gb@emulation@@8 DD 00H			; emulation::gb::LCDDriver::`RTTI Class Hierarchy Descriptor'
+	DD	00H
+	DD	02H
+	DD	FLAT:??_R2LCDDriver@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R0?AVLCDDriver@gb@emulation@@@8
+_DATA	SEGMENT
+??_R0?AVLCDDriver@gb@emulation@@@8 DD FLAT:??_7type_info@@6B@ ; emulation::gb::LCDDriver `RTTI Type Descriptor'
+	DD	00H
+	DB	'.?AVLCDDriver@gb@emulation@@', 00H
+_DATA	ENDS
+;	COMDAT ??_R4LCDDriver@gb@emulation@@6B@
+rdata$r	SEGMENT
+??_R4LCDDriver@gb@emulation@@6B@ DD 00H			; emulation::gb::LCDDriver::`RTTI Complete Object Locator'
+	DD	00H
+	DD	00H
+	DD	FLAT:??_R0?AVLCDDriver@gb@emulation@@@8
+	DD	FLAT:??_R3LCDDriver@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R1A@?0A@EA@Cartridge@gb@emulation@@8
+rdata$r	SEGMENT
+??_R1A@?0A@EA@Cartridge@gb@emulation@@8 DD FLAT:??_R0?AVCartridge@gb@emulation@@@8 ; emulation::gb::Cartridge::`RTTI Base Class Descriptor at (0,-1,0,64)'
+	DD	01H
+	DD	00H
+	DD	0ffffffffH
+	DD	00H
+	DD	040H
+	DD	FLAT:??_R3Cartridge@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R2Cartridge@gb@emulation@@8
+rdata$r	SEGMENT
+??_R2Cartridge@gb@emulation@@8 DD FLAT:??_R1A@?0A@EA@Cartridge@gb@emulation@@8 ; emulation::gb::Cartridge::`RTTI Base Class Array'
+	DD	FLAT:??_R1A@?0A@EA@Component@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R3Cartridge@gb@emulation@@8
+rdata$r	SEGMENT
+??_R3Cartridge@gb@emulation@@8 DD 00H			; emulation::gb::Cartridge::`RTTI Class Hierarchy Descriptor'
+	DD	00H
+	DD	02H
+	DD	FLAT:??_R2Cartridge@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R0?AVCartridge@gb@emulation@@@8
+_DATA	SEGMENT
+??_R0?AVCartridge@gb@emulation@@@8 DD FLAT:??_7type_info@@6B@ ; emulation::gb::Cartridge `RTTI Type Descriptor'
+	DD	00H
+	DB	'.?AVCartridge@gb@emulation@@', 00H
+_DATA	ENDS
+;	COMDAT ??_R4Cartridge@gb@emulation@@6B@
+rdata$r	SEGMENT
+??_R4Cartridge@gb@emulation@@6B@ DD 00H			; emulation::gb::Cartridge::`RTTI Complete Object Locator'
+	DD	00H
+	DD	00H
+	DD	FLAT:??_R0?AVCartridge@gb@emulation@@@8
+	DD	FLAT:??_R3Cartridge@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R2Component@gb@emulation@@8
+rdata$r	SEGMENT
+??_R2Component@gb@emulation@@8 DD FLAT:??_R1A@?0A@EA@Component@gb@emulation@@8 ; emulation::gb::Component::`RTTI Base Class Array'
+rdata$r	ENDS
+;	COMDAT ??_R3Component@gb@emulation@@8
+rdata$r	SEGMENT
+??_R3Component@gb@emulation@@8 DD 00H			; emulation::gb::Component::`RTTI Class Hierarchy Descriptor'
+	DD	00H
+	DD	01H
+	DD	FLAT:??_R2Component@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R0?AVComponent@gb@emulation@@@8
+_DATA	SEGMENT
+??_R0?AVComponent@gb@emulation@@@8 DD FLAT:??_7type_info@@6B@ ; emulation::gb::Component `RTTI Type Descriptor'
+	DD	00H
+	DB	'.?AVComponent@gb@emulation@@', 00H
+_DATA	ENDS
+;	COMDAT ??_R1A@?0A@EA@Component@gb@emulation@@8
+rdata$r	SEGMENT
+??_R1A@?0A@EA@Component@gb@emulation@@8 DD FLAT:??_R0?AVComponent@gb@emulation@@@8 ; emulation::gb::Component::`RTTI Base Class Descriptor at (0,-1,0,64)'
+	DD	00H
+	DD	00H
+	DD	0ffffffffH
+	DD	00H
+	DD	040H
+	DD	FLAT:??_R3Component@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R1A@?0A@EA@Memory@gb@emulation@@8
+rdata$r	SEGMENT
+??_R1A@?0A@EA@Memory@gb@emulation@@8 DD FLAT:??_R0?AVMemory@gb@emulation@@@8 ; emulation::gb::Memory::`RTTI Base Class Descriptor at (0,-1,0,64)'
+	DD	01H
+	DD	00H
+	DD	0ffffffffH
+	DD	00H
+	DD	040H
+	DD	FLAT:??_R3Memory@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R2Memory@gb@emulation@@8
+rdata$r	SEGMENT
+??_R2Memory@gb@emulation@@8 DD FLAT:??_R1A@?0A@EA@Memory@gb@emulation@@8 ; emulation::gb::Memory::`RTTI Base Class Array'
+	DD	FLAT:??_R1A@?0A@EA@Component@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R3Memory@gb@emulation@@8
+rdata$r	SEGMENT
+??_R3Memory@gb@emulation@@8 DD 00H			; emulation::gb::Memory::`RTTI Class Hierarchy Descriptor'
+	DD	00H
+	DD	02H
+	DD	FLAT:??_R2Memory@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R0?AVMemory@gb@emulation@@@8
+_DATA	SEGMENT
+??_R0?AVMemory@gb@emulation@@@8 DD FLAT:??_7type_info@@6B@ ; emulation::gb::Memory `RTTI Type Descriptor'
+	DD	00H
+	DB	'.?AVMemory@gb@emulation@@', 00H
+_DATA	ENDS
+;	COMDAT ??_R4Memory@gb@emulation@@6B@
+rdata$r	SEGMENT
+??_R4Memory@gb@emulation@@6B@ DD 00H			; emulation::gb::Memory::`RTTI Complete Object Locator'
+	DD	00H
+	DD	00H
+	DD	FLAT:??_R0?AVMemory@gb@emulation@@@8
+	DD	FLAT:??_R3Memory@gb@emulation@@8
+rdata$r	ENDS
 ;	COMDAT ??_R0?AV<lambda_5d8c5ab464462ebb691e185ac4dda097>@@@8
 _DATA	SEGMENT
 ??_R0?AV<lambda_5d8c5ab464462ebb691e185ac4dda097>@@@8 DD FLAT:??_7type_info@@6B@ ; <lambda_5d8c5ab464462ebb691e185ac4dda097> `RTTI Type Descriptor'
@@ -1578,6 +1848,48 @@ CONST	SEGMENT
 	DD	FLAT:?OnDropFiles@DisplayWindow@app@@MAEHIJ@Z
 	DD	FLAT:?OnPaint@Window@windows@core@@MAEHIJ@Z
 	DD	FLAT:?PreProcessMessages@Window@windows@core@@MAEHPAUHWND__@@IIJ@Z
+CONST	ENDS
+;	COMDAT ??_7Timer@gb@emulation@@6B@
+CONST	SEGMENT
+??_7Timer@gb@emulation@@6B@ DD FLAT:??_R4Timer@gb@emulation@@6B@ ; emulation::gb::Timer::`vftable'
+	DD	FLAT:?Initialize@Timer@gb@emulation@@UAEXPAVEmu@23@@Z
+	DD	FLAT:?Deinitialize@Timer@gb@emulation@@UAEXXZ
+	DD	FLAT:?Reset@Component@gb@emulation@@UAEXXZ
+CONST	ENDS
+;	COMDAT ??_7SoundController@gb@emulation@@6B@
+CONST	SEGMENT
+??_7SoundController@gb@emulation@@6B@ DD FLAT:??_R4SoundController@gb@emulation@@6B@ ; emulation::gb::SoundController::`vftable'
+	DD	FLAT:?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z
+	DD	FLAT:?Deinitialize@SoundController@gb@emulation@@UAEXXZ
+	DD	FLAT:?Reset@Component@gb@emulation@@UAEXXZ
+CONST	ENDS
+;	COMDAT ??_7LCDDriver@gb@emulation@@6B@
+CONST	SEGMENT
+??_7LCDDriver@gb@emulation@@6B@ DD FLAT:??_R4LCDDriver@gb@emulation@@6B@ ; emulation::gb::LCDDriver::`vftable'
+	DD	FLAT:?Initialize@LCDDriver@gb@emulation@@UAEXPAVEmu@23@@Z
+	DD	FLAT:?Deinitialize@LCDDriver@gb@emulation@@UAEXXZ
+	DD	FLAT:?Reset@Component@gb@emulation@@UAEXXZ
+CONST	ENDS
+;	COMDAT ??_7Memory@gb@emulation@@6B@
+CONST	SEGMENT
+??_7Memory@gb@emulation@@6B@ DD FLAT:??_R4Memory@gb@emulation@@6B@ ; emulation::gb::Memory::`vftable'
+	DD	FLAT:?Initialize@Memory@gb@emulation@@UAEXPAVEmu@23@@Z
+	DD	FLAT:?Deinitialize@Memory@gb@emulation@@UAEXXZ
+	DD	FLAT:?Reset@Component@gb@emulation@@UAEXXZ
+CONST	ENDS
+;	COMDAT ??_7Cartridge@gb@emulation@@6B@
+CONST	SEGMENT
+??_7Cartridge@gb@emulation@@6B@ DD FLAT:??_R4Cartridge@gb@emulation@@6B@ ; emulation::gb::Cartridge::`vftable'
+	DD	FLAT:?Initialize@Cartridge@gb@emulation@@UAEXPAVEmu@23@@Z
+	DD	FLAT:?Deinitialize@Cartridge@gb@emulation@@UAEXXZ
+	DD	FLAT:?Reset@Component@gb@emulation@@UAEXXZ
+CONST	ENDS
+;	COMDAT ??_7Component@gb@emulation@@6B@
+CONST	SEGMENT
+??_7Component@gb@emulation@@6B@ DD FLAT:??_R4Component@gb@emulation@@6B@ ; emulation::gb::Component::`vftable'
+	DD	FLAT:?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z
+	DD	FLAT:?Deinitialize@Component@gb@emulation@@UAEXXZ
+	DD	FLAT:?Reset@Component@gb@emulation@@UAEXXZ
 CONST	ENDS
 ;	COMDAT ??_C@_1CK@CDMMNGHP@?$AAs?$AAt?$AAd?$AA?3?$AA?3?$AA_?$AAA?$AAt?$AAo?$AAm?$AAi?$AAc?$AA_?$AAs?$AAt?$AAo?$AAr?$AAe?$AA_?$AA1?$AA?$AA@
 CONST	SEGMENT
@@ -1855,7 +2167,7 @@ xdata$x	ENDS
 ;	COMDAT xdata$x
 xdata$x	SEGMENT
 __ehfuncinfo$??1Emu@gb@emulation@@QAE@XZ DD 019930522H
-	DD	06H
+	DD	07H
 	DD	FLAT:__unwindtable$??1Emu@gb@emulation@@QAE@XZ
 	DD	2 DUP(00H)
 	DD	2 DUP(00H)
@@ -1873,11 +2185,13 @@ __unwindtable$??1Emu@gb@emulation@@QAE@XZ DD 0ffffffffH
 	DD	FLAT:__unwindfunclet$??1Emu@gb@emulation@@QAE@XZ$4
 	DD	04H
 	DD	FLAT:__unwindfunclet$??1Emu@gb@emulation@@QAE@XZ$5
+	DD	05H
+	DD	FLAT:__unwindfunclet$??1Emu@gb@emulation@@QAE@XZ$6
 xdata$x	ENDS
 ;	COMDAT xdata$x
 xdata$x	SEGMENT
 __ehfuncinfo$??0Emu@gb@emulation@@QAE@XZ DD 019930522H
-	DD	06H
+	DD	07H
 	DD	FLAT:__unwindtable$??0Emu@gb@emulation@@QAE@XZ
 	DD	2 DUP(00H)
 	DD	2 DUP(00H)
@@ -1895,6 +2209,8 @@ __unwindtable$??0Emu@gb@emulation@@QAE@XZ DD 0ffffffffH
 	DD	FLAT:__unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$4
 	DD	04H
 	DD	FLAT:__unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$5
+	DD	05H
+	DD	FLAT:__unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$6
 xdata$x	ENDS
 CRT$XCU	SEGMENT
 _allocator_arg$initializer$ DD FLAT:??__Eallocator_arg@std@@YAXXZ
@@ -5384,7 +5700,7 @@ $LN2@Render:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 640				; 00000280H
 	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
-	mov	edx, DWORD PTR [eax+4]
+	mov	edx, DWORD PTR [eax+8]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+604]
@@ -5396,7 +5712,7 @@ $LN2@Render:
 
 	mov	esi, esp
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+2288]
+	mov	eax, DWORD PTR [edx+2328]
 	push	eax
 	push	3553					; 00000de1H
 	call	DWORD PTR __imp__glBindTexture@8
@@ -5521,33 +5837,37 @@ $LN2@Render:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 276  :       glEnd();
+; 276  :       /*glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
+; 277  :       glTexCoord2d(1,0.0); glVertex2d(256,0.0);
+; 278  :       glTexCoord2d(1,1); glVertex2d(256,256);
+; 279  :       glTexCoord2d(0.0,1); glVertex2d(0.0,256);*/
+; 280  :       glEnd();
 
 	mov	esi, esp
 	call	DWORD PTR __imp__glEnd@0
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 277  :     break;
+; 281  :     break;
 
 	jmp	$LN3@Render
 $LN1@Render:
 
-; 278  :       
-; 279  :     case ID_VIDEO_EAGLE512X480:
-; 280  :       //ScaleImageEagle2X(nes.frame_buffer,256,240,output);
-; 281  :       glBindTexture( GL_TEXTURE_2D, texture );
+; 282  :       
+; 283  :     case ID_VIDEO_EAGLE512X480:
+; 284  :       //ScaleImageEagle2X(nes.frame_buffer,256,240,output);
+; 285  :       glBindTexture( GL_TEXTURE_2D, texture );
 
 	mov	esi, esp
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+2288]
+	mov	ecx, DWORD PTR [eax+2328]
 	push	ecx
 	push	3553					; 00000de1H
 	call	DWORD PTR __imp__glBindTexture@8
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 282  :       glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,512,480,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
+; 286  :       glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,512,480,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
 
 	mov	esi, esp
 	mov	edx, DWORD PTR _this$[ebp]
@@ -5565,7 +5885,7 @@ $LN1@Render:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 283  :       glBegin( GL_QUADS );
+; 287  :       glBegin( GL_QUADS );
 
 	mov	esi, esp
 	push	7
@@ -5573,7 +5893,7 @@ $LN1@Render:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 284  :       glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
+; 288  :       glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
 
 	mov	esi, esp
 	sub	esp, 8
@@ -5596,7 +5916,7 @@ $LN1@Render:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 285  :       glTexCoord2d(1.0,0.0); glVertex2d(256.0*2,0.0);
+; 289  :       glTexCoord2d(1.0,0.0); glVertex2d(256.0*2,0.0);
 
 	mov	esi, esp
 	sub	esp, 8
@@ -5619,7 +5939,7 @@ $LN1@Render:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 286  :       glTexCoord2d(1.0,1.0); glVertex2d(256.0*2,240.0*2);
+; 290  :       glTexCoord2d(1.0,1.0); glVertex2d(256.0*2,240.0*2);
 
 	mov	esi, esp
 	sub	esp, 8
@@ -5642,7 +5962,7 @@ $LN1@Render:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 287  :       glTexCoord2d(0.0,1.0); glVertex2d(0.0,240.0*2);
+; 291  :       glTexCoord2d(0.0,1.0); glVertex2d(0.0,240.0*2);
 
 	mov	esi, esp
 	sub	esp, 8
@@ -5665,7 +5985,7 @@ $LN1@Render:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 288  :       glEnd();
+; 292  :       glEnd();
 
 	mov	esi, esp
 	call	DWORD PTR __imp__glEnd@0
@@ -5673,12 +5993,12 @@ $LN1@Render:
 	call	__RTC_CheckEsp
 $LN3@Render:
 
-; 289  :       //hq2x_filter_render(output,256,nes.frame_buffer,256,256,240);
-; 290  :       //glDrawPixels(512,480,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
-; 291  :     break;
-; 292  :   }
-; 293  : 
-; 294  :   gfx.Render();
+; 293  :       //hq2x_filter_render(output,256,nes.frame_buffer,256,256,240);
+; 294  :       //glDrawPixels(512,480,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
+; 295  :     break;
+; 296  :   }
+; 297  : 
+; 298  :   gfx.Render();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 608				; 00000260H
@@ -5690,25 +6010,25 @@ $LN3@Render:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 295  :   timing.render_time_span = 0;
+; 299  :   timing.render_time_span = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	movsd	xmm0, QWORD PTR __real@0000000000000000
-	movsd	QWORD PTR [eax+2416], xmm0
+	movsd	QWORD PTR [eax+2456], xmm0
 
-; 296  :   ++timing.fps_counter;
+; 300  :   ++timing.fps_counter;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [ecx+2400]
+	mov	edx, DWORD PTR [ecx+2440]
 	add	edx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+2400], edx
+	mov	DWORD PTR [eax+2440], edx
 
-; 297  :   return 0;
+; 301  :   return 0;
 
 	xor	eax, eax
 
-; 298  : }
+; 302  : }
 
 	pop	esi
 	add	esp, 8
@@ -5784,7 +6104,7 @@ $LN5@OnDropFile:
 ; 245  :   char* filename = new char[len];
 
 	push	245					; 000000f5H
-	push	OFFSET $SG137653
+	push	OFFSET $SG137742
 	push	1
 	mov	edx, DWORD PTR _len$[ebp]
 	push	edx
@@ -5857,7 +6177,7 @@ $LN2@OnDropFile:
 ; 252  : 
 ; 253  :   if (strcmp(ext,".nes")==0) {
 
-	push	OFFSET $SG137662
+	push	OFFSET $SG137751
 	mov	edx, DWORD PTR _ext$[ebp]
 	push	edx
 	call	_strcmp
@@ -5974,7 +6294,7 @@ _lParam$ = 12						; size = 4
 ; 141  :   glDeleteTextures(1,&texture);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 2288				; 000008f0H
+	add	eax, 2328				; 00000918H
 	mov	esi, esp
 	push	eax
 	push	1
@@ -6049,28 +6369,135 @@ _lParam$ = 12						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 220  :   /*if (wParam == 'Z')
-; 221  :     IO::joy1.a = false;
+; 220  :   if (wParam == 'Z')
+
+	cmp	DWORD PTR _wParam$[ebp], 90		; 0000005aH
+	jne	SHORT $LN8@OnKeyUp
+
+; 221  : 		emu.memory()->JoypadRelease(emulation::gb::JoypadA);
+
+	push	4
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadRelease@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadRelease
+$LN8@OnKeyUp:
+
 ; 222  :   if (wParam == 'X')
-; 223  :     IO::joy1.b = false;
+
+	cmp	DWORD PTR _wParam$[ebp], 88		; 00000058H
+	jne	SHORT $LN7@OnKeyUp
+
+; 223  :     emu.memory()->JoypadRelease(emulation::gb::JoypadB);
+
+	push	5
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadRelease@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadRelease
+$LN7@OnKeyUp:
+
 ; 224  :   if (wParam == VK_RETURN)
-; 225  :     IO::joy1.start = false;
+
+	cmp	DWORD PTR _wParam$[ebp], 13		; 0000000dH
+	jne	SHORT $LN6@OnKeyUp
+
+; 225  :     emu.memory()->JoypadRelease(emulation::gb::JoypadStart);
+
+	push	7
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadRelease@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadRelease
+$LN6@OnKeyUp:
+
 ; 226  :   if (wParam == VK_SPACE)
-; 227  :     IO::joy1.select = false;
+
+	cmp	DWORD PTR _wParam$[ebp], 32		; 00000020H
+	jne	SHORT $LN5@OnKeyUp
+
+; 227  :     emu.memory()->JoypadRelease(emulation::gb::JoypadSelect);
+
+	push	6
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadRelease@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadRelease
+$LN5@OnKeyUp:
+
 ; 228  :   if (wParam == VK_UP)
-; 229  :     IO::joy1.up = false;
+
+	cmp	DWORD PTR _wParam$[ebp], 38		; 00000026H
+	jne	SHORT $LN4@OnKeyUp
+
+; 229  :     emu.memory()->JoypadRelease(emulation::gb::JoypadUp);
+
+	push	2
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadRelease@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadRelease
+$LN4@OnKeyUp:
+
 ; 230  :   if (wParam == VK_DOWN)
-; 231  :     IO::joy1.down = false;
+
+	cmp	DWORD PTR _wParam$[ebp], 40		; 00000028H
+	jne	SHORT $LN3@OnKeyUp
+
+; 231  :     emu.memory()->JoypadRelease(emulation::gb::JoypadDown);
+
+	push	3
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadRelease@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadRelease
+$LN3@OnKeyUp:
+
 ; 232  :   if (wParam == VK_LEFT)
-; 233  :     IO::joy1.left = false;
+
+	cmp	DWORD PTR _wParam$[ebp], 37		; 00000025H
+	jne	SHORT $LN2@OnKeyUp
+
+; 233  :     emu.memory()->JoypadRelease(emulation::gb::JoypadLeft);
+
+	push	1
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadRelease@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadRelease
+$LN2@OnKeyUp:
+
 ; 234  :   if (wParam == VK_RIGHT)
-; 235  :     IO::joy1.right = false;*/
+
+	cmp	DWORD PTR _wParam$[ebp], 39		; 00000027H
+	jne	SHORT $LN1@OnKeyUp
+
+; 235  :     emu.memory()->JoypadRelease(emulation::gb::JoypadRight);
+
+	push	0
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadRelease@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadRelease
+$LN1@OnKeyUp:
+
 ; 236  :   return 0;
 
 	xor	eax, eax
 
 ; 237  : }
 
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	8
@@ -6094,22 +6521,126 @@ _lParam$ = 12						; size = 4
 	mov	DWORD PTR _this$[ebp], ecx
 
 ; 198  : 
-; 199  :   /*if (wParam == 'Z')
-; 200  :     IO::joy1.a = true;
+; 199  :   if (wParam == 'Z')
+
+	cmp	DWORD PTR _wParam$[ebp], 90		; 0000005aH
+	jne	SHORT $LN8@OnKeyDown
+
+; 200  : 		emu.memory()->JoypadPress(emulation::gb::JoypadA);
+
+	push	4
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadPress@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadPress
+$LN8@OnKeyDown:
+
 ; 201  :   if (wParam == 'X')
-; 202  :     IO::joy1.b = true;
+
+	cmp	DWORD PTR _wParam$[ebp], 88		; 00000058H
+	jne	SHORT $LN7@OnKeyDown
+
+; 202  :     emu.memory()->JoypadPress(emulation::gb::JoypadB);
+
+	push	5
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadPress@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadPress
+$LN7@OnKeyDown:
+
 ; 203  :   if (wParam == VK_RETURN)
-; 204  :     IO::joy1.start = true;
+
+	cmp	DWORD PTR _wParam$[ebp], 13		; 0000000dH
+	jne	SHORT $LN6@OnKeyDown
+
+; 204  :     emu.memory()->JoypadPress(emulation::gb::JoypadStart);
+
+	push	7
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadPress@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadPress
+$LN6@OnKeyDown:
+
 ; 205  :   if (wParam == VK_SPACE)
-; 206  :     IO::joy1.select = true;
+
+	cmp	DWORD PTR _wParam$[ebp], 32		; 00000020H
+	jne	SHORT $LN5@OnKeyDown
+
+; 206  :     emu.memory()->JoypadPress(emulation::gb::JoypadSelect);
+
+	push	6
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadPress@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadPress
+$LN5@OnKeyDown:
+
 ; 207  :   if (wParam == VK_UP)
-; 208  :     IO::joy1.up = true;
+
+	cmp	DWORD PTR _wParam$[ebp], 38		; 00000026H
+	jne	SHORT $LN4@OnKeyDown
+
+; 208  :     emu.memory()->JoypadPress(emulation::gb::JoypadUp);
+
+	push	2
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadPress@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadPress
+$LN4@OnKeyDown:
+
 ; 209  :   if (wParam == VK_DOWN)
-; 210  :     IO::joy1.down = true;
+
+	cmp	DWORD PTR _wParam$[ebp], 40		; 00000028H
+	jne	SHORT $LN3@OnKeyDown
+
+; 210  :     emu.memory()->JoypadPress(emulation::gb::JoypadDown);
+
+	push	3
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadPress@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadPress
+$LN3@OnKeyDown:
+
 ; 211  :   if (wParam == VK_LEFT)
-; 212  :     IO::joy1.left = true;
+
+	cmp	DWORD PTR _wParam$[ebp], 37		; 00000025H
+	jne	SHORT $LN2@OnKeyDown
+
+; 212  :     emu.memory()->JoypadPress(emulation::gb::JoypadLeft);
+
+	push	1
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadPress@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadPress
+$LN2@OnKeyDown:
+
 ; 213  :   if (wParam == VK_RIGHT)
-; 214  :     IO::joy1.right = true;*/
+
+	cmp	DWORD PTR _wParam$[ebp], 39		; 00000027H
+	jne	SHORT $LN1@OnKeyDown
+
+; 214  :     emu.memory()->JoypadPress(emulation::gb::JoypadRight);
+
+	push	0
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 640				; 00000280H
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?JoypadPress@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ; emulation::gb::Memory::JoypadPress
+$LN1@OnKeyDown:
+
 ; 215  : 
 ; 216  :   return 0;
 
@@ -6117,6 +6648,9 @@ _lParam$ = 12						; size = 4
 
 ; 217  : }
 
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	8
@@ -6391,7 +6925,7 @@ $LN2@OnCommand:
 	mov	eax, DWORD PTR _this$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2292				; 000008f4H
+	add	ecx, 2332				; 0000091cH
 	call	?Show@Options@dialogs@app@@QAEXPAVWindow@windows@core@@@Z ; app::dialogs::Options::Show
 $LN8@OnCommand:
 
@@ -6464,20 +6998,20 @@ __$ArrayPad$ = -4					; size = 4
 ; 100  :     timing.current_cycles = timer.GetCurrentCycles();
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2312				; 00000908H
+	add	ecx, 2352				; 00000930H
 	call	?GetCurrentCycles@Timer@utilities@@QAE_KXZ ; utilities::Timer::GetCurrentCycles
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+2376], eax
-	mov	DWORD PTR [ecx+2380], edx
+	mov	DWORD PTR [ecx+2416], eax
+	mov	DWORD PTR [ecx+2420], edx
 
 ; 101  :     double time_span =  (timing.current_cycles - timing.prev_cycles) * timer.resolution();
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+2376]
-	sub	ecx, DWORD PTR [eax+2384]
-	mov	edx, DWORD PTR [edx+2380]
-	sbb	edx, DWORD PTR [eax+2388]
+	mov	ecx, DWORD PTR [edx+2416]
+	sub	ecx, DWORD PTR [eax+2424]
+	mov	edx, DWORD PTR [edx+2420]
+	sbb	edx, DWORD PTR [eax+2428]
 	mov	DWORD PTR tv194[ebp], ecx
 	mov	DWORD PTR tv194[ebp+4], edx
 	mov	eax, DWORD PTR tv194[ebp+4]
@@ -6494,7 +7028,7 @@ __$ArrayPad$ = -4					; size = 4
 	fstp	QWORD PTR tv207[ebp]
 	movsd	xmm0, QWORD PTR tv207[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2312				; 00000908H
+	add	ecx, 2352				; 00000930H
 	movsd	QWORD PTR tv274[ebp], xmm0
 	call	?resolution@Timer@utilities@@QAENXZ	; utilities::Timer::resolution
 	fstp	QWORD PTR tv212[ebp]
@@ -6518,16 +7052,16 @@ $LN4@Step:
 ; 105  :     timing.span_accumulator += time_span;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	movsd	xmm0, QWORD PTR [ecx+2432]
+	movsd	xmm0, QWORD PTR [ecx+2472]
 	addsd	xmm0, QWORD PTR _time_span$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	movsd	QWORD PTR [edx+2432], xmm0
+	movsd	QWORD PTR [edx+2472], xmm0
 $LN3@Step:
 
 ; 106  :     while (timing.span_accumulator >= dt) {
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movsd	xmm0, QWORD PTR [eax+2432]
+	movsd	xmm0, QWORD PTR [eax+2472]
 	comisd	xmm0, QWORD PTR _dt$[ebp]
 	jb	SHORT $LN2@Step
 
@@ -6541,10 +7075,10 @@ $LN3@Step:
 	call	?Step@Emu@gb@emulation@@QAENN@Z		; emulation::gb::Emu::Step
 	fstp	QWORD PTR tv226[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	movsd	xmm0, QWORD PTR [ecx+2432]
+	movsd	xmm0, QWORD PTR [ecx+2472]
 	subsd	xmm0, QWORD PTR tv226[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	movsd	QWORD PTR [edx+2432], xmm0
+	movsd	QWORD PTR [edx+2472], xmm0
 
 ; 108  :     }
 
@@ -6556,40 +7090,40 @@ $LN2@Step:
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [eax+2376]
-	sub	edx, DWORD PTR [ecx+2384]
-	mov	eax, DWORD PTR [eax+2380]
-	sbb	eax, DWORD PTR [ecx+2388]
+	mov	edx, DWORD PTR [eax+2416]
+	sub	edx, DWORD PTR [ecx+2424]
+	mov	eax, DWORD PTR [eax+2420]
+	sbb	eax, DWORD PTR [ecx+2428]
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	edx, DWORD PTR [ecx+2392]
-	adc	eax, DWORD PTR [ecx+2396]
+	add	edx, DWORD PTR [ecx+2432]
+	adc	eax, DWORD PTR [ecx+2436]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+2392], edx
-	mov	DWORD PTR [ecx+2396], eax
+	mov	DWORD PTR [ecx+2432], edx
+	mov	DWORD PTR [ecx+2436], eax
 
 ; 111  :     timing.prev_cycles = timing.current_cycles;
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+2376]
-	mov	DWORD PTR [edx+2384], ecx
-	mov	eax, DWORD PTR [eax+2380]
-	mov	DWORD PTR [edx+2388], eax
+	mov	ecx, DWORD PTR [eax+2416]
+	mov	DWORD PTR [edx+2424], ecx
+	mov	eax, DWORD PTR [eax+2420]
+	mov	DWORD PTR [edx+2428], eax
 
 ; 112  :     //timing.render_time_span += time_span;
 ; 113  :     //++timing.fps_counter;
 ; 114  :     timing.fps_time_span += time_span;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	movsd	xmm0, QWORD PTR [ecx+2424]
+	movsd	xmm0, QWORD PTR [ecx+2464]
 	addsd	xmm0, QWORD PTR _time_span$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	movsd	QWORD PTR [edx+2424], xmm0
+	movsd	QWORD PTR [edx+2464], xmm0
 
 ; 115  :     if (timing.fps_time_span >= 1000.0) {
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movsd	xmm0, QWORD PTR [eax+2424]
+	movsd	xmm0, QWORD PTR [eax+2464]
 	comisd	xmm0, QWORD PTR __real@408f400000000000
 	jb	SHORT $LN1@Step
 
@@ -6597,19 +7131,19 @@ $LN2@Step:
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+2400]
-	mov	DWORD PTR [ecx+2408], eax
+	mov	eax, DWORD PTR [edx+2440]
+	mov	DWORD PTR [ecx+2448], eax
 
 ; 117  :       timing.fps_counter = 0;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+2400], 0
+	mov	DWORD PTR [ecx+2440], 0
 
 ; 118  :       timing.fps_time_span = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
 	movsd	xmm0, QWORD PTR __real@0000000000000000
-	movsd	QWORD PTR [edx+2424], xmm0
+	movsd	QWORD PTR [edx+2464], xmm0
 
 ; 119  : 
 ; 120  :       char caption[256];
@@ -6620,9 +7154,9 @@ $LN2@Step:
 
 	mov	esi, esp
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+2408]
+	mov	ecx, DWORD PTR [eax+2448]
 	push	ecx
-	push	OFFSET $SG137591
+	push	OFFSET $SG137664
 	lea	edx, DWORD PTR _caption$1[ebp]
 	push	edx
 	call	DWORD PTR __imp__sprintf
@@ -6705,7 +7239,7 @@ _this$ = -4						; size = 4
 	push	72					; 00000048H
 	push	0
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 2368				; 00000940H
+	add	eax, 2408				; 00000968H
 	push	eax
 	call	_memset
 	add	esp, 12					; 0000000cH
@@ -6713,17 +7247,17 @@ _this$ = -4						; size = 4
 ; 88   :   timer.Calibrate();
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2312				; 00000908H
+	add	ecx, 2352				; 00000930H
 	call	?Calibrate@Timer@utilities@@QAEXXZ	; utilities::Timer::Calibrate
 
 ; 89   :   timing.prev_cycles = timer.GetCurrentCycles();
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2312				; 00000908H
+	add	ecx, 2352				; 00000930H
 	call	?GetCurrentCycles@Timer@utilities@@QAE_KXZ ; utilities::Timer::GetCurrentCycles
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+2384], eax
-	mov	DWORD PTR [ecx+2388], edx
+	mov	DWORD PTR [ecx+2424], eax
+	mov	DWORD PTR [ecx+2428], edx
 
 ; 90   : }
 
@@ -6783,7 +7317,7 @@ __$EHRec$ = -12						; size = 12
 
 ; 32   :   PrepareClass("GBEmu");
 
-	push	OFFSET $SG137519
+	push	OFFSET $SG137592
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?PrepareClass@Window@windows@core@@IAEXPAD@Z ; core::windows::Window::PrepareClass
 
@@ -6796,7 +7330,7 @@ __$EHRec$ = -12						; size = 12
 	push	1
 	push	104					; 00000068H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+2440]
+	mov	ecx, DWORD PTR [eax+2480]
 	push	ecx
 	call	DWORD PTR __imp__LoadImageA@24
 	cmp	esi, esp
@@ -6813,7 +7347,7 @@ __$EHRec$ = -12						; size = 12
 	push	1
 	push	104					; 00000068H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+2440]
+	mov	ecx, DWORD PTR [eax+2480]
 	push	ecx
 	call	DWORD PTR __imp__LoadImageA@24
 	cmp	esi, esp
@@ -6831,7 +7365,7 @@ __$EHRec$ = -12						; size = 12
 	mov	esi, esp
 	push	101					; 00000065H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+2440]
+	mov	ecx, DWORD PTR [eax+2480]
 	push	ecx
 	call	DWORD PTR __imp__LoadMenuA@8
 	cmp	esi, esp
@@ -6938,7 +7472,7 @@ __$EHRec$ = -12						; size = 12
 ; 62   :   glGenTextures( 1, &texture );
 
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 2288				; 000008f0H
+	add	eax, 2328				; 00000918H
 	mov	esi, esp
 	push	eax
 	push	1
@@ -6958,7 +7492,7 @@ __$EHRec$ = -12						; size = 12
 
 	mov	esi, esp
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [ecx+2288]
+	mov	edx, DWORD PTR [ecx+2328]
 	push	edx
 	push	3553					; 00000de1H
 	call	DWORD PTR __imp__glBindTexture@8
@@ -7142,7 +7676,7 @@ __$EHRec$ = -12						; size = 12
 ; 28   : }
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2292				; 000008f4H
+	add	ecx, 2332				; 0000091cH
 	call	??1Options@dialogs@app@@QAE@XZ		; app::dialogs::Options::~Options
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -7228,17 +7762,17 @@ __$EHRec$ = -12						; size = 12
 	call	??0Emu@gb@emulation@@QAE@XZ		; emulation::gb::Emu::Emu
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2292				; 000008f4H
+	add	ecx, 2332				; 0000091cH
 	call	??0Options@dialogs@app@@QAE@XZ		; app::dialogs::Options::Options
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2312				; 00000908H
+	add	ecx, 2352				; 00000930H
 	call	??0Timer@utilities@@QAE@XZ		; utilities::Timer::Timer
 
 ; 21   :   output = new uint32_t[256*256];
 
 	push	21					; 00000015H
-	push	OFFSET $SG137511
+	push	OFFSET $SG137584
 	push	1
 	push	262144					; 00040000H
 	call	??_U@YAPAXIHPBDH@Z			; operator new[]
@@ -7257,7 +7791,7 @@ __$EHRec$ = -12						; size = 12
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+2440], eax
+	mov	DWORD PTR [ecx+2480], eax
 
 ; 24   : }
 
@@ -7288,7 +7822,7 @@ __unwindfunclet$??0DisplayWindow@app@@QAE@XZ$2:
 	jmp	??1Emu@gb@emulation@@QAE@XZ		; emulation::gb::Emu::~Emu
 __unwindfunclet$??0DisplayWindow@app@@QAE@XZ$3:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2292				; 000008f4H
+	add	ecx, 2332				; 0000091cH
 	jmp	??1Options@dialogs@app@@QAE@XZ		; app::dialogs::Options::~Options
 __ehhandler$??0DisplayWindow@app@@QAE@XZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -7877,11 +8411,33 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1576				; 00000628H
+	add	eax, 1592				; 00000638H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
 ?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ENDP ; emulation::gb::Emu::lcd_driver
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\emu.h
+;	COMDAT ?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ PROC	; emulation::gb::Emu::memory, COMDAT
+; _this$ = ecx
+
+; 21   :   Memory* memory() { return &memory_; }
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 1144				; 00000478H
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ENDP	; emulation::gb::Emu::memory
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\emu.h
@@ -7908,21 +8464,25 @@ __$EHRec$ = -12						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR __$EHRec$[ebp+8], 5
+	mov	DWORD PTR __$EHRec$[ebp+8], 6
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1640				; 00000668H
+	add	ecx, 1676				; 0000068cH
+	call	??1Timer@gb@emulation@@QAE@XZ		; emulation::gb::Timer::~Timer
+	mov	BYTE PTR __$EHRec$[ebp+8], 5
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 1664				; 00000680H
 	call	??1SoundController@gb@emulation@@QAE@XZ	; emulation::gb::SoundController::~SoundController
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1576				; 00000628H
+	add	ecx, 1592				; 00000638H
 	call	??1LCDDriver@gb@emulation@@QAE@XZ	; emulation::gb::LCDDriver::~LCDDriver
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1136				; 00000470H
+	add	ecx, 1144				; 00000478H
 	call	??1Memory@gb@emulation@@QAE@XZ		; emulation::gb::Memory::~Memory
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 64					; 00000040H
+	add	ecx, 72					; 00000048H
 	call	??1Cpu@gb@emulation@@QAE@XZ		; emulation::gb::Cpu::~Cpu
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -7960,16 +8520,20 @@ __unwindfunclet$??1Emu@gb@emulation@@QAE@XZ$2:
 	jmp	??1Cartridge@gb@emulation@@QAE@XZ	; emulation::gb::Cartridge::~Cartridge
 __unwindfunclet$??1Emu@gb@emulation@@QAE@XZ$3:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 64					; 00000040H
+	add	ecx, 72					; 00000048H
 	jmp	??1Cpu@gb@emulation@@QAE@XZ		; emulation::gb::Cpu::~Cpu
 __unwindfunclet$??1Emu@gb@emulation@@QAE@XZ$4:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1136				; 00000470H
+	add	ecx, 1144				; 00000478H
 	jmp	??1Memory@gb@emulation@@QAE@XZ		; emulation::gb::Memory::~Memory
 __unwindfunclet$??1Emu@gb@emulation@@QAE@XZ$5:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1576				; 00000628H
+	add	ecx, 1592				; 00000638H
 	jmp	??1LCDDriver@gb@emulation@@QAE@XZ	; emulation::gb::LCDDriver::~LCDDriver
+__unwindfunclet$??1Emu@gb@emulation@@QAE@XZ$6:
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 1664				; 00000680H
+	jmp	??1SoundController@gb@emulation@@QAE@XZ	; emulation::gb::SoundController::~SoundController
 __ehhandler$??1Emu@gb@emulation@@QAE@XZ:
 	mov	edx, DWORD PTR [esp+8]
 	lea	eax, DWORD PTR [edx+12]
@@ -8017,20 +8581,24 @@ __$EHRec$ = -12						; size = 12
 	call	??0Cartridge@gb@emulation@@QAE@XZ	; emulation::gb::Cartridge::Cartridge
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 64					; 00000040H
+	add	ecx, 72					; 00000048H
 	call	??0Cpu@gb@emulation@@QAE@XZ		; emulation::gb::Cpu::Cpu
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1136				; 00000470H
+	add	ecx, 1144				; 00000478H
 	call	??0Memory@gb@emulation@@QAE@XZ		; emulation::gb::Memory::Memory
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1576				; 00000628H
+	add	ecx, 1592				; 00000638H
 	call	??0LCDDriver@gb@emulation@@QAE@XZ	; emulation::gb::LCDDriver::LCDDriver
 	mov	BYTE PTR __$EHRec$[ebp+8], 5
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1640				; 00000668H
+	add	ecx, 1664				; 00000680H
 	call	??0SoundController@gb@emulation@@QAE@XZ	; emulation::gb::SoundController::SoundController
+	mov	BYTE PTR __$EHRec$[ebp+8], 6
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 1676				; 0000068cH
+	call	??0Timer@gb@emulation@@QAE@XZ		; emulation::gb::Timer::Timer
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR __$EHRec$[ebp]
@@ -8058,16 +8626,20 @@ __unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$2:
 	jmp	??1Cartridge@gb@emulation@@QAE@XZ	; emulation::gb::Cartridge::~Cartridge
 __unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$3:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 64					; 00000040H
+	add	ecx, 72					; 00000048H
 	jmp	??1Cpu@gb@emulation@@QAE@XZ		; emulation::gb::Cpu::~Cpu
 __unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$4:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1136				; 00000470H
+	add	ecx, 1144				; 00000478H
 	jmp	??1Memory@gb@emulation@@QAE@XZ		; emulation::gb::Memory::~Memory
 __unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$5:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1576				; 00000628H
+	add	ecx, 1592				; 00000638H
 	jmp	??1LCDDriver@gb@emulation@@QAE@XZ	; emulation::gb::LCDDriver::~LCDDriver
+__unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$6:
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 1664				; 00000680H
+	jmp	??1SoundController@gb@emulation@@QAE@XZ	; emulation::gb::SoundController::~SoundController
 __ehhandler$??0Emu@gb@emulation@@QAE@XZ:
 	mov	edx, DWORD PTR [esp+8]
 	lea	eax, DWORD PTR [edx+12]
@@ -8078,6 +8650,58 @@ __ehhandler$??0Emu@gb@emulation@@QAE@XZ:
 	jmp	___CxxFrameHandler3
 text$x	ENDS
 ??0Emu@gb@emulation@@QAE@XZ ENDP			; emulation::gb::Emu::Emu
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\timer.h
+;	COMDAT ??1Timer@gb@emulation@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+??1Timer@gb@emulation@@QAE@XZ PROC			; emulation::gb::Timer::~Timer, COMDAT
+; _this$ = ecx
+
+; 11   :   ~Timer() {}
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax], OFFSET ??_7Timer@gb@emulation@@6B@
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??1Timer@gb@emulation@@QAE@XZ ENDP			; emulation::gb::Timer::~Timer
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\timer.h
+;	COMDAT ??0Timer@gb@emulation@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+??0Timer@gb@emulation@@QAE@XZ PROC			; emulation::gb::Timer::Timer, COMDAT
+; _this$ = ecx
+
+; 10   :   Timer():ioports(nullptr) {}
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??0Component@gb@emulation@@QAE@XZ
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax], OFFSET ??_7Timer@gb@emulation@@6B@
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [ecx+8], 0
+	mov	eax, DWORD PTR _this$[ebp]
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??0Timer@gb@emulation@@QAE@XZ ENDP			; emulation::gb::Timer::Timer
+_TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\sound_controller.h
 ;	COMDAT ??1SoundController@gb@emulation@@QAE@XZ
@@ -8093,6 +8717,8 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax], OFFSET ??_7SoundController@gb@emulation@@6B@
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -8113,9 +8739,16 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??0Component@gb@emulation@@QAE@XZ
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+4], 0
+	mov	DWORD PTR [eax], OFFSET ??_7SoundController@gb@emulation@@6B@
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [ecx+8], 0
 	mov	eax, DWORD PTR _this$[ebp]
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -8136,6 +8769,8 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax], OFFSET ??_7LCDDriver@gb@emulation@@6B@
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -8156,11 +8791,80 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??0Component@gb@emulation@@QAE@XZ
 	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax], OFFSET ??_7LCDDriver@gb@emulation@@6B@
+	mov	eax, DWORD PTR _this$[ebp]
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	0
 ??0LCDDriver@gb@emulation@@QAE@XZ ENDP			; emulation::gb::LCDDriver::LCDDriver
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\memory.h
+;	COMDAT ?JoypadRelease@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+_key$ = 8						; size = 4
+?JoypadRelease@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z PROC ; emulation::gb::Memory::JoypadRelease, COMDAT
+; _this$ = ecx
+
+; 31   : 	void JoypadRelease(JoypadKeys key) {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 32   : 		//ioports_[0] |= key;
+; 33   : 		joypadflags[key] = false;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, DWORD PTR _key$[ebp]
+	mov	BYTE PTR [eax+440], 0
+
+; 34   : 	}
+
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+?JoypadRelease@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ENDP ; emulation::gb::Memory::JoypadRelease
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\memory.h
+;	COMDAT ?JoypadPress@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+_key$ = 8						; size = 4
+?JoypadPress@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z PROC ; emulation::gb::Memory::JoypadPress, COMDAT
+; _this$ = ecx
+
+; 27   : 	void JoypadPress(JoypadKeys key) {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 28   : 		joypadflags[key] = true;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, DWORD PTR _key$[ebp]
+	mov	BYTE PTR [eax+440], 1
+
+; 29   : 		//ioports_[0] &= ~key;
+; 30   : 	}
+
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+?JoypadPress@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z ENDP ; emulation::gb::Memory::JoypadPress
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\memory.h
@@ -8170,13 +8874,15 @@ _this$ = -4						; size = 4
 ??1Memory@gb@emulation@@QAE@XZ PROC			; emulation::gb::Memory::~Memory, COMDAT
 ; _this$ = ecx
 
-; 9    :   ~Memory() {}
+; 11   :   ~Memory() {}
 
 	push	ebp
 	mov	ebp, esp
 	push	ecx
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax], OFFSET ??_7Memory@gb@emulation@@6B@
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -8190,14 +8896,21 @@ _this$ = -4						; size = 4
 ??0Memory@gb@emulation@@QAE@XZ PROC			; emulation::gb::Memory::Memory, COMDAT
 ; _this$ = ecx
 
-; 8    :   Memory(){}
+; 10   :   Memory(){}
 
 	push	ebp
 	mov	ebp, esp
 	push	ecx
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??0Component@gb@emulation@@QAE@XZ
 	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax], OFFSET ??_7Memory@gb@emulation@@6B@
+	mov	eax, DWORD PTR _this$[ebp]
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -8218,6 +8931,8 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax], OFFSET ??_7Cartridge@gb@emulation@@6B@
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -8238,13 +8953,115 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??0Component@gb@emulation@@QAE@XZ
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+12], 0
+	mov	DWORD PTR [eax], OFFSET ??_7Cartridge@gb@emulation@@6B@
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [ecx+16], 0
 	mov	eax, DWORD PTR _this$[ebp]
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	0
 ??0Cartridge@gb@emulation@@QAE@XZ ENDP			; emulation::gb::Cartridge::Cartridge
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+;	COMDAT ??0Component@gb@emulation@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+??0Component@gb@emulation@@QAE@XZ PROC			; emulation::gb::Component::Component, COMDAT
+; _this$ = ecx
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax], OFFSET ??_7Component@gb@emulation@@6B@
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??0Component@gb@emulation@@QAE@XZ ENDP			; emulation::gb::Component::Component
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\gb.h
+;	COMDAT ?Reset@Component@gb@emulation@@UAEXXZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?Reset@Component@gb@emulation@@UAEXXZ PROC		; emulation::gb::Component::Reset, COMDAT
+; _this$ = ecx
+
+; 33   : 	virtual void Reset() {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 34   : 	}
+
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?Reset@Component@gb@emulation@@UAEXXZ ENDP		; emulation::gb::Component::Reset
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\gb.h
+;	COMDAT ?Deinitialize@Component@gb@emulation@@UAEXXZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?Deinitialize@Component@gb@emulation@@UAEXXZ PROC	; emulation::gb::Component::Deinitialize, COMDAT
+; _this$ = ecx
+
+; 31   : 	virtual void Deinitialize() {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 32   : 	}
+
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?Deinitialize@Component@gb@emulation@@UAEXXZ ENDP	; emulation::gb::Component::Deinitialize
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\gb.h
+;	COMDAT ?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+_emu$ = 8						; size = 4
+?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z PROC ; emulation::gb::Component::Initialize, COMDAT
+; _this$ = ecx
+
+; 28   :   virtual void Initialize(Emu* emu) {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 29   :     emu_ = emu;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _emu$[ebp]
+	mov	DWORD PTR [eax+4], ecx
+
+; 30   :   }
+
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ENDP ; emulation::gb::Component::Initialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\program files (x86)\microsoft visual studio 11.0\vc\include\xxatomic

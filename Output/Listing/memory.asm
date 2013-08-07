@@ -37,21 +37,15 @@ PUBLIC	?_STATE_DEFER_DELETE@_CancellationTokenRegistration@details@Concurrency@@
 PUBLIC	?value@?$_GcdX@$0GE@$0DLJKMKAA@@std@@2_JB	; std::_GcdX<100,1000000000>::value
 PUBLIC	?_STATE_SYNCHRONIZE@_CancellationTokenRegistration@details@Concurrency@@0JB ; Concurrency::details::_CancellationTokenRegistration::_STATE_SYNCHRONIZE
 PUBLIC	?_STATE_CALLED@_CancellationTokenRegistration@details@Concurrency@@0JB ; Concurrency::details::_CancellationTokenRegistration::_STATE_CALLED
-PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?value@?$_Gcd@$0GE@$0DLJKMKAA@@std@@2_JB	; std::_Gcd<100,1000000000>::value
 PUBLIC	?is_signed@?$numeric_limits@G@std@@2_NB		; std::numeric_limits<unsigned short>::is_signed
 PUBLIC	?digits@?$numeric_limits@G@std@@2HB		; std::numeric_limits<unsigned short>::digits
 PUBLIC	?_G1@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G1
 PUBLIC	?digits10@?$numeric_limits@G@std@@2HB		; std::numeric_limits<unsigned short>::digits10
-PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?value@?$_Abs@$00@std@@2_JB			; std::_Abs<1>::value
-PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?value@?$_GcdX@$00$0A@@std@@2_JB		; std::_GcdX<1,0>::value
-PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?value@?$_GcdX@$00$00@std@@2_JB			; std::_GcdX<1,1>::value
 PUBLIC	?is_signed@?$numeric_limits@H@std@@2_NB		; std::numeric_limits<int>::is_signed
-PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
-PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?digits@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits
 PUBLIC	?value@?$_Gcd@$00$00@std@@2_JB			; std::_Gcd<1,1>::value
 PUBLIC	?digits10@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits10
@@ -60,10 +54,16 @@ PUBLIC	?is_signed@?$numeric_limits@I@std@@2_NB		; std::numeric_limits<unsigned i
 PUBLIC	?digits@?$numeric_limits@I@std@@2HB		; std::numeric_limits<unsigned int>::digits
 PUBLIC	?digits10@?$numeric_limits@I@std@@2HB		; std::numeric_limits<unsigned int>::digits10
 PUBLIC	?is_monotonic@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_monotonic
+PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?is_steady@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_steady
+PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?is_signed@?$numeric_limits@J@std@@2_NB		; std::numeric_limits<long>::is_signed
 PUBLIC	?digits@?$numeric_limits@J@std@@2HB		; std::numeric_limits<long>::digits
+PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?digits10@?$numeric_limits@J@std@@2HB		; std::numeric_limits<long>::digits10
+PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
+PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
+PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?is_signed@?$numeric_limits@K@std@@2_NB		; std::numeric_limits<unsigned long>::is_signed
 PUBLIC	?digits@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits
 PUBLIC	?digits10@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits10
@@ -769,9 +769,25 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@K@std@@2_NB DB 00H		; std::numeric_limits<unsigned long>::is_signed
 CONST	ENDS
+;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
+CONST	ENDS
+;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
+CONST	ENDS
+;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@J@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@J@std@@2HB DD 09H		; std::numeric_limits<long>::digits10
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
 CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@J@std@@2HB
 CONST	SEGMENT
@@ -781,9 +797,17 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@J@std@@2_NB DB 01H		; std::numeric_limits<long>::is_signed
 CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
+CONST	ENDS
 ;	COMDAT ?is_steady@system_clock@chrono@std@@2_NB
 CONST	SEGMENT
 ?is_steady@system_clock@chrono@std@@2_NB DB 00H		; std::chrono::system_clock::is_steady
+CONST	ENDS
+;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
+CONST	SEGMENT
+?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?is_monotonic@system_clock@chrono@std@@2_NB
 CONST	SEGMENT
@@ -817,14 +841,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@H@std@@2HB DD 01fH		; std::numeric_limits<int>::digits
 CONST	ENDS
-;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
-CONST	ENDS
-;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
-CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@H@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@H@std@@2_NB DB 01H		; std::numeric_limits<int>::is_signed
@@ -833,25 +849,13 @@ CONST	ENDS
 CONST	SEGMENT
 ?value@?$_GcdX@$00$00@std@@2_JB DQ 0000000000000001H	; std::_GcdX<1,1>::value
 CONST	ENDS
-;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?value@?$_GcdX@$00$0A@@std@@2_JB
 CONST	SEGMENT
 ?value@?$_GcdX@$00$0A@@std@@2_JB DQ 0000000000000001H	; std::_GcdX<1,0>::value
 CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?value@?$_Abs@$00@std@@2_JB
 CONST	SEGMENT
 ?value@?$_Abs@$00@std@@2_JB DQ 0000000000000001H	; std::_Abs<1>::value
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@G@std@@2HB
 CONST	SEGMENT
@@ -872,10 +876,6 @@ CONST	ENDS
 ;	COMDAT ?value@?$_Gcd@$0GE@$0DLJKMKAA@@std@@2_JB
 CONST	SEGMENT
 ?value@?$_Gcd@$0GE@$0DLJKMKAA@@std@@2_JB DQ 0000000000000064H ; std::_Gcd<100,1000000000>::value
-CONST	ENDS
-;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
-CONST	SEGMENT
-?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?_STATE_CALLED@_CancellationTokenRegistration@details@Concurrency@@0JB
 CONST	SEGMENT
@@ -978,8 +978,6 @@ CONST	SEGMENT
 ?is_modulo@?$numeric_limits@_N@std@@2_NB DB 00H		; std::numeric_limits<bool>::is_modulo
 CONST	ENDS
 CONST	SEGMENT
-$SG130099 DB	'%c', 00H
-	ORG $+5
 _dmgrom	DB	031H
 	DB	0feH
 	DB	0ffH
@@ -1236,11 +1234,13 @@ _dmgrom	DB	031H
 	DB	01H
 	DB	0e0H
 	DB	050H
-$SG130021 DB	'Code\emulation\gb\memory.cpp', 00H
+$SG130093 DB	'Code\emulation\gb\memory.cpp', 00H
 	ORG $+3
-$SG130024 DB	'Code\emulation\gb\memory.cpp', 00H
+$SG130096 DB	'Code\emulation\gb\memory.cpp', 00H
 	ORG $+3
-$SG130027 DB	'Code\emulation\gb\memory.cpp', 00H
+$SG130099 DB	'Code\emulation\gb\memory.cpp', 00H
+	ORG $+3
+$SG130178 DB	'%c', 00H
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@_W@std@@2HB
 CONST	SEGMENT
@@ -1255,13 +1255,17 @@ CONST	SEGMENT
 ?is_signed@?$numeric_limits@_W@std@@2_NB DB 00H		; std::numeric_limits<wchar_t>::is_signed
 CONST	ENDS
 PUBLIC	??0_Ignore@std@@QAE@XZ				; std::_Ignore::_Ignore
-PUBLIC	?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
+PUBLIC	?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
 PUBLIC	?rom@Cartridge@gb@emulation@@QAEPBEXZ		; emulation::gb::Cartridge::rom
 PUBLIC	??$SafeDeleteArray@E@@YAXPAPAE@Z		; SafeDeleteArray<unsigned char>
-PUBLIC	?Initialize@Memory@gb@emulation@@QAEXPAVEmu@23@@Z ; emulation::gb::Memory::Initialize
-PUBLIC	?Deinitialize@Memory@gb@emulation@@QAEXXZ	; emulation::gb::Memory::Deinitialize
+PUBLIC	?Initialize@Memory@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Memory::Initialize
+PUBLIC	?Deinitialize@Memory@gb@emulation@@UAEXXZ	; emulation::gb::Memory::Deinitialize
 PUBLIC	?Read8@Memory@gb@emulation@@QAEEG@Z		; emulation::gb::Memory::Read8
 PUBLIC	?Write8@Memory@gb@emulation@@QAEXGE@Z		; emulation::gb::Memory::Write8
+PUBLIC	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ	; emulation::gb::Memory::interrupt_flag
+PUBLIC	?Tick@Memory@gb@emulation@@QAEXXZ		; emulation::gb::Memory::Tick
+PUBLIC	?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ ; emulation::gb::LCDDriver::lcdc
+PUBLIC	?stat@LCDDriver@gb@emulation@@QAEABTLCDStatusRegister@23@XZ ; emulation::gb::LCDDriver::stat
 PUBLIC	?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ ; emulation::gb::Emu::cartridge
 PUBLIC	?cpu@Emu@gb@emulation@@QAEPAVCpu@23@XZ		; emulation::gb::Emu::cpu
 PUBLIC	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
@@ -1365,7 +1369,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1640				; 00000668H
+	add	eax, 1664				; 00000680H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1387,7 +1391,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1576				; 00000628H
+	add	eax, 1592				; 00000638H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1409,7 +1413,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 64					; 00000040H
+	add	eax, 72					; 00000048H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1438,9 +1442,273 @@ _this$ = -4						; size = 4
 ?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ ENDP	; emulation::gb::Emu::cartridge
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\lcd_driver.h
+;	COMDAT ?stat@LCDDriver@gb@emulation@@QAEABTLCDStatusRegister@23@XZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?stat@LCDDriver@gb@emulation@@QAEABTLCDStatusRegister@23@XZ PROC ; emulation::gb::LCDDriver::stat, COMDAT
+; _this$ = ecx
+
+; 52   : 	const LCDStatusRegister& stat() { return stat_; }
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 13					; 0000000dH
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?stat@LCDDriver@gb@emulation@@QAEABTLCDStatusRegister@23@XZ ENDP ; emulation::gb::LCDDriver::stat
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\lcd_driver.h
+;	COMDAT ?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ PROC ; emulation::gb::LCDDriver::lcdc, COMDAT
+; _this$ = ecx
+
+; 51   : 	const LCDControlRegister& lcdc() { return lcdc_; }
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 12					; 0000000cH
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ ENDP ; emulation::gb::LCDDriver::lcdc
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\memory.cpp
 _TEXT	SEGMENT
-tv247 = -280						; size = 4
+tv177 = -16						; size = 4
+_i$1 = -12						; size = 4
+_i$2 = -8						; size = 4
+_this$ = -4						; size = 4
+?Tick@Memory@gb@emulation@@QAEXXZ PROC			; emulation::gb::Memory::Tick
+; _this$ = ecx
+
+; 163  : void Memory::Tick() {
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 16					; 00000010H
+	mov	eax, -858993460				; ccccccccH
+	mov	DWORD PTR [ebp-16], eax
+	mov	DWORD PTR [ebp-12], eax
+	mov	DWORD PTR [ebp-8], eax
+	mov	DWORD PTR [ebp-4], eax
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 164  : 
+; 165  : 	if ((ioports_[0] & 0x30)==0x10) {
+
+	mov	eax, 1
+	imul	eax, 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+eax+184]
+	and	edx, 48					; 00000030H
+	cmp	edx, 16					; 00000010H
+	jne	SHORT $LN14@Tick
+
+; 166  : 		for (int i=0;i<4;++i) {
+
+	mov	DWORD PTR _i$2[ebp], 0
+	jmp	SHORT $LN13@Tick
+$LN12@Tick:
+	mov	eax, DWORD PTR _i$2[ebp]
+	add	eax, 1
+	mov	DWORD PTR _i$2[ebp], eax
+$LN13@Tick:
+	cmp	DWORD PTR _i$2[ebp], 4
+	jge	SHORT $LN11@Tick
+
+; 167  : 			if (joypadflags[i]==true)//pressed
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, DWORD PTR _i$2[ebp]
+	movzx	edx, BYTE PTR [ecx+440]
+	cmp	edx, 1
+	jne	SHORT $LN10@Tick
+
+; 168  : 				ioports_[i] &= ~(1<<i);
+
+	mov	eax, 1
+	mov	ecx, DWORD PTR _i$2[ebp]
+	shl	eax, cl
+	not	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, DWORD PTR _i$2[ebp]
+	movzx	edx, BYTE PTR [ecx+184]
+	and	edx, eax
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, DWORD PTR _i$2[ebp]
+	mov	BYTE PTR [eax+184], dl
+
+; 169  : 			else
+
+	jmp	SHORT $LN9@Tick
+$LN10@Tick:
+
+; 170  : 				ioports_[i] |= (1<<i);
+
+	mov	edx, 1
+	mov	ecx, DWORD PTR _i$2[ebp]
+	shl	edx, cl
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, DWORD PTR _i$2[ebp]
+	movzx	ecx, BYTE PTR [eax+184]
+	or	ecx, edx
+	mov	edx, DWORD PTR _this$[ebp]
+	add	edx, DWORD PTR _i$2[ebp]
+	mov	BYTE PTR [edx+184], cl
+$LN9@Tick:
+
+; 171  : 		}
+
+	jmp	SHORT $LN12@Tick
+$LN11@Tick:
+	jmp	$LN8@Tick
+$LN14@Tick:
+
+; 172  : 	} else if ((ioports_[0] & 0x30)==0x20) {
+
+	mov	eax, 1
+	imul	eax, 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+eax+184]
+	and	edx, 48					; 00000030H
+	cmp	edx, 32					; 00000020H
+	jne	SHORT $LN8@Tick
+
+; 173  : 		for (int i=0;i<4;++i) {
+
+	mov	DWORD PTR _i$1[ebp], 0
+	jmp	SHORT $LN6@Tick
+$LN5@Tick:
+	mov	eax, DWORD PTR _i$1[ebp]
+	add	eax, 1
+	mov	DWORD PTR _i$1[ebp], eax
+$LN6@Tick:
+	cmp	DWORD PTR _i$1[ebp], 4
+	jge	SHORT $LN8@Tick
+
+; 174  : 			if (joypadflags[i+4]==true)//pressed
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, DWORD PTR _i$1[ebp]
+	movzx	edx, BYTE PTR [ecx+444]
+	cmp	edx, 1
+	jne	SHORT $LN3@Tick
+
+; 175  : 				ioports_[i+4] &= ~(1<<i);
+
+	mov	eax, 1
+	mov	ecx, DWORD PTR _i$1[ebp]
+	shl	eax, cl
+	not	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, DWORD PTR _i$1[ebp]
+	movzx	edx, BYTE PTR [ecx+188]
+	and	edx, eax
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, DWORD PTR _i$1[ebp]
+	mov	BYTE PTR [eax+188], dl
+
+; 176  : 			else
+
+	jmp	SHORT $LN2@Tick
+$LN3@Tick:
+
+; 177  : 				ioports_[i+4] |= (1<<i);
+
+	mov	edx, 1
+	mov	ecx, DWORD PTR _i$1[ebp]
+	shl	edx, cl
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, DWORD PTR _i$1[ebp]
+	movzx	ecx, BYTE PTR [eax+188]
+	or	ecx, edx
+	mov	edx, DWORD PTR _this$[ebp]
+	add	edx, DWORD PTR _i$1[ebp]
+	mov	BYTE PTR [edx+188], cl
+$LN2@Tick:
+
+; 178  : 		}
+
+	jmp	SHORT $LN5@Tick
+$LN8@Tick:
+
+; 179  : 	} 
+; 180  : 
+; 181  : 	if ((ioports_[0]&0xF) != 0xF) 
+
+	mov	eax, 1
+	imul	eax, 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+eax+184]
+	and	edx, 15					; 0000000fH
+	cmp	edx, 15					; 0000000fH
+	je	SHORT $LN15@Tick
+
+; 182  : 		interrupt_flag() |= 16;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ ; emulation::gb::Memory::interrupt_flag
+	mov	DWORD PTR tv177[ebp], eax
+	mov	eax, DWORD PTR tv177[ebp]
+	movzx	ecx, BYTE PTR [eax]
+	or	ecx, 16					; 00000010H
+	mov	edx, DWORD PTR tv177[ebp]
+	mov	BYTE PTR [edx], cl
+$LN15@Tick:
+
+; 183  : 
+; 184  : }
+
+	add	esp, 16					; 00000010H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?Tick@Memory@gb@emulation@@QAEXXZ ENDP			; emulation::gb::Memory::Tick
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\memory.h
+;	COMDAT ?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ PROC	; emulation::gb::Memory::interrupt_flag, COMDAT
+; _this$ = ecx
+
+; 20   :   uint8_t& interrupt_flag() {  return ioports_[0x0F]; }
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, 1
+	imul	eax, 15					; 0000000fH
+	mov	ecx, DWORD PTR _this$[ebp]
+	lea	eax, DWORD PTR [ecx+eax+184]
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ ENDP	; emulation::gb::Memory::interrupt_flag
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\personal\projects\gbemu\solution\code\emulation\gb\memory.cpp
+_TEXT	SEGMENT
+tv310 = -280						; size = 4
 _str$1 = -272						; size = 255
 _a$2 = -12						; size = 4
 _this$ = -8						; size = 4
@@ -1471,22 +1739,22 @@ _data$ = 12						; size = 1
 ; 102  :   emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?cpu@Emu@gb@emulation@@QAEPAVCpu@23@XZ	; emulation::gb::Emu::cpu
 	mov	ecx, eax
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx]
+	mov	ecx, DWORD PTR [ecx+4]
 	call	?cpu@Emu@gb@emulation@@QAEPAVCpu@23@XZ	; emulation::gb::Emu::cpu
 	mov	ecx, eax
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx]
+	mov	ecx, DWORD PTR [edx+4]
 	call	?cpu@Emu@gb@emulation@@QAEPAVCpu@23@XZ	; emulation::gb::Emu::cpu
 	mov	ecx, eax
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?cpu@Emu@gb@emulation@@QAEPAVCpu@23@XZ	; emulation::gb::Emu::cpu
 	mov	ecx, eax
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -1495,10 +1763,10 @@ _data$ = 12						; size = 1
 
 	movzx	ecx, WORD PTR _address$[ebp]
 	test	ecx, ecx
-	jl	SHORT $LN31@Write8
+	jl	SHORT $LN35@Write8
 	movzx	edx, WORD PTR _address$[ebp]
 	cmp	edx, 16383				; 00003fffH
-	jg	SHORT $LN31@Write8
+	jg	SHORT $LN35@Write8
 
 ; 104  :     emu_->cartridge()->Write(address,data);
 
@@ -1507,21 +1775,21 @@ _data$ = 12						; size = 1
 	movzx	ecx, WORD PTR _address$[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx]
+	mov	ecx, DWORD PTR [edx+4]
 	call	?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ ; emulation::gb::Emu::cartridge
 	mov	ecx, eax
 	call	?Write@Cartridge@gb@emulation@@QAEXGE@Z	; emulation::gb::Cartridge::Write
-	jmp	$LN32@Write8
-$LN31@Write8:
+	jmp	$LN36@Write8
+$LN35@Write8:
 
 ; 105  : 	} else if (address >= 0x4000 && address <= 0x7FFF) {
 
 	movzx	eax, WORD PTR _address$[ebp]
 	cmp	eax, 16384				; 00004000H
-	jl	SHORT $LN29@Write8
+	jl	SHORT $LN33@Write8
 	movzx	ecx, WORD PTR _address$[ebp]
 	cmp	ecx, 32767				; 00007fffH
-	jg	SHORT $LN29@Write8
+	jg	SHORT $LN33@Write8
 
 ; 106  : 		emu_->cartridge()->Write(address,data);
 
@@ -1530,46 +1798,73 @@ $LN31@Write8:
 	movzx	eax, WORD PTR _address$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx]
+	mov	ecx, DWORD PTR [ecx+4]
 	call	?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ ; emulation::gb::Emu::cartridge
 	mov	ecx, eax
 	call	?Write@Cartridge@gb@emulation@@QAEXGE@Z	; emulation::gb::Cartridge::Write
-	jmp	$LN32@Write8
-$LN29@Write8:
+	jmp	$LN36@Write8
+$LN33@Write8:
 
 ; 107  : 	} else if (address >= 0x8000 && address <= 0x9FFF) {
 
 	movzx	edx, WORD PTR _address$[ebp]
 	cmp	edx, 32768				; 00008000H
-	jl	SHORT $LN27@Write8
+	jl	SHORT $LN31@Write8
 	movzx	eax, WORD PTR _address$[ebp]
 	cmp	eax, 40959				; 00009fffH
-	jg	SHORT $LN27@Write8
+	jg	SHORT $LN31@Write8
 
 ; 108  : 
-; 109  : 		//if ((emu_->lcd_driver()->stat().mode == 3)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
-; 110  : 		//	return;
+; 109  : 		if ((emu_->lcd_driver()->stat().mode == 3)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
+	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
+	mov	ecx, eax
+	call	?stat@LCDDriver@gb@emulation@@QAEABTLCDStatusRegister@23@XZ ; emulation::gb::LCDDriver::stat
+	mov	dl, BYTE PTR [eax]
+	and	dl, 3
+	movzx	eax, dl
+	cmp	eax, 3
+	jne	SHORT $LN30@Write8
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
+	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
+	mov	ecx, eax
+	call	?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ ; emulation::gb::LCDDriver::lcdc
+	mov	dl, BYTE PTR [eax]
+	shr	dl, 7
+	and	dl, 1
+	movzx	eax, dl
+	cmp	eax, 1
+	jne	SHORT $LN30@Write8
+
+; 110  : 			return;
+
+	jmp	$LN36@Write8
+$LN30@Write8:
+
 ; 111  : 
 ; 112  : 		 vram_[address&0x1FFF] = data;
 
 	movzx	ecx, WORD PTR _address$[ebp]
 	and	ecx, 8191				; 00001fffH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+8]
+	mov	eax, DWORD PTR [edx+12]
 	mov	dl, BYTE PTR _data$[ebp]
 	mov	BYTE PTR [eax+ecx], dl
-	jmp	$LN32@Write8
-$LN27@Write8:
+	jmp	$LN36@Write8
+$LN31@Write8:
 
 ; 113  : 
 ; 114  : 	} else if (address >= 0xA000 && address <= 0xBFFF) {
 
 	movzx	eax, WORD PTR _address$[ebp]
 	cmp	eax, 40960				; 0000a000H
-	jl	SHORT $LN25@Write8
+	jl	SHORT $LN28@Write8
 	movzx	ecx, WORD PTR _address$[ebp]
 	cmp	ecx, 49151				; 0000bfffH
-	jg	SHORT $LN25@Write8
+	jg	SHORT $LN28@Write8
 
 ; 115  : 		emu_->cartridge()->Write(address,data);
 
@@ -1578,87 +1873,23 @@ $LN27@Write8:
 	movzx	eax, WORD PTR _address$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx]
+	mov	ecx, DWORD PTR [ecx+4]
 	call	?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ ; emulation::gb::Emu::cartridge
 	mov	ecx, eax
 	call	?Write@Cartridge@gb@emulation@@QAEXGE@Z	; emulation::gb::Cartridge::Write
-	jmp	$LN32@Write8
-$LN25@Write8:
+	jmp	$LN36@Write8
+$LN28@Write8:
 
 ; 116  : 	} else if (address >= 0xC000 && address <= 0xCFFF) {
 
 	movzx	edx, WORD PTR _address$[ebp]
 	cmp	edx, 49152				; 0000c000H
-	jl	SHORT $LN23@Write8
+	jl	SHORT $LN26@Write8
 	movzx	eax, WORD PTR _address$[ebp]
 	cmp	eax, 53247				; 0000cfffH
-	jg	SHORT $LN23@Write8
+	jg	SHORT $LN26@Write8
 
 ; 117  : 		wram1_[address&0x0FFF] = data;
-
-	movzx	ecx, WORD PTR _address$[ebp]
-	and	ecx, 4095				; 00000fffH
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+12]
-	mov	dl, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [eax+ecx], dl
-	jmp	$LN32@Write8
-$LN23@Write8:
-
-; 118  : 	} else if (address >= 0xD000 && address <= 0xDFFF) {
-
-	movzx	eax, WORD PTR _address$[ebp]
-	cmp	eax, 53248				; 0000d000H
-	jl	SHORT $LN21@Write8
-	movzx	ecx, WORD PTR _address$[ebp]
-	cmp	ecx, 57343				; 0000dfffH
-	jg	SHORT $LN21@Write8
-
-; 119  : 		wram2_[address&0x0FFF] = data;
-
-	movzx	edx, WORD PTR _address$[ebp]
-	and	edx, 4095				; 00000fffH
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+16]
-	mov	al, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [ecx+edx], al
-	jmp	$LN32@Write8
-$LN21@Write8:
-
-; 120  : 	} else if (address >= 0xE000 && address <= 0xFDFF) {
-
-	movzx	ecx, WORD PTR _address$[ebp]
-	cmp	ecx, 57344				; 0000e000H
-	jl	SHORT $LN19@Write8
-	movzx	edx, WORD PTR _address$[ebp]
-	cmp	edx, 65023				; 0000fdffH
-	jg	SHORT $LN19@Write8
-
-; 121  : 		if ((address&0xF000)==0xE000)
-
-	movzx	eax, WORD PTR _address$[ebp]
-	and	eax, 61440				; 0000f000H
-	cmp	eax, 57344				; 0000e000H
-	jne	SHORT $LN18@Write8
-
-; 122  : 		 wram1_[address&0xFFF] = data;
-
-	movzx	ecx, WORD PTR _address$[ebp]
-	and	ecx, 4095				; 00000fffH
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+12]
-	mov	dl, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [eax+ecx], dl
-$LN18@Write8:
-
-; 123  : 		if ((address&0xF000)==0xF000)
-
-	movzx	eax, WORD PTR _address$[ebp]
-	and	eax, 61440				; 0000f000H
-	cmp	eax, 61440				; 0000f000H
-	jne	SHORT $LN17@Write8
-
-; 124  : 		 wram2_[address&0xFFF] = data;
 
 	movzx	ecx, WORD PTR _address$[ebp]
 	and	ecx, 4095				; 00000fffH
@@ -1666,191 +1897,301 @@ $LN18@Write8:
 	mov	eax, DWORD PTR [edx+16]
 	mov	dl, BYTE PTR _data$[ebp]
 	mov	BYTE PTR [eax+ecx], dl
-$LN17@Write8:
+	jmp	$LN36@Write8
+$LN26@Write8:
+
+; 118  : 	} else if (address >= 0xD000 && address <= 0xDFFF) {
+
+	movzx	eax, WORD PTR _address$[ebp]
+	cmp	eax, 53248				; 0000d000H
+	jl	SHORT $LN24@Write8
+	movzx	ecx, WORD PTR _address$[ebp]
+	cmp	ecx, 57343				; 0000dfffH
+	jg	SHORT $LN24@Write8
+
+; 119  : 		wram2_[address&0x0FFF] = data;
+
+	movzx	edx, WORD PTR _address$[ebp]
+	and	edx, 4095				; 00000fffH
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+20]
+	mov	al, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [ecx+edx], al
+	jmp	$LN36@Write8
+$LN24@Write8:
+
+; 120  : 	} else if (address >= 0xE000 && address <= 0xFDFF) {
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	cmp	ecx, 57344				; 0000e000H
+	jl	SHORT $LN22@Write8
+	movzx	edx, WORD PTR _address$[ebp]
+	cmp	edx, 65023				; 0000fdffH
+	jg	SHORT $LN22@Write8
+
+; 121  : 		if ((address&0xF000)==0xE000)
+
+	movzx	eax, WORD PTR _address$[ebp]
+	and	eax, 61440				; 0000f000H
+	cmp	eax, 57344				; 0000e000H
+	jne	SHORT $LN21@Write8
+
+; 122  : 		 wram1_[address&0xFFF] = data;
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	and	ecx, 4095				; 00000fffH
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+16]
+	mov	dl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [eax+ecx], dl
+$LN21@Write8:
+
+; 123  : 		if ((address&0xF000)==0xF000)
+
+	movzx	eax, WORD PTR _address$[ebp]
+	and	eax, 61440				; 0000f000H
+	cmp	eax, 61440				; 0000f000H
+	jne	SHORT $LN20@Write8
+
+; 124  : 		 wram2_[address&0xFFF] = data;
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	and	ecx, 4095				; 00000fffH
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+20]
+	mov	dl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [eax+ecx], dl
+$LN20@Write8:
 
 ; 125  : 	} else if (address >= 0xFE00 && address <= 0xFE9F) {
 
-	jmp	$LN32@Write8
-$LN19@Write8:
+	jmp	$LN36@Write8
+$LN22@Write8:
 	movzx	eax, WORD PTR _address$[ebp]
 	cmp	eax, 65024				; 0000fe00H
-	jl	SHORT $LN15@Write8
+	jl	SHORT $LN18@Write8
 	movzx	ecx, WORD PTR _address$[ebp]
 	cmp	ecx, 65183				; 0000fe9fH
-	jg	SHORT $LN15@Write8
+	jg	SHORT $LN18@Write8
 
-; 126  : 		//if ((emu_->lcd_driver()->stat().mode&0x2)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
-; 127  : 		//	return;
+; 126  : 		if ((emu_->lcd_driver()->stat().mode&0x2)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [edx+4]
+	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
+	mov	ecx, eax
+	call	?stat@LCDDriver@gb@emulation@@QAEABTLCDStatusRegister@23@XZ ; emulation::gb::LCDDriver::stat
+	mov	al, BYTE PTR [eax]
+	and	al, 3
+	movzx	ecx, al
+	and	ecx, 2
+	je	SHORT $LN17@Write8
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [edx+4]
+	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
+	mov	ecx, eax
+	call	?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ ; emulation::gb::LCDDriver::lcdc
+	mov	al, BYTE PTR [eax]
+	shr	al, 7
+	and	al, 1
+	movzx	ecx, al
+	cmp	ecx, 1
+	jne	SHORT $LN17@Write8
+
+; 127  : 			return;
+
+	jmp	$LN36@Write8
+$LN17@Write8:
+
 ; 128  : 		 oam_[address-0xFE00] = data;
 
 	movzx	edx, WORD PTR _address$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	cl, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [eax+edx-65004], cl
-	jmp	$LN32@Write8
-$LN15@Write8:
+	mov	BYTE PTR [eax+edx-65000], cl
+	jmp	$LN36@Write8
+$LN18@Write8:
 
 ; 129  : 
 ; 130  : 	} else if (address >= 0xFEA0 && address <= 0xFEFF) {
 
 	movzx	edx, WORD PTR _address$[ebp]
 	cmp	edx, 65184				; 0000fea0H
-	jl	SHORT $LN13@Write8
+	jl	SHORT $LN15@Write8
 	movzx	eax, WORD PTR _address$[ebp]
 	cmp	eax, 65279				; 0000feffH
-	jg	SHORT $LN13@Write8
+	jg	SHORT $LN15@Write8
 
 ; 131  : 		//int a = 1;
 ; 132  :      int a = 1;
 
 	mov	DWORD PTR _a$2[ebp], 1
-	jmp	$LN32@Write8
-$LN13@Write8:
+	jmp	$LN36@Write8
+$LN15@Write8:
 
 ; 133  : 	} else if (address >= 0xFF00 && address <= 0xFF7F) {
 
 	movzx	ecx, WORD PTR _address$[ebp]
 	cmp	ecx, 65280				; 0000ff00H
-	jl	$LN11@Write8
+	jl	$LN13@Write8
 	movzx	edx, WORD PTR _address$[ebp]
 	cmp	edx, 65407				; 0000ff7fH
-	jg	$LN11@Write8
+	jg	$LN13@Write8
 
 ; 134  : 
-; 135  : 
-; 136  : 
-; 137  : 		if (address == 0xFF01) {
+; 135  : 		if (address == 0xFF00) {
 
 	movzx	eax, WORD PTR _address$[ebp]
-	cmp	eax, 65281				; 0000ff01H
-	jne	SHORT $LN10@Write8
+	cmp	eax, 65280				; 0000ff00H
+	jne	SHORT $LN12@Write8
 
-; 138  : 			char str[255];
-; 139  : 			sprintf_s(str,"%c",data);
+; 136  : 			ioports_[0]=data & ~0x0F;
 
 	movzx	ecx, BYTE PTR _data$[ebp]
-	push	ecx
-	push	OFFSET $SG130099
-	lea	edx, DWORD PTR _str$1[ebp]
+	and	ecx, -16				; fffffff0H
+	mov	edx, 1
+	imul	edx, 0
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+edx+184], cl
+
+; 137  : 			return;
+
+	jmp	$LN36@Write8
+	jmp	SHORT $LN11@Write8
+$LN12@Write8:
+
+; 138  : 		} else if (address == 0xFF01) {
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	cmp	ecx, 65281				; 0000ff01H
+	jne	SHORT $LN11@Write8
+
+; 139  : 			char str[255];
+; 140  : 			sprintf_s(str,"%c",data);
+
+	movzx	edx, BYTE PTR _data$[ebp]
 	push	edx
+	push	OFFSET $SG130178
+	lea	eax, DWORD PTR _str$1[ebp]
+	push	eax
 	call	??$sprintf_s@$0PP@@@YAHAAY0PP@DPBDZZ	; sprintf_s<255>
 	add	esp, 12					; 0000000cH
 
-; 140  : 			OutputDebugString(str);
+; 141  : 			OutputDebugString(str);
 
 	mov	esi, esp
-	lea	eax, DWORD PTR _str$1[ebp]
-	push	eax
+	lea	ecx, DWORD PTR _str$1[ebp]
+	push	ecx
 	call	DWORD PTR __imp__OutputDebugStringA@4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-$LN10@Write8:
+$LN11@Write8:
 
-; 141  : 		}
-; 142  : 
-; 143  : 		ioports_[address&0xFF]=data;
-
-	movzx	ecx, WORD PTR _address$[ebp]
-	and	ecx, 255				; 000000ffH
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [edx+ecx+180], al
-
-; 144  : 
-; 145  :     switch (address) {
-
-	movzx	ecx, WORD PTR _address$[ebp]
-	mov	DWORD PTR tv247[ebp], ecx
-
-; 146  :       case 0xFF26: //sound enable/disable
-; 147  :         break;
-; 148  :     }
-; 149  :     if (address >= 0xFF10 && address <= 0xFF26)
+; 142  : 		}
+; 143  : 
+; 144  : 		ioports_[address&0xFF]=data;
 
 	movzx	edx, WORD PTR _address$[ebp]
-	cmp	edx, 65296				; 0000ff10H
-	jl	SHORT $LN6@Write8
+	and	edx, 255				; 000000ffH
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [eax+edx+184], cl
+
+; 145  : 
+; 146  :     switch (address) {
+
+	movzx	edx, WORD PTR _address$[ebp]
+	mov	DWORD PTR tv310[ebp], edx
+
+; 147  :       case 0xFF26: //sound enable/disable
+; 148  :         break;
+; 149  :     }
+; 150  :     if (address >= 0xFF10 && address <= 0xFF26)
+
 	movzx	eax, WORD PTR _address$[ebp]
-	cmp	eax, 65318				; 0000ff26H
+	cmp	eax, 65296				; 0000ff10H
+	jl	SHORT $LN6@Write8
+	movzx	ecx, WORD PTR _address$[ebp]
+	cmp	ecx, 65318				; 0000ff26H
 	jg	SHORT $LN6@Write8
 
-; 150  :       emu_->lcd_driver()->Write(address,data);
+; 151  :       emu_->lcd_driver()->Write(address,data);
 
-	movzx	ecx, BYTE PTR _data$[ebp]
-	push	ecx
-	movzx	edx, WORD PTR _address$[ebp]
+	movzx	edx, BYTE PTR _data$[ebp]
 	push	edx
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax]
+	movzx	eax, WORD PTR _address$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
 	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
 	mov	ecx, eax
 	call	?Write@LCDDriver@gb@emulation@@QAEXGE@Z	; emulation::gb::LCDDriver::Write
 $LN6@Write8:
 
-; 151  : 
-; 152  :     if (address >= 0xFF40 && address <= 0xFF4B)
+; 152  : 
+; 153  :     if (address >= 0xFF40 && address <= 0xFF4B)
 
-	movzx	ecx, WORD PTR _address$[ebp]
-	cmp	ecx, 65344				; 0000ff40H
-	jl	SHORT $LN5@Write8
 	movzx	edx, WORD PTR _address$[ebp]
-	cmp	edx, 65355				; 0000ff4bH
+	cmp	edx, 65344				; 0000ff40H
+	jl	SHORT $LN5@Write8
+	movzx	eax, WORD PTR _address$[ebp]
+	cmp	eax, 65355				; 0000ff4bH
 	jg	SHORT $LN5@Write8
 
-; 153  :       emu_->lcd_driver()->Write(address,data);
+; 154  :       emu_->lcd_driver()->Write(address,data);
 
-	movzx	eax, BYTE PTR _data$[ebp]
-	push	eax
-	movzx	ecx, WORD PTR _address$[ebp]
+	movzx	ecx, BYTE PTR _data$[ebp]
 	push	ecx
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx]
+	movzx	edx, WORD PTR _address$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
 	mov	ecx, eax
 	call	?Write@LCDDriver@gb@emulation@@QAEXGE@Z	; emulation::gb::LCDDriver::Write
 $LN5@Write8:
 
-; 154  : 
-; 155  : 	} else if (address >= 0xFF80 && address <= 0xFFFE) {
+; 155  : 
+; 156  : 	} else if (address >= 0xFF80 && address <= 0xFFFE) {
 
-	jmp	SHORT $LN32@Write8
-$LN11@Write8:
-	movzx	eax, WORD PTR _address$[ebp]
-	cmp	eax, 65408				; 0000ff80H
-	jl	SHORT $LN3@Write8
+	jmp	SHORT $LN36@Write8
+$LN13@Write8:
 	movzx	ecx, WORD PTR _address$[ebp]
-	cmp	ecx, 65534				; 0000fffeH
+	cmp	ecx, 65408				; 0000ff80H
+	jl	SHORT $LN3@Write8
+	movzx	edx, WORD PTR _address$[ebp]
+	cmp	edx, 65534				; 0000fffeH
 	jg	SHORT $LN3@Write8
 
-; 156  : 		hram_[address-0xFF80] = data;
+; 157  : 		hram_[address-0xFF80] = data;
 
-	movzx	edx, WORD PTR _address$[ebp]
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [eax+edx-65100], cl
-	jmp	SHORT $LN32@Write8
+	movzx	eax, WORD PTR _address$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [ecx+eax-65096], dl
+	jmp	SHORT $LN36@Write8
 $LN3@Write8:
 
-; 157  : 	} else if (address == 0xFFFF) {
+; 158  : 	} else if (address == 0xFFFF) {
 
-	movzx	edx, WORD PTR _address$[ebp]
-	cmp	edx, 65535				; 0000ffffH
-	jne	SHORT $LN32@Write8
+	movzx	eax, WORD PTR _address$[ebp]
+	cmp	eax, 65535				; 0000ffffH
+	jne	SHORT $LN36@Write8
 
-; 158  : 		interrupt_enable_register_ = data;
+; 159  : 		interrupt_enable_register_ = data;
 
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR _data$[ebp]
-	mov	BYTE PTR [eax+435], cl
-$LN32@Write8:
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [ecx+439], dl
+$LN36@Write8:
 
-; 159  : 	}
-; 160  : }
+; 160  : 	}
+; 161  : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN36@Write8
+	lea	edx, DWORD PTR $LN40@Write8
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -1865,15 +2206,15 @@ $LN32@Write8:
 	mov	esp, ebp
 	pop	ebp
 	ret	8
-	npad	3
-$LN36@Write8:
+	npad	1
+$LN40@Write8:
 	DD	1
-	DD	$LN35@Write8
-$LN35@Write8:
+	DD	$LN39@Write8
+$LN39@Write8:
 	DD	-272					; fffffef0H
 	DD	255					; 000000ffH
-	DD	$LN34@Write8
-$LN34@Write8:
+	DD	$LN38@Write8
+$LN38@Write8:
 	DB	115					; 00000073H
 	DB	116					; 00000074H
 	DB	114					; 00000072H
@@ -1889,7 +2230,7 @@ _address$ = 8						; size = 2
 ?Read8@Memory@gb@emulation@@QAEEG@Z PROC		; emulation::gb::Memory::Read8
 ; _this$ = ecx
 
-; 48   : uint8_t Memory::Read8(uint16_t address) {
+; 50   : uint8_t Memory::Read8(uint16_t address) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1898,323 +2239,378 @@ _address$ = 8						; size = 2
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 49   :   emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();
+; 51   :   emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?cpu@Emu@gb@emulation@@QAEPAVCpu@23@XZ	; emulation::gb::Emu::cpu
 	mov	ecx, eax
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx]
+	mov	ecx, DWORD PTR [ecx+4]
 	call	?cpu@Emu@gb@emulation@@QAEPAVCpu@23@XZ	; emulation::gb::Emu::cpu
 	mov	ecx, eax
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx]
+	mov	ecx, DWORD PTR [edx+4]
 	call	?cpu@Emu@gb@emulation@@QAEPAVCpu@23@XZ	; emulation::gb::Emu::cpu
 	mov	ecx, eax
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?cpu@Emu@gb@emulation@@QAEPAVCpu@23@XZ	; emulation::gb::Emu::cpu
 	mov	ecx, eax
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 50   : 	if (address >= 0x0000 && address <= 0x3FFF) {
+; 52   : 	if (address >= 0x0000 && address <= 0x3FFF) {
 
 	movzx	ecx, WORD PTR _address$[ebp]
 	test	ecx, ecx
-	jl	SHORT $LN29@Read8
+	jl	SHORT $LN32@Read8
 	movzx	edx, WORD PTR _address$[ebp]
 	cmp	edx, 16383				; 00003fffH
-	jg	SHORT $LN29@Read8
+	jg	SHORT $LN32@Read8
 
-; 51   : 		if (ioports_[0x50] == 0) {
+; 53   : 		if (ioports_[0x50] == 0) {
 
 	mov	eax, 1
 	imul	eax, 80					; 00000050H
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+180]
+	movzx	edx, BYTE PTR [ecx+eax+184]
 	test	edx, edx
-	jne	SHORT $LN28@Read8
+	jne	SHORT $LN31@Read8
 
-; 52   :       if (address < 0x100)
+; 54   :       if (address < 0x100)
 
 	movzx	eax, WORD PTR _address$[ebp]
 	cmp	eax, 256				; 00000100H
-	jge	SHORT $LN28@Read8
+	jge	SHORT $LN31@Read8
 
-; 53   : 			  return dmgrom[address&0xFF];
+; 55   : 			  return dmgrom[address&0xFF];
 
 	movzx	ecx, WORD PTR _address$[ebp]
 	and	ecx, 255				; 000000ffH
 	mov	al, BYTE PTR _dmgrom[ecx]
-	jmp	$LN30@Read8
-$LN28@Read8:
+	jmp	$LN33@Read8
+$LN31@Read8:
 
-; 54   :     }
-; 55   : 	  return emu_->cartridge()->Read(address);
+; 56   :     }
+; 57   : 	  return emu_->cartridge()->Read(address);
 
 	movzx	edx, WORD PTR _address$[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ ; emulation::gb::Emu::cartridge
 	mov	ecx, eax
 	call	?Read@Cartridge@gb@emulation@@QAEEG@Z	; emulation::gb::Cartridge::Read
-	jmp	$LN30@Read8
-	jmp	$LN26@Read8
-$LN29@Read8:
+	jmp	$LN33@Read8
+	jmp	$LN29@Read8
+$LN32@Read8:
 
-; 56   : 	} else if (address >= 0x4000 && address <= 0x7FFF) {
+; 58   : 	} else if (address >= 0x4000 && address <= 0x7FFF) {
 
 	movzx	ecx, WORD PTR _address$[ebp]
 	cmp	ecx, 16384				; 00004000H
-	jl	SHORT $LN25@Read8
+	jl	SHORT $LN28@Read8
 	movzx	edx, WORD PTR _address$[ebp]
 	cmp	edx, 32767				; 00007fffH
-	jg	SHORT $LN25@Read8
+	jg	SHORT $LN28@Read8
 
-; 57   : 		return emu_->cartridge()->Read(address);
+; 59   : 		return emu_->cartridge()->Read(address);
 
 	movzx	eax, WORD PTR _address$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx]
+	mov	ecx, DWORD PTR [ecx+4]
 	call	?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ ; emulation::gb::Emu::cartridge
 	mov	ecx, eax
 	call	?Read@Cartridge@gb@emulation@@QAEEG@Z	; emulation::gb::Cartridge::Read
-	jmp	$LN30@Read8
-	jmp	$LN26@Read8
-$LN25@Read8:
+	jmp	$LN33@Read8
+	jmp	$LN29@Read8
+$LN28@Read8:
 
-; 58   : 	} else if (address >= 0x8000 && address <= 0x9FFF) {
+; 60   : 	} else if (address >= 0x8000 && address <= 0x9FFF) {
 
 	movzx	edx, WORD PTR _address$[ebp]
 	cmp	edx, 32768				; 00008000H
-	jl	SHORT $LN23@Read8
+	jl	SHORT $LN26@Read8
 	movzx	eax, WORD PTR _address$[ebp]
 	cmp	eax, 40959				; 00009fffH
-	jg	SHORT $LN23@Read8
+	jg	SHORT $LN26@Read8
 
-; 59   : 
-; 60   : 		//if ((emu_->lcd_driver()->stat().mode == 3)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
-; 61   : 		//	return 0xFF;
-; 62   : 
-; 63   : 		return vram_[address&0x1FFF];
+; 61   : 
+; 62   : 		if ((emu_->lcd_driver()->stat().mode == 3)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
+	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
+	mov	ecx, eax
+	call	?stat@LCDDriver@gb@emulation@@QAEABTLCDStatusRegister@23@XZ ; emulation::gb::LCDDriver::stat
+	mov	dl, BYTE PTR [eax]
+	and	dl, 3
+	movzx	eax, dl
+	cmp	eax, 3
+	jne	SHORT $LN25@Read8
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
+	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
+	mov	ecx, eax
+	call	?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ ; emulation::gb::LCDDriver::lcdc
+	mov	dl, BYTE PTR [eax]
+	shr	dl, 7
+	and	dl, 1
+	movzx	eax, dl
+	cmp	eax, 1
+	jne	SHORT $LN25@Read8
+
+; 63   : 			return 0xFF;
+
+	or	al, 255					; 000000ffH
+	jmp	$LN33@Read8
+$LN25@Read8:
+
+; 64   : 
+; 65   : 		return vram_[address&0x1FFF];
 
 	movzx	ecx, WORD PTR _address$[ebp]
 	and	ecx, 8191				; 00001fffH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+8]
+	mov	eax, DWORD PTR [edx+12]
 	mov	al, BYTE PTR [eax+ecx]
-	jmp	$LN30@Read8
-	jmp	$LN26@Read8
-$LN23@Read8:
+	jmp	$LN33@Read8
+	jmp	$LN29@Read8
+$LN26@Read8:
 
-; 64   : 	} else if (address >= 0xA000 && address <= 0xBFFF) {
+; 66   : 	} else if (address >= 0xA000 && address <= 0xBFFF) {
 
 	movzx	ecx, WORD PTR _address$[ebp]
 	cmp	ecx, 40960				; 0000a000H
-	jl	SHORT $LN21@Read8
+	jl	SHORT $LN23@Read8
 	movzx	edx, WORD PTR _address$[ebp]
 	cmp	edx, 49151				; 0000bfffH
-	jg	SHORT $LN21@Read8
+	jg	SHORT $LN23@Read8
 
-; 65   :     return emu_->cartridge()->Read(address);//emu_->cartridge()->eram()[address&0x1FFF];
+; 67   :     return emu_->cartridge()->Read(address);//emu_->cartridge()->eram()[address&0x1FFF];
 
 	movzx	eax, WORD PTR _address$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx]
+	mov	ecx, DWORD PTR [ecx+4]
 	call	?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ ; emulation::gb::Emu::cartridge
 	mov	ecx, eax
 	call	?Read@Cartridge@gb@emulation@@QAEEG@Z	; emulation::gb::Cartridge::Read
-	jmp	$LN30@Read8
-	jmp	$LN26@Read8
-$LN21@Read8:
+	jmp	$LN33@Read8
+	jmp	$LN29@Read8
+$LN23@Read8:
 
-; 66   : 	} else if (address >= 0xC000 && address <= 0xCFFF) {
+; 68   : 	} else if (address >= 0xC000 && address <= 0xCFFF) {
 
 	movzx	edx, WORD PTR _address$[ebp]
 	cmp	edx, 49152				; 0000c000H
-	jl	SHORT $LN19@Read8
+	jl	SHORT $LN21@Read8
 	movzx	eax, WORD PTR _address$[ebp]
 	cmp	eax, 53247				; 0000cfffH
-	jg	SHORT $LN19@Read8
+	jg	SHORT $LN21@Read8
 
-; 67   : 		return wram1_[address&0x0FFF];
-
-	movzx	ecx, WORD PTR _address$[ebp]
-	and	ecx, 4095				; 00000fffH
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+12]
-	mov	al, BYTE PTR [eax+ecx]
-	jmp	$LN30@Read8
-	jmp	$LN26@Read8
-$LN19@Read8:
-
-; 68   : 	} else if (address >= 0xD000 && address <= 0xDFFF) {
-
-	movzx	ecx, WORD PTR _address$[ebp]
-	cmp	ecx, 53248				; 0000d000H
-	jl	SHORT $LN17@Read8
-	movzx	edx, WORD PTR _address$[ebp]
-	cmp	edx, 57343				; 0000dfffH
-	jg	SHORT $LN17@Read8
-
-; 69   : 		return wram2_[address&0x0FFF];
-
-	movzx	eax, WORD PTR _address$[ebp]
-	and	eax, 4095				; 00000fffH
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [ecx+16]
-	mov	al, BYTE PTR [edx+eax]
-	jmp	$LN30@Read8
-	jmp	$LN26@Read8
-$LN17@Read8:
-
-; 70   : 	} else if (address >= 0xE000 && address <= 0xFDFF) {
-
-	movzx	eax, WORD PTR _address$[ebp]
-	cmp	eax, 57344				; 0000e000H
-	jl	SHORT $LN15@Read8
-	movzx	ecx, WORD PTR _address$[ebp]
-	cmp	ecx, 65023				; 0000fdffH
-	jg	SHORT $LN15@Read8
-
-; 71   : 	  if ((address&0xF000)==0xE000)
-
-	movzx	edx, WORD PTR _address$[ebp]
-	and	edx, 61440				; 0000f000H
-	cmp	edx, 57344				; 0000e000H
-	jne	SHORT $LN14@Read8
-
-; 72   : 		 return wram1_[address&0xFFF];
-
-	movzx	eax, WORD PTR _address$[ebp]
-	and	eax, 4095				; 00000fffH
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [ecx+12]
-	mov	al, BYTE PTR [edx+eax]
-	jmp	$LN30@Read8
-$LN14@Read8:
-
-; 73   : 		if ((address&0xF000)==0xF000)
-
-	movzx	eax, WORD PTR _address$[ebp]
-	and	eax, 61440				; 0000f000H
-	cmp	eax, 61440				; 0000f000H
-	jne	SHORT $LN13@Read8
-
-; 74   : 		 return wram2_[address&0xFFF];
+; 69   : 		return wram1_[address&0x0FFF];
 
 	movzx	ecx, WORD PTR _address$[ebp]
 	and	ecx, 4095				; 00000fffH
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR [edx+16]
 	mov	al, BYTE PTR [eax+ecx]
-	jmp	$LN30@Read8
-$LN13@Read8:
+	jmp	$LN33@Read8
+	jmp	$LN29@Read8
+$LN21@Read8:
 
-; 75   : 	} else if (address >= 0xFE00 && address <= 0xFE9F) {
+; 70   : 	} else if (address >= 0xD000 && address <= 0xDFFF) {
 
-	jmp	$LN26@Read8
+	movzx	ecx, WORD PTR _address$[ebp]
+	cmp	ecx, 53248				; 0000d000H
+	jl	SHORT $LN19@Read8
+	movzx	edx, WORD PTR _address$[ebp]
+	cmp	edx, 57343				; 0000dfffH
+	jg	SHORT $LN19@Read8
+
+; 71   : 		return wram2_[address&0x0FFF];
+
+	movzx	eax, WORD PTR _address$[ebp]
+	and	eax, 4095				; 00000fffH
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+20]
+	mov	al, BYTE PTR [edx+eax]
+	jmp	$LN33@Read8
+	jmp	$LN29@Read8
+$LN19@Read8:
+
+; 72   : 	} else if (address >= 0xE000 && address <= 0xFDFF) {
+
+	movzx	eax, WORD PTR _address$[ebp]
+	cmp	eax, 57344				; 0000e000H
+	jl	SHORT $LN17@Read8
+	movzx	ecx, WORD PTR _address$[ebp]
+	cmp	ecx, 65023				; 0000fdffH
+	jg	SHORT $LN17@Read8
+
+; 73   : 	  if ((address&0xF000)==0xE000)
+
+	movzx	edx, WORD PTR _address$[ebp]
+	and	edx, 61440				; 0000f000H
+	cmp	edx, 57344				; 0000e000H
+	jne	SHORT $LN16@Read8
+
+; 74   : 		 return wram1_[address&0xFFF];
+
+	movzx	eax, WORD PTR _address$[ebp]
+	and	eax, 4095				; 00000fffH
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+16]
+	mov	al, BYTE PTR [edx+eax]
+	jmp	$LN33@Read8
+$LN16@Read8:
+
+; 75   : 		if ((address&0xF000)==0xF000)
+
+	movzx	eax, WORD PTR _address$[ebp]
+	and	eax, 61440				; 0000f000H
+	cmp	eax, 61440				; 0000f000H
+	jne	SHORT $LN15@Read8
+
+; 76   : 		 return wram2_[address&0xFFF];
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	and	ecx, 4095				; 00000fffH
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+20]
+	mov	al, BYTE PTR [eax+ecx]
+	jmp	$LN33@Read8
 $LN15@Read8:
+
+; 77   : 	} else if (address >= 0xFE00 && address <= 0xFE9F) {
+
+	jmp	$LN29@Read8
+$LN17@Read8:
 	movzx	ecx, WORD PTR _address$[ebp]
 	cmp	ecx, 65024				; 0000fe00H
-	jl	SHORT $LN11@Read8
+	jl	SHORT $LN13@Read8
 	movzx	edx, WORD PTR _address$[ebp]
 	cmp	edx, 65183				; 0000fe9fH
-	jg	SHORT $LN11@Read8
+	jg	SHORT $LN13@Read8
 
-; 76   : 
-; 77   : 		//if ((emu_->lcd_driver()->stat().mode&0x2)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
-; 78   : 		//	return 0xFF;
-; 79   : 
-; 80   : 		return oam_[address-0xFE00];
+; 78   : 
+; 79   : 		if ((emu_->lcd_driver()->stat().mode&0x2)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+4]
+	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
+	mov	ecx, eax
+	call	?stat@LCDDriver@gb@emulation@@QAEABTLCDStatusRegister@23@XZ ; emulation::gb::LCDDriver::stat
+	mov	cl, BYTE PTR [eax]
+	and	cl, 3
+	movzx	edx, cl
+	and	edx, 2
+	je	SHORT $LN12@Read8
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+4]
+	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
+	mov	ecx, eax
+	call	?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ ; emulation::gb::LCDDriver::lcdc
+	mov	cl, BYTE PTR [eax]
+	shr	cl, 7
+	and	cl, 1
+	movzx	edx, cl
+	cmp	edx, 1
+	jne	SHORT $LN12@Read8
+
+; 80   : 			return 0xFF;
+
+	or	al, 255					; 000000ffH
+	jmp	$LN33@Read8
+$LN12@Read8:
+
+; 81   : 
+; 82   : 		return oam_[address-0xFE00];
 
 	movzx	eax, WORD PTR _address$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [ecx+eax-65004]
-	jmp	$LN30@Read8
-	jmp	$LN26@Read8
-$LN11@Read8:
+	mov	al, BYTE PTR [ecx+eax-65000]
+	jmp	$LN33@Read8
+	jmp	$LN29@Read8
+$LN13@Read8:
 
-; 81   : 	} else if (address >= 0xFEA0 && address <= 0xFEFF) {
+; 83   : 	} else if (address >= 0xFEA0 && address <= 0xFEFF) {
 
 	movzx	edx, WORD PTR _address$[ebp]
 	cmp	edx, 65184				; 0000fea0H
-	jl	SHORT $LN9@Read8
+	jl	SHORT $LN10@Read8
 	movzx	eax, WORD PTR _address$[ebp]
 	cmp	eax, 65279				; 0000feffH
-	jg	SHORT $LN9@Read8
+	jg	SHORT $LN10@Read8
 
-; 82   : 		int a = 1;
+; 84   : 		int a = 1;
 
 	mov	DWORD PTR _a$1[ebp], 1
-	jmp	$LN26@Read8
-$LN9@Read8:
+	jmp	$LN29@Read8
+$LN10@Read8:
 
-; 83   : 	} else if (address >= 0xFF00 && address <= 0xFF7F) {
+; 85   : 	} else if (address >= 0xFF00 && address <= 0xFF7F) {
 
 	movzx	ecx, WORD PTR _address$[ebp]
 	cmp	ecx, 65280				; 0000ff00H
-	jl	$LN7@Read8
+	jl	$LN8@Read8
 	movzx	edx, WORD PTR _address$[ebp]
 	cmp	edx, 65407				; 0000ff7fH
-	jg	$LN7@Read8
+	jg	$LN8@Read8
 
-; 84   : 
-; 85   : 		if (address >= 0xFF10 && address <= 0xFF26)
+; 86   : 		if (address >= 0xFF10 && address <= 0xFF26) {
 
 	movzx	eax, WORD PTR _address$[ebp]
 	cmp	eax, 65296				; 0000ff10H
-	jl	SHORT $LN6@Read8
+	jl	SHORT $LN7@Read8
 	movzx	ecx, WORD PTR _address$[ebp]
 	cmp	ecx, 65318				; 0000ff26H
-	jg	SHORT $LN6@Read8
+	jg	SHORT $LN7@Read8
 
-; 86   :       ioports_[address&0xFF] = emu_->sc()->Read(address);
+; 87   :       ioports_[address&0xFF] = emu_->sc()->Read(address);
 
 	movzx	edx, WORD PTR _address$[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?sc@Emu@gb@emulation@@QAEPAVSoundController@23@XZ ; emulation::gb::Emu::sc
 	mov	ecx, eax
 	call	?Read@SoundController@gb@emulation@@QAEEG@Z ; emulation::gb::SoundController::Read
 	movzx	ecx, WORD PTR _address$[ebp]
 	and	ecx, 255				; 000000ffH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+180], al
-$LN6@Read8:
+	mov	BYTE PTR [edx+ecx+184], al
+	jmp	SHORT $LN6@Read8
+$LN7@Read8:
 
-; 87   : 
-; 88   :     if (address >= 0xFF40 && address <= 0xFF4B) {
+; 88   : 		} else if (address >= 0xFF40 && address <= 0xFF4B) {
 
 	movzx	eax, WORD PTR _address$[ebp]
 	cmp	eax, 65344				; 0000ff40H
-	jl	SHORT $LN5@Read8
+	jl	SHORT $LN6@Read8
 	movzx	ecx, WORD PTR _address$[ebp]
 	cmp	ecx, 65355				; 0000ff4bH
-	jg	SHORT $LN5@Read8
+	jg	SHORT $LN6@Read8
 
 ; 89   : 			ioports_[address&0xFF] = emu_->lcd_driver()->Read(address);
 
 	movzx	edx, WORD PTR _address$[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
 	mov	ecx, eax
 	call	?Read@LCDDriver@gb@emulation@@QAEEG@Z	; emulation::gb::LCDDriver::Read
 	movzx	ecx, WORD PTR _address$[ebp]
 	and	ecx, 255				; 000000ffH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+180], al
-$LN5@Read8:
+	mov	BYTE PTR [edx+ecx+184], al
+$LN6@Read8:
 
 ; 90   : 		}
 ; 91   : 		return ioports_[address&0xFF];
@@ -2222,10 +2618,10 @@ $LN5@Read8:
 	movzx	eax, WORD PTR _address$[ebp]
 	and	eax, 255				; 000000ffH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [ecx+eax+180]
-	jmp	SHORT $LN30@Read8
-	jmp	SHORT $LN26@Read8
-$LN7@Read8:
+	mov	al, BYTE PTR [ecx+eax+184]
+	jmp	SHORT $LN33@Read8
+	jmp	SHORT $LN29@Read8
+$LN8@Read8:
 
 ; 92   : 	} else if (address >= 0xFF80 && address <= 0xFFFE) {
 
@@ -2240,30 +2636,30 @@ $LN7@Read8:
 
 	movzx	ecx, WORD PTR _address$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx-65100]
-	jmp	SHORT $LN30@Read8
-	jmp	SHORT $LN26@Read8
+	mov	al, BYTE PTR [edx+ecx-65096]
+	jmp	SHORT $LN33@Read8
+	jmp	SHORT $LN29@Read8
 $LN3@Read8:
 
 ; 94   : 	} else if (address == 0xFFFF) {
 
 	movzx	eax, WORD PTR _address$[ebp]
 	cmp	eax, 65535				; 0000ffffH
-	jne	SHORT $LN26@Read8
+	jne	SHORT $LN29@Read8
 
 ; 95   : 		return interrupt_enable_register_;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [ecx+435]
-	jmp	SHORT $LN30@Read8
-$LN26@Read8:
+	mov	al, BYTE PTR [ecx+439]
+	jmp	SHORT $LN33@Read8
+$LN29@Read8:
 
 ; 96   : 	}
 ; 97   : 
 ; 98   : 	return 0;
 
 	xor	al, al
-$LN30@Read8:
+$LN33@Read8:
 
 ; 99   : }
 
@@ -2279,10 +2675,10 @@ _TEXT	ENDS
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\memory.cpp
 _TEXT	SEGMENT
 _this$ = -4						; size = 4
-?Deinitialize@Memory@gb@emulation@@QAEXXZ PROC		; emulation::gb::Memory::Deinitialize
+?Deinitialize@Memory@gb@emulation@@UAEXXZ PROC		; emulation::gb::Memory::Deinitialize
 ; _this$ = ecx
 
-; 41   : void Memory::Deinitialize() {
+; 43   : void Memory::Deinitialize() {
 
 	push	ebp
 	mov	ebp, esp
@@ -2290,31 +2686,31 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 42   : 	SafeDeleteArray(&wram2_);
+; 44   : 	SafeDeleteArray(&wram2_);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 16					; 00000010H
+	add	eax, 20					; 00000014H
 	push	eax
 	call	??$SafeDeleteArray@E@@YAXPAPAE@Z	; SafeDeleteArray<unsigned char>
 	add	esp, 4
 
-; 43   : 	SafeDeleteArray(&wram1_);
+; 45   : 	SafeDeleteArray(&wram1_);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 12					; 0000000cH
+	add	ecx, 16					; 00000010H
 	push	ecx
 	call	??$SafeDeleteArray@E@@YAXPAPAE@Z	; SafeDeleteArray<unsigned char>
 	add	esp, 4
 
-; 44   : 	SafeDeleteArray(&vram_);
+; 46   : 	SafeDeleteArray(&vram_);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	add	edx, 8
+	add	edx, 12					; 0000000cH
 	push	edx
 	call	??$SafeDeleteArray@E@@YAXPAPAE@Z	; SafeDeleteArray<unsigned char>
 	add	esp, 4
 
-; 45   : }
+; 47   : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -2322,7 +2718,7 @@ _this$ = -4						; size = 4
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-?Deinitialize@Memory@gb@emulation@@QAEXXZ ENDP		; emulation::gb::Memory::Deinitialize
+?Deinitialize@Memory@gb@emulation@@UAEXXZ ENDP		; emulation::gb::Memory::Deinitialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\memory.cpp
@@ -2332,7 +2728,7 @@ $T2 = -12						; size = 4
 $T3 = -8						; size = 4
 _this$ = -4						; size = 4
 _emu$ = 8						; size = 4
-?Initialize@Memory@gb@emulation@@QAEXPAVEmu@23@@Z PROC	; emulation::gb::Memory::Initialize
+?Initialize@Memory@gb@emulation@@UAEXPAVEmu@23@@Z PROC	; emulation::gb::Memory::Initialize
 ; _this$ = ecx
 
 ; 32   : void Memory::Initialize(Emu* emu) {
@@ -2352,22 +2748,22 @@ _emu$ = 8						; size = 4
 	mov	eax, DWORD PTR _emu$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	call	?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
+	call	?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
 
 ; 34   :   rom_ = emu_->cartridge()->rom();
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx]
+	mov	ecx, DWORD PTR [ecx+4]
 	call	?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ ; emulation::gb::Emu::cartridge
 	mov	ecx, eax
 	call	?rom@Cartridge@gb@emulation@@QAEPBEXZ	; emulation::gb::Cartridge::rom
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+4], eax
+	mov	DWORD PTR [edx+8], eax
 
 ; 35   :   vram_ = new uint8_t[0x2000];
 
 	push	35					; 00000023H
-	push	OFFSET $SG130021
+	push	OFFSET $SG130093
 	push	1
 	push	8192					; 00002000H
 	call	??_U@YAPAXIHPBDH@Z			; operator new[]
@@ -2375,12 +2771,12 @@ _emu$ = 8						; size = 4
 	mov	DWORD PTR $T3[ebp], eax
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR $T3[ebp]
-	mov	DWORD PTR [eax+8], ecx
+	mov	DWORD PTR [eax+12], ecx
 
 ; 36   : 	wram1_ = new uint8_t[0x1000];
 
 	push	36					; 00000024H
-	push	OFFSET $SG130024
+	push	OFFSET $SG130096
 	push	1
 	push	4096					; 00001000H
 	call	??_U@YAPAXIHPBDH@Z			; operator new[]
@@ -2388,12 +2784,12 @@ _emu$ = 8						; size = 4
 	mov	DWORD PTR $T2[ebp], eax
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR $T2[ebp]
-	mov	DWORD PTR [edx+12], eax
+	mov	DWORD PTR [edx+16], eax
 
 ; 37   : 	wram2_ = new uint8_t[0x1000];
 
 	push	37					; 00000025H
-	push	OFFSET $SG130027
+	push	OFFSET $SG130099
 	push	1
 	push	4096					; 00001000H
 	call	??_U@YAPAXIHPBDH@Z			; operator new[]
@@ -2401,19 +2797,36 @@ _emu$ = 8						; size = 4
 	mov	DWORD PTR $T1[ebp], eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR $T1[ebp]
-	mov	DWORD PTR [ecx+16], edx
+	mov	DWORD PTR [ecx+20], edx
 
 ; 38   : 	ZeroMemory(ioports_,sizeof(ioports_));
 
 	push	128					; 00000080H
 	push	0
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 180				; 000000b4H
+	add	eax, 184				; 000000b8H
 	push	eax
 	call	_memset
 	add	esp, 12					; 0000000cH
 
-; 39   : }
+; 39   : 	memset(joypadflags,0,sizeof(joypadflags));
+
+	push	8
+	push	0
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 440				; 000001b8H
+	push	ecx
+	call	_memset
+	add	esp, 12					; 0000000cH
+
+; 40   : 	ioports_[0] = 0x0F;
+
+	mov	edx, 1
+	imul	edx, 0
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+edx+184], 15		; 0000000fH
+
+; 41   : }
 
 	add	esp, 16					; 00000010H
 	cmp	ebp, esp
@@ -2421,7 +2834,7 @@ _emu$ = 8						; size = 4
 	mov	esp, ebp
 	pop	ebp
 	ret	4
-?Initialize@Memory@gb@emulation@@QAEXPAVEmu@23@@Z ENDP	; emulation::gb::Memory::Initialize
+?Initialize@Memory@gb@emulation@@UAEXPAVEmu@23@@Z ENDP	; emulation::gb::Memory::Initialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\wincore\types.h
@@ -2487,7 +2900,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [eax+12]
+	mov	eax, DWORD PTR [eax+16]
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -2495,14 +2908,14 @@ _this$ = -4						; size = 4
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\gb.h
-;	COMDAT ?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z
+;	COMDAT ?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z
 _TEXT	SEGMENT
 _this$ = -4						; size = 4
 _emu$ = 8						; size = 4
-?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z PROC ; emulation::gb::Component::Initialize, COMDAT
+?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z PROC ; emulation::gb::Component::Initialize, COMDAT
 ; _this$ = ecx
 
-; 27   :   void Initialize(Emu* emu) {
+; 28   :   virtual void Initialize(Emu* emu) {
 
 	push	ebp
 	mov	ebp, esp
@@ -2510,18 +2923,18 @@ _emu$ = 8						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 28   :     emu_ = emu;
+; 29   :     emu_ = emu;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _emu$[ebp]
-	mov	DWORD PTR [eax], ecx
+	mov	DWORD PTR [eax+4], ecx
 
-; 29   :   }
+; 30   :   }
 
 	mov	esp, ebp
 	pop	ebp
 	ret	4
-?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z ENDP ; emulation::gb::Component::Initialize
+?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ENDP ; emulation::gb::Component::Initialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\program files (x86)\microsoft visual studio 11.0\vc\include\tuple

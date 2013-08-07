@@ -43,27 +43,27 @@ PUBLIC	?digits@?$numeric_limits@G@std@@2HB		; std::numeric_limits<unsigned short
 PUBLIC	?_G1@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G1
 PUBLIC	?digits10@?$numeric_limits@G@std@@2HB		; std::numeric_limits<unsigned short>::digits10
 PUBLIC	?value@?$_Abs@$00@std@@2_JB			; std::_Abs<1>::value
-PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?value@?$_GcdX@$00$0A@@std@@2_JB		; std::_GcdX<1,0>::value
 PUBLIC	?value@?$_GcdX@$00$00@std@@2_JB			; std::_GcdX<1,1>::value
 PUBLIC	?is_signed@?$numeric_limits@H@std@@2_NB		; std::numeric_limits<int>::is_signed
-PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?digits@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits
 PUBLIC	?value@?$_Gcd@$00$00@std@@2_JB			; std::_Gcd<1,1>::value
 PUBLIC	?digits10@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits10
-PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?_G2@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G2
-PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
-PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
-PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?is_signed@?$numeric_limits@I@std@@2_NB		; std::numeric_limits<unsigned int>::is_signed
 PUBLIC	?digits@?$numeric_limits@I@std@@2HB		; std::numeric_limits<unsigned int>::digits
 PUBLIC	?digits10@?$numeric_limits@I@std@@2HB		; std::numeric_limits<unsigned int>::digits10
 PUBLIC	?is_monotonic@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_monotonic
 PUBLIC	?is_steady@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_steady
+PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?is_signed@?$numeric_limits@J@std@@2_NB		; std::numeric_limits<long>::is_signed
+PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?digits@?$numeric_limits@J@std@@2HB		; std::numeric_limits<long>::digits
 PUBLIC	?digits10@?$numeric_limits@J@std@@2HB		; std::numeric_limits<long>::digits10
+PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
+PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
+PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
+PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?is_signed@?$numeric_limits@K@std@@2_NB		; std::numeric_limits<unsigned long>::is_signed
 PUBLIC	?digits@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits
 PUBLIC	?digits10@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits10
@@ -769,6 +769,22 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@K@std@@2_NB DB 00H		; std::numeric_limits<unsigned long>::is_signed
 CONST	ENDS
+;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
+CONST	ENDS
+;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
+CONST	ENDS
+;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@J@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@J@std@@2HB DD 09H		; std::numeric_limits<long>::digits10
@@ -777,9 +793,17 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@J@std@@2HB DD 01fH		; std::numeric_limits<long>::digits
 CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
+CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@J@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@J@std@@2_NB DB 01H		; std::numeric_limits<long>::is_signed
+CONST	ENDS
+;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
+CONST	SEGMENT
+?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?is_steady@system_clock@chrono@std@@2_NB
 CONST	SEGMENT
@@ -801,25 +825,9 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@I@std@@2_NB DB 00H		; std::numeric_limits<unsigned int>::is_signed
 CONST	ENDS
-;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
-CONST	ENDS
-;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
-CONST	ENDS
-;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?_G2@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB
 CONST	SEGMENT
 ?_G2@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB DQ 0000000000000001H ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G2
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@H@std@@2HB
 CONST	SEGMENT
@@ -833,10 +841,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@H@std@@2HB DD 01fH		; std::numeric_limits<int>::digits
 CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
-CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@H@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@H@std@@2_NB DB 01H		; std::numeric_limits<int>::is_signed
@@ -848,10 +852,6 @@ CONST	ENDS
 ;	COMDAT ?value@?$_GcdX@$00$0A@@std@@2_JB
 CONST	SEGMENT
 ?value@?$_GcdX@$00$0A@@std@@2_JB DQ 0000000000000001H	; std::_GcdX<1,0>::value
-CONST	ENDS
-;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
-CONST	SEGMENT
-?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?value@?$_Abs@$00@std@@2_JB
 CONST	SEGMENT
@@ -941,6 +941,11 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits10@?$numeric_limits@E@std@@2HB DD 02H		; std::numeric_limits<unsigned char>::digits10
 CONST	ENDS
+CONST	SEGMENT
+$SG130187 DB	'Code\emulation\gb\cartridge.cpp', 00H
+$SG130192 DB	'Code\emulation\gb\cartridge.cpp', 00H
+$SG130197 DB	'Code\emulation\gb\cartridge.cpp', 00H
+CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@E@std@@2HB
 CONST	SEGMENT
 ?digits@?$numeric_limits@E@std@@2HB DD 08H		; std::numeric_limits<unsigned char>::digits
@@ -969,11 +974,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@_N@std@@2HB DD 01H		; std::numeric_limits<bool>::digits
 CONST	ENDS
-CONST	SEGMENT
-$SG130112 DB	'Code\emulation\gb\cartridge.cpp', 00H
-$SG130117 DB	'Code\emulation\gb\cartridge.cpp', 00H
-$SG130122 DB	'Code\emulation\gb\cartridge.cpp', 00H
-CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@_N@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@_N@std@@2_NB DB 00H		; std::numeric_limits<bool>::is_signed
@@ -995,11 +995,11 @@ CONST	SEGMENT
 ?is_signed@?$numeric_limits@_W@std@@2_NB DB 00H		; std::numeric_limits<wchar_t>::is_signed
 CONST	ENDS
 PUBLIC	??0_Ignore@std@@QAE@XZ				; std::_Ignore::_Ignore
-PUBLIC	?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
+PUBLIC	?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
 PUBLIC	?rom_size_bytes@CartridgeHeader@gb@emulation@@QAEIXZ ; emulation::gb::CartridgeHeader::rom_size_bytes
-PUBLIC	?Initialize@Cartridge@gb@emulation@@QAEXPAVEmu@23@@Z ; emulation::gb::Cartridge::Initialize
-PUBLIC	?Deinitialize@Cartridge@gb@emulation@@QAEXXZ	; emulation::gb::Cartridge::Deinitialize
-PUBLIC	?ReadFile@Cartridge@gb@emulation@@QAEXPBDPAUCartridgeHeader@23@@Z ; emulation::gb::Cartridge::ReadFile
+PUBLIC	?Initialize@Cartridge@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Cartridge::Initialize
+PUBLIC	?Deinitialize@Cartridge@gb@emulation@@UAEXXZ	; emulation::gb::Cartridge::Deinitialize
+PUBLIC	?LoadFile@Cartridge@gb@emulation@@QAEXPBDPAUCartridgeHeader@23@@Z ; emulation::gb::Cartridge::LoadFile
 PUBLIC	?rom@Cartridge@gb@emulation@@QAEPBEXZ		; emulation::gb::Cartridge::rom
 PUBLIC	?Read@Cartridge@gb@emulation@@QAEEG@Z		; emulation::gb::Cartridge::Read
 PUBLIC	?Write@Cartridge@gb@emulation@@QAEXGE@Z		; emulation::gb::Cartridge::Write
@@ -1039,6 +1039,7 @@ PUBLIC	??_R1A@?0A@EA@MBC1@gb@emulation@@8		; emulation::gb::MBC1::`RTTI Base Cla
 EXTRN	__purecall:PROC
 EXTRN	??3@YAXPAX@Z:PROC				; operator delete
 EXTRN	_memcpy:PROC
+EXTRN	__imp__DebugBreak@0:PROC
 EXTRN	??_V@YAXPAX@Z:PROC				; operator delete[]
 EXTRN	??2@YAPAXIHPBDH@Z:PROC				; operator new
 EXTRN	??_U@YAPAXIHPBDH@Z:PROC				; operator new[]
@@ -1972,7 +1973,7 @@ _cartridge$ = 8						; size = 4
 ; 101  :     switch (cartridge->header->ram_size) {
 
 	mov	edx, DWORD PTR _cartridge$[ebp]
-	mov	eax, DWORD PTR [edx+4]
+	mov	eax, DWORD PTR [edx+8]
 	movzx	ecx, BYTE PTR [eax+73]
 	mov	DWORD PTR tv68[ebp], ecx
 	cmp	DWORD PTR tv68[ebp], 3
@@ -2058,7 +2059,7 @@ _data$ = 12						; size = 1
 ?Write@Cartridge@gb@emulation@@QAEXGE@Z PROC		; emulation::gb::Cartridge::Write
 ; _this$ = ecx
 
-; 48   : void Cartridge::Write(uint16_t address, uint8_t data) {
+; 54   : void Cartridge::Write(uint16_t address, uint8_t data) {
 
 	push	ebp
 	mov	ebp, esp
@@ -2067,7 +2068,7 @@ _data$ = 12						; size = 1
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 49   :   mbc->Write(address,data);
+; 55   :   mbc->Write(address,data);
 
 	mov	esi, esp
 	movzx	eax, BYTE PTR _data$[ebp]
@@ -2075,16 +2076,16 @@ _data$ = 12						; size = 1
 	movzx	ecx, WORD PTR _address$[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+8]
+	mov	eax, DWORD PTR [edx+12]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [eax]
-	mov	ecx, DWORD PTR [ecx+8]
+	mov	ecx, DWORD PTR [ecx+12]
 	mov	eax, DWORD PTR [edx+12]
 	call	eax
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 50   : }
+; 56   : }
 
 	pop	esi
 	add	esp, 4
@@ -2103,7 +2104,7 @@ _address$ = 8						; size = 2
 ?Read@Cartridge@gb@emulation@@QAEEG@Z PROC		; emulation::gb::Cartridge::Read
 ; _this$ = ecx
 
-; 44   : uint8_t Cartridge::Read(uint16_t address) {
+; 50   : uint8_t Cartridge::Read(uint16_t address) {
 
 	push	ebp
 	mov	ebp, esp
@@ -2112,22 +2113,22 @@ _address$ = 8						; size = 2
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 45   :   return mbc->Read(address);
+; 51   :   return mbc->Read(address);
 
 	mov	esi, esp
 	movzx	eax, WORD PTR _address$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [ecx+8]
+	mov	edx, DWORD PTR [ecx+12]
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [edx]
-	mov	ecx, DWORD PTR [eax+8]
+	mov	ecx, DWORD PTR [eax+12]
 	mov	eax, DWORD PTR [edx+8]
 	call	eax
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 46   : }
+; 52   : }
 
 	pop	esi
 	add	esp, 4
@@ -2154,7 +2155,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [eax+12]
+	mov	eax, DWORD PTR [eax+16]
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -2163,45 +2164,77 @@ _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\cartridge.cpp
 _TEXT	SEGMENT
-tv158 = -48						; size = 4
-tv141 = -44						; size = 4
-$T1 = -40						; size = 4
-$T2 = -36						; size = 4
-$T3 = -32						; size = 4
+tv169 = -52						; size = 4
+tv152 = -48						; size = 4
+$T1 = -44						; size = 4
+$T2 = -40						; size = 4
+$T3 = -36						; size = 4
+$T4 = -32						; size = 4
 _length$ = -24						; size = 4
 _data$ = -12						; size = 4
 _this$ = -4						; size = 4
 _filename$ = 8						; size = 4
 _header$ = 12						; size = 4
-?ReadFile@Cartridge@gb@emulation@@QAEXPBDPAUCartridgeHeader@23@@Z PROC ; emulation::gb::Cartridge::ReadFile
+?LoadFile@Cartridge@gb@emulation@@QAEXPBDPAUCartridgeHeader@23@@Z PROC ; emulation::gb::Cartridge::LoadFile
 ; _this$ = ecx
 
-; 20   : void Cartridge::ReadFile(const char* filename, CartridgeHeader* header) {
+; 20   : void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
 
 	push	ebp
 	mov	ebp, esp
-	sub	esp, 48					; 00000030H
+	sub	esp, 52					; 00000034H
 	push	esi
 	push	edi
 	push	ecx
-	lea	edi, DWORD PTR [ebp-48]
-	mov	ecx, 12					; 0000000cH
+	lea	edi, DWORD PTR [ebp-52]
+	mov	ecx, 13					; 0000000dH
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 21   :   core::io::DestroyFileBuffer(&rom_);
+; 21   : 	SafeDeleteArray(&rom_);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 12					; 0000000cH
+	add	eax, 16					; 00000010H
 	push	eax
-	call	?DestroyFileBuffer@io@core@@YAXPAPAE@Z	; core::io::DestroyFileBuffer
+	call	??$SafeDeleteArray@E@@YAXPAPAE@Z	; SafeDeleteArray<unsigned char>
 	add	esp, 4
 
-; 22   :   uint8_t* data;
-; 23   :   size_t length;
-; 24   :   core::io::ReadWholeFileBinary(filename,&data,length);
+; 22   :   if (mbc) {
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	cmp	DWORD PTR [ecx+12], 0
+	je	SHORT $LN6@LoadFile
+
+; 23   :     mbc->Deinitialize();
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [eax]
+	mov	esi, esp
+	mov	ecx, DWORD PTR [ecx+12]
+	mov	eax, DWORD PTR [edx+4]
+	call	eax
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 24   : 		delete mbc;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+12]
+	mov	DWORD PTR $T4[ebp], edx
+	mov	eax, DWORD PTR $T4[ebp]
+	push	eax
+	call	??3@YAXPAX@Z				; operator delete
+	add	esp, 4
+$LN6@LoadFile:
+
+; 25   : 	}
+; 26   :   uint8_t* data;
+; 27   :   size_t length;
+; 28   :   core::io::ReadWholeFileBinary(filename,&data,length);
 
 	lea	ecx, DWORD PTR _length$[ebp]
 	push	ecx
@@ -2212,7 +2245,7 @@ _header$ = 12						; size = 4
 	call	?ReadWholeFileBinary@io@core@@YAXPBDPAPAEAAI@Z ; core::io::ReadWholeFileBinary
 	add	esp, 12					; 0000000cH
 
-; 25   :   memcpy(header,data+0x100,0x50);
+; 29   :   memcpy(header,data+0x100,0x50);
 
 	push	80					; 00000050H
 	mov	ecx, DWORD PTR _data$[ebp]
@@ -2223,24 +2256,24 @@ _header$ = 12						; size = 4
 	call	_memcpy
 	add	esp, 12					; 0000000cH
 
-; 26   :   if (header->rom_size_bytes() == 0) {
+; 30   :   if (header->rom_size_bytes() == 0) {
 
 	mov	ecx, DWORD PTR _header$[ebp]
 	call	?rom_size_bytes@CartridgeHeader@gb@emulation@@QAEIXZ ; emulation::gb::CartridgeHeader::rom_size_bytes
 	test	eax, eax
-	jne	SHORT $LN4@ReadFile
+	jne	SHORT $LN5@LoadFile
 
-; 27   :     //report error
-; 28   :     return;
+; 31   :     //report error
+; 32   :     return;
 
-	jmp	$LN5@ReadFile
-$LN4@ReadFile:
+	jmp	$LN7@LoadFile
+$LN5@LoadFile:
 
-; 29   :   }
-; 30   :   rom_ = new uint8_t[header->rom_size_bytes()];
+; 33   :   }
+; 34   :   rom_ = new uint8_t[header->rom_size_bytes()];
 
-	push	30					; 0000001eH
-	push	OFFSET $SG130112
+	push	34					; 00000022H
+	push	OFFSET $SG130187
 	push	1
 	mov	ecx, DWORD PTR _header$[ebp]
 	call	?rom_size_bytes@CartridgeHeader@gb@emulation@@QAEIXZ ; emulation::gb::CartridgeHeader::rom_size_bytes
@@ -2250,9 +2283,9 @@ $LN4@ReadFile:
 	mov	DWORD PTR $T3[ebp], eax
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR $T3[ebp]
-	mov	DWORD PTR [eax+12], ecx
+	mov	DWORD PTR [eax+16], ecx
 
-; 31   :   memcpy(rom_,data,header->rom_size_bytes());
+; 35   :   memcpy(rom_,data,header->rom_size_bytes());
 
 	mov	ecx, DWORD PTR _header$[ebp]
 	call	?rom_size_bytes@CartridgeHeader@gb@emulation@@QAEIXZ ; emulation::gb::CartridgeHeader::rom_size_bytes
@@ -2260,136 +2293,148 @@ $LN4@ReadFile:
 	mov	edx, DWORD PTR _data$[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+12]
+	mov	ecx, DWORD PTR [eax+16]
 	push	ecx
 	call	_memcpy
 	add	esp, 12					; 0000000cH
 
-; 32   :   this->header = (CartridgeHeader*)&rom_[0x100];
+; 36   :   this->header = (CartridgeHeader*)&rom_[0x100];
 
 	mov	edx, 1
 	shl	edx, 8
 	mov	eax, DWORD PTR _this$[ebp]
-	add	edx, DWORD PTR [eax+12]
+	add	edx, DWORD PTR [eax+16]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+4], edx
+	mov	DWORD PTR [ecx+8], edx
 
-; 33   :   if (header->cartridge_type == 0) {
+; 37   :   if (header->cartridge_type == 0) {
 
 	mov	edx, DWORD PTR _header$[ebp]
 	movzx	eax, BYTE PTR [edx+71]
 	test	eax, eax
-	jne	SHORT $LN3@ReadFile
+	jne	SHORT $LN4@LoadFile
 
-; 34   :     mbc = new MBCNone();
+; 38   :     mbc = new MBCNone();
 
-	push	34					; 00000022H
-	push	OFFSET $SG130117
+	push	38					; 00000026H
+	push	OFFSET $SG130192
 	push	1
 	push	16					; 00000010H
 	call	??2@YAPAXIHPBDH@Z			; operator new
 	add	esp, 16					; 00000010H
 	mov	DWORD PTR $T2[ebp], eax
 	cmp	DWORD PTR $T2[ebp], 0
-	je	SHORT $LN7@ReadFile
+	je	SHORT $LN9@LoadFile
 	mov	ecx, DWORD PTR $T2[ebp]
 	call	??0MBCNone@gb@emulation@@QAE@XZ
-	mov	DWORD PTR tv141[ebp], eax
-	jmp	SHORT $LN8@ReadFile
-$LN7@ReadFile:
-	mov	DWORD PTR tv141[ebp], 0
-$LN8@ReadFile:
+	mov	DWORD PTR tv152[ebp], eax
+	jmp	SHORT $LN10@LoadFile
+$LN9@LoadFile:
+	mov	DWORD PTR tv152[ebp], 0
+$LN10@LoadFile:
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR tv141[ebp]
-	mov	DWORD PTR [ecx+8], edx
-	jmp	SHORT $LN2@ReadFile
-$LN3@ReadFile:
+	mov	edx, DWORD PTR tv152[ebp]
+	mov	DWORD PTR [ecx+12], edx
+	jmp	SHORT $LN3@LoadFile
+$LN4@LoadFile:
 
-; 35   :   } else if (header->cartridge_type == 1) {
+; 39   :   } else if (header->cartridge_type == 1) {
 
 	mov	eax, DWORD PTR _header$[ebp]
 	movzx	ecx, BYTE PTR [eax+71]
 	cmp	ecx, 1
-	jne	SHORT $LN2@ReadFile
+	jne	SHORT $LN2@LoadFile
 
-; 36   :     mbc = new MBC1();
+; 40   :     mbc = new MBC1();
 
-	push	36					; 00000024H
-	push	OFFSET $SG130122
+	push	40					; 00000028H
+	push	OFFSET $SG130197
 	push	1
 	push	20					; 00000014H
 	call	??2@YAPAXIHPBDH@Z			; operator new
 	add	esp, 16					; 00000010H
 	mov	DWORD PTR $T1[ebp], eax
 	cmp	DWORD PTR $T1[ebp], 0
-	je	SHORT $LN9@ReadFile
+	je	SHORT $LN11@LoadFile
 	mov	ecx, DWORD PTR $T1[ebp]
 	call	??0MBC1@gb@emulation@@QAE@XZ
-	mov	DWORD PTR tv158[ebp], eax
-	jmp	SHORT $LN10@ReadFile
-$LN9@ReadFile:
-	mov	DWORD PTR tv158[ebp], 0
-$LN10@ReadFile:
+	mov	DWORD PTR tv169[ebp], eax
+	jmp	SHORT $LN12@LoadFile
+$LN11@LoadFile:
+	mov	DWORD PTR tv169[ebp], 0
+$LN12@LoadFile:
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR tv158[ebp]
-	mov	DWORD PTR [edx+8], eax
-$LN2@ReadFile:
+	mov	eax, DWORD PTR tv169[ebp]
+	mov	DWORD PTR [edx+12], eax
 
-; 37   :   }
-; 38   :   mbc->Initialize(this);
+; 41   :   } else {
+
+	jmp	SHORT $LN3@LoadFile
+$LN2@LoadFile:
+
+; 42   : 		DebugBreak();
+
+	mov	esi, esp
+	call	DWORD PTR __imp__DebugBreak@0
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+$LN3@LoadFile:
+
+; 43   : 	}
+; 44   :   mbc->Initialize(this);
 
 	mov	esi, esp
 	mov	ecx, DWORD PTR _this$[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+8]
+	mov	eax, DWORD PTR [edx+12]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [eax]
-	mov	ecx, DWORD PTR [ecx+8]
+	mov	ecx, DWORD PTR [ecx+12]
 	mov	eax, DWORD PTR [edx]
 	call	eax
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 39   :   core::io::DestroyFileBuffer(&data);
+; 45   :   core::io::DestroyFileBuffer(&data);
 
 	lea	ecx, DWORD PTR _data$[ebp]
 	push	ecx
 	call	?DestroyFileBuffer@io@core@@YAXPAPAE@Z	; core::io::DestroyFileBuffer
 	add	esp, 4
-$LN5@ReadFile:
+$LN7@LoadFile:
 
-; 40   : 
-; 41   :   
-; 42   : }
+; 46   : 
+; 47   :   
+; 48   : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN14@ReadFile
+	lea	edx, DWORD PTR $LN16@LoadFile
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
 	pop	edi
 	pop	esi
-	add	esp, 48					; 00000030H
+	add	esp, 52					; 00000034H
 	cmp	ebp, esp
 	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	8
-	npad	1
-$LN14@ReadFile:
+	npad	2
+$LN16@LoadFile:
 	DD	2
-	DD	$LN13@ReadFile
-$LN13@ReadFile:
+	DD	$LN15@LoadFile
+$LN15@LoadFile:
 	DD	-12					; fffffff4H
 	DD	4
-	DD	$LN11@ReadFile
+	DD	$LN13@LoadFile
 	DD	-24					; ffffffe8H
 	DD	4
-	DD	$LN12@ReadFile
-$LN12@ReadFile:
+	DD	$LN14@LoadFile
+$LN14@LoadFile:
 	DB	108					; 0000006cH
 	DB	101					; 00000065H
 	DB	110					; 0000006eH
@@ -2397,19 +2442,19 @@ $LN12@ReadFile:
 	DB	116					; 00000074H
 	DB	104					; 00000068H
 	DB	0
-$LN11@ReadFile:
+$LN13@LoadFile:
 	DB	100					; 00000064H
 	DB	97					; 00000061H
 	DB	116					; 00000074H
 	DB	97					; 00000061H
 	DB	0
-?ReadFile@Cartridge@gb@emulation@@QAEXPBDPAUCartridgeHeader@23@@Z ENDP ; emulation::gb::Cartridge::ReadFile
+?LoadFile@Cartridge@gb@emulation@@QAEXPBDPAUCartridgeHeader@23@@Z ENDP ; emulation::gb::Cartridge::LoadFile
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\cartridge.cpp
 _TEXT	SEGMENT
 _this$ = -4						; size = 4
-?Deinitialize@Cartridge@gb@emulation@@QAEXXZ PROC	; emulation::gb::Cartridge::Deinitialize
+?Deinitialize@Cartridge@gb@emulation@@UAEXXZ PROC	; emulation::gb::Cartridge::Deinitialize
 ; _this$ = ecx
 
 ; 13   : void Cartridge::Deinitialize() {
@@ -2424,7 +2469,7 @@ _this$ = -4						; size = 4
 ; 14   :   core::io::DestroyFileBuffer(&rom_);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 12					; 0000000cH
+	add	eax, 16					; 00000010H
 	push	eax
 	call	?DestroyFileBuffer@io@core@@YAXPAPAE@Z	; core::io::DestroyFileBuffer
 	add	esp, 4
@@ -2432,17 +2477,17 @@ _this$ = -4						; size = 4
 ; 15   :   if (mbc)
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	cmp	DWORD PTR [ecx+8], 0
+	cmp	DWORD PTR [ecx+12], 0
 	je	SHORT $LN1@Deinitiali
 
 ; 16   :     mbc->Deinitialize();
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+8]
+	mov	eax, DWORD PTR [edx+12]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [eax]
 	mov	esi, esp
-	mov	ecx, DWORD PTR [ecx+8]
+	mov	ecx, DWORD PTR [ecx+12]
 	mov	eax, DWORD PTR [edx+4]
 	call	eax
 	cmp	esi, esp
@@ -2452,7 +2497,7 @@ $LN1@Deinitiali:
 ; 17   :   SafeDelete(&mbc);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 8
+	add	ecx, 12					; 0000000cH
 	push	ecx
 	call	??$SafeDelete@VMemoryBankController@gb@emulation@@@@YAXPAPAVMemoryBankController@gb@emulation@@@Z ; SafeDelete<emulation::gb::MemoryBankController>
 	add	esp, 4
@@ -2466,14 +2511,14 @@ $LN1@Deinitiali:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-?Deinitialize@Cartridge@gb@emulation@@QAEXXZ ENDP	; emulation::gb::Cartridge::Deinitialize
+?Deinitialize@Cartridge@gb@emulation@@UAEXXZ ENDP	; emulation::gb::Cartridge::Deinitialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\cartridge.cpp
 _TEXT	SEGMENT
 _this$ = -4						; size = 4
 _emu$ = 8						; size = 4
-?Initialize@Cartridge@gb@emulation@@QAEXPAVEmu@23@@Z PROC ; emulation::gb::Cartridge::Initialize
+?Initialize@Cartridge@gb@emulation@@UAEXPAVEmu@23@@Z PROC ; emulation::gb::Cartridge::Initialize
 ; _this$ = ecx
 
 ; 7    : void Cartridge::Initialize(Emu* emu) {
@@ -2489,17 +2534,17 @@ _emu$ = 8						; size = 4
 	mov	eax, DWORD PTR _emu$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	call	?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
+	call	?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
 
 ; 9    :   rom_ = nullptr;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+12], 0
+	mov	DWORD PTR [ecx+16], 0
 
 ; 10   :   mbc = nullptr;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+8], 0
+	mov	DWORD PTR [edx+12], 0
 
 ; 11   : }
 
@@ -2509,7 +2554,7 @@ _emu$ = 8						; size = 4
 	mov	esp, ebp
 	pop	ebp
 	ret	4
-?Initialize@Cartridge@gb@emulation@@QAEXPAVEmu@23@@Z ENDP ; emulation::gb::Cartridge::Initialize
+?Initialize@Cartridge@gb@emulation@@UAEXPAVEmu@23@@Z ENDP ; emulation::gb::Cartridge::Initialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\cartridge.h
@@ -2597,14 +2642,14 @@ $LN8@rom_size_b:
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\personal\projects\gbemu\solution\code\emulation\gb\gb.h
-;	COMDAT ?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z
+;	COMDAT ?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z
 _TEXT	SEGMENT
 _this$ = -4						; size = 4
 _emu$ = 8						; size = 4
-?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z PROC ; emulation::gb::Component::Initialize, COMDAT
+?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z PROC ; emulation::gb::Component::Initialize, COMDAT
 ; _this$ = ecx
 
-; 27   :   void Initialize(Emu* emu) {
+; 28   :   virtual void Initialize(Emu* emu) {
 
 	push	ebp
 	mov	ebp, esp
@@ -2612,18 +2657,18 @@ _emu$ = 8						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 28   :     emu_ = emu;
+; 29   :     emu_ = emu;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _emu$[ebp]
-	mov	DWORD PTR [eax], ecx
+	mov	DWORD PTR [eax+4], ecx
 
-; 29   :   }
+; 30   :   }
 
 	mov	esp, ebp
 	pop	ebp
 	ret	4
-?Initialize@Component@gb@emulation@@QAEXPAVEmu@23@@Z ENDP ; emulation::gb::Component::Initialize
+?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ENDP ; emulation::gb::Component::Initialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\program files (x86)\microsoft visual studio 11.0\vc\include\tuple

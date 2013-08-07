@@ -196,43 +196,43 @@ int DisplayWindow::OnCommand(WPARAM wParam,LPARAM lParam) {
 
 int DisplayWindow::OnKeyDown(WPARAM wParam,LPARAM lParam) {
 
-  /*if (wParam == 'Z')
-    IO::joy1.a = true;
+  if (wParam == 'Z')
+		emu.memory()->JoypadPress(emulation::gb::JoypadA);
   if (wParam == 'X')
-    IO::joy1.b = true;
+    emu.memory()->JoypadPress(emulation::gb::JoypadB);
   if (wParam == VK_RETURN)
-    IO::joy1.start = true;
+    emu.memory()->JoypadPress(emulation::gb::JoypadStart);
   if (wParam == VK_SPACE)
-    IO::joy1.select = true;
+    emu.memory()->JoypadPress(emulation::gb::JoypadSelect);
   if (wParam == VK_UP)
-    IO::joy1.up = true;
+    emu.memory()->JoypadPress(emulation::gb::JoypadUp);
   if (wParam == VK_DOWN)
-    IO::joy1.down = true;
+    emu.memory()->JoypadPress(emulation::gb::JoypadDown);
   if (wParam == VK_LEFT)
-    IO::joy1.left = true;
+    emu.memory()->JoypadPress(emulation::gb::JoypadLeft);
   if (wParam == VK_RIGHT)
-    IO::joy1.right = true;*/
+    emu.memory()->JoypadPress(emulation::gb::JoypadRight);
 
   return 0;
 }
 
 int DisplayWindow::OnKeyUp(WPARAM wParam,LPARAM lParam) {
-  /*if (wParam == 'Z')
-    IO::joy1.a = false;
+  if (wParam == 'Z')
+		emu.memory()->JoypadRelease(emulation::gb::JoypadA);
   if (wParam == 'X')
-    IO::joy1.b = false;
+    emu.memory()->JoypadRelease(emulation::gb::JoypadB);
   if (wParam == VK_RETURN)
-    IO::joy1.start = false;
+    emu.memory()->JoypadRelease(emulation::gb::JoypadStart);
   if (wParam == VK_SPACE)
-    IO::joy1.select = false;
+    emu.memory()->JoypadRelease(emulation::gb::JoypadSelect);
   if (wParam == VK_UP)
-    IO::joy1.up = false;
+    emu.memory()->JoypadRelease(emulation::gb::JoypadUp);
   if (wParam == VK_DOWN)
-    IO::joy1.down = false;
+    emu.memory()->JoypadRelease(emulation::gb::JoypadDown);
   if (wParam == VK_LEFT)
-    IO::joy1.left = false;
+    emu.memory()->JoypadRelease(emulation::gb::JoypadLeft);
   if (wParam == VK_RIGHT)
-    IO::joy1.right = false;*/
+    emu.memory()->JoypadRelease(emulation::gb::JoypadRight);
   return 0;
 }
 
@@ -273,6 +273,10 @@ int DisplayWindow::Render() {
       glTexCoord2d(0.625,0.0); glVertex2d(320,0.0);
       glTexCoord2d(0.625,0.5625); glVertex2d(320,288);
       glTexCoord2d(0.0,0.5625); glVertex2d(0.0,288);
+      /*glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
+      glTexCoord2d(1,0.0); glVertex2d(256,0.0);
+      glTexCoord2d(1,1); glVertex2d(256,256);
+      glTexCoord2d(0.0,1); glVertex2d(0.0,256);*/
       glEnd();
     break;
       

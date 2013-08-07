@@ -14,41 +14,41 @@ PUBLIC	?is_integer@_Num_base@std@@2_NB			; std::_Num_base::is_integer
 PUBLIC	?is_modulo@_Num_base@std@@2_NB			; std::_Num_base::is_modulo
 PUBLIC	?is_signed@_Num_base@std@@2_NB			; std::_Num_base::is_signed
 PUBLIC	?is_specialized@_Num_base@std@@2_NB		; std::_Num_base::is_specialized
-PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?tinyness_before@_Num_base@std@@2_NB		; std::_Num_base::tinyness_before
 PUBLIC	?traps@_Num_base@std@@2_NB			; std::_Num_base::traps
 PUBLIC	?round_style@_Num_base@std@@2W4float_round_style@2@B ; std::_Num_base::round_style
 PUBLIC	?digits@_Num_base@std@@2HB			; std::_Num_base::digits
 PUBLIC	?digits10@_Num_base@std@@2HB			; std::_Num_base::digits10
 PUBLIC	?max_digits10@_Num_base@std@@2HB		; std::_Num_base::max_digits10
-PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?max_exponent@_Num_base@std@@2HB		; std::_Num_base::max_exponent
 PUBLIC	?max_exponent10@_Num_base@std@@2HB		; std::_Num_base::max_exponent10
 PUBLIC	?min_exponent@_Num_base@std@@2HB		; std::_Num_base::min_exponent
-PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?min_exponent10@_Num_base@std@@2HB		; std::_Num_base::min_exponent10
 PUBLIC	?radix@_Num_base@std@@2HB			; std::_Num_base::radix
-PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
-PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
-PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?is_bounded@_Num_int_base@std@@2_NB		; std::_Num_int_base::is_bounded
 PUBLIC	?is_exact@_Num_int_base@std@@2_NB		; std::_Num_int_base::is_exact
 PUBLIC	?is_integer@_Num_int_base@std@@2_NB		; std::_Num_int_base::is_integer
+PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?is_modulo@_Num_int_base@std@@2_NB		; std::_Num_int_base::is_modulo
 PUBLIC	?is_specialized@_Num_int_base@std@@2_NB		; std::_Num_int_base::is_specialized
 PUBLIC	?radix@_Num_int_base@std@@2HB			; std::_Num_int_base::radix
 PUBLIC	?is_monotonic@steady_clock@chrono@std@@2_NB	; std::chrono::steady_clock::is_monotonic
 PUBLIC	?is_steady@steady_clock@chrono@std@@2_NB	; std::chrono::steady_clock::is_steady
 PUBLIC	?has_denorm@_Num_float_base@std@@2W4float_denorm_style@2@B ; std::_Num_float_base::has_denorm
+PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?has_denorm_loss@_Num_float_base@std@@2_NB	; std::_Num_float_base::has_denorm_loss
 PUBLIC	?has_infinity@_Num_float_base@std@@2_NB		; std::_Num_float_base::has_infinity
 PUBLIC	?has_quiet_NaN@_Num_float_base@std@@2_NB	; std::_Num_float_base::has_quiet_NaN
+PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?has_signaling_NaN@_Num_float_base@std@@2_NB	; std::_Num_float_base::has_signaling_NaN
 PUBLIC	?is_bounded@_Num_float_base@std@@2_NB		; std::_Num_float_base::is_bounded
+PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?is_exact@_Num_float_base@std@@2_NB		; std::_Num_float_base::is_exact
 PUBLIC	?is_iec559@_Num_float_base@std@@2_NB		; std::_Num_float_base::is_iec559
 PUBLIC	?is_integer@_Num_float_base@std@@2_NB		; std::_Num_float_base::is_integer
+PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
 PUBLIC	?is_modulo@_Num_float_base@std@@2_NB		; std::_Num_float_base::is_modulo
+PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?is_signed@_Num_float_base@std@@2_NB		; std::_Num_float_base::is_signed
 PUBLIC	?is_specialized@_Num_float_base@std@@2_NB	; std::_Num_float_base::is_specialized
 PUBLIC	?tinyness_before@_Num_float_base@std@@2_NB	; std::_Num_float_base::tinyness_before
@@ -235,6 +235,9 @@ CONST	ENDS
 CONST	SEGMENT
 ?value@?$_Abs@$0JIJGIA@@std@@2_JB DQ 0000000000989680H	; std::_Abs<10000000>::value
 CONST	ENDS
+CONST	SEGMENT
+$SG144285 DB	'%0.2f Mhz', 00H
+CONST	ENDS
 ;	COMDAT ?_G1@?$_Ratio_multiply2@U?$ratio@$00$0JIJGIA@@std@@U?$ratio@$0JIJGIA@$00@2@@std@@2_JB
 CONST	SEGMENT
 ?_G1@?$_Ratio_multiply2@U?$ratio@$00$0JIJGIA@@std@@U?$ratio@$0JIJGIA@$00@2@@std@@2_JB DQ 0000000000000001H ; std::_Ratio_multiply2<std::ratio<1,10000000>,std::ratio<10000000,1> >::_G1
@@ -242,9 +245,6 @@ CONST	ENDS
 ;	COMDAT ?value@?$_Sizeof@HU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@2IB
 CONST	SEGMENT
 ?value@?$_Sizeof@HU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@2IB DD 01H ; std::_Sizeof<int,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::value
-CONST	ENDS
-CONST	SEGMENT
-$SG144212 DB	'%0.2f Mhz', 00H
 CONST	ENDS
 ;	COMDAT ?_S_reserved@_TaskCollectionBase@details@Concurrency@@1HB
 CONST	SEGMENT
@@ -832,9 +832,17 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@_Num_float_base@std@@2_NB DB 01H		; std::_Num_float_base::is_signed
 CONST	ENDS
+;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
+CONST	ENDS
 ;	COMDAT ?is_modulo@_Num_float_base@std@@2_NB
 CONST	SEGMENT
 ?is_modulo@_Num_float_base@std@@2_NB DB 00H		; std::_Num_float_base::is_modulo
+CONST	ENDS
+;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
 CONST	ENDS
 ;	COMDAT ?is_integer@_Num_float_base@std@@2_NB
 CONST	SEGMENT
@@ -848,6 +856,10 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_exact@_Num_float_base@std@@2_NB DB 00H		; std::_Num_float_base::is_exact
 CONST	ENDS
+;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?is_bounded@_Num_float_base@std@@2_NB
 CONST	SEGMENT
 ?is_bounded@_Num_float_base@std@@2_NB DB 01H		; std::_Num_float_base::is_bounded
@@ -855,6 +867,10 @@ CONST	ENDS
 ;	COMDAT ?has_signaling_NaN@_Num_float_base@std@@2_NB
 CONST	SEGMENT
 ?has_signaling_NaN@_Num_float_base@std@@2_NB DB 01H	; std::_Num_float_base::has_signaling_NaN
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
 CONST	ENDS
 ;	COMDAT ?has_quiet_NaN@_Num_float_base@std@@2_NB
 CONST	SEGMENT
@@ -867,6 +883,10 @@ CONST	ENDS
 ;	COMDAT ?has_denorm_loss@_Num_float_base@std@@2_NB
 CONST	SEGMENT
 ?has_denorm_loss@_Num_float_base@std@@2_NB DB 01H	; std::_Num_float_base::has_denorm_loss
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?has_denorm@_Num_float_base@std@@2W4float_denorm_style@2@B
 CONST	SEGMENT
@@ -892,6 +912,10 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_modulo@_Num_int_base@std@@2_NB DB 01H		; std::_Num_int_base::is_modulo
 CONST	ENDS
+;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
+CONST	SEGMENT
+?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
+CONST	ENDS
 ;	COMDAT ?is_integer@_Num_int_base@std@@2_NB
 CONST	SEGMENT
 ?is_integer@_Num_int_base@std@@2_NB DB 01H		; std::_Num_int_base::is_integer
@@ -904,18 +928,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_bounded@_Num_int_base@std@@2_NB DB 01H		; std::_Num_int_base::is_bounded
 CONST	ENDS
-;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
-CONST	ENDS
-;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
-CONST	ENDS
-;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?radix@_Num_base@std@@2HB
 CONST	SEGMENT
 ?radix@_Num_base@std@@2HB DD 00H			; std::_Num_base::radix
@@ -923,10 +935,6 @@ CONST	ENDS
 ;	COMDAT ?min_exponent10@_Num_base@std@@2HB
 CONST	SEGMENT
 ?min_exponent10@_Num_base@std@@2HB DD 00H		; std::_Num_base::min_exponent10
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
 CONST	ENDS
 ;	COMDAT ?min_exponent@_Num_base@std@@2HB
 CONST	SEGMENT
@@ -939,10 +947,6 @@ CONST	ENDS
 ;	COMDAT ?max_exponent@_Num_base@std@@2HB
 CONST	SEGMENT
 ?max_exponent@_Num_base@std@@2HB DD 00H			; std::_Num_base::max_exponent
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?max_digits10@_Num_base@std@@2HB
 CONST	SEGMENT
@@ -967,10 +971,6 @@ CONST	ENDS
 ;	COMDAT ?tinyness_before@_Num_base@std@@2_NB
 CONST	SEGMENT
 ?tinyness_before@_Num_base@std@@2_NB DB 00H		; std::_Num_base::tinyness_before
-CONST	ENDS
-;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
-CONST	SEGMENT
-?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?is_specialized@_Num_base@std@@2_NB
 CONST	SEGMENT
@@ -1398,7 +1398,7 @@ _cpu_freq$ = 8						; size = 8
 	mov	esi, esp
 	sub	esp, 8
 	movsd	QWORD PTR [esp], xmm0
-	push	OFFSET $SG144212
+	push	OFFSET $SG144285
 	lea	eax, DWORD PTR _str$[ebp]
 	push	eax
 	call	DWORD PTR __imp__sprintf
