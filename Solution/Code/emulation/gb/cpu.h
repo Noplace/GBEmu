@@ -15,11 +15,10 @@ union CpuFlagRegister {
 	uint8_t raw;
 };
 
-enum CpuModes {ModeRegReg,Mode$RegReg,ModeReg$Reg,Mode$FF00RegReg,ModeReg$FF00Reg,ModeRegD16,Mode$RegRegLDI,Mode$RegRegLDD,ModeReg$RegLDI,ModeReg$RegLDD};
 enum CpuRegisterNames8 { RegF,RegA,RegC,RegB,RegE,RegD,RegL,RegH,RegSPl,RegSPh,RegPCl,RegPCh };
 enum CpuRegisterNames16 { RegAF,RegBC,RegDE,RegHL,RegSP,RegPC };
 enum CpuFlags { CpuFlagsUnused0 = 0, CpuFlagsC = 4,CpuFlagsH=5,CpuFlagsN=6,CpuFlagsZ=7 };
-
+enum CpuMode { CpuModeNormal,CpuModeHalt,CpuModeStop };
 //#pragma pack(1)
 struct CpuRegisters {
 	union {
@@ -71,7 +70,11 @@ class Cpu : public Component {
   void Reset();
   void Tick();
   void Step(double dt);
+  void Wake() {
+    cpumode_ = CpuModeNormal;
+  }
  private: 
+  CpuMode cpumode_;
   typedef void (Cpu::*Instruction)();
   double dt;
   Instruction instructions[0x100];
@@ -89,6 +92,10 @@ class Cpu : public Component {
   }
   
   void updateCpuFlagH(uint8_t a,uint8_t b,int mode) {
+    /*if((dest^b^a)&0x10)
+      reg.F.H=1;
+    else
+      reg.F.H=0;*/
     if (mode == 0) {
       uint8_t r1 = (a&0xF) + (b&0xF);
       reg.F.H = r1>0xF?1:0;
@@ -149,9 +156,21 @@ class Cpu : public Component {
 	void LDr$FF00r();
 	template<uint8_t dest>
 	void LDrd16();
+  template<uint8_t dest,uint8_t src>
+  void LDI$regreg();
+  template<uint8_t dest,uint8_t src>
+  void LDD$regreg();
+  template<uint8_t dest,uint8_t src>
+  void LDIreg$reg();
+  template<uint8_t dest,uint8_t src>
+  void LDDreg$reg();
 
 	template<uint8_t dest,uint8_t src,int mode>
 	void LD();
+
+  void LDSPHL();
+  void LDHLSPr8();
+  void LDa16SP();
 	template<uint8_t dest,uint8_t src,int mode>
 	void ADD();
   template<uint8_t dest,uint8_t src>
@@ -169,8 +188,10 @@ class Cpu : public Component {
 	void XOR();
 	template<uint8_t dest,uint8_t src,int mode>
 	void OR();
-
+  void SCF();
+  void CCF();
 	void HALT();
+  void STOP();
   void CPL();
 	void PREFIX_CB();
 	void JR();
@@ -220,6 +241,8 @@ class Cpu : public Component {
   void EI();
 
 	void RETI();
+
+  void DAA();
 };
 
 }

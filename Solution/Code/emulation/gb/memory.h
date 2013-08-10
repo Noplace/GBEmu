@@ -11,6 +11,7 @@ class Memory : public Component {
   ~Memory() {}
   void Initialize(Emu* emu);
   void Deinitialize();
+  void Reset();
   uint8_t Read8(uint16_t address);
   void    Write8(uint16_t address, uint8_t data);
 	uint8_t* vram() { return vram_; }
@@ -24,10 +25,7 @@ class Memory : public Component {
 		nn |= Read8(address+1)<<8;
 		return nn;
 	}
-	void JoypadPress(JoypadKeys key) {
-		joypadflags[key] = true;
-		//ioports_[0] &= ~key;
-	}
+	void JoypadPress(JoypadKeys key);
 	void JoypadRelease(JoypadKeys key) {
 		//ioports_[0] |= key;
 		joypadflags[key] = false;

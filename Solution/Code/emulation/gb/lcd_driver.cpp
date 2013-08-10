@@ -4,13 +4,13 @@
 namespace emulation {
 namespace gb {
 
-const uint32_t colormap[4] = {0xffffffff,0xffAAAAAA,0xff545454,0xff000000};
+const uint32_t pal32[4] = {0xffffffff,0xffAAAAAA,0xff545454,0xff000000};
 
 void LCDDriver::Initialize(Emu* emu) {
   Component::Initialize(emu);
   frame_buffer = new uint32_t[256*256];
   lcdc_.raw = 0;
-  stat_.raw = 0;
+  stat_.raw = 2;
   ly = 0;
   lyc = 0;
   scroll_x = scroll_y = 0;
@@ -18,43 +18,54 @@ void LCDDriver::Initialize(Emu* emu) {
   counter1 = counter2 = 0;
   vsync = 0;
   hsync = 0;
+  colormap = new uint8_t[256*256];
 }
 
 void LCDDriver::Deinitialize() {
   auto ioports = emu_->memory()->ioports();
+  delete [] colormap;
   delete [] frame_buffer;  
 }
 
 void LCDDriver::Step(double dt) {
 	stat_.coincidence = lyc == ly;
-  
+  if (stat_.coincidence_inr && stat_.coincidence)
+    emu_->memory()->interrupt_flag() |= 2;
 
 	switch (stat_.mode) {
-		case 0:
-			if (counter2==204)
-				stat_.mode = 2;
-			break;
 		case 2:
-			if (counter2==284)
+      if (stat_.oam_int)
+        emu_->memory()->interrupt_flag() |= 2;
+			if (counter2==80)
 				stat_.mode = 3;
 			break;
 		case 3:
-		  if (counter2 == 456) {
+		  if (counter2 == 282) {
 	  		RenderLine();
 				stat_.mode = 0;
 				if (ly == 143) 
 					stat_.mode = 1;//vblank period
-					emu_->memory()->interrupt_flag() |= 1;
 			}
 			break;
+		case 0:
+      if (stat_.hblank_int)
+        emu_->memory()->interrupt_flag() |= 2;
+
+			if (counter2==456)
+				stat_.mode = 2;
+			break;
 		case 1:
-			
+        if (stat_.vblank_int)
+          emu_->memory()->interrupt_flag() |= 2;
+				emu_->memory()->interrupt_flag() |= 1;
 			break;
 	}
 
 	
   if (counter2 == 456) {
 		if (ly == 153 && counter2 == 456) {
+      for (int i=0;i<256*256;++i)
+        frame_buffer[i] = pal32[colormap[i]];
 			emu_->on_render();
 			stat_.mode = 0;
 			ly = 0;
@@ -67,20 +78,6 @@ void LCDDriver::Step(double dt) {
 
   ++counter2; //line clock
   ++counter1;//screen clock
-
-	/*hsync += dt;
-  if (hsync >= 0.10871928680147858230050010871929) {
-    hsync = 0;
-  }
-
-  vsync += dt;
-  if (vsync >= 16.742005692281935375858027791729) {
-
-		
-    vsync = 0;
-    
-		
-  }*/
 }
 
 uint8_t LCDDriver::Read(uint16_t address) {
@@ -137,7 +134,7 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       uint16_t srcaddr = data<<8;
       auto dest = emu_->memory()->oam();
       for (int i=0;i<160;++i)
-        dest[i] = emu_->memory()->Read8(srcaddr++);
+        *dest++ = emu_->memory()->Read8(srcaddr++);
       break;
     }
     case 0xFF47:
@@ -170,6 +167,7 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
   }
 }
 
+#define pixel(bit) ((tile[y<<1]>>(bit))&0x1+(((tile[(y<<1)+1]>>(bit))<<1)&0x2))
 
 void LCDDriver::RenderAllBGTiles() {
 	auto mapoffset = ((ly)&0xFF) >> 3;
@@ -188,16 +186,16 @@ void LCDDriver::RenderAllBGTiles() {
 
 	if (lcdc_.bgdisplay == 0) {
 		for (int i=0;i<256;++i) {
-			frame_buffer[((ly)<<8)+(i)] = colormap[0];
+			colormap[((ly)<<8)+(i)] = 0;
 		}
 	} else {
 		uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
 		for (int i=0;i<256;++i) {
 			auto tileindex = (i>>3)+(ly>>3)*32;
 			uint8_t* tile = &tiledata[(tileindex<<4)];
-			#define pixel(bit) ((tile[y<<1]>>(bit))&0x1+((tile[(y<<1)+1]>>(bit))<<1))
-			frame_buffer[((ly)<<8)+i] = colormap[bg_pal[pixel((7-x))]];
-			#undef pixel
+			
+			colormap[((ly)<<8)+i] = bg_pal[pixel((7-x))];
+
 			++x;
 			if (x==8) {
 				x = 0;
@@ -214,7 +212,9 @@ void LCDDriver::RenderBGLine() {
 	auto readTile = [&](){
 		  uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
 			auto tileindex = bgtilemap[(mapoffset<<5) + lineoffset];
-			if(lcdc_.tile_data == 0) {
+			if(lcdc_.tile_data == 0) { //1 && tileindex < 128) {
+        //tileindex += 256;
+        //tileindex &= 0xFF;
 				int8_t d = tileindex;
 				d+=128;
 				tileindex = d;
@@ -224,70 +224,111 @@ void LCDDriver::RenderBGLine() {
 
 	if (lcdc_.bgdisplay == 0) {
 		for (int i=0;i<256;++i) {
-			frame_buffer[((ly)<<8)+(i)] = colormap[0];
+			colormap[((ly)<<8)+(i)] = 0;
 		}
 	} else {
 		uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
 		for (int i=0;i<256;++i) {
 			auto tileindex = readTile();
 			uint8_t* tile = &tiledata[(tileindex<<4)];
-			#define pixel(bit) ((tile[y<<1]>>(bit))&0x1+((tile[(y<<1)+1]>>(bit))<<1))
-			frame_buffer[((ly)<<8)+i] = colormap[bg_pal[pixel((7-x))]];
-			#undef pixel
+			
+      uint8_t bgcolor = pixel((7-x));
+			
 			++x;
 			if (x==8) {
 				x = 0;
 				lineoffset = (lineoffset+1)&0x1F;
-			}
+      }
+      colormap[((ly)<<8)+i] = bg_pal[bgcolor];
 		}
 	}
 }
 
 void LCDDriver::RenderWindowLine() {
 	if (lcdc_.window_enable == 1) {
-		uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
-		uint8_t* tilemap = &emu_->memory()->vram()[lcdc_.window_tile_map ==0?0x1800:0x1C00];
-		for (int i=0;i<32;++i) {
-			auto mapoffset = ((ly)&0xFF) >> 3;
-			auto lineoffset = (i)&0x1F;
-			auto tileindex = tilemap[(mapoffset<<5) + lineoffset];
-			auto y = (ly) & 7;
-			auto x = 0;
-			if(lcdc_.tile_data == 0) {
-				int8_t d = tileindex;
-				d+=128;
-				tileindex = d;
-			}
-			uint8_t* tile = &tiledata[(tileindex<<4)];
+	int  a = 1;
 
-			#define pixel(bit) ((tile[y<<1]>>bit)&0x1+((tile[(y<<1)+1]>>bit)<<1))
-
-			frame_buffer[((ly)<<8)+((i<<3)+0)] = colormap[bg_pal[pixel(7)]];
-			frame_buffer[((ly)<<8)+((i<<3)+1)] = colormap[bg_pal[pixel(6)]];
-			frame_buffer[((ly)<<8)+((i<<3)+2)] = colormap[bg_pal[pixel(5)]];
-			frame_buffer[((ly)<<8)+((i<<3)+3)] = colormap[bg_pal[pixel(4)]];
-			
-			
-			frame_buffer[((ly)<<8)+((i<<3)+4)] = colormap[bg_pal[pixel(3)]];
-			frame_buffer[((ly)<<8)+((i<<3)+5)] = colormap[bg_pal[pixel(2)]];
-			frame_buffer[((ly)<<8)+((i<<3)+6)] = colormap[bg_pal[pixel(1)]];
-			frame_buffer[((ly)<<8)+((i<<3)+7)] = colormap[bg_pal[pixel(0)]];
-
-			#undef pixel
-		}
 	}
 }
 
 void LCDDriver::RenderSpriteLine() {
+  struct Sprite{
+    uint8_t y,x,tileindex;
+
+    union {
+      struct {
+        uint8_t unused:4;
+        uint8_t pal:1;
+        uint8_t xflip:1;
+        uint8_t yflip:1;
+        uint8_t priority:1;
+        /* Bit7   OBJ-to-BG Priority (0=OBJ Above BG, 1=OBJ Behind BG color 1-3)
+         (Used for both BG and Window. BG color 0 is always behind OBJ)
+  Bit6   Y flip          (0=Normal, 1=Vertically mirrored)
+  Bit5   X flip          (0=Normal, 1=Horizontally mirrored)
+  Bit4   Palette number  **Non CGB Mode Only** (0=OBP0, 1=OBP1)
+  Bit3   Tile VRAM-Bank  **CGB Mode Only**     (0=Bank 0, 1=Bank 1)
+  Bit2-0 Palette number  **CGB Mode Only**     (OBP0-7)
+*/
+      };
+      uint8_t raw;
+    }attr;
+
+  } ;
 	if (lcdc_.sprite_enable == 1) {
-		int a =1;
+		uint8_t* tiledata = &emu_->memory()->vram()[0x0000];
+    Sprite* sprites = (Sprite*)emu_->memory()->oam();
+
+    for (int j=0;j<40;++j) {
+       uint8_t spritey = sprites[j].y-16;
+       uint8_t spritex = sprites[j].y-8;
+       if ( ly >= (spritey) && ly < (spritey+(8<<lcdc_.sprite_size))) { //same line
+         if (lcdc_.sprite_size)
+           sprites[j].tileindex &= ~0x01;
+          uint8_t* tile = &tiledata[(sprites[j].tileindex<<4)];
+          uint8_t y = ly-spritey;
+          uint8_t* pal = sprites[j].attr.pal == 0?obj_pal1:obj_pal2;
+          if (sprites[j].attr.yflip)
+            y = ((8<<lcdc_.sprite_size)) - y;
+			     
+			    for (int x=0;x<8;++x) {
+            uint8_t p = 0;
+            if (sprites[j].attr.xflip) {
+              p = pixel((x));
+            } else {
+              p = pixel((7-x));
+            }
+            if (p != 0)
+            colormap[((ly)<<8)+x+spritex] = pal[p];
+          }
+
+			
+       }
+     }
+
+    for (int i=0;i<256;++i) {
+			
+  
+      /*auto tileindex = readTile();
+			uint8_t* tile = &tiledata[(tileindex<<4)];
+			#define pixel(bit) ((tile[y<<1]>>(bit))&0x1+(((tile[(y<<1)+1]>>(bit))<<1)&0x2))
+			frame_buffer[((ly)<<8)+i] = colormap[bg_pal[pixel((7-x))]];
+			#undef pixel
+			++x;
+			if (x==8) {
+				x = 0;
+				lineoffset = (lineoffset+1)&0x1F;
+			}*/
+		}
+
 	}
 }
 
 void LCDDriver::RenderLine() {
+  //RenderAllBGTiles();
 	RenderBGLine();
-	RenderWindowLine();
-	RenderSpriteLine();
+	//RenderWindowLine();
+	//RenderSpriteLine();
 }
 
 }

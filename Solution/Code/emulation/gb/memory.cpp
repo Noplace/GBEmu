@@ -38,6 +38,7 @@ void Memory::Initialize(Emu* emu) {
 	ZeroMemory(ioports_,sizeof(ioports_));
 	memset(joypadflags,0,sizeof(joypadflags));
 	ioports_[0] = 0x0F;
+  //Reset();
 }
 
 void Memory::Deinitialize() {
@@ -46,6 +47,39 @@ void Memory::Deinitialize() {
 	SafeDeleteArray(&vram_);
 }
 
+void Memory::Reset() {
+   ioports_[0x05] = 0x00; // TIMA
+   ioports_[0x06] = 0x00; // TMA
+   ioports_[0x07] = 0x00; // TAC
+   ioports_[0x10] = 0x80; // NR10
+   ioports_[0x11] = 0xBF; // NR11
+   ioports_[0x12] = 0xF3; // NR12
+   ioports_[0x14] = 0xBF; // NR14
+   ioports_[0x16] = 0x3F; // NR21
+   ioports_[0x17] = 0x00; // NR22
+   ioports_[0x19] = 0xBF; // NR24
+   ioports_[0x1A] = 0x7F; // NR30
+   ioports_[0x1B] = 0xFF; // NR31
+   ioports_[0x1C] = 0x9F; // NR32
+   ioports_[0x1E] = 0xBF; // NR33
+   ioports_[0x20] = 0xFF; // NR41
+   ioports_[0x21] = 0x00; // NR42
+   ioports_[0x22] = 0x00; // NR43
+   ioports_[0x23] = 0xBF; // NR30
+   ioports_[0x24] = 0x77; // NR50
+   ioports_[0x25] = 0xF3; // NR51
+   ioports_[0x26] = 0xF1; //NR52
+   ioports_[0x40] = 0x91; // LCDC
+   ioports_[0x42] = 0x00; // SCY
+   ioports_[0x43] = 0x00; // SCX
+   ioports_[0x45] = 0x00; // LYC
+   ioports_[0x47] = 0xFC; // BGP
+   ioports_[0x48] = 0xFF; // OBP0
+   ioports_[0x49] = 0xFF; // OBP1
+   ioports_[0x4A] = 0x00; // WY
+   ioports_[0x4B] = 0x00; // WX
+   ioports_[0xFF] = 0x00; // IE*/
+}
 
 uint8_t Memory::Read8(uint16_t address) {
   emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();
@@ -87,6 +121,8 @@ uint8_t Memory::Read8(uint16_t address) {
       ioports_[address&0xFF] = emu_->sc()->Read(address);
 		} else if (address >= 0xFF40 && address <= 0xFF4B) {
 			ioports_[address&0xFF] = emu_->lcd_driver()->Read(address);
+		} else if (address >= 0xFF04 && address <= 0xFF07) {
+      ioports_[address&0xFF] = emu_->timer()->Read(address);
 		}
 		return ioports_[address&0xFF];
 	} else if (address >= 0xFF80 && address <= 0xFFFE) {
@@ -147,12 +183,13 @@ void Memory::Write8(uint16_t address, uint8_t data) {
       case 0xFF26: //sound enable/disable
         break;
     }
-    if (address >= 0xFF10 && address <= 0xFF26)
+    if (address >= 0xFF04 && address <= 0xFF07) {
+      emu_->timer()->Write(address,data);
+		} else if (address >= 0xFF10 && address <= 0xFF26) {
+      emu_->sc()->Write(address,data);
+    } else if (address >= 0xFF40 && address <= 0xFF4B) {
       emu_->lcd_driver()->Write(address,data);
-
-    if (address >= 0xFF40 && address <= 0xFF4B)
-      emu_->lcd_driver()->Write(address,data);
-
+    }
 	} else if (address >= 0xFF80 && address <= 0xFFFE) {
 		hram_[address-0xFF80] = data;
 	} else if (address == 0xFFFF) {
@@ -181,6 +218,12 @@ void Memory::Tick() {
 	if ((ioports_[0]&0xF) != 0xF) 
 		interrupt_flag() |= 16;
 
+}
+
+void Memory::JoypadPress(JoypadKeys key) {
+	joypadflags[key] = true;
+  emu_->cpu()->Wake();
+	//ioports_[0] &= ~key;
 }
 
 }

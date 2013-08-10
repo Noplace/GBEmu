@@ -51,6 +51,7 @@ class LCDDriver : public Component {
 	const LCDControlRegister& lcdc() { return lcdc_; }
 	const LCDStatusRegister& stat() { return stat_; }
  private:
+   uint8_t* colormap;
    LCDControlRegister lcdc_;
    LCDStatusRegister stat_;
    uint8_t scroll_x,scroll_y;

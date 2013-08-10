@@ -7,14 +7,13 @@ void Emu::Initialize() {
   emulation::gb::CartridgeHeader header;
   cartridge_.Initialize(this);
   
-
-	
-  //cartridge_.ReadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\cpu_instrs\\individual\\01-special.gb",&header);
-  cartridge_.LoadFile("D:\\Personal\\Projects\\GBEmu\\test\\cpu_instrs\\individual\\01-special.gb",&header);
+  //cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\cpu_instrs\\individual\\01-special.gb",&header);
+  //cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\cpu_instrs\\cpu_instrs.gb",&header);
+  //cartridge_.LoadFile("D:\\Personal\\Projects\\GBEmu\\test\\cpu_instrs\\individual\\01-special.gb",&header);
 	//cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\cpu_instrs\\cpu_instrs.gb",&header);
 	//cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\Runtime - Test Rom (PD).gb",&header);
 	//cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\opus5.gb",&header);
-  //cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\Super Mario Land (World).gb",&header);
+  cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\Super Mario Land (World).gb",&header);
 	timer_.Initialize(this);
   lcd_driver_.Initialize(this);
   memory_.Initialize(this);

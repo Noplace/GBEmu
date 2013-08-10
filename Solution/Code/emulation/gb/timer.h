@@ -16,6 +16,8 @@ class Timer : public Component {
   void  Write(uint16_t address, uint8_t data);
  private:
 	uint8_t* ioports;
+  uint64_t counter1,counter2,tima_max;
+  uint8_t div,tima,tma,tac;
 };
 
 }

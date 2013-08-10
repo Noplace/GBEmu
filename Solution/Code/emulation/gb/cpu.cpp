@@ -20,7 +20,7 @@ Cpu::Cpu() {
 	instructions[0x05] = &Cpu::DEC_8bit<RegB,0>;
 	instructions[0x06] = &Cpu::LD<RegB,0,10>;
 	instructions[0x07] = &Cpu::RLCA;
-	instructions[0x08] = nullptr;
+	instructions[0x08] = &Cpu::LDa16SP;
 	instructions[0x09] = &Cpu::ADD_16bit<RegHL,RegBC>;
 	instructions[0x0A] = &Cpu::LDr$r<RegA,RegBC>;
 	instructions[0x0B] = &Cpu::DEC_16bit<RegBC>;
@@ -29,7 +29,7 @@ Cpu::Cpu() {
 	instructions[0x0E] = &Cpu::LD<RegC,0,10>;
 	instructions[0x0F] = &Cpu::RRCA;
 
-	instructions[0x10] = nullptr;
+	instructions[0x10] = &Cpu::STOP;
 	instructions[0x11] = &Cpu::LDrd16<RegDE>;
 	instructions[0x12] = &Cpu::LD$rr<RegDE,RegA>;
 	instructions[0x13] = &Cpu::INC_16bit<RegDE>;
@@ -48,15 +48,15 @@ Cpu::Cpu() {
 	
 	instructions[0x20] = &Cpu::JR_cc<CpuFlagsZ,1>;
 	instructions[0x21] = &Cpu::LDrd16<RegHL>;
-	instructions[0x22] = &Cpu::LD<RegHL,RegA,Mode$RegRegLDI>;
+	instructions[0x22] = &Cpu::LDI$regreg<RegHL,RegA>;
 	instructions[0x23] = &Cpu::INC_16bit<RegHL>;
 	instructions[0x24] = &Cpu::INC_8bit<RegH,0>;
 	instructions[0x25] = &Cpu::DEC_8bit<RegH,0>;
 	instructions[0x26] = &Cpu::LD<RegH,0,10>;
-	instructions[0x27] = nullptr;
+  instructions[0x27] = &Cpu::DAA;
 	instructions[0x28] = &Cpu::JR_cc<CpuFlagsZ,0>;
 	instructions[0x29] = &Cpu::ADD_16bit<RegHL,RegHL>;
-	instructions[0x2A] = &Cpu::LD<RegA,RegHL,ModeReg$RegLDI>;
+	instructions[0x2A] = &Cpu::LDIreg$reg<RegA,RegHL>;
 	instructions[0x2B] = &Cpu::DEC_16bit<RegHL>;
 	instructions[0x2C] = &Cpu::INC_8bit<RegL,0>;
 	instructions[0x2D] = &Cpu::DEC_8bit<RegL,0>;
@@ -65,20 +65,20 @@ Cpu::Cpu() {
 
 	instructions[0x30] = &Cpu::JR_cc<CpuFlagsC,1>;
 	instructions[0x31] = &Cpu::LDrd16<RegSP>;
-	instructions[0x32] = &Cpu::LD<RegHL,RegA,Mode$RegRegLDD>;
+	instructions[0x32] = &Cpu::LDD$regreg<RegHL,RegA>;
 	instructions[0x33] = &Cpu::INC_16bit<RegSP>;
 	instructions[0x34] = &Cpu::INC_8bit<RegHL,1>;
 	instructions[0x35] = &Cpu::DEC_8bit<RegHL,1>;
 	instructions[0x36] = &Cpu::LD<RegHL,0,11>;
-	instructions[0x37] = nullptr;
+	instructions[0x37] = &Cpu::SCF;
 	instructions[0x38] = &Cpu::JR_cc<CpuFlagsC,0>;
 	instructions[0x39] = &Cpu::ADD_16bit<RegHL,RegSP>;
-	instructions[0x3A] = &Cpu::LD<RegA,RegHL,ModeReg$RegLDD>;
+	instructions[0x3A] = &Cpu::LDDreg$reg<RegA,RegHL>;
 	instructions[0x3B] = &Cpu::DEC_16bit<RegSP>;
 	instructions[0x3C] = &Cpu::INC_8bit<RegA,0>;
 	instructions[0x3D] = &Cpu::DEC_8bit<RegA,0>;
 	instructions[0x3E] = &Cpu::LD<RegA,0,10>;
-	instructions[0x3F] = nullptr;
+  instructions[0x3F] = &Cpu::CCF;
 
 	instructions[0x40] = &Cpu::LDrr<RegB,RegB>;
 	instructions[0x41] = &Cpu::LDrr<RegB,RegC>;
@@ -275,8 +275,8 @@ Cpu::Cpu() {
 	instructions[0xF5] = &Cpu::PUSH<RegAF>;
   instructions[0xF6] = &Cpu::OR<RegA,0,2>;
 	instructions[0xF7] = &Cpu::RST;
-	instructions[0xF8] = nullptr;
-	instructions[0xF9] = nullptr;
+	instructions[0xF8] = &Cpu::LDHLSPr8;
+	instructions[0xF9] = &Cpu::LDSPHL;
 	instructions[0xFA] = &Cpu::LD<RegA,0,15>;
 	instructions[0xFB] = &Cpu::EI;
 	instructions[0xFC] = &Cpu::ILLEGAL;
@@ -305,6 +305,7 @@ void Cpu::Reset() {
   reg.PC = 0;
   cycles = 0;
   ime = false;
+  cpumode_ = CpuModeNormal;
 }
 
 void Cpu::Tick() {
@@ -313,54 +314,34 @@ void Cpu::Tick() {
 	emu_->memory()->Tick();
   emu_->lcd_driver()->Step(dt);
 	emu_->sc()->Step(dt);
+
+   
 }
 
 void Cpu::Step(double dt) {
   this->dt = dt;
 	cycles = 0;
   //reg.F._unused = 0;//always 0 according to docs
-  if (reg.PC == 0x100) {
-    DebugBreak();
-  /* mem_->Write8(0xFF05,0x00); // TIMA
-   mem_->Write8(0xFF06,0x00); // TMA
-   mem_->Write8(0xFF07,0x00); // TAC
-   mem_->Write8(0xFF10,0x80); // NR10
-   mem_->Write8(0xFF11,0xBF); // NR11
-   mem_->Write8(0xFF12,0xF3); // NR12
-   mem_->Write8(0xFF14,0xBF); // NR14
-   mem_->Write8(0xFF16,0x3F); // NR21
-   mem_->Write8(0xFF17,0x00); // NR22
-   mem_->Write8(0xFF19,0xBF); // NR24
-   mem_->Write8(0xFF1A,0x7F); // NR30
-   mem_->Write8(0xFF1B,0xFF); // NR31
-   mem_->Write8(0xFF1C,0x9F); // NR32
-   mem_->Write8(0xFF1E,0xBF); // NR33
-   mem_->Write8(0xFF20,0xFF); // NR41
-   mem_->Write8(0xFF21,0x00); // NR42
-   mem_->Write8(0xFF22,0x00); // NR43
-   mem_->Write8(0xFF23,0xBF); // NR30
-   mem_->Write8(0xFF24,0x77); // NR50
-   mem_->Write8(0xFF25,0xF3); // NR51
-   mem_->Write8(0xFF26,0xF1); //NR52
-   mem_->Write8(0xFF40,0x91); // LCDC
-   mem_->Write8(0xFF42,0x00); // SCY
-   mem_->Write8(0xFF43,0x00); // SCX
-   mem_->Write8(0xFF45,0x00); // LYC
-   mem_->Write8(0xFF47,0xFC); // BGP
-   mem_->Write8(0xFF48,0xFF); // OBP0
-   mem_->Write8(0xFF49,0xFF); // OBP1
-   mem_->Write8(0xFF4A,0x00); // WY
-   mem_->Write8(0xFF4B,0x00); // WX
-   mem_->Write8(0xFFFF,0x00); // IE*/
-	}
-//	StopAt(0x0073);
-  opcode = emu_->memory()->Read8(reg.PC++);
-  (this->*(instructions[opcode]))();
+  //StopAt(0xC47A);
+  //StopAt(0x0100);
+  //StopAt(0x0073);
+  if (cpumode_ == CpuModeStop) {
+    cycles = 1;
+    return;
+  }
+  if (cpumode_ == CpuModeNormal) {
+    opcode = emu_->memory()->Read8(reg.PC++);
+    (this->*(instructions[opcode]))();
+  } else if (cpumode_ == CpuModeHalt) {
+    Tick();
+  }
+
   if (ime) {
     uint8_t test = emu_->memory()->interrupt_enable() & emu_->memory()->interrupt_flag();
 		if (test) {
 			ime = false;
-			pushSP();
+      cpumode_ = CpuModeNormal;
+			pushPC();
 			if (test & 0x1) { //vblank
 				reg.PC = 0x0040;
 				emu_->memory()->interrupt_flag() &= ~0x1;
@@ -430,32 +411,43 @@ void Cpu::LDrd16() {
 	reg.raw16[dest] |= (mem_->Read8(reg.PC++))<<8;
 }
 
+template<uint8_t dest,uint8_t src>
+void Cpu::LDI$regreg() {
+	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+	++reg.raw16[dest];
+}
+
+template<uint8_t dest,uint8_t src>
+void Cpu::LDD$regreg() {
+	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+	--reg.raw16[dest];
+}
+
+template<uint8_t dest,uint8_t src>
+void Cpu::LDIreg$reg() {
+  reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+  ++reg.raw16[src];
+}
+
+template<uint8_t dest,uint8_t src>
+void Cpu::LDDreg$reg() {
+  reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+  --reg.raw16[src];
+}
 
 template<uint8_t dest,uint8_t src,int mode>
 void Cpu::LD() {
-	if (mode == 6) { //(dest),src - ldi
-		mem_->Write8(reg.raw16[dest],reg.raw8[src]);
-		++reg.raw16[dest];
-	} else if (mode == 7) { //(dest),src - ldd
-		mem_->Write8(reg.raw16[dest],reg.raw8[src]);
-		--reg.raw16[dest];
-	} else if (mode == 8) { //dest,(src) - ldi
-		reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
-		++reg.raw16[src];
-	} else if (mode == 9) { //src,(dest) - ldd
-		reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
-		--reg.raw16[src];
-	} else if (mode == 10) { //dest,d8
+  if (mode == 10) { //dest,d8
 		reg.raw8[dest] = mem_->Read8(reg.PC++);
 	}else if (mode == 11) { //(dest),d8
 		auto d8 = mem_->Read8(reg.PC++);
 		mem_->Write8(reg.raw16[dest],d8);
 	} else if (mode == 12) { //0xFF00+d8 src
-    uint8_t dest = mem_->Read8(reg.PC++);
-		mem_->Write8(0xFF00+dest,reg.raw8[src]);
+    uint8_t a8 = mem_->Read8(reg.PC++);
+		mem_->Write8(0xFF00+a8,reg.raw8[src]);
 	} else if (mode == 13) { //dest,0xFF00+d8 
-    uint8_t src = mem_->Read8(reg.PC++);
-		reg.raw8[dest] = mem_->Read8(0xFF00+src);
+    uint8_t a8 = mem_->Read8(reg.PC++);
+		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
 	} else if (mode == 14) { //(d16),src
 		uint16_t d16 = mem_->Read8(reg.PC++);
 		d16 |= (mem_->Read8(reg.PC++))<<8;
@@ -465,9 +457,35 @@ void Cpu::LD() {
 		d16 |= (mem_->Read8(reg.PC++))<<8;
     reg.raw8[dest] = mem_->Read8(d16);
 	}
+}
 
- // for (int i=0;i<cycles;++i)
-    //Tick();
+void Cpu::LDSPHL() {
+  reg.SP = reg.HL;
+  Tick();Tick();Tick();Tick();
+}
+
+void Cpu::LDHLSPr8() {
+
+
+
+  reg.F.N  = reg.F.Z = 0;
+	uint16_t a = reg.SP;
+	int8_t r8 = mem_->Read8(reg.PC++);
+	reg.HL = (reg.SP + r8);
+  updateCpuFlagC(a&0xFF,r8,0);
+  updateCpuFlagH(a&0xFF,r8,0);
+  /*uint16_t r1 = (a&0xFFF) + (r8&0xFFF);
+  reg.F.H = r1>0xFFF?1:0;
+  uint32_t r2 = (a&0xFFFF) + (r8&0xFFFF);
+  reg.F.C = r2>0xFFFF?1:0;*/
+	Tick();Tick();Tick();Tick();
+}
+
+void Cpu::LDa16SP() {
+  uint16_t a16 = mem_->Read8(reg.PC++);
+  a16 |= (mem_->Read8(reg.PC++))<<8;
+  mem_->Write8(a16,reg.SP&0xFF);
+  mem_->Write8(a16+1,reg.SP>>8);
 }
 
 template<uint8_t dest,uint8_t src,int mode>
@@ -502,10 +520,8 @@ void Cpu::ADD_SPr8() {
 	int8_t r8 = mem_->Read8(reg.PC++);
 	reg.SP += r8;
 
-  uint16_t r1 = (a&0xFFF) + (r8&0xFFF);
-  reg.F.H = r1>0xFFF?1:0;
-  uint32_t r2 = (a&0xFFFF) + (r8&0xFFFF);
-  reg.F.C = r2>0xFFFF?1:0;
+  updateCpuFlagC(a&0xFF,r8,0);
+  updateCpuFlagH(a&0xFF,r8,0);
 	Tick();Tick();Tick();Tick();
 	Tick();Tick();Tick();Tick();
 }
@@ -515,12 +531,18 @@ void Cpu::ADC() {
   reg.F.N = 0;
   uint8_t a=0,b=0;
   arithmeticMode<dest,src,mode>(a,b);
-  b += reg.F.C;
-  reg.raw8[dest] = a + b;
-  updateCpuFlagC(a,b,0);
-  updateCpuFlagH(a,b,0);
+  uint8_t carry = reg.F.C;
+  reg.raw8[dest] = a + b + carry;
+
+  updateCpuFlagC(a,carry,0);
+  if (reg.F.C==0)
+    updateCpuFlagC(a+carry,b,0);
+  updateCpuFlagH(a,carry,0);
+  if (reg.F.H==0)
+    updateCpuFlagH(a+carry,b,0);
   updateCpuFlagZ(reg.raw8[dest]);
 }
+
 
 template<uint8_t dest,uint8_t src,int mode>
 void Cpu::SUB() {
@@ -538,10 +560,14 @@ void Cpu::SBC() {
   reg.F.N = 1;
   uint8_t a=0,b=0;
   arithmeticMode<dest,src,mode>(a,b);
-  b += reg.F.C;
-  reg.raw8[dest] = a - b;
-  updateCpuFlagC(a,b,1);
-  updateCpuFlagH(a,b,1);
+  uint8_t carry = reg.F.C;
+  reg.raw8[dest] = a - b - carry;
+  updateCpuFlagC(a,carry,1);
+  if (reg.F.C==0)
+    updateCpuFlagC(a-carry,b,1);
+  updateCpuFlagH(a,carry,1);
+  if (reg.F.H==0)
+    updateCpuFlagH(a-carry,b,1);
   updateCpuFlagZ(reg.raw8[dest]);
 }
 
@@ -574,9 +600,22 @@ void Cpu::OR() {
   updateCpuFlagZ(reg.raw8[dest]);
 }
 
+void Cpu::SCF() {
+  reg.F.H = reg.F.N = 0;
+  reg.F.C = 1;
+}
+
+void Cpu::CCF() {
+  reg.F.H = reg.F.N = 0;
+  reg.F.C = ~reg.F.C;
+}
 
 void Cpu::HALT() {
-  int a = 1;
+  cpumode_ = CpuModeHalt;
+}
+
+void Cpu::STOP() {
+  cpumode_ = CpuModeStop;
 }
 
 void Cpu::CPL() {
@@ -584,14 +623,12 @@ void Cpu::CPL() {
   reg.F.N = 1;
   reg.A = ~reg.A;
 }
+
 const CpuRegisterNames8 reg_index[8] = {
     RegB,RegC,RegD,RegE,RegH,RegL,RegH,RegA,
-  };
+};
 
 void Cpu::PREFIX_CB() {
-
-  
-
 	uint8_t code = emu_->memory()->Read8(reg.PC++);
 
   auto getr = [=]() {
@@ -605,39 +642,59 @@ void Cpu::PREFIX_CB() {
   auto setr = [=](uint8_t r) {
     if ((code&0x7) != 6) {
       reg.raw8[reg_index[code&0x7]] = r;
-    
     } else {
       mem_->Write8(reg.HL,r);
-     
     }
   };
 
-  if ((code & 0xF8) == 0x30) { //swap
-    uint8_t r = getr();
-    uint8_t n0 = r&0xF;
-    uint8_t n1 = r&0xF0;
-    r = n1 | (n0<<4);
-    setr(r);
-    updateCpuFlagZ(r);
-  } else if ((code & 0xC0) == 0x40) {
+   if ((code & 0xC0) == 0x40) { //bit
     uint8_t test = getr();
     uint8_t bitshift = (code&0x38) >> 3;
     reg.F.Z = (~(((test&(1<<bitshift))>>bitshift))&0x1);
     reg.F.H = 1;
+    reg.F.N = 0;
+  } else if ((code & 0xC0) == 0x80) { //res
+    uint8_t test = getr();
+    uint8_t bitshift = (code&0x38) >> 3;
+    test &= ~(1<<bitshift);
+    setr(test);
+  } else if ((code & 0xC0) == 0xC0) { //set
+    uint8_t test = getr();
+    uint8_t bitshift = (code&0x38) >> 3;
+    test |= (1<<bitshift);
+    setr(test);
+  } else  if ((code & 0xF8) == 0x30) { //swap
+    uint8_t r = getr();
+    uint8_t n0 = r&0xF;
+    uint8_t n1 = (r&0xF0)>>4;
+    r = n1 | (n0<<4);
+    setr(r);
+    reg.F.H  = reg.F.N = reg.F.C = 0;
+    updateCpuFlagZ(r);
   } else if ((code&0xF8) == 0) { //RLC r
     uint8_t r = getr();
     reg.F.C = (r&0x80)!=0?1:0;
     r = r << 1;
     r |= reg.F.C;
     setr(r);
+    reg.F.H  = reg.F.N = 0;
+    updateCpuFlagZ(r);
+  } else if ((code&0xF8) == 0x08) { //RRC r
+    uint8_t r = getr();
+    reg.F.C = r&1;
+    r = r >> 1;
+    r |= reg.F.C<<7;
+    setr(r);
+    reg.F.H  = reg.F.N = 0;
     updateCpuFlagZ(r);
   } else if ((code&0xF8) == 0x10) { //RL r
     uint8_t r = getr();
     uint8_t oldC = reg.F.C;
-    reg.F.C = (r&0x80)!=0?1:0;
+    reg.F.C = ((r&0x80)>>7);
     r = r << 1;
     r |= oldC;
     setr(r);
+    reg.F.H  = reg.F.N = 0;
     updateCpuFlagZ(r);
   } else if ((code&0xF8) == 0x18) { //RR r
     uint8_t r = getr();
@@ -646,13 +703,30 @@ void Cpu::PREFIX_CB() {
     r = r >> 1;
     r |= oldC<<7;
     setr(r);
+    reg.F.H  = reg.F.N = 0;
     updateCpuFlagZ(r);
 
-  } else if ((code & 0xF8) == 0x38) {
+  } else if ((code&0xF8) == 0x20) { //SLA r
+    uint8_t r = getr();
+    reg.F.C = ((r&0x80)>>7);
+    r = r << 1;
+    r &= ~0x01;
+    setr(r);
+    reg.F.H  = reg.F.N = 0;
+    updateCpuFlagZ(r);
+  } else if ((code&0xF8) == 0x28) { //SRA r
+    uint8_t r = getr();
+    reg.F.C = r&1;
+    r = (r&0x80) + (r >> 1);
+    setr(r);
+    reg.F.H  = reg.F.N = 0;
+    updateCpuFlagZ(r);
+  } else if ((code & 0xF8) == 0x38) { //SRL n
     auto r = getr();
     reg.F.C = r&1;
     r >>= 1;
     setr(r);
+    reg.F.H  = reg.F.N = 0;
     updateCpuFlagZ(r);
   }
   else {
@@ -687,14 +761,16 @@ void Cpu::INC_8bit() {
   if (mode==0) {
     updateCpuFlagH(reg.raw8[dest],1,0);
     ++reg.raw8[dest];
+    updateCpuFlagZ(reg.raw8[dest]);
   } else {
     uint8_t data = mem_->Read8(reg.HL);
 		updateCpuFlagH(data,1,0);
     ++data;
     mem_->Write8(reg.HL,data);
+     updateCpuFlagZ(data);
   }
     
-  updateCpuFlagZ(reg.raw8[dest]);
+ 
 }
 
 template<uint8_t dest>
@@ -708,15 +784,27 @@ void Cpu::DEC_8bit() {
   reg.F.N = 1;
 
   if (mode==0) {
-    updateCpuFlagH(reg.raw8[dest],1,1);
+    //updateCpuFlagH(reg.raw8[dest],1,1);
     --reg.raw8[dest];
+    if ((reg.raw8[dest]&0xF)==0xF)
+      reg.F.H = 1;
+    else 
+      reg.F.H = 0;
+    updateCpuFlagZ(reg.raw8[dest]);
   } else {
     uint8_t data = mem_->Read8(reg.HL);
-    updateCpuFlagH(data,1,1);
+
+    //updateCpuFlagH(data,1,1);
     --data;
+    if ((data&0xF)==0xF)
+      reg.F.H = 1;
+    else
+      reg.F.H = 0;
+    updateCpuFlagZ(data);
     mem_->Write8(reg.HL,data);
+
   }
-  updateCpuFlagZ(reg.raw8[dest]);
+  
 }
 
 template<uint8_t dest>
@@ -749,10 +837,7 @@ void Cpu::JP_cc() {
 }
 
 void Cpu::JP_HL() {
-  uint16_t nn;
-  nn = mem_->Read8(reg.HL);
-  nn |= (mem_->Read8(reg.HL))<<8;
-  reg.PC = nn;
+  reg.PC = reg.HL;
 }
 
 
@@ -811,21 +896,28 @@ template<uint8_t dest>
 void Cpu::POP() {
   reg.raw16[dest] = pop();
   reg.raw16[dest] |= pop() << 8;
-
+  if (dest == RegAF)
+    reg.F._unused = 0;
 }
 
 void Cpu::RLCA() {
   uint8_t& r = reg.A;
-  reg.F.C = (r&0x80)!=0?1:0;
+  reg.F.C = (r&0x80)>>7;
   r = r << 1;
   r |= reg.F.C;
+  reg.F.H = reg.F.N = 0;
+    reg.F.Z = 0;
+ // updateCpuFlagZ(r);
 }
 
 void Cpu::RRCA() {
   uint8_t& r = reg.A;
-  reg.F.C = (r&0x80)!=0?1:0;
+  reg.F.C = r&1;
   r = r >> 1;
   r |= reg.F.C<<7;
+  reg.F.H = reg.F.N = 0;
+    reg.F.Z = 0;
+  //updateCpuFlagZ(r);
 }
 
 void Cpu::RLA() {
@@ -834,6 +926,9 @@ void Cpu::RLA() {
   reg.F.C = (r&0x80)>>7;
   r = r << 1;
   r |= oldC;
+  reg.F.H = reg.F.N = 0;
+    reg.F.Z = 0;
+  //updateCpuFlagZ(r);
 }
 
 void Cpu::RRA() {
@@ -842,6 +937,9 @@ void Cpu::RRA() {
   reg.F.C = r & 1;
   r = r >> 1;
   r |= oldC << 7;
+  reg.F.H = reg.F.N = 0;
+  reg.F.Z = 0;
+  //updateCpuFlagZ(r);
 }
 
 void Cpu::CP(uint8_t a, uint8_t b) {
@@ -876,6 +974,35 @@ void Cpu::EI() {
 void Cpu::RETI() {
 	EI();
 	RET();
+}
+
+void Cpu::DAA() {
+ int a = reg.A;
+
+  if (!reg.F.N)
+  {
+      if (reg.F.H || (a & 0xF) > 9)
+          a += 0x06;
+      if (reg.F.C || a > 0x9F)
+          a += 0x60;
+  }
+  else
+  {
+    if (reg.F.H)
+      a = (a - 6) & 0xFF;
+      if (reg.F.C)
+          a -= 0x60;
+  }
+
+
+  if ((a & 0x100) == 0x100)
+      reg.F.C = 1;
+
+  a &= 0xFF;
+
+  updateCpuFlagZ(a);
+  reg.F.H = 0;
+  reg.A = (uint8_t)a;
 }
 
 }
