@@ -19,13 +19,13 @@ void Timer::Deinitialize() {
 }
 
 void Timer::Tick() {
-  if ((tac&0x4)==0)return; 
-  if (counter1++ == (4194304/16384)) {
+   
+  if (++counter1 == (4194304/16384)) {
     counter1 = 0;
     ++div;
   }
-
-  if (counter2++ == tima_max) {
+  if ((tac&0x4)==0)return;
+  if (++counter2 == tima_max) {
     if (tima == 0xFF) {
       emu_->memory()->interrupt_flag() |= 0x4;
       emu_->cpu()->Wake();
@@ -75,6 +75,7 @@ void Timer::Write(uint16_t address, uint8_t data) {
           case 2: tima_max = 4194304/65536 ; break;
             case 3: tima_max = 4194304/16384 ; break;
       }
+
       break;
  
   }

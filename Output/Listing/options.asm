@@ -39,7 +39,6 @@ PUBLIC	?has_signaling_NaN@_Num_float_base@std@@2_NB	; std::_Num_float_base::has_
 PUBLIC	?is_bounded@_Num_float_base@std@@2_NB		; std::_Num_float_base::is_bounded
 PUBLIC	?is_exact@_Num_float_base@std@@2_NB		; std::_Num_float_base::is_exact
 PUBLIC	?is_iec559@_Num_float_base@std@@2_NB		; std::_Num_float_base::is_iec559
-PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?is_integer@_Num_float_base@std@@2_NB		; std::_Num_float_base::is_integer
 PUBLIC	?is_modulo@_Num_float_base@std@@2_NB		; std::_Num_float_base::is_modulo
 PUBLIC	?is_signed@_Num_float_base@std@@2_NB		; std::_Num_float_base::is_signed
@@ -47,9 +46,7 @@ PUBLIC	?is_specialized@_Num_float_base@std@@2_NB	; std::_Num_float_base::is_spec
 PUBLIC	?tinyness_before@_Num_float_base@std@@2_NB	; std::_Num_float_base::tinyness_before
 PUBLIC	?traps@_Num_float_base@std@@2_NB		; std::_Num_float_base::traps
 PUBLIC	?round_style@_Num_float_base@std@@2W4float_round_style@2@B ; std::_Num_float_base::round_style
-PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?radix@_Num_float_base@std@@2HB			; std::_Num_float_base::radix
-PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	_ConcRT_ProviderGuid
 PUBLIC	_ConcRTEventGuid
 PUBLIC	_SchedulerEventGuid
@@ -58,15 +55,12 @@ PUBLIC	_ContextEventGuid
 PUBLIC	_ChoreEventGuid
 PUBLIC	_VirtualProcessorEventGuid
 PUBLIC	_LockEventGuid
-PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	_ResourceManagerEventGuid
 PUBLIC	_PPLParallelInvokeEventGuid
 PUBLIC	_PPLParallelForEventGuid
 PUBLIC	_PPLParallelForeachEventGuid
 PUBLIC	_AgentEventGuid
 PUBLIC	?is_signed@?$numeric_limits@D@std@@2_NB		; std::numeric_limits<char>::is_signed
-PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
-PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?digits@?$numeric_limits@D@std@@2HB		; std::numeric_limits<char>::digits
 PUBLIC	?digits10@?$numeric_limits@D@std@@2HB		; std::numeric_limits<char>::digits10
 PUBLIC	?is_signed@?$numeric_limits@_W@std@@2_NB	; std::numeric_limits<wchar_t>::is_signed
@@ -162,11 +156,17 @@ PUBLIC	?_S_structured@_TaskCollectionBase@details@Concurrency@@1HB ; Concurrency
 PUBLIC	?_S_localCancel@_TaskCollectionBase@details@Concurrency@@1HB ; Concurrency::details::_TaskCollectionBase::_S_localCancel
 PUBLIC	?_S_reserved@_TaskCollectionBase@details@Concurrency@@1HB ; Concurrency::details::_TaskCollectionBase::_S_reserved
 PUBLIC	?value@?$_Sizeof@HU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@2IB ; std::_Sizeof<int,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil,std::_Nil>::value
+PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?_G1@?$_Ratio_multiply2@U?$ratio@$00$0JIJGIA@@std@@U?$ratio@$0JIJGIA@$00@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<1,10000000>,std::ratio<10000000,1> >::_G1
 PUBLIC	?value@?$_Abs@$0JIJGIA@@std@@2_JB		; std::_Abs<10000000>::value
+PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?value@?$_GcdX@$0JIJGIA@$0A@@std@@2_JB		; std::_GcdX<10000000,0>::value
+PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?value@?$_GcdX@$0JIJGIA@$0JIJGIA@@std@@2_JB	; std::_GcdX<10000000,10000000>::value
+PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?value@?$_Gcd@$0JIJGIA@$0JIJGIA@@std@@2_JB	; std::_Gcd<10000000,10000000>::value
+PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
+PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?_G2@?$_Ratio_multiply2@U?$ratio@$00$0JIJGIA@@std@@U?$ratio@$0JIJGIA@$00@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<1,10000000>,std::ratio<10000000,1> >::_G2
 PUBLIC	?has_denorm@_Num_base@std@@2W4float_denorm_style@2@B ; std::_Num_base::has_denorm
 PUBLIC	?has_denorm_loss@_Num_base@std@@2_NB		; std::_Num_base::has_denorm_loss
@@ -223,24 +223,41 @@ CONST	ENDS
 CONST	SEGMENT
 ?has_denorm@_Num_base@std@@2W4float_denorm_style@2@B DD 00H ; std::_Num_base::has_denorm
 CONST	ENDS
-CONST	SEGMENT
-$SG144319 DB	'%0.2f Mhz', 00H
-CONST	ENDS
 ;	COMDAT ?_G2@?$_Ratio_multiply2@U?$ratio@$00$0JIJGIA@@std@@U?$ratio@$0JIJGIA@$00@2@@std@@2_JB
 CONST	SEGMENT
 ?_G2@?$_Ratio_multiply2@U?$ratio@$00$0JIJGIA@@std@@U?$ratio@$0JIJGIA@$00@2@@std@@2_JB DQ 0000000000989680H ; std::_Ratio_multiply2<std::ratio<1,10000000>,std::ratio<10000000,1> >::_G2
+CONST	ENDS
+;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
+CONST	ENDS
+;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
 CONST	ENDS
 ;	COMDAT ?value@?$_Gcd@$0JIJGIA@$0JIJGIA@@std@@2_JB
 CONST	SEGMENT
 ?value@?$_Gcd@$0JIJGIA@$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::_Gcd<10000000,10000000>::value
 CONST	ENDS
+;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?value@?$_GcdX@$0JIJGIA@$0JIJGIA@@std@@2_JB
 CONST	SEGMENT
 ?value@?$_GcdX@$0JIJGIA@$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::_GcdX<10000000,10000000>::value
 CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?value@?$_GcdX@$0JIJGIA@$0A@@std@@2_JB
 CONST	SEGMENT
 ?value@?$_GcdX@$0JIJGIA@$0A@@std@@2_JB DQ 0000000000989680H ; std::_GcdX<10000000,0>::value
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?value@?$_Abs@$0JIJGIA@@std@@2_JB
 CONST	SEGMENT
@@ -249,6 +266,10 @@ CONST	ENDS
 ;	COMDAT ?_G1@?$_Ratio_multiply2@U?$ratio@$00$0JIJGIA@@std@@U?$ratio@$0JIJGIA@$00@2@@std@@2_JB
 CONST	SEGMENT
 ?_G1@?$_Ratio_multiply2@U?$ratio@$00$0JIJGIA@@std@@U?$ratio@$0JIJGIA@$00@2@@std@@2_JB DQ 0000000000000001H ; std::_Ratio_multiply2<std::ratio<1,10000000>,std::ratio<10000000,1> >::_G1
+CONST	ENDS
+;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
+CONST	SEGMENT
+?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?value@?$_Sizeof@HU_Nil@std@@U12@U12@U12@U12@U12@U12@@std@@2IB
 CONST	SEGMENT
@@ -630,14 +651,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@D@std@@2HB DD 07H		; std::numeric_limits<char>::digits
 CONST	ENDS
-;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
-CONST	ENDS
-;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
-CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@D@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@D@std@@2_NB DB 01H		; std::numeric_limits<char>::is_signed
@@ -711,10 +724,6 @@ _ResourceManagerEventGuid DD 02718d25bH
 	DB	0bdH
 	DB	0bfH
 	DB	0caH
-CONST	ENDS
-;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
 CONST	ENDS
 ;	COMDAT _LockEventGuid
 CONST	SEGMENT
@@ -828,17 +837,9 @@ _ConcRT_ProviderGuid DD 0f7b697a3H
 	DB	059H
 	DB	02fH
 CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?radix@_Num_float_base@std@@2HB
 CONST	SEGMENT
 ?radix@_Num_float_base@std@@2HB DD 02H			; std::_Num_float_base::radix
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?round_style@_Num_float_base@std@@2W4float_round_style@2@B
 CONST	SEGMENT
@@ -867,10 +868,6 @@ CONST	ENDS
 ;	COMDAT ?is_integer@_Num_float_base@std@@2_NB
 CONST	SEGMENT
 ?is_integer@_Num_float_base@std@@2_NB DB 00H		; std::_Num_float_base::is_integer
-CONST	ENDS
-;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
-CONST	SEGMENT
-?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?is_iec559@_Num_float_base@std@@2_NB
 CONST	SEGMENT
@@ -959,6 +956,41 @@ CONST	ENDS
 ;	COMDAT ?max_digits10@_Num_base@std@@2HB
 CONST	SEGMENT
 ?max_digits10@_Num_base@std@@2HB DD 00H			; std::_Num_base::max_digits10
+CONST	ENDS
+CONST	SEGMENT
+_dutycycletable DB 00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+$SG167609 DB	'%0.2f Mhz', 00H
 CONST	ENDS
 ;	COMDAT ?digits10@_Num_base@std@@2HB
 CONST	SEGMENT
@@ -1398,7 +1430,7 @@ _cpu_freq$ = 8						; size = 8
 	mov	esi, esp
 	sub	esp, 8
 	movsd	QWORD PTR [esp], xmm0
-	push	OFFSET $SG144319
+	push	OFFSET $SG167609
 	lea	eax, DWORD PTR _str$[ebp]
 	push	eax
 	call	DWORD PTR __imp__sprintf

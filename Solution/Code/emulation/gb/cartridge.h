@@ -68,6 +68,7 @@ struct CartridgeHeader {
       case 2:return 8*1024;
       case 3:return 32*1024;
     }
+    return 0;
   }
 
 };
@@ -80,13 +81,16 @@ class Cartridge : public Component {
   void Initialize(Emu* emu);
   void Deinitialize();
   void LoadFile(const char* filename, CartridgeHeader* header);
+  void LoadRam();
+  void SaveRam();
   const uint8_t* rom() { return rom_; }
 
   uint8_t Read(uint16_t address);
   void Write(uint16_t address, uint8_t data);
+  MemoryBankController* mbc;
  private:
 
-  MemoryBankController* mbc;
+
   uint8_t* rom_;
 
  
@@ -110,6 +114,8 @@ class MemoryBankController {
   };
   virtual uint8_t Read(uint16_t address) = 0;
   virtual void Write(uint16_t address, uint8_t data) = 0;
+  virtual void Tick() { }
+  uint8_t* eram() { return eram_; }
  protected:
   Cartridge* cartridge;
   uint8_t* eram_;

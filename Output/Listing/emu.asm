@@ -47,8 +47,8 @@ PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::ch
 PUBLIC	?value@?$_GcdX@$00$0A@@std@@2_JB		; std::_GcdX<1,0>::value
 PUBLIC	?value@?$_GcdX@$00$00@std@@2_JB			; std::_GcdX<1,1>::value
 PUBLIC	?is_signed@?$numeric_limits@H@std@@2_NB		; std::numeric_limits<int>::is_signed
-PUBLIC	?digits@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits
 PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
+PUBLIC	?digits@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits
 PUBLIC	?value@?$_Gcd@$00$00@std@@2_JB			; std::_Gcd<1,1>::value
 PUBLIC	?digits10@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits10
 PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
@@ -829,13 +829,13 @@ CONST	ENDS
 CONST	SEGMENT
 ?value@?$_Gcd@$00$00@std@@2_JB DQ 0000000000000001H	; std::_Gcd<1,1>::value
 CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
-CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@H@std@@2HB
 CONST	SEGMENT
 ?digits@?$numeric_limits@H@std@@2HB DD 01fH		; std::numeric_limits<int>::digits
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@H@std@@2_NB
 CONST	SEGMENT
@@ -961,10 +961,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@C@std@@2_NB DB 01H		; std::numeric_limits<signed char>::is_signed
 CONST	ENDS
-CONST	SEGMENT
-$SG130130 DB	'C:\Users\Khalid\Documents\GitHub\GBEmu\test\Super Mario '
-	DB	'Land (World).gb', 00H
-CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@_N@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@_N@std@@2HB DD 00H		; std::numeric_limits<bool>::digits10
@@ -980,6 +976,42 @@ CONST	ENDS
 ;	COMDAT ?is_modulo@?$numeric_limits@_N@std@@2_NB
 CONST	SEGMENT
 ?is_modulo@?$numeric_limits@_N@std@@2_NB DB 00H		; std::numeric_limits<bool>::is_modulo
+CONST	ENDS
+CONST	SEGMENT
+$SG153649 DB	'C:\Users\Khalid\Documents\GitHub\GBEmu\test\Super Mario '
+	DB	'Land (World).gb', 00H
+_dutycycletable DB 00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@_W@std@@2HB
 CONST	SEGMENT
@@ -1045,7 +1077,7 @@ _dt$ = 8						; size = 8
 ?Step@Emu@gb@emulation@@QAENN@Z PROC			; emulation::gb::Emu::Step
 ; _this$ = ecx
 
-; 31   : double Emu::Step(double dt) {
+; 35   : double Emu::Step(double dt) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1059,7 +1091,7 @@ _dt$ = 8						; size = 8
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 32   : 	cpu_.Step(dt);
+; 36   : 	cpu_.Step(dt);
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR _dt$[ebp]
@@ -1068,11 +1100,11 @@ _dt$ = 8						; size = 8
 	add	ecx, 72					; 00000048H
 	call	?Step@Cpu@gb@emulation@@QAEXN@Z		; emulation::gb::Cpu::Step
 
-; 33   : 	double r = dt*cpu_.cycles; 
+; 37   : 	double r = dt*cpu_.cycles; 
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+80]
-	mov	edx, DWORD PTR [eax+84]
+	mov	ecx, DWORD PTR [eax+88]
+	mov	edx, DWORD PTR [eax+92]
 	mov	DWORD PTR tv80[ebp], ecx
 	mov	DWORD PTR tv80[ebp+4], edx
 	mov	eax, DWORD PTR tv80[ebp+4]
@@ -1091,11 +1123,11 @@ _dt$ = 8						; size = 8
 	mulsd	xmm0, QWORD PTR _dt$[ebp]
 	movsd	QWORD PTR _r$[ebp], xmm0
 
-; 34   :   return r;
+; 38   :   return r;
 
 	fld	QWORD PTR _r$[ebp]
 
-; 35   : }
+; 39   : }
 
 	pop	edi
 	add	esp, 44					; 0000002cH
@@ -1113,7 +1145,7 @@ _this$ = -4						; size = 4
 ?Deinitialize@Emu@gb@emulation@@QAEXXZ PROC		; emulation::gb::Emu::Deinitialize
 ; _this$ = ecx
 
-; 23   : void Emu::Deinitialize() {
+; 26   : void Emu::Deinitialize() {
 
 	push	ebp
 	mov	ebp, esp
@@ -1122,67 +1154,79 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 24   :   cpu_.Deinitialize();
+; 27   :   sc_.Deinitialize();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 1696				; 000006a0H
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [eax+1696]
+	mov	esi, esp
+	mov	eax, DWORD PTR [edx+4]
+	call	eax
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 28   :   cpu_.Deinitialize();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 72					; 00000048H
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [eax+72]
-	mov	esi, esp
-	mov	eax, DWORD PTR [edx+4]
-	call	eax
-	cmp	esi, esp
-	call	__RTC_CheckEsp
-
-; 25   :   memory_.Deinitialize();
-
-	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1152				; 00000480H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+1152]
+	mov	eax, DWORD PTR [edx+72]
 	mov	esi, esp
 	mov	edx, DWORD PTR [eax+4]
 	call	edx
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 26   :   lcd_driver_.Deinitialize();
+; 29   :   memory_.Deinitialize();
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1600				; 00000640H
+	add	ecx, 1160				; 00000488H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [eax+1600]
+	mov	edx, DWORD PTR [eax+1160]
 	mov	esi, esp
 	mov	eax, DWORD PTR [edx+4]
 	call	eax
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 27   : 	timer_.Deinitialize();
+; 30   :   lcd_driver_.Deinitialize();
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1688				; 00000698H
+	add	ecx, 1616				; 00000650H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+1688]
+	mov	eax, DWORD PTR [edx+1616]
 	mov	esi, esp
 	mov	edx, DWORD PTR [eax+4]
 	call	edx
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 28   :   cartridge_.Deinitialize();
+; 31   : 	timer_.Deinitialize();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 1992				; 000007c8H
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [eax+1992]
+	mov	esi, esp
+	mov	eax, DWORD PTR [edx+4]
+	call	eax
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 32   :   cartridge_.Deinitialize();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 48					; 00000030H
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [eax+48]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+48]
 	mov	esi, esp
-	mov	eax, DWORD PTR [edx+4]
-	call	eax
+	mov	edx, DWORD PTR [eax+4]
+	call	edx
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 29   : }
+; 33   : }
 
 	pop	esi
 	add	esp, 4
@@ -1236,64 +1280,66 @@ __$ArrayPad$ = -4					; size = 4
 	call	__RTC_CheckEsp
 
 ; 9    :   
-; 10   :   //cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\cpu_instrs\\individual\\01-special.gb",&header);
-; 11   :   //cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\cpu_instrs\\cpu_instrs.gb",&header);
-; 12   :   //cartridge_.LoadFile("D:\\Personal\\Projects\\GBEmu\\test\\cpu_instrs\\individual\\01-special.gb",&header);
-; 13   : 	//cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\cpu_instrs\\cpu_instrs.gb",&header);
-; 14   : 	//cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\Runtime - Test Rom (PD).gb",&header);
-; 15   : 	//cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\opus5.gb",&header);
-; 16   :   cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\Super Mario Land (World).gb",&header);
+; 10   :   //cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\oam_bug\\oam_bug\\rom_singles\\2-causes.gb",&header);
+; 11   :   //cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
+; 12   :   //cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\mem_timing-2\\mem_timing-2\\mem_timing.gb",&header);
+; 13   :   //cartridge_.LoadFile("D:\\Personal\\Projects\\GBEmu\\test\\cpu_instrs\\individual\\01-special.gb",&header);
+; 14   : 	//cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\cpu_instrs\\cpu_instrs.gb",&header);
+; 15   : 	//cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\PUZZLE.gb",&header);
+; 16   : 	//cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\opus5.gb",&header);
+; 17   :   cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\Super Mario Land (World).gb",&header);
 
 	lea	eax, DWORD PTR _header$[ebp]
 	push	eax
-	push	OFFSET $SG130130
+	push	OFFSET $SG153649
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 48					; 00000030H
 	call	?LoadFile@Cartridge@gb@emulation@@QAEXPBDPAUCartridgeHeader@23@@Z ; emulation::gb::Cartridge::LoadFile
 
-; 17   : 	timer_.Initialize(this);
+; 18   :   //cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
+; 19   : 	timer_.Initialize(this);
 
 	mov	esi, esp
 	mov	ecx, DWORD PTR _this$[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1688				; 00000698H
+	add	ecx, 1992				; 000007c8H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+1688]
+	mov	eax, DWORD PTR [edx+1992]
 	mov	edx, DWORD PTR [eax]
 	call	edx
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 18   :   lcd_driver_.Initialize(this);
+; 20   :   lcd_driver_.Initialize(this);
 
 	mov	esi, esp
 	mov	eax, DWORD PTR _this$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1600				; 00000640H
+	add	ecx, 1616				; 00000650H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+1600]
+	mov	eax, DWORD PTR [edx+1616]
 	mov	edx, DWORD PTR [eax]
 	call	edx
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 19   :   memory_.Initialize(this);
+; 21   :   memory_.Initialize(this);
 
 	mov	esi, esp
 	mov	eax, DWORD PTR _this$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1152				; 00000480H
+	add	ecx, 1160				; 00000488H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+1152]
+	mov	eax, DWORD PTR [edx+1160]
 	mov	edx, DWORD PTR [eax]
 	call	edx
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 20   :   cpu_.Initialize(this);
+; 22   :   cpu_.Initialize(this);
 
 	mov	esi, esp
 	mov	eax, DWORD PTR _this$[ebp]
@@ -1307,7 +1353,21 @@ __$ArrayPad$ = -4					; size = 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 21   : }
+; 23   :   sc_.Initialize(this);
+
+	mov	esi, esp
+	mov	eax, DWORD PTR _this$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 1696				; 000006a0H
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+1696]
+	mov	edx, DWORD PTR [eax]
+	call	edx
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 24   : }
 
 	push	edx
 	mov	ecx, ebp
@@ -1327,6 +1387,7 @@ __$ArrayPad$ = -4					; size = 4
 	mov	esp, ebp
 	pop	ebp
 	ret	0
+	npad	1
 $LN5@Initialize:
 	DD	1
 	DD	$LN4@Initialize

@@ -40,6 +40,7 @@ class Memory : public Component {
   uint8_t ioports_[128];
   uint8_t hram_[127];
   uint8_t interrupt_enable_register_;
+  uint16_t last_address;
 	bool joypadflags[8];
 };
 

@@ -51,14 +51,14 @@ PUBLIC	?value@?$_Gcd@$00$00@std@@2_JB			; std::_Gcd<1,1>::value
 PUBLIC	?digits10@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits10
 PUBLIC	?_G2@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G2
 PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
-PUBLIC	?is_signed@?$numeric_limits@I@std@@2_NB		; std::numeric_limits<unsigned int>::is_signed
 PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
+PUBLIC	?is_signed@?$numeric_limits@I@std@@2_NB		; std::numeric_limits<unsigned int>::is_signed
 PUBLIC	?digits@?$numeric_limits@I@std@@2HB		; std::numeric_limits<unsigned int>::digits
-PUBLIC	?digits10@?$numeric_limits@I@std@@2HB		; std::numeric_limits<unsigned int>::digits10
 PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
+PUBLIC	?digits10@?$numeric_limits@I@std@@2HB		; std::numeric_limits<unsigned int>::digits10
+PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?is_monotonic@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_monotonic
 PUBLIC	?is_steady@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_steady
-PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
 PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?is_signed@?$numeric_limits@J@std@@2_NB		; std::numeric_limits<long>::is_signed
@@ -214,6 +214,40 @@ CONST	ENDS
 ;	COMDAT ?is_signed@_Num_float_base@std@@2_NB
 CONST	SEGMENT
 ?is_signed@_Num_float_base@std@@2_NB DB 01H		; std::_Num_float_base::is_signed
+CONST	ENDS
+CONST	SEGMENT
+_dutycycletable DB 00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
 CONST	ENDS
 ;	COMDAT ?is_modulo@_Num_float_base@std@@2_NB
 CONST	SEGMENT
@@ -789,10 +823,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
 CONST	ENDS
-;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?is_steady@system_clock@chrono@std@@2_NB
 CONST	SEGMENT
 ?is_steady@system_clock@chrono@std@@2_NB DB 00H		; std::chrono::system_clock::is_steady
@@ -801,25 +831,29 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_monotonic@system_clock@chrono@std@@2_NB DB 00H	; std::chrono::system_clock::is_monotonic
 CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
 CONST	SEGMENT
-?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
+?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@I@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@I@std@@2HB DD 09H		; std::numeric_limits<unsigned int>::digits10
 CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@I@std@@2HB
 CONST	SEGMENT
 ?digits@?$numeric_limits@I@std@@2HB DD 020H		; std::numeric_limits<unsigned int>::digits
 CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
-CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@I@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@I@std@@2_NB DB 00H		; std::numeric_limits<unsigned int>::is_signed
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
 CONST	SEGMENT
@@ -1046,7 +1080,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1152				; 00000480H
+	add	eax, 1160				; 00000488H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1082,7 +1116,7 @@ _this$ = -4						; size = 4
 ?Wake@Cpu@gb@emulation@@QAEXXZ PROC			; emulation::gb::Cpu::Wake, COMDAT
 ; _this$ = ecx
 
-; 73   :   void Wake() {
+; 74   :   void Wake() {
 
 	push	ebp
 	mov	ebp, esp
@@ -1090,12 +1124,12 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 74   :     cpumode_ = CpuModeNormal;
+; 75   :     cpumode_ = CpuModeNormal;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+16], 0
+	mov	DWORD PTR [eax+24], 0
 
-; 75   :   }
+; 76   :   }
 
 	mov	esp, ebp
 	pop	ebp
@@ -1222,10 +1256,11 @@ $LN1@Write:
 $LN13@Write:
 
 ; 77   :       }
-; 78   :       break;
-; 79   :  
-; 80   :   }
-; 81   : }
+; 78   : 
+; 79   :       break;
+; 80   :  
+; 81   :   }
+; 82   : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -1330,12 +1365,10 @@ _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\timer.cpp
 _TEXT	SEGMENT
-tv134 = -40						; size = 4
-tv88 = -36						; size = 4
-tv87 = -32						; size = 8
-tv86 = -24						; size = 8
-tv74 = -16						; size = 4
-tv73 = -12						; size = 8
+tv93 = -28						; size = 4
+tv181 = -24						; size = 4
+tv78 = -20						; size = 8
+tv66 = -12						; size = 8
 _this$ = -4						; size = 4
 ?Tick@Timer@gb@emulation@@QAEXXZ PROC			; emulation::gb::Timer::Tick
 ; _this$ = ecx
@@ -1344,51 +1377,36 @@ _this$ = -4						; size = 4
 
 	push	ebp
 	mov	ebp, esp
-	sub	esp, 40					; 00000028H
-	push	edi
-	push	ecx
-	lea	edi, DWORD PTR [ebp-40]
-	mov	ecx, 10					; 0000000aH
+	sub	esp, 28					; 0000001cH
 	mov	eax, -858993460				; ccccccccH
-	rep stosd
-	pop	ecx
+	mov	DWORD PTR [ebp-28], eax
+	mov	DWORD PTR [ebp-24], eax
+	mov	DWORD PTR [ebp-20], eax
+	mov	DWORD PTR [ebp-16], eax
+	mov	DWORD PTR [ebp-12], eax
+	mov	DWORD PTR [ebp-8], eax
+	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 22   :   if ((tac&0x4)==0)return; 
+; 22   :    
+; 23   :   if (++counter1 == (4194304/16384)) {
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+43]
-	and	ecx, 4
+	mov	ecx, DWORD PTR [eax+16]
+	add	ecx, 1
+	mov	DWORD PTR tv66[ebp], ecx
+	mov	edx, DWORD PTR [eax+20]
+	adc	edx, 0
+	mov	DWORD PTR tv66[ebp+4], edx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR tv66[ebp]
+	mov	DWORD PTR [eax+16], ecx
+	mov	edx, DWORD PTR tv66[ebp+4]
+	mov	DWORD PTR [eax+20], edx
+	cmp	DWORD PTR tv66[ebp], 256		; 00000100H
 	jne	SHORT $LN5@Tick
-	jmp	$LN6@Tick
-$LN5@Tick:
-
-; 23   :   if (counter1++ == (4194304/16384)) {
-
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+16]
-	mov	DWORD PTR tv73[ebp], eax
-	mov	ecx, DWORD PTR [edx+20]
-	mov	DWORD PTR tv73[ebp+4], ecx
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+16]
-	add	eax, 1
-	mov	ecx, DWORD PTR [edx+20]
-	adc	ecx, 0
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+16], eax
-	mov	DWORD PTR [edx+20], ecx
-	cmp	DWORD PTR tv73[ebp], 256		; 00000100H
-	jne	SHORT $LN8@Tick
-	cmp	DWORD PTR tv73[ebp+4], 0
-	jne	SHORT $LN8@Tick
-	mov	DWORD PTR tv74[ebp], 1
-	jmp	SHORT $LN9@Tick
-$LN8@Tick:
-	mov	DWORD PTR tv74[ebp], 0
-$LN9@Tick:
-	cmp	DWORD PTR tv74[ebp], 0
-	je	SHORT $LN4@Tick
+	cmp	DWORD PTR tv66[ebp+4], 0
+	jne	SHORT $LN5@Tick
 
 ; 24   :     counter1 = 0;
 
@@ -1403,79 +1421,78 @@ $LN9@Tick:
 	add	dl, 1
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	BYTE PTR [eax+40], dl
-$LN4@Tick:
+$LN5@Tick:
 
 ; 26   :   }
-; 27   : 
-; 28   :   if (counter2++ == tima_max) {
+; 27   :   if ((tac&0x4)==0)return;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [ecx+24]
-	mov	DWORD PTR tv86[ebp], edx
-	mov	eax, DWORD PTR [ecx+28]
-	mov	DWORD PTR tv86[ebp+4], eax
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [ecx+32]
-	mov	DWORD PTR tv87[ebp], edx
-	mov	eax, DWORD PTR [ecx+36]
-	mov	DWORD PTR tv87[ebp+4], eax
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [ecx+24]
-	add	edx, 1
-	mov	eax, DWORD PTR [ecx+28]
-	adc	eax, 0
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+24], edx
-	mov	DWORD PTR [ecx+28], eax
-	mov	edx, DWORD PTR tv86[ebp]
-	cmp	edx, DWORD PTR tv87[ebp]
-	jne	SHORT $LN10@Tick
-	mov	eax, DWORD PTR tv86[ebp+4]
-	cmp	eax, DWORD PTR tv87[ebp+4]
-	jne	SHORT $LN10@Tick
-	mov	DWORD PTR tv88[ebp], 1
-	jmp	SHORT $LN11@Tick
-$LN10@Tick:
-	mov	DWORD PTR tv88[ebp], 0
-$LN11@Tick:
-	cmp	DWORD PTR tv88[ebp], 0
-	je	SHORT $LN6@Tick
+	movzx	edx, BYTE PTR [ecx+43]
+	and	edx, 4
+	jne	SHORT $LN4@Tick
+	jmp	$LN6@Tick
+$LN4@Tick:
+
+; 28   :   if (++counter2 == tima_max) {
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+24]
+	add	ecx, 1
+	mov	DWORD PTR tv78[ebp], ecx
+	mov	edx, DWORD PTR [eax+28]
+	adc	edx, 0
+	mov	DWORD PTR tv78[ebp+4], edx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR tv78[ebp]
+	mov	DWORD PTR [eax+24], ecx
+	mov	edx, DWORD PTR tv78[ebp+4]
+	mov	DWORD PTR [eax+28], edx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR tv181[ebp], eax
+	mov	ecx, DWORD PTR tv181[ebp]
+	mov	edx, DWORD PTR tv78[ebp]
+	cmp	edx, DWORD PTR [ecx+32]
+	jne	SHORT $LN6@Tick
+	mov	eax, DWORD PTR tv181[ebp]
+	mov	ecx, DWORD PTR tv78[ebp+4]
+	cmp	ecx, DWORD PTR [eax+36]
+	jne	SHORT $LN6@Tick
 
 ; 29   :     if (tima == 0xFF) {
 
-	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+41]
-	cmp	edx, 255				; 000000ffH
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+41]
+	cmp	eax, 255				; 000000ffH
 	jne	SHORT $LN2@Tick
 
 ; 30   :       emu_->memory()->interrupt_flag() |= 0x4;
 
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+4]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ ; emulation::gb::Memory::interrupt_flag
-	mov	DWORD PTR tv134[ebp], eax
-	mov	ecx, DWORD PTR tv134[ebp]
-	movzx	edx, BYTE PTR [ecx]
-	or	edx, 4
-	mov	eax, DWORD PTR tv134[ebp]
-	mov	BYTE PTR [eax], dl
+	mov	DWORD PTR tv93[ebp], eax
+	mov	edx, DWORD PTR tv93[ebp]
+	movzx	eax, BYTE PTR [edx]
+	or	eax, 4
+	mov	ecx, DWORD PTR tv93[ebp]
+	mov	BYTE PTR [ecx], al
 
 ; 31   :       emu_->cpu()->Wake();
 
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+4]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [edx+4]
 	call	?cpu@Emu@gb@emulation@@QAEPAVCpu@23@XZ	; emulation::gb::Emu::cpu
 	mov	ecx, eax
 	call	?Wake@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Wake
 
 ; 32   :       tima = tma;
 
-	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+42]
-	mov	BYTE PTR [edx+41], cl
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [ecx+42]
+	mov	BYTE PTR [eax+41], dl
 
 ; 33   :     }
 ; 34   :     else
@@ -1485,18 +1502,18 @@ $LN2@Tick:
 
 ; 35   :       ++tima;
 
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+41]
+	add	cl, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+41]
-	add	al, 1
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+41], al
+	mov	BYTE PTR [edx+41], cl
 $LN1@Tick:
 
 ; 36   :     counter2 = 0;
 
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+24], 0
-	mov	DWORD PTR [edx+28], 0
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+24], 0
+	mov	DWORD PTR [eax+28], 0
 $LN6@Tick:
 
 ; 37   :   }
@@ -1505,8 +1522,7 @@ $LN6@Tick:
 ; 40   : 
 ; 41   : }
 
-	pop	edi
-	add	esp, 40					; 00000028H
+	add	esp, 28					; 0000001cH
 	cmp	ebp, esp
 	call	__RTC_CheckEsp
 	mov	esp, ebp

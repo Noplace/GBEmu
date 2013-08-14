@@ -38,6 +38,7 @@ void Memory::Initialize(Emu* emu) {
 	ZeroMemory(ioports_,sizeof(ioports_));
 	memset(joypadflags,0,sizeof(joypadflags));
 	ioports_[0] = 0x0F;
+  last_address = 0;
   //Reset();
 }
 
@@ -48,7 +49,7 @@ void Memory::Deinitialize() {
 }
 
 void Memory::Reset() {
-   ioports_[0x05] = 0x00; // TIMA
+   /*ioports_[0x05] = 0x00; // TIMA
    ioports_[0x06] = 0x00; // TMA
    ioports_[0x07] = 0x00; // TAC
    ioports_[0x10] = 0x80; // NR10
@@ -82,56 +83,57 @@ void Memory::Reset() {
 }
 
 uint8_t Memory::Read8(uint16_t address) {
-  emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();
+  uint8_t result = 0;
+  emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick(); 
 	if (address >= 0x0000 && address <= 0x3FFF) {
-		if (ioports_[0x50] == 0) {
-      if (address < 0x100)
-			  return dmgrom[address&0xFF];
+    if (ioports_[0x50] == 0 && address < 0x100) { 
+			result = dmgrom[address&0xFF];
+    } else {
+	    result = emu_->cartridge()->Read(address);
     }
-	  return emu_->cartridge()->Read(address);
 	} else if (address >= 0x4000 && address <= 0x7FFF) {
-		return emu_->cartridge()->Read(address);
+		result = emu_->cartridge()->Read(address);
 	} else if (address >= 0x8000 && address <= 0x9FFF) {
 
 		if ((emu_->lcd_driver()->stat().mode == 3)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
-			return 0xFF;
-
-		return vram_[address&0x1FFF];
+			result = 0xFF;
+    else
+		  result = vram_[address&0x1FFF];
 	} else if (address >= 0xA000 && address <= 0xBFFF) {
-    return emu_->cartridge()->Read(address);//emu_->cartridge()->eram()[address&0x1FFF];
+    result = emu_->cartridge()->Read(address);//emu_->cartridge()->eram()[address&0x1FFF];
 	} else if (address >= 0xC000 && address <= 0xCFFF) {
-		return wram1_[address&0x0FFF];
+		result = wram1_[address&0x0FFF];
 	} else if (address >= 0xD000 && address <= 0xDFFF) {
-		return wram2_[address&0x0FFF];
+		result = wram2_[address&0x0FFF];
 	} else if (address >= 0xE000 && address <= 0xFDFF) {
 	  if ((address&0xF000)==0xE000)
-		 return wram1_[address&0xFFF];
-		if ((address&0xF000)==0xF000)
-		 return wram2_[address&0xFFF];
+		 result = wram1_[address&0xFFF];
+		else if ((address&0xF000)==0xF000)
+		 result = wram2_[address&0xFFF];
 	} else if (address >= 0xFE00 && address <= 0xFE9F) {
 
 		if ((emu_->lcd_driver()->stat().mode&0x2)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
-			return 0xFF;
-
-		return oam_[address-0xFE00];
+			result = 0xFF;
+    else
+		  result = oam_[address-0xFE00];
 	} else if (address >= 0xFEA0 && address <= 0xFEFF) {
 		int a = 1;
 	} else if (address >= 0xFF00 && address <= 0xFF7F) {
-		if (address >= 0xFF10 && address <= 0xFF26) {
+		if (address >= 0xFF10 && address <= 0xFF3F) {
       ioports_[address&0xFF] = emu_->sc()->Read(address);
 		} else if (address >= 0xFF40 && address <= 0xFF4B) {
 			ioports_[address&0xFF] = emu_->lcd_driver()->Read(address);
 		} else if (address >= 0xFF04 && address <= 0xFF07) {
       ioports_[address&0xFF] = emu_->timer()->Read(address);
 		}
-		return ioports_[address&0xFF];
+		result = ioports_[address&0xFF];
 	} else if (address >= 0xFF80 && address <= 0xFFFE) {
-		return hram_[address-0xFF80];
+		result = hram_[address-0xFF80];
 	} else if (address == 0xFFFF) {
-		return interrupt_enable_register_;
+		result = interrupt_enable_register_;
 	}
 
-	return 0;
+	return result;
 }
 
 void Memory::Write8(uint16_t address, uint8_t data) {
@@ -141,12 +143,10 @@ void Memory::Write8(uint16_t address, uint8_t data) {
 	} else if (address >= 0x4000 && address <= 0x7FFF) {
 		emu_->cartridge()->Write(address,data);
 	} else if (address >= 0x8000 && address <= 0x9FFF) {
-
-		if ((emu_->lcd_driver()->stat().mode == 3)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
-			return;
-
+		if ((emu_->lcd_driver()->stat().mode == 3)&&(emu_->lcd_driver()->lcdc().lcd_enable==1)) {
+    } else {
 		 vram_[address&0x1FFF] = data;
-
+    }
 	} else if (address >= 0xA000 && address <= 0xBFFF) {
 		emu_->cartridge()->Write(address,data);
 	} else if (address >= 0xC000 && address <= 0xCFFF) {
@@ -159,33 +159,24 @@ void Memory::Write8(uint16_t address, uint8_t data) {
 		if ((address&0xF000)==0xF000)
 		 wram2_[address&0xFFF] = data;
 	} else if (address >= 0xFE00 && address <= 0xFE9F) {
-		if ((emu_->lcd_driver()->stat().mode&0x2)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
-			return;
+		if ((emu_->lcd_driver()->stat().mode&0x2)&&(emu_->lcd_driver()->lcdc().lcd_enable==1)) {
+    } else {
 		 oam_[address-0xFE00] = data;
-
+    }
 	} else if (address >= 0xFEA0 && address <= 0xFEFF) {
 		//int a = 1;
      int a = 1;
 	} else if (address >= 0xFF00 && address <= 0xFF7F) {
-
+    ioports_[address&0xFF]=data;
 		if (address == 0xFF00) {
 			ioports_[0]=data & ~0x0F;
-			return;
 		} else if (address == 0xFF01) {
 			char str[255];
 			sprintf_s(str,"%c",data);
 			OutputDebugString(str);
-		}
-
-		ioports_[address&0xFF]=data;
-
-    switch (address) {
-      case 0xFF26: //sound enable/disable
-        break;
-    }
-    if (address >= 0xFF04 && address <= 0xFF07) {
+		} else if (address >= 0xFF04 && address <= 0xFF07) {
       emu_->timer()->Write(address,data);
-		} else if (address >= 0xFF10 && address <= 0xFF26) {
+		} else if (address >= 0xFF10 && address <= 0xFF3F) {
       emu_->sc()->Write(address,data);
     } else if (address >= 0xFF40 && address <= 0xFF4B) {
       emu_->lcd_driver()->Write(address,data);
@@ -195,27 +186,28 @@ void Memory::Write8(uint16_t address, uint8_t data) {
 	} else if (address == 0xFFFF) {
 		interrupt_enable_register_ = data;
 	}
+  
 }
 
 void Memory::Tick() {
-
-	if ((ioports_[0] & 0x30)==0x10) {
+  ioports_[0] |= 0x0F;
+	if ((ioports_[0] & 0x30)==0x20) {
 		for (int i=0;i<4;++i) {
 			if (joypadflags[i]==true)//pressed
-				ioports_[i] &= ~(1<<i);
+				ioports_[0] &= ~(1<<i);
 			else
-				ioports_[i] |= (1<<i);
+				ioports_[0] |= (1<<i);
 		}
-	} else if ((ioports_[0] & 0x30)==0x20) {
+	} else if ((ioports_[0] & 0x30)==0x10) {
 		for (int i=0;i<4;++i) {
 			if (joypadflags[i+4]==true)//pressed
-				ioports_[i+4] &= ~(1<<i);
+				ioports_[0] &= ~(1<<i);
 			else
-				ioports_[i+4] |= (1<<i);
+				ioports_[0] |= (1<<i);
 		}
 	} 
 
-	if ((ioports_[0]&0xF) != 0xF) 
+	if ((ioports_[0]&0x0F) != 0x0F) 
 		interrupt_flag() |= 16;
 
 }

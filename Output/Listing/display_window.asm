@@ -97,15 +97,21 @@ PUBLIC	?_STATE_CLEAR@_CancellationTokenRegistration@details@Concurrency@@0JB ; C
 PUBLIC	?_STATE_DEFER_DELETE@_CancellationTokenRegistration@details@Concurrency@@0JB ; Concurrency::details::_CancellationTokenRegistration::_STATE_DEFER_DELETE
 PUBLIC	?value@?$_GcdX@$0GE@$0DLJKMKAA@@std@@2_JB	; std::_GcdX<100,1000000000>::value
 PUBLIC	?_STATE_SYNCHRONIZE@_CancellationTokenRegistration@details@Concurrency@@0JB ; Concurrency::details::_CancellationTokenRegistration::_STATE_SYNCHRONIZE
+PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?_STATE_CALLED@_CancellationTokenRegistration@details@Concurrency@@0JB ; Concurrency::details::_CancellationTokenRegistration::_STATE_CALLED
 PUBLIC	?value@?$_Gcd@$0GE@$0DLJKMKAA@@std@@2_JB	; std::_Gcd<100,1000000000>::value
 PUBLIC	?is_signed@?$numeric_limits@J@std@@2_NB		; std::numeric_limits<long>::is_signed
 PUBLIC	?digits@?$numeric_limits@J@std@@2HB		; std::numeric_limits<long>::digits
 PUBLIC	?_G1@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G1
 PUBLIC	?digits10@?$numeric_limits@J@std@@2HB		; std::numeric_limits<long>::digits10
+PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?value@?$_Abs@$00@std@@2_JB			; std::_Abs<1>::value
+PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?value@?$_GcdX@$00$0A@@std@@2_JB		; std::_GcdX<1,0>::value
+PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?value@?$_GcdX@$00$00@std@@2_JB			; std::_GcdX<1,1>::value
+PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
+PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?is_signed@?$numeric_limits@K@std@@2_NB		; std::numeric_limits<unsigned long>::is_signed
 PUBLIC	?value@?$_Gcd@$00$00@std@@2_JB			; std::_Gcd<1,1>::value
 PUBLIC	?digits@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits
@@ -136,17 +142,11 @@ PUBLIC	?max_exponent@?$numeric_limits@N@std@@2HB	; std::numeric_limits<double>::
 PUBLIC	?value@?$integral_constant@H$0A@@std@@2HB	; std::integral_constant<int,0>::value
 PUBLIC	?max_exponent10@?$numeric_limits@N@std@@2HB	; std::numeric_limits<double>::max_exponent10
 PUBLIC	?min_exponent@?$numeric_limits@N@std@@2HB	; std::numeric_limits<double>::min_exponent
-PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?min_exponent10@?$numeric_limits@N@std@@2HB	; std::numeric_limits<double>::min_exponent10
-PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
-PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?digits@?$numeric_limits@O@std@@2HB		; std::numeric_limits<long double>::digits
-PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?digits10@?$numeric_limits@O@std@@2HB		; std::numeric_limits<long double>::digits10
 PUBLIC	?max_digits10@?$numeric_limits@O@std@@2HB	; std::numeric_limits<long double>::max_digits10
 PUBLIC	?max_exponent@?$numeric_limits@O@std@@2HB	; std::numeric_limits<long double>::max_exponent
-PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
-PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?max_exponent10@?$numeric_limits@O@std@@2HB	; std::numeric_limits<long double>::max_exponent10
 PUBLIC	?_S_cancelBitsMask@_TaskCollectionBase@details@Concurrency@@1IB ; Concurrency::details::_TaskCollectionBase::_S_cancelBitsMask
 PUBLIC	?min_exponent@?$numeric_limits@O@std@@2HB	; std::numeric_limits<long double>::min_exponent
@@ -307,14 +307,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?max_exponent10@?$numeric_limits@O@std@@2HB DD 0134H	; std::numeric_limits<long double>::max_exponent10
 CONST	ENDS
-;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
-CONST	ENDS
-;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
-CONST	ENDS
 ;	COMDAT ?max_exponent@?$numeric_limits@O@std@@2HB
 CONST	SEGMENT
 ?max_exponent@?$numeric_limits@O@std@@2HB DD 0400H	; std::numeric_limits<long double>::max_exponent
@@ -327,29 +319,13 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits10@?$numeric_limits@O@std@@2HB DD 0fH		; std::numeric_limits<long double>::digits10
 CONST	ENDS
-;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@O@std@@2HB
 CONST	SEGMENT
 ?digits@?$numeric_limits@O@std@@2HB DD 035H		; std::numeric_limits<long double>::digits
 CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
-CONST	ENDS
 ;	COMDAT ?min_exponent10@?$numeric_limits@N@std@@2HB
 CONST	SEGMENT
 ?min_exponent10@?$numeric_limits@N@std@@2HB DD 0fffffecdH ; std::numeric_limits<double>::min_exponent10
-CONST	ENDS
-;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
-CONST	SEGMENT
-?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?min_exponent@?$numeric_limits@N@std@@2HB
 CONST	SEGMENT
@@ -471,17 +447,37 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@K@std@@2_NB DB 00H		; std::numeric_limits<unsigned long>::is_signed
 CONST	ENDS
+;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
+CONST	ENDS
+;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
+CONST	ENDS
 ;	COMDAT ?value@?$_GcdX@$00$00@std@@2_JB
 CONST	SEGMENT
 ?value@?$_GcdX@$00$00@std@@2_JB DQ 0000000000000001H	; std::_GcdX<1,1>::value
+CONST	ENDS
+;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
 CONST	ENDS
 ;	COMDAT ?value@?$_GcdX@$00$0A@@std@@2_JB
 CONST	SEGMENT
 ?value@?$_GcdX@$00$0A@@std@@2_JB DQ 0000000000000001H	; std::_GcdX<1,0>::value
 CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
+CONST	ENDS
 ;	COMDAT ?value@?$_Abs@$00@std@@2_JB
 CONST	SEGMENT
 ?value@?$_Abs@$00@std@@2_JB DQ 0000000000000001H	; std::_Abs<1>::value
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@J@std@@2HB
 CONST	SEGMENT
@@ -506,6 +502,10 @@ CONST	ENDS
 ;	COMDAT ?_STATE_CALLED@_CancellationTokenRegistration@details@Concurrency@@0JB
 CONST	SEGMENT
 ?_STATE_CALLED@_CancellationTokenRegistration@details@Concurrency@@0JB DD 03H ; Concurrency::details::_CancellationTokenRegistration::_STATE_CALLED
+CONST	ENDS
+;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
+CONST	SEGMENT
+?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?_STATE_SYNCHRONIZE@_CancellationTokenRegistration@details@Concurrency@@0JB
 CONST	SEGMENT
@@ -566,17 +566,6 @@ CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@H@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@H@std@@2_NB DB 01H		; std::numeric_limits<int>::is_signed
-CONST	ENDS
-CONST	SEGMENT
-$SG137618 DB	'Code\display_window.cpp', 00H
-$SG137626 DB	'GBEmu', 00H
-	ORG $+2
-$SG137698 DB	'GBEmu - FPS: %02d', 00H, 00H
-	ORG $+1
-$SG137776 DB	'Code\display_window.cpp', 00H
-$SG137785 DB	'.nes', 00H
-	ORG $+7
-_clockspeed DQ	04150000000000000r		; 4.1943e+006
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@G@std@@2HB
 CONST	SEGMENT
@@ -968,6 +957,49 @@ CONST	ENDS
 CONST	SEGMENT
 ?max_digits10@_Num_base@std@@2HB DD 00H			; std::_Num_base::max_digits10
 CONST	ENDS
+CONST	SEGMENT
+_dutycycletable DB 00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+$SG160909 DB	'Code\display_window.cpp', 00H
+$SG160917 DB	'GBEmu', 00H
+	ORG $+2
+$SG160989 DB	'GBEmu - FPS: %02d', 00H, 00H
+	ORG $+1
+$SG161067 DB	'Code\display_window.cpp', 00H
+$SG161076 DB	'.nes', 00H
+	ORG $+7
+_clockspeed DQ	04150000000000000r		; 4.1943e+006
+CONST	ENDS
 ;	COMDAT ?digits10@_Num_base@std@@2HB
 CONST	SEGMENT
 ?digits10@_Num_base@std@@2HB DD 00H			; std::_Num_base::digits10
@@ -1282,8 +1314,13 @@ EXTRN	?Reset@Memory@gb@emulation@@UAEXXZ:PROC		; emulation::gb::Memory::Reset
 EXTRN	?JoypadPress@Memory@gb@emulation@@QAEXW4JoypadKeys@23@@Z:PROC ; emulation::gb::Memory::JoypadPress
 EXTRN	?Initialize@LCDDriver@gb@emulation@@UAEXPAVEmu@23@@Z:PROC ; emulation::gb::LCDDriver::Initialize
 EXTRN	?Deinitialize@LCDDriver@gb@emulation@@UAEXXZ:PROC ; emulation::gb::LCDDriver::Deinitialize
+EXTRN	??0SquareOscillator@synth@audio@@QAE@XZ:PROC	; audio::synth::SquareOscillator::SquareOscillator
+EXTRN	??1SquareOscillator@synth@audio@@UAE@XZ:PROC	; audio::synth::SquareOscillator::~SquareOscillator
+EXTRN	??0NoiseSynth@synth@audio@@QAE@XZ:PROC		; audio::synth::NoiseSynth::NoiseSynth
+EXTRN	??1NoiseSynth@synth@audio@@UAE@XZ:PROC		; audio::synth::NoiseSynth::~NoiseSynth
 EXTRN	?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z:PROC ; emulation::gb::SoundController::Initialize
 EXTRN	?Deinitialize@SoundController@gb@emulation@@UAEXXZ:PROC ; emulation::gb::SoundController::Deinitialize
+EXTRN	?Reset@SoundController@gb@emulation@@UAEXXZ:PROC ; emulation::gb::SoundController::Reset
 EXTRN	?Initialize@Timer@gb@emulation@@UAEXPAVEmu@23@@Z:PROC ; emulation::gb::Timer::Initialize
 EXTRN	?Deinitialize@Timer@gb@emulation@@UAEXXZ:PROC	; emulation::gb::Timer::Deinitialize
 EXTRN	??0Cpu@gb@emulation@@QAE@XZ:PROC		; emulation::gb::Cpu::Cpu
@@ -1860,7 +1897,7 @@ CONST	SEGMENT
 ??_7SoundController@gb@emulation@@6B@ DD FLAT:??_R4SoundController@gb@emulation@@6B@ ; emulation::gb::SoundController::`vftable'
 	DD	FLAT:?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z
 	DD	FLAT:?Deinitialize@SoundController@gb@emulation@@UAEXXZ
-	DD	FLAT:?Reset@Component@gb@emulation@@UAEXXZ
+	DD	FLAT:?Reset@SoundController@gb@emulation@@UAEXXZ
 CONST	ENDS
 ;	COMDAT ??_7LCDDriver@gb@emulation@@6B@
 CONST	SEGMENT
@@ -2210,6 +2247,34 @@ __unwindtable$??0Emu@gb@emulation@@QAE@XZ DD 0ffffffffH
 	DD	FLAT:__unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$5
 	DD	05H
 	DD	FLAT:__unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$6
+xdata$x	ENDS
+;	COMDAT xdata$x
+xdata$x	SEGMENT
+__unwindtable$??1SoundController@gb@emulation@@QAE@XZ DD 0ffffffffH
+	DD	FLAT:__unwindfunclet$??1SoundController@gb@emulation@@QAE@XZ$0
+	DD	00H
+	DD	FLAT:__unwindfunclet$??1SoundController@gb@emulation@@QAE@XZ$1
+__ehfuncinfo$??1SoundController@gb@emulation@@QAE@XZ DD 019930522H
+	DD	02H
+	DD	FLAT:__unwindtable$??1SoundController@gb@emulation@@QAE@XZ
+	DD	2 DUP(00H)
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
+xdata$x	ENDS
+;	COMDAT xdata$x
+xdata$x	SEGMENT
+__unwindtable$??0SoundController@gb@emulation@@QAE@XZ DD 0ffffffffH
+	DD	FLAT:__unwindfunclet$??0SoundController@gb@emulation@@QAE@XZ$0
+	DD	00H
+	DD	FLAT:__unwindfunclet$??0SoundController@gb@emulation@@QAE@XZ$1
+__ehfuncinfo$??0SoundController@gb@emulation@@QAE@XZ DD 019930522H
+	DD	02H
+	DD	FLAT:__unwindtable$??0SoundController@gb@emulation@@QAE@XZ
+	DD	2 DUP(00H)
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
 xdata$x	ENDS
 CRT$XCU	SEGMENT
 _allocator_arg$initializer$ DD FLAT:??__Eallocator_arg@std@@YAXXZ
@@ -5699,7 +5764,7 @@ $LN2@Render:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 640				; 00000280H
 	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
-	mov	edx, DWORD PTR [eax+8]
+	mov	edx, DWORD PTR [eax+12]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+604]
@@ -5711,7 +5776,7 @@ $LN2@Render:
 
 	mov	esi, esp
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+2376]
+	mov	eax, DWORD PTR [edx+2680]
 	push	eax
 	push	3553					; 00000de1H
 	call	DWORD PTR __imp__glBindTexture@8
@@ -5859,7 +5924,7 @@ $LN1@Render:
 
 	mov	esi, esp
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+2376]
+	mov	ecx, DWORD PTR [eax+2680]
 	push	ecx
 	push	3553					; 00000de1H
 	call	DWORD PTR __imp__glBindTexture@8
@@ -6013,15 +6078,15 @@ $LN3@Render:
 
 	mov	eax, DWORD PTR _this$[ebp]
 	movsd	xmm0, QWORD PTR __real@0000000000000000
-	movsd	QWORD PTR [eax+2504], xmm0
+	movsd	QWORD PTR [eax+2808], xmm0
 
 ; 300  :   ++timing.fps_counter;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [ecx+2488]
+	mov	edx, DWORD PTR [ecx+2792]
 	add	edx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+2488], edx
+	mov	DWORD PTR [eax+2792], edx
 
 ; 301  :   return 0;
 
@@ -6103,7 +6168,7 @@ $LN5@OnDropFile:
 ; 245  :   char* filename = new char[len];
 
 	push	245					; 000000f5H
-	push	OFFSET $SG137776
+	push	OFFSET $SG161067
 	push	1
 	mov	edx, DWORD PTR _len$[ebp]
 	push	edx
@@ -6176,7 +6241,7 @@ $LN2@OnDropFile:
 ; 252  : 
 ; 253  :   if (strcmp(ext,".nes")==0) {
 
-	push	OFFSET $SG137785
+	push	OFFSET $SG161076
 	mov	edx, DWORD PTR _ext$[ebp]
 	push	edx
 	call	_strcmp
@@ -6293,7 +6358,7 @@ _lParam$ = 12						; size = 4
 ; 141  :   glDeleteTextures(1,&texture);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 2376				; 00000948H
+	add	eax, 2680				; 00000a78H
 	mov	esi, esp
 	push	eax
 	push	1
@@ -6924,7 +6989,7 @@ $LN2@OnCommand:
 	mov	eax, DWORD PTR _this$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2380				; 0000094cH
+	add	ecx, 2684				; 00000a7cH
 	call	?Show@Options@dialogs@app@@QAEXPAVWindow@windows@core@@@Z ; app::dialogs::Options::Show
 $LN8@OnCommand:
 
@@ -6997,20 +7062,20 @@ __$ArrayPad$ = -4					; size = 4
 ; 100  :     timing.current_cycles = timer.GetCurrentCycles();
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2400				; 00000960H
+	add	ecx, 2704				; 00000a90H
 	call	?GetCurrentCycles@Timer@utilities@@QAE_KXZ ; utilities::Timer::GetCurrentCycles
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+2464], eax
-	mov	DWORD PTR [ecx+2468], edx
+	mov	DWORD PTR [ecx+2768], eax
+	mov	DWORD PTR [ecx+2772], edx
 
 ; 101  :     double time_span =  (timing.current_cycles - timing.prev_cycles) * timer.resolution();
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+2464]
-	sub	ecx, DWORD PTR [eax+2472]
-	mov	edx, DWORD PTR [edx+2468]
-	sbb	edx, DWORD PTR [eax+2476]
+	mov	ecx, DWORD PTR [edx+2768]
+	sub	ecx, DWORD PTR [eax+2776]
+	mov	edx, DWORD PTR [edx+2772]
+	sbb	edx, DWORD PTR [eax+2780]
 	mov	DWORD PTR tv194[ebp], ecx
 	mov	DWORD PTR tv194[ebp+4], edx
 	mov	eax, DWORD PTR tv194[ebp+4]
@@ -7027,7 +7092,7 @@ __$ArrayPad$ = -4					; size = 4
 	fstp	QWORD PTR tv207[ebp]
 	movsd	xmm0, QWORD PTR tv207[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2400				; 00000960H
+	add	ecx, 2704				; 00000a90H
 	movsd	QWORD PTR tv274[ebp], xmm0
 	call	?resolution@Timer@utilities@@QAENXZ	; utilities::Timer::resolution
 	fstp	QWORD PTR tv212[ebp]
@@ -7051,16 +7116,16 @@ $LN4@Step:
 ; 105  :     timing.span_accumulator += time_span;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	movsd	xmm0, QWORD PTR [ecx+2520]
+	movsd	xmm0, QWORD PTR [ecx+2824]
 	addsd	xmm0, QWORD PTR _time_span$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	movsd	QWORD PTR [edx+2520], xmm0
+	movsd	QWORD PTR [edx+2824], xmm0
 $LN3@Step:
 
 ; 106  :     while (timing.span_accumulator >= dt) {
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movsd	xmm0, QWORD PTR [eax+2520]
+	movsd	xmm0, QWORD PTR [eax+2824]
 	comisd	xmm0, QWORD PTR _dt$[ebp]
 	jb	SHORT $LN2@Step
 
@@ -7074,10 +7139,10 @@ $LN3@Step:
 	call	?Step@Emu@gb@emulation@@QAENN@Z		; emulation::gb::Emu::Step
 	fstp	QWORD PTR tv226[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	movsd	xmm0, QWORD PTR [ecx+2520]
+	movsd	xmm0, QWORD PTR [ecx+2824]
 	subsd	xmm0, QWORD PTR tv226[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	movsd	QWORD PTR [edx+2520], xmm0
+	movsd	QWORD PTR [edx+2824], xmm0
 
 ; 108  :     }
 
@@ -7089,40 +7154,40 @@ $LN2@Step:
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [eax+2464]
-	sub	edx, DWORD PTR [ecx+2472]
-	mov	eax, DWORD PTR [eax+2468]
-	sbb	eax, DWORD PTR [ecx+2476]
+	mov	edx, DWORD PTR [eax+2768]
+	sub	edx, DWORD PTR [ecx+2776]
+	mov	eax, DWORD PTR [eax+2772]
+	sbb	eax, DWORD PTR [ecx+2780]
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	edx, DWORD PTR [ecx+2480]
-	adc	eax, DWORD PTR [ecx+2484]
+	add	edx, DWORD PTR [ecx+2784]
+	adc	eax, DWORD PTR [ecx+2788]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+2480], edx
-	mov	DWORD PTR [ecx+2484], eax
+	mov	DWORD PTR [ecx+2784], edx
+	mov	DWORD PTR [ecx+2788], eax
 
 ; 111  :     timing.prev_cycles = timing.current_cycles;
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+2464]
-	mov	DWORD PTR [edx+2472], ecx
-	mov	eax, DWORD PTR [eax+2468]
-	mov	DWORD PTR [edx+2476], eax
+	mov	ecx, DWORD PTR [eax+2768]
+	mov	DWORD PTR [edx+2776], ecx
+	mov	eax, DWORD PTR [eax+2772]
+	mov	DWORD PTR [edx+2780], eax
 
 ; 112  :     //timing.render_time_span += time_span;
 ; 113  :     //++timing.fps_counter;
 ; 114  :     timing.fps_time_span += time_span;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	movsd	xmm0, QWORD PTR [ecx+2512]
+	movsd	xmm0, QWORD PTR [ecx+2816]
 	addsd	xmm0, QWORD PTR _time_span$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	movsd	QWORD PTR [edx+2512], xmm0
+	movsd	QWORD PTR [edx+2816], xmm0
 
 ; 115  :     if (timing.fps_time_span >= 1000.0) {
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movsd	xmm0, QWORD PTR [eax+2512]
+	movsd	xmm0, QWORD PTR [eax+2816]
 	comisd	xmm0, QWORD PTR __real@408f400000000000
 	jb	SHORT $LN1@Step
 
@@ -7130,19 +7195,19 @@ $LN2@Step:
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+2488]
-	mov	DWORD PTR [ecx+2496], eax
+	mov	eax, DWORD PTR [edx+2792]
+	mov	DWORD PTR [ecx+2800], eax
 
 ; 117  :       timing.fps_counter = 0;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+2488], 0
+	mov	DWORD PTR [ecx+2792], 0
 
 ; 118  :       timing.fps_time_span = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
 	movsd	xmm0, QWORD PTR __real@0000000000000000
-	movsd	QWORD PTR [edx+2512], xmm0
+	movsd	QWORD PTR [edx+2816], xmm0
 
 ; 119  : 
 ; 120  :       char caption[256];
@@ -7153,9 +7218,9 @@ $LN2@Step:
 
 	mov	esi, esp
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+2496]
+	mov	ecx, DWORD PTR [eax+2800]
 	push	ecx
-	push	OFFSET $SG137698
+	push	OFFSET $SG160989
 	lea	edx, DWORD PTR _caption$1[ebp]
 	push	edx
 	call	DWORD PTR __imp__sprintf
@@ -7238,7 +7303,7 @@ _this$ = -4						; size = 4
 	push	72					; 00000048H
 	push	0
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 2456				; 00000998H
+	add	eax, 2760				; 00000ac8H
 	push	eax
 	call	_memset
 	add	esp, 12					; 0000000cH
@@ -7246,17 +7311,17 @@ _this$ = -4						; size = 4
 ; 88   :   timer.Calibrate();
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2400				; 00000960H
+	add	ecx, 2704				; 00000a90H
 	call	?Calibrate@Timer@utilities@@QAEXXZ	; utilities::Timer::Calibrate
 
 ; 89   :   timing.prev_cycles = timer.GetCurrentCycles();
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2400				; 00000960H
+	add	ecx, 2704				; 00000a90H
 	call	?GetCurrentCycles@Timer@utilities@@QAE_KXZ ; utilities::Timer::GetCurrentCycles
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+2472], eax
-	mov	DWORD PTR [ecx+2476], edx
+	mov	DWORD PTR [ecx+2776], eax
+	mov	DWORD PTR [ecx+2780], edx
 
 ; 90   : }
 
@@ -7316,7 +7381,7 @@ __$EHRec$ = -12						; size = 12
 
 ; 32   :   PrepareClass("GBEmu");
 
-	push	OFFSET $SG137626
+	push	OFFSET $SG160917
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?PrepareClass@Window@windows@core@@IAEXPAD@Z ; core::windows::Window::PrepareClass
 
@@ -7329,7 +7394,7 @@ __$EHRec$ = -12						; size = 12
 	push	1
 	push	104					; 00000068H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+2528]
+	mov	ecx, DWORD PTR [eax+2832]
 	push	ecx
 	call	DWORD PTR __imp__LoadImageA@24
 	cmp	esi, esp
@@ -7346,7 +7411,7 @@ __$EHRec$ = -12						; size = 12
 	push	1
 	push	104					; 00000068H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+2528]
+	mov	ecx, DWORD PTR [eax+2832]
 	push	ecx
 	call	DWORD PTR __imp__LoadImageA@24
 	cmp	esi, esp
@@ -7364,7 +7429,7 @@ __$EHRec$ = -12						; size = 12
 	mov	esi, esp
 	push	101					; 00000065H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+2528]
+	mov	ecx, DWORD PTR [eax+2832]
 	push	ecx
 	call	DWORD PTR __imp__LoadMenuA@8
 	cmp	esi, esp
@@ -7471,7 +7536,7 @@ __$EHRec$ = -12						; size = 12
 ; 62   :   glGenTextures( 1, &texture );
 
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 2376				; 00000948H
+	add	eax, 2680				; 00000a78H
 	mov	esi, esp
 	push	eax
 	push	1
@@ -7491,7 +7556,7 @@ __$EHRec$ = -12						; size = 12
 
 	mov	esi, esp
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [ecx+2376]
+	mov	edx, DWORD PTR [ecx+2680]
 	push	edx
 	push	3553					; 00000de1H
 	call	DWORD PTR __imp__glBindTexture@8
@@ -7675,7 +7740,7 @@ __$EHRec$ = -12						; size = 12
 ; 28   : }
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2380				; 0000094cH
+	add	ecx, 2684				; 00000a7cH
 	call	??1Options@dialogs@app@@QAE@XZ		; app::dialogs::Options::~Options
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -7761,17 +7826,17 @@ __$EHRec$ = -12						; size = 12
 	call	??0Emu@gb@emulation@@QAE@XZ		; emulation::gb::Emu::Emu
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2380				; 0000094cH
+	add	ecx, 2684				; 00000a7cH
 	call	??0Options@dialogs@app@@QAE@XZ		; app::dialogs::Options::Options
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2400				; 00000960H
+	add	ecx, 2704				; 00000a90H
 	call	??0Timer@utilities@@QAE@XZ		; utilities::Timer::Timer
 
 ; 21   :   output = new uint32_t[256*256];
 
 	push	21					; 00000015H
-	push	OFFSET $SG137618
+	push	OFFSET $SG160909
 	push	1
 	push	262144					; 00040000H
 	call	??_U@YAPAXIHPBDH@Z			; operator new[]
@@ -7790,7 +7855,7 @@ __$EHRec$ = -12						; size = 12
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+2528], eax
+	mov	DWORD PTR [ecx+2832], eax
 
 ; 24   : }
 
@@ -7821,7 +7886,7 @@ __unwindfunclet$??0DisplayWindow@app@@QAE@XZ$2:
 	jmp	??1Emu@gb@emulation@@QAE@XZ		; emulation::gb::Emu::~Emu
 __unwindfunclet$??0DisplayWindow@app@@QAE@XZ$3:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 2380				; 0000094cH
+	add	ecx, 2684				; 00000a7cH
 	jmp	??1Options@dialogs@app@@QAE@XZ		; app::dialogs::Options::~Options
 __ehhandler$??0DisplayWindow@app@@QAE@XZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -8410,7 +8475,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1600				; 00000640H
+	add	eax, 1616				; 00000650H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -8432,7 +8497,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1152				; 00000480H
+	add	eax, 1160				; 00000488H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -8465,19 +8530,19 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	DWORD PTR __$EHRec$[ebp+8], 6
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1688				; 00000698H
+	add	ecx, 1992				; 000007c8H
 	call	??1Timer@gb@emulation@@QAE@XZ		; emulation::gb::Timer::~Timer
 	mov	BYTE PTR __$EHRec$[ebp+8], 5
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1672				; 00000688H
+	add	ecx, 1696				; 000006a0H
 	call	??1SoundController@gb@emulation@@QAE@XZ	; emulation::gb::SoundController::~SoundController
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1600				; 00000640H
+	add	ecx, 1616				; 00000650H
 	call	??1LCDDriver@gb@emulation@@QAE@XZ	; emulation::gb::LCDDriver::~LCDDriver
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1152				; 00000480H
+	add	ecx, 1160				; 00000488H
 	call	??1Memory@gb@emulation@@QAE@XZ		; emulation::gb::Memory::~Memory
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -8523,15 +8588,15 @@ __unwindfunclet$??1Emu@gb@emulation@@QAE@XZ$3:
 	jmp	??1Cpu@gb@emulation@@QAE@XZ		; emulation::gb::Cpu::~Cpu
 __unwindfunclet$??1Emu@gb@emulation@@QAE@XZ$4:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1152				; 00000480H
+	add	ecx, 1160				; 00000488H
 	jmp	??1Memory@gb@emulation@@QAE@XZ		; emulation::gb::Memory::~Memory
 __unwindfunclet$??1Emu@gb@emulation@@QAE@XZ$5:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1600				; 00000640H
+	add	ecx, 1616				; 00000650H
 	jmp	??1LCDDriver@gb@emulation@@QAE@XZ	; emulation::gb::LCDDriver::~LCDDriver
 __unwindfunclet$??1Emu@gb@emulation@@QAE@XZ$6:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1672				; 00000688H
+	add	ecx, 1696				; 000006a0H
 	jmp	??1SoundController@gb@emulation@@QAE@XZ	; emulation::gb::SoundController::~SoundController
 __ehhandler$??1Emu@gb@emulation@@QAE@XZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -8584,19 +8649,19 @@ __$EHRec$ = -12						; size = 12
 	call	??0Cpu@gb@emulation@@QAE@XZ		; emulation::gb::Cpu::Cpu
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1152				; 00000480H
+	add	ecx, 1160				; 00000488H
 	call	??0Memory@gb@emulation@@QAE@XZ		; emulation::gb::Memory::Memory
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1600				; 00000640H
+	add	ecx, 1616				; 00000650H
 	call	??0LCDDriver@gb@emulation@@QAE@XZ	; emulation::gb::LCDDriver::LCDDriver
 	mov	BYTE PTR __$EHRec$[ebp+8], 5
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1672				; 00000688H
+	add	ecx, 1696				; 000006a0H
 	call	??0SoundController@gb@emulation@@QAE@XZ	; emulation::gb::SoundController::SoundController
 	mov	BYTE PTR __$EHRec$[ebp+8], 6
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1688				; 00000698H
+	add	ecx, 1992				; 000007c8H
 	call	??0Timer@gb@emulation@@QAE@XZ		; emulation::gb::Timer::Timer
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	eax, DWORD PTR _this$[ebp]
@@ -8629,15 +8694,15 @@ __unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$3:
 	jmp	??1Cpu@gb@emulation@@QAE@XZ		; emulation::gb::Cpu::~Cpu
 __unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$4:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1152				; 00000480H
+	add	ecx, 1160				; 00000488H
 	jmp	??1Memory@gb@emulation@@QAE@XZ		; emulation::gb::Memory::~Memory
 __unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$5:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1600				; 00000640H
+	add	ecx, 1616				; 00000650H
 	jmp	??1LCDDriver@gb@emulation@@QAE@XZ	; emulation::gb::LCDDriver::~LCDDriver
 __unwindfunclet$??0Emu@gb@emulation@@QAE@XZ$6:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1672				; 00000688H
+	add	ecx, 1696				; 000006a0H
 	jmp	??1SoundController@gb@emulation@@QAE@XZ	; emulation::gb::SoundController::~SoundController
 __ehhandler$??0Emu@gb@emulation@@QAE@XZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -8705,38 +8770,95 @@ _TEXT	ENDS
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.h
 ;	COMDAT ??1SoundController@gb@emulation@@QAE@XZ
 _TEXT	SEGMENT
-_this$ = -4						; size = 4
+_this$ = -16						; size = 4
+__$EHRec$ = -12						; size = 12
 ??1SoundController@gb@emulation@@QAE@XZ PROC		; emulation::gb::SoundController::~SoundController, COMDAT
 ; _this$ = ecx
 
-; 11   :   ~SoundController() {}
+; 101  :   ~SoundController() {}
 
 	push	ebp
 	mov	ebp, esp
+	push	-1
+	push	__ehhandler$??1SoundController@gb@emulation@@QAE@XZ
+	mov	eax, DWORD PTR fs:0
+	push	eax
 	push	ecx
-	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR [ebp-16], -858993460		; ccccccccH
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	push	eax
+	lea	eax, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax], OFFSET ??_7SoundController@gb@emulation@@6B@
+	mov	DWORD PTR __$EHRec$[ebp+8], 1
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 96					; 00000060H
+	call	??1NoiseSynth@synth@audio@@UAE@XZ	; audio::synth::NoiseSynth::~NoiseSynth
+	mov	BYTE PTR __$EHRec$[ebp+8], 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 60					; 0000003cH
+	call	??1SquareOscillator@synth@audio@@UAE@XZ	; audio::synth::SquareOscillator::~SquareOscillator
+	mov	DWORD PTR __$EHRec$[ebp+8], -1
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 24					; 00000018H
+	call	??1SquareOscillator@synth@audio@@UAE@XZ	; audio::synth::SquareOscillator::~SquareOscillator
+	mov	ecx, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, ecx
+	pop	ecx
+	add	esp, 16					; 00000010H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-??1SoundController@gb@emulation@@QAE@XZ ENDP		; emulation::gb::SoundController::~SoundController
 _TEXT	ENDS
+;	COMDAT text$x
+text$x	SEGMENT
+__unwindfunclet$??1SoundController@gb@emulation@@QAE@XZ$0:
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 24					; 00000018H
+	jmp	??1SquareOscillator@synth@audio@@UAE@XZ	; audio::synth::SquareOscillator::~SquareOscillator
+__unwindfunclet$??1SoundController@gb@emulation@@QAE@XZ$1:
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 60					; 0000003cH
+	jmp	??1SquareOscillator@synth@audio@@UAE@XZ	; audio::synth::SquareOscillator::~SquareOscillator
+__ehhandler$??1SoundController@gb@emulation@@QAE@XZ:
+	mov	edx, DWORD PTR [esp+8]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-8]
+	xor	ecx, eax
+	call	@__security_check_cookie@4
+	mov	eax, OFFSET __ehfuncinfo$??1SoundController@gb@emulation@@QAE@XZ
+	jmp	___CxxFrameHandler3
+text$x	ENDS
+??1SoundController@gb@emulation@@QAE@XZ ENDP		; emulation::gb::SoundController::~SoundController
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.h
 ;	COMDAT ??0SoundController@gb@emulation@@QAE@XZ
 _TEXT	SEGMENT
-_this$ = -4						; size = 4
+_this$ = -16						; size = 4
+__$EHRec$ = -12						; size = 12
 ??0SoundController@gb@emulation@@QAE@XZ PROC		; emulation::gb::SoundController::SoundController, COMDAT
 ; _this$ = ecx
 
-; 10   :   SoundController():ioports(nullptr) {}
+; 100  :   SoundController():ioports(nullptr) {}
 
 	push	ebp
 	mov	ebp, esp
+	push	-1
+	push	__ehhandler$??0SoundController@gb@emulation@@QAE@XZ
+	mov	eax, DWORD PTR fs:0
+	push	eax
 	push	ecx
-	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR [ebp-16], -858993460		; ccccccccH
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	push	eax
+	lea	eax, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??0Component@gb@emulation@@QAE@XZ
@@ -8744,15 +8866,49 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [eax], OFFSET ??_7SoundController@gb@emulation@@6B@
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [ecx+8], 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 24					; 00000018H
+	call	??0SquareOscillator@synth@audio@@QAE@XZ	; audio::synth::SquareOscillator::SquareOscillator
+	mov	DWORD PTR __$EHRec$[ebp+8], 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 60					; 0000003cH
+	call	??0SquareOscillator@synth@audio@@QAE@XZ	; audio::synth::SquareOscillator::SquareOscillator
+	mov	BYTE PTR __$EHRec$[ebp+8], 1
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 96					; 00000060H
+	call	??0NoiseSynth@synth@audio@@QAE@XZ	; audio::synth::NoiseSynth::NoiseSynth
+	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	eax, DWORD PTR _this$[ebp]
-	add	esp, 4
+	mov	ecx, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, ecx
+	pop	ecx
+	add	esp, 16					; 00000010H
 	cmp	ebp, esp
 	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-??0SoundController@gb@emulation@@QAE@XZ ENDP		; emulation::gb::SoundController::SoundController
 _TEXT	ENDS
+;	COMDAT text$x
+text$x	SEGMENT
+__unwindfunclet$??0SoundController@gb@emulation@@QAE@XZ$0:
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 24					; 00000018H
+	jmp	??1SquareOscillator@synth@audio@@UAE@XZ	; audio::synth::SquareOscillator::~SquareOscillator
+__unwindfunclet$??0SoundController@gb@emulation@@QAE@XZ$1:
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 60					; 0000003cH
+	jmp	??1SquareOscillator@synth@audio@@UAE@XZ	; audio::synth::SquareOscillator::~SquareOscillator
+__ehhandler$??0SoundController@gb@emulation@@QAE@XZ:
+	mov	edx, DWORD PTR [esp+8]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-8]
+	xor	ecx, eax
+	call	@__security_check_cookie@4
+	mov	eax, OFFSET __ehfuncinfo$??0SoundController@gb@emulation@@QAE@XZ
+	jmp	___CxxFrameHandler3
+text$x	ENDS
+??0SoundController@gb@emulation@@QAE@XZ ENDP		; emulation::gb::SoundController::SoundController
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\lcd_driver.h
 ;	COMDAT ??1LCDDriver@gb@emulation@@QAE@XZ
@@ -8761,7 +8917,7 @@ _this$ = -4						; size = 4
 ??1LCDDriver@gb@emulation@@QAE@XZ PROC			; emulation::gb::LCDDriver::~LCDDriver, COMDAT
 ; _this$ = ecx
 
-; 40   :   ~LCDDriver() {}
+; 41   :   ~LCDDriver() {}
 
 	push	ebp
 	mov	ebp, esp
@@ -8783,7 +8939,7 @@ _this$ = -4						; size = 4
 ??0LCDDriver@gb@emulation@@QAE@XZ PROC			; emulation::gb::LCDDriver::LCDDriver, COMDAT
 ; _this$ = ecx
 
-; 39   :   LCDDriver(){}
+; 40   :   LCDDriver(){}
 
 	push	ebp
 	mov	ebp, esp
@@ -8825,7 +8981,7 @@ _key$ = 8						; size = 4
 
 	mov	eax, DWORD PTR _this$[ebp]
 	add	eax, DWORD PTR _key$[ebp]
-	mov	BYTE PTR [eax+440], 0
+	mov	BYTE PTR [eax+442], 0
 
 ; 32   : 	}
 
@@ -8892,7 +9048,7 @@ _this$ = -4						; size = 4
 ??1Cartridge@gb@emulation@@QAE@XZ PROC			; emulation::gb::Cartridge::~Cartridge, COMDAT
 ; _this$ = ecx
 
-; 79   :   ~Cartridge() {  }
+; 80   :   ~Cartridge() {  }
 
 	push	ebp
 	mov	ebp, esp
@@ -8914,7 +9070,7 @@ _this$ = -4						; size = 4
 ??0Cartridge@gb@emulation@@QAE@XZ PROC			; emulation::gb::Cartridge::Cartridge, COMDAT
 ; _this$ = ecx
 
-; 78   :   Cartridge() : rom_(nullptr) {}
+; 79   :   Cartridge() : rom_(nullptr) {}
 
 	push	ebp
 	mov	ebp, esp

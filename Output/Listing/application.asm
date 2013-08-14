@@ -33,6 +33,7 @@ PUBLIC	?is_monotonic@steady_clock@chrono@std@@2_NB	; std::chrono::steady_clock::
 PUBLIC	?is_steady@steady_clock@chrono@std@@2_NB	; std::chrono::steady_clock::is_steady
 PUBLIC	?has_denorm@_Num_float_base@std@@2W4float_denorm_style@2@B ; std::_Num_float_base::has_denorm
 PUBLIC	?has_denorm_loss@_Num_float_base@std@@2_NB	; std::_Num_float_base::has_denorm_loss
+PUBLIC	?current_app_@Application@app@@1PAV12@A		; app::Application::current_app_
 PUBLIC	?has_infinity@_Num_float_base@std@@2_NB		; std::_Num_float_base::has_infinity
 PUBLIC	?has_quiet_NaN@_Num_float_base@std@@2_NB	; std::_Num_float_base::has_quiet_NaN
 PUBLIC	?has_signaling_NaN@_Num_float_base@std@@2_NB	; std::_Num_float_base::has_signaling_NaN
@@ -73,11 +74,17 @@ PUBLIC	?digits10@?$numeric_limits@_N@std@@2HB		; std::numeric_limits<bool>::digi
 PUBLIC	?is_signed@?$numeric_limits@C@std@@2_NB		; std::numeric_limits<signed char>::is_signed
 PUBLIC	?digits@?$numeric_limits@C@std@@2HB		; std::numeric_limits<signed char>::digits
 PUBLIC	?digits10@?$numeric_limits@C@std@@2HB		; std::numeric_limits<signed char>::digits10
+PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?is_signed@?$numeric_limits@E@std@@2_NB		; std::numeric_limits<unsigned char>::is_signed
 PUBLIC	?digits@?$numeric_limits@E@std@@2HB		; std::numeric_limits<unsigned char>::digits
 PUBLIC	?digits10@?$numeric_limits@E@std@@2HB		; std::numeric_limits<unsigned char>::digits10
+PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
+PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
+PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?is_signed@?$numeric_limits@F@std@@2_NB		; std::numeric_limits<short>::is_signed
 PUBLIC	?digits@?$numeric_limits@F@std@@2HB		; std::numeric_limits<short>::digits
+PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
+PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?digits10@?$numeric_limits@F@std@@2HB		; std::numeric_limits<short>::digits10
 PUBLIC	?is_signed@?$numeric_limits@G@std@@2_NB		; std::numeric_limits<unsigned short>::is_signed
 PUBLIC	?digits@?$numeric_limits@G@std@@2HB		; std::numeric_limits<unsigned short>::digits
@@ -108,19 +115,13 @@ PUBLIC	?value@?$_GcdX@$00$0A@@std@@2_JB		; std::_GcdX<1,0>::value
 PUBLIC	?value@?$_GcdX@$00$00@std@@2_JB			; std::_GcdX<1,1>::value
 PUBLIC	?is_signed@?$numeric_limits@K@std@@2_NB		; std::numeric_limits<unsigned long>::is_signed
 PUBLIC	?value@?$_Gcd@$00$00@std@@2_JB			; std::_Gcd<1,1>::value
-PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?digits@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits
 PUBLIC	?digits10@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits10
 PUBLIC	?_G2@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G2
-PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
-PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?value@?$integral_constant@_N$0A@@std@@2_NB	; std::integral_constant<bool,0>::value
 PUBLIC	?is_signed@?$numeric_limits@_J@std@@2_NB	; std::numeric_limits<__int64>::is_signed
-PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?digits@?$numeric_limits@_J@std@@2HB		; std::numeric_limits<__int64>::digits
 PUBLIC	?digits10@?$numeric_limits@_J@std@@2HB		; std::numeric_limits<__int64>::digits10
-PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
-PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?value@?$integral_constant@_N$00@std@@2_NB	; std::integral_constant<bool,1>::value
 PUBLIC	?is_monotonic@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_monotonic
 PUBLIC	?is_steady@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_steady
@@ -179,6 +180,9 @@ PUBLIC	?is_bounded@_Num_base@std@@2_NB			; std::_Num_base::is_bounded
 PUBLIC	?is_exact@_Num_base@std@@2_NB			; std::_Num_base::is_exact
 PUBLIC	?is_iec559@_Num_base@std@@2_NB			; std::_Num_base::is_iec559
 PUBLIC	?is_integer@_Num_base@std@@2_NB			; std::_Num_base::is_integer
+_BSS	SEGMENT
+?current_app_@Application@app@@1PAV12@A DD 01H DUP (?)	; app::Application::current_app_
+_BSS	ENDS
 ;	COMDAT ?is_integer@_Num_base@std@@2_NB
 CONST	SEGMENT
 ?is_integer@_Num_base@std@@2_NB DB 00H			; std::_Num_base::is_integer
@@ -411,14 +415,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?value@?$integral_constant@_N$00@std@@2_NB DB 01H	; std::integral_constant<bool,1>::value
 CONST	ENDS
-;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
-CONST	ENDS
-;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
-CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@_J@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@_J@std@@2HB DD 012H		; std::numeric_limits<__int64>::digits10
@@ -427,10 +423,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@_J@std@@2HB DD 03fH		; std::numeric_limits<__int64>::digits
 CONST	ENDS
-;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@_J@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@_J@std@@2_NB DB 01H		; std::numeric_limits<__int64>::is_signed
@@ -438,14 +430,6 @@ CONST	ENDS
 ;	COMDAT ?value@?$integral_constant@_N$0A@@std@@2_NB
 CONST	SEGMENT
 ?value@?$integral_constant@_N$0A@@std@@2_NB DB 00H	; std::integral_constant<bool,0>::value
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?_G2@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB
 CONST	SEGMENT
@@ -458,10 +442,6 @@ CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@K@std@@2HB
 CONST	SEGMENT
 ?digits@?$numeric_limits@K@std@@2HB DD 020H		; std::numeric_limits<unsigned long>::digits
-CONST	ENDS
-;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
-CONST	SEGMENT
-?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?value@?$_Gcd@$00$00@std@@2_JB
 CONST	SEGMENT
@@ -583,6 +563,14 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits10@?$numeric_limits@F@std@@2HB DD 04H		; std::numeric_limits<short>::digits10
 CONST	ENDS
+;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
+CONST	ENDS
+;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
+CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@F@std@@2HB
 CONST	SEGMENT
 ?digits@?$numeric_limits@F@std@@2HB DD 0fH		; std::numeric_limits<short>::digits
@@ -590,6 +578,18 @@ CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@F@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@F@std@@2_NB DB 01H		; std::numeric_limits<short>::is_signed
+CONST	ENDS
+;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@E@std@@2HB
 CONST	SEGMENT
@@ -602,6 +602,10 @@ CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@E@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@E@std@@2_NB DB 00H		; std::numeric_limits<unsigned char>::is_signed
+CONST	ENDS
+;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
+CONST	SEGMENT
+?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@C@std@@2HB
 CONST	SEGMENT
@@ -957,6 +961,40 @@ CONST	ENDS
 CONST	SEGMENT
 ?max_digits10@_Num_base@std@@2HB DD 00H			; std::_Num_base::max_digits10
 CONST	ENDS
+CONST	SEGMENT
+_dutycycletable DB 00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+CONST	ENDS
 ;	COMDAT ?digits10@_Num_base@std@@2HB
 CONST	SEGMENT
 ?digits10@_Num_base@std@@2HB DD 00H			; std::_Num_base::digits10
@@ -1045,8 +1083,14 @@ EXTRN	??_7type_info@@6B@:QWORD			; type_info::`vftable'
 EXTRN	___security_cookie:DWORD
 _BSS	SEGMENT
 _piecewise_construct DB 01H DUP (?)
+	ALIGN	4
+
 _allocator_arg DB 01H DUP (?)
+	ALIGN	4
+
 _ignore	DB	01H DUP (?)
+	ALIGN	4
+
 __Tuple_alloc DB 01H DUP (?)
 _BSS	ENDS
 CRT$XCU	SEGMENT
@@ -1267,7 +1311,7 @@ _this$ = -4						; size = 4
 ?Run@Application@app@@UAEHXZ PROC			; app::Application::Run
 ; _this$ = ecx
 
-; 13   : int Application::Run() {
+; 16   : int Application::Run() {
 
 	push	ebp
 	mov	ebp, esp
@@ -1282,9 +1326,9 @@ _this$ = -4						; size = 4
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 14   :   //CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
-; 15   :   unsigned old_fp_state;
-; 16   :   _controlfp_s(&old_fp_state, _PC_53, _MCW_PC);
+; 17   :   //CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+; 18   :   unsigned old_fp_state;
+; 19   :   _controlfp_s(&old_fp_state, _PC_53, _MCW_PC);
 
 	mov	esi, esp
 	push	196608					; 00030000H
@@ -1296,18 +1340,18 @@ _this$ = -4						; size = 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 17   : 
-; 18   :   display_window_.Init();
+; 20   : 
+; 21   :   display_window_.Init();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 8
 	call	?Init@DisplayWindow@app@@QAEXXZ		; app::DisplayWindow::Init
 $LN6@Run:
 
-; 19   :   
-; 20   :   MSG msg;
-; 21   :   do {
-; 22   :     if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+; 22   :   
+; 23   :   MSG msg;
+; 24   :   do {
+; 25   :     if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 
 	mov	esi, esp
 	push	1
@@ -1322,7 +1366,7 @@ $LN6@Run:
 	test	eax, eax
 	je	SHORT $LN3@Run
 
-; 23   :       TranslateMessage(&msg);
+; 26   :       TranslateMessage(&msg);
 
 	mov	esi, esp
 	lea	edx, DWORD PTR _msg$[ebp]
@@ -1331,7 +1375,7 @@ $LN6@Run:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 24   :       DispatchMessage(&msg);
+; 27   :       DispatchMessage(&msg);
 
 	mov	esi, esp
 	lea	eax, DWORD PTR _msg$[ebp]
@@ -1340,20 +1384,20 @@ $LN6@Run:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 25   :     } else {
+; 28   :     } else {
 
 	jmp	SHORT $LN5@Run
 $LN3@Run:
 
-; 26   :       display_window_.Step(); 
+; 29   :       display_window_.Step(); 
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 8
 	call	?Step@DisplayWindow@app@@QAEXXZ		; app::DisplayWindow::Step
 $LN5@Run:
 
-; 27   :     }
-; 28   :   } while(msg.message!=WM_QUIT && display_window_.exit_signal() == false);
+; 30   :     }
+; 31   :   } while(msg.message!=WM_QUIT && display_window_.exit_signal() == false);
 
 	cmp	DWORD PTR _msg$[ebp+4], 18		; 00000012H
 	je	SHORT $LN4@Run
@@ -1365,14 +1409,14 @@ $LN5@Run:
 	je	SHORT $LN6@Run
 $LN4@Run:
 
-; 29   : 
-; 30   :  //CoUninitialize();
-; 31   :  //Return the exit code to the system. 
-; 32   :  return static_cast<int>(msg.wParam);
+; 32   : 
+; 33   :  //CoUninitialize();
+; 34   :  //Return the exit code to the system. 
+; 35   :  return static_cast<int>(msg.wParam);
 
 	mov	eax, DWORD PTR _msg$[ebp+8]
 
-; 33   : }
+; 36   : }
 
 	push	edx
 	mov	ecx, ebp
@@ -1429,7 +1473,7 @@ __$EHRec$ = -12						; size = 12
 ??1Application@app@@UAE@XZ PROC				; app::Application::~Application
 ; _this$ = ecx
 
-; 9    : Application::~Application() {
+; 12   : Application::~Application() {
 
 	push	ebp
 	mov	ebp, esp
@@ -1449,8 +1493,11 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR [eax], OFFSET ??_7Application@app@@6B@
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 
-; 10   :  
-; 11   : }
+; 13   :  current_app_ = nullptr;
+
+	mov	DWORD PTR ?current_app_@Application@app@@1PAV12@A, 0 ; app::Application::current_app_
+
+; 14   : }
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 8
@@ -1493,7 +1540,7 @@ _show_command$ = 16					; size = 4
 ??0Application@app@@QAE@PAUHINSTANCE__@@PADH@Z PROC	; app::Application::Application
 ; _this$ = ecx
 
-; 5    : Application::Application(HINSTANCE instance , LPSTR command_line, int show_command) {
+; 7    : Application::Application(HINSTANCE instance , LPSTR command_line, int show_command) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1518,8 +1565,13 @@ _show_command$ = 16					; size = 4
 	add	ecx, 8
 	call	??0DisplayWindow@app@@QAE@XZ		; app::DisplayWindow::DisplayWindow
 
-; 6    :   //OleInitialize(NULL);
-; 7    : }
+; 8    :   //OleInitialize(NULL);
+; 9    :   current_app_ = this;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR ?current_app_@Application@app@@1PAV12@A, ecx ; app::Application::current_app_
+
+; 10   : }
 
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	eax, DWORD PTR _this$[ebp]

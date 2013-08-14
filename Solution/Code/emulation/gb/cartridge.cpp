@@ -11,10 +11,12 @@ void Cartridge::Initialize(Emu* emu) {
 }
 
 void Cartridge::Deinitialize() {
-  core::io::DestroyFileBuffer(&rom_);
-  if (mbc)
+  if (mbc) {
+    SaveRam();
     mbc->Deinitialize();
+  }
   SafeDelete(&mbc);
+  core::io::DestroyFileBuffer(&rom_);
 }
 
 void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
@@ -34,17 +36,50 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
   rom_ = new uint8_t[header->rom_size_bytes()];
   memcpy(rom_,data,header->rom_size_bytes());
   this->header = (CartridgeHeader*)&rom_[0x100];
-  if (header->cartridge_type == 0) {
-    mbc = new MBCNone();
-  } else if (header->cartridge_type == 1) {
-    mbc = new MBC1();
-  } else {
-		DebugBreak();
-	}
+
+  switch (header->cartridge_type) {
+    case 0:
+      mbc = new MBCNone();
+      break;
+    case 1:
+    case 2:
+    case 3:
+      mbc = new MBC1();
+      break;
+    case 0x0F:
+    case 0x10:
+    case 0x11:
+    case 0x12:
+    case 0x13:
+      mbc = new MBC3();
+      break;
+    default:
+      DebugBreak();
+  }
+
   mbc->Initialize(this);
+  LoadRam();
   core::io::DestroyFileBuffer(&data);
 
   
+}
+
+void Cartridge::LoadRam() {
+  uint8_t* data=nullptr;
+  size_t length;
+  char filename[256];
+  sprintf(filename,"%s.ram",header->title);
+  core::io::ReadWholeFileBinary(filename,&data,length);
+  if (data)
+    memcpy(mbc->eram(),data,length);
+}
+
+void Cartridge::SaveRam() {
+  char filename[256];
+  sprintf(filename,"%s.ram",header->title);
+  FILE* fp = fopen(filename,"wb");
+  fwrite(mbc->eram(),1,header->ram_size_bytes(),fp);
+  fclose(fp);
 }
 
 uint8_t Cartridge::Read(uint16_t address) {
@@ -54,6 +89,8 @@ uint8_t Cartridge::Read(uint16_t address) {
 void Cartridge::Write(uint16_t address, uint8_t data) {
   mbc->Write(address,data);
 }
+
+
 
 }
 }

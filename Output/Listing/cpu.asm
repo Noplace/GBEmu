@@ -769,16 +769,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?value@?$integral_constant@H$0A@@std@@2HB DD 00H	; std::integral_constant<int,0>::value
 CONST	ENDS
-CONST	SEGMENT
-_reg_index DD	03H
-	DD	02H
-	DD	05H
-	DD	04H
-	DD	07H
-	DD	06H
-	DD	07H
-	DD	01H
-CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@_J@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@_J@std@@2HB DD 012H		; std::numeric_limits<__int64>::digits10
@@ -790,6 +780,48 @@ CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@_J@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@_J@std@@2_NB DB 01H		; std::numeric_limits<__int64>::is_signed
+CONST	ENDS
+CONST	SEGMENT
+_reg_index DD	03H
+	DD	02H
+	DD	05H
+	DD	04H
+	DD	07H
+	DD	06H
+	DD	07H
+	DD	01H
+_dutycycletable DB 00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@K@std@@2HB
 CONST	SEGMENT
@@ -1006,6 +1038,7 @@ PUBLIC	?Reset@Component@gb@emulation@@UAEXXZ		; emulation::gb::Component::Reset
 PUBLIC	??0Component@gb@emulation@@QAE@XZ		; emulation::gb::Component::Component
 PUBLIC	?interrupt_enable@Memory@gb@emulation@@QAEAAEXZ	; emulation::gb::Memory::interrupt_enable
 PUBLIC	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ	; emulation::gb::Memory::interrupt_flag
+PUBLIC	?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ ; emulation::gb::LCDDriver::lcdc
 PUBLIC	??0Cpu@gb@emulation@@QAE@XZ			; emulation::gb::Cpu::Cpu
 PUBLIC	??1Cpu@gb@emulation@@QAE@XZ			; emulation::gb::Cpu::~Cpu
 PUBLIC	?Initialize@Cpu@gb@emulation@@UAEXPAVEmu@23@@Z	; emulation::gb::Cpu::Initialize
@@ -1013,6 +1046,7 @@ PUBLIC	?Deinitialize@Cpu@gb@emulation@@UAEXXZ		; emulation::gb::Cpu::Deinitializ
 PUBLIC	?Reset@Cpu@gb@emulation@@UAEXXZ			; emulation::gb::Cpu::Reset
 PUBLIC	?Tick@Cpu@gb@emulation@@QAEXXZ			; emulation::gb::Cpu::Tick
 PUBLIC	?Step@Cpu@gb@emulation@@QAEXN@Z			; emulation::gb::Cpu::Step
+PUBLIC	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ	; emulation::gb::Cpu::simulateSpriteBug
 PUBLIC	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z	; emulation::gb::Cpu::updateCpuFlagC
 PUBLIC	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z	; emulation::gb::Cpu::updateCpuFlagH
 PUBLIC	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z	; emulation::gb::Cpu::updateCpuFlagZ
@@ -1048,6 +1082,7 @@ PUBLIC	?DI@Cpu@gb@emulation@@AAEXXZ			; emulation::gb::Cpu::DI
 PUBLIC	?EI@Cpu@gb@emulation@@AAEXXZ			; emulation::gb::Cpu::EI
 PUBLIC	?RETI@Cpu@gb@emulation@@AAEXXZ			; emulation::gb::Cpu::RETI
 PUBLIC	?DAA@Cpu@gb@emulation@@AAEXXZ			; emulation::gb::Cpu::DAA
+PUBLIC	?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ ; emulation::gb::Emu::cartridge
 PUBLIC	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ	; emulation::gb::Emu::memory
 PUBLIC	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
 PUBLIC	?sc@Emu@gb@emulation@@QAEPAVSoundController@23@XZ ; emulation::gb::Emu::sc
@@ -1419,7 +1454,7 @@ _b$ = 12						; size = 4
 ??$arithmeticMode@$00$0A@$01@Cpu@gb@emulation@@AAEXAAE0@Z PROC ; emulation::gb::Cpu::arithmeticMode<1,0,2>, COMDAT
 ; _this$ = ecx
 
-; 120  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
+; 124  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1428,96 +1463,96 @@ _b$ = 12						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 121  : 	  if (mode == 0) {
+; 125  : 	  if (mode == 0) {
 
 	xor	eax, eax
 	je	SHORT $LN5@arithmetic
 
-; 122  :       a = reg.raw8[dest];
+; 126  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 123  :       b = reg.raw8[src];
+; 127  :       b = reg.raw8[src];
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _b$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+edx+1056]
+	mov	dl, BYTE PTR [ecx+edx+1064]
 	mov	BYTE PTR [eax], dl
 	jmp	$LN6@arithmetic
 $LN5@arithmetic:
 
-; 124  :     } else if (mode == 1) {
+; 128  :     } else if (mode == 1) {
 
 	xor	eax, eax
 	je	SHORT $LN3@arithmetic
 
-; 125  :       a = reg.raw8[dest];
+; 129  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 126  :       b = mem_->Read8(reg.raw16[src]);
+; 130  :       b = mem_->Read8(reg.raw16[src]);
 
 	mov	edx, 2
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [ecx], al
 	jmp	SHORT $LN6@arithmetic
 $LN3@arithmetic:
 
-; 127  :     } else if (mode == 2) {
+; 131  :     } else if (mode == 2) {
 
 	mov	edx, 1
 	test	edx, edx
 	je	SHORT $LN6@arithmetic
 
-; 128  :       a = reg.raw8[dest];
+; 132  :       a = reg.raw8[dest];
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _a$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+eax+1056]
+	mov	al, BYTE PTR [edx+eax+1064]
 	mov	BYTE PTR [ecx], al
 
-; 129  :       b = mem_->Read8(reg.PC++);
+; 133  :       b = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv133[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv133[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [edx], al
 $LN6@arithmetic:
 
-; 130  :     }
-; 131  :   }
+; 134  :     }
+; 135  :   }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -1538,7 +1573,7 @@ _b$ = 12						; size = 4
 ??$arithmeticMode@$00$00$0A@@Cpu@gb@emulation@@AAEXAAE0@Z PROC ; emulation::gb::Cpu::arithmeticMode<1,1,0>, COMDAT
 ; _this$ = ecx
 
-; 120  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
+; 124  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1547,96 +1582,96 @@ _b$ = 12						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 121  : 	  if (mode == 0) {
+; 125  : 	  if (mode == 0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN5@arithmetic
 
-; 122  :       a = reg.raw8[dest];
+; 126  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 123  :       b = reg.raw8[src];
+; 127  :       b = reg.raw8[src];
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _b$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+edx+1056]
+	mov	dl, BYTE PTR [ecx+edx+1064]
 	mov	BYTE PTR [eax], dl
 	jmp	$LN6@arithmetic
 $LN5@arithmetic:
 
-; 124  :     } else if (mode == 1) {
+; 128  :     } else if (mode == 1) {
 
 	xor	eax, eax
 	je	SHORT $LN3@arithmetic
 
-; 125  :       a = reg.raw8[dest];
+; 129  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 126  :       b = mem_->Read8(reg.raw16[src]);
+; 130  :       b = mem_->Read8(reg.raw16[src]);
 
 	mov	edx, 2
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [ecx], al
 	jmp	SHORT $LN6@arithmetic
 $LN3@arithmetic:
 
-; 127  :     } else if (mode == 2) {
+; 131  :     } else if (mode == 2) {
 
 	xor	edx, edx
 	je	SHORT $LN6@arithmetic
 
-; 128  :       a = reg.raw8[dest];
+; 132  :       a = reg.raw8[dest];
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _a$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+eax+1056]
+	mov	al, BYTE PTR [edx+eax+1064]
 	mov	BYTE PTR [ecx], al
 
-; 129  :       b = mem_->Read8(reg.PC++);
+; 133  :       b = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv133[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv133[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [edx], al
 $LN6@arithmetic:
 
-; 130  :     }
-; 131  :   }
+; 134  :     }
+; 135  :   }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -1657,7 +1692,7 @@ _b$ = 12						; size = 4
 ??$arithmeticMode@$00$02$00@Cpu@gb@emulation@@AAEXAAE0@Z PROC ; emulation::gb::Cpu::arithmeticMode<1,3,1>, COMDAT
 ; _this$ = ecx
 
-; 120  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
+; 124  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1666,96 +1701,96 @@ _b$ = 12						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 121  : 	  if (mode == 0) {
+; 125  : 	  if (mode == 0) {
 
 	xor	eax, eax
 	je	SHORT $LN5@arithmetic
 
-; 122  :       a = reg.raw8[dest];
+; 126  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 123  :       b = reg.raw8[src];
+; 127  :       b = reg.raw8[src];
 
 	mov	edx, 1
 	imul	edx, 3
 	mov	eax, DWORD PTR _b$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+edx+1056]
+	mov	dl, BYTE PTR [ecx+edx+1064]
 	mov	BYTE PTR [eax], dl
 	jmp	$LN6@arithmetic
 $LN5@arithmetic:
 
-; 124  :     } else if (mode == 1) {
+; 128  :     } else if (mode == 1) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN3@arithmetic
 
-; 125  :       a = reg.raw8[dest];
+; 129  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 126  :       b = mem_->Read8(reg.raw16[src]);
+; 130  :       b = mem_->Read8(reg.raw16[src]);
 
 	mov	edx, 2
 	imul	edx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [ecx], al
 	jmp	SHORT $LN6@arithmetic
 $LN3@arithmetic:
 
-; 127  :     } else if (mode == 2) {
+; 131  :     } else if (mode == 2) {
 
 	xor	edx, edx
 	je	SHORT $LN6@arithmetic
 
-; 128  :       a = reg.raw8[dest];
+; 132  :       a = reg.raw8[dest];
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _a$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+eax+1056]
+	mov	al, BYTE PTR [edx+eax+1064]
 	mov	BYTE PTR [ecx], al
 
-; 129  :       b = mem_->Read8(reg.PC++);
+; 133  :       b = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv133[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv133[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [edx], al
 $LN6@arithmetic:
 
-; 130  :     }
-; 131  :   }
+; 134  :     }
+; 135  :   }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -1776,7 +1811,7 @@ _b$ = 12						; size = 4
 ??$arithmeticMode@$00$05$0A@@Cpu@gb@emulation@@AAEXAAE0@Z PROC ; emulation::gb::Cpu::arithmeticMode<1,6,0>, COMDAT
 ; _this$ = ecx
 
-; 120  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
+; 124  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1785,96 +1820,96 @@ _b$ = 12						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 121  : 	  if (mode == 0) {
+; 125  : 	  if (mode == 0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN5@arithmetic
 
-; 122  :       a = reg.raw8[dest];
+; 126  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 123  :       b = reg.raw8[src];
+; 127  :       b = reg.raw8[src];
 
 	mov	edx, 1
 	imul	edx, 6
 	mov	eax, DWORD PTR _b$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+edx+1056]
+	mov	dl, BYTE PTR [ecx+edx+1064]
 	mov	BYTE PTR [eax], dl
 	jmp	$LN6@arithmetic
 $LN5@arithmetic:
 
-; 124  :     } else if (mode == 1) {
+; 128  :     } else if (mode == 1) {
 
 	xor	eax, eax
 	je	SHORT $LN3@arithmetic
 
-; 125  :       a = reg.raw8[dest];
+; 129  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 126  :       b = mem_->Read8(reg.raw16[src]);
+; 130  :       b = mem_->Read8(reg.raw16[src]);
 
 	mov	edx, 2
 	imul	edx, 6
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [ecx], al
 	jmp	SHORT $LN6@arithmetic
 $LN3@arithmetic:
 
-; 127  :     } else if (mode == 2) {
+; 131  :     } else if (mode == 2) {
 
 	xor	edx, edx
 	je	SHORT $LN6@arithmetic
 
-; 128  :       a = reg.raw8[dest];
+; 132  :       a = reg.raw8[dest];
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _a$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+eax+1056]
+	mov	al, BYTE PTR [edx+eax+1064]
 	mov	BYTE PTR [ecx], al
 
-; 129  :       b = mem_->Read8(reg.PC++);
+; 133  :       b = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv133[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv133[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [edx], al
 $LN6@arithmetic:
 
-; 130  :     }
-; 131  :   }
+; 134  :     }
+; 135  :   }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -1895,7 +1930,7 @@ _b$ = 12						; size = 4
 ??$arithmeticMode@$00$06$0A@@Cpu@gb@emulation@@AAEXAAE0@Z PROC ; emulation::gb::Cpu::arithmeticMode<1,7,0>, COMDAT
 ; _this$ = ecx
 
-; 120  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
+; 124  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1904,96 +1939,96 @@ _b$ = 12						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 121  : 	  if (mode == 0) {
+; 125  : 	  if (mode == 0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN5@arithmetic
 
-; 122  :       a = reg.raw8[dest];
+; 126  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 123  :       b = reg.raw8[src];
+; 127  :       b = reg.raw8[src];
 
 	mov	edx, 1
 	imul	edx, 7
 	mov	eax, DWORD PTR _b$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+edx+1056]
+	mov	dl, BYTE PTR [ecx+edx+1064]
 	mov	BYTE PTR [eax], dl
 	jmp	$LN6@arithmetic
 $LN5@arithmetic:
 
-; 124  :     } else if (mode == 1) {
+; 128  :     } else if (mode == 1) {
 
 	xor	eax, eax
 	je	SHORT $LN3@arithmetic
 
-; 125  :       a = reg.raw8[dest];
+; 129  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 126  :       b = mem_->Read8(reg.raw16[src]);
+; 130  :       b = mem_->Read8(reg.raw16[src]);
 
 	mov	edx, 2
 	imul	edx, 7
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [ecx], al
 	jmp	SHORT $LN6@arithmetic
 $LN3@arithmetic:
 
-; 127  :     } else if (mode == 2) {
+; 131  :     } else if (mode == 2) {
 
 	xor	edx, edx
 	je	SHORT $LN6@arithmetic
 
-; 128  :       a = reg.raw8[dest];
+; 132  :       a = reg.raw8[dest];
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _a$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+eax+1056]
+	mov	al, BYTE PTR [edx+eax+1064]
 	mov	BYTE PTR [ecx], al
 
-; 129  :       b = mem_->Read8(reg.PC++);
+; 133  :       b = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv133[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv133[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [edx], al
 $LN6@arithmetic:
 
-; 130  :     }
-; 131  :   }
+; 134  :     }
+; 135  :   }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -2014,7 +2049,7 @@ _b$ = 12						; size = 4
 ??$arithmeticMode@$00$03$0A@@Cpu@gb@emulation@@AAEXAAE0@Z PROC ; emulation::gb::Cpu::arithmeticMode<1,4,0>, COMDAT
 ; _this$ = ecx
 
-; 120  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
+; 124  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
 
 	push	ebp
 	mov	ebp, esp
@@ -2023,96 +2058,96 @@ _b$ = 12						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 121  : 	  if (mode == 0) {
+; 125  : 	  if (mode == 0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN5@arithmetic
 
-; 122  :       a = reg.raw8[dest];
+; 126  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 123  :       b = reg.raw8[src];
+; 127  :       b = reg.raw8[src];
 
 	mov	edx, 1
 	shl	edx, 2
 	mov	eax, DWORD PTR _b$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+edx+1056]
+	mov	dl, BYTE PTR [ecx+edx+1064]
 	mov	BYTE PTR [eax], dl
 	jmp	$LN6@arithmetic
 $LN5@arithmetic:
 
-; 124  :     } else if (mode == 1) {
+; 128  :     } else if (mode == 1) {
 
 	xor	eax, eax
 	je	SHORT $LN3@arithmetic
 
-; 125  :       a = reg.raw8[dest];
+; 129  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 126  :       b = mem_->Read8(reg.raw16[src]);
+; 130  :       b = mem_->Read8(reg.raw16[src]);
 
 	mov	edx, 2
 	shl	edx, 2
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [ecx], al
 	jmp	SHORT $LN6@arithmetic
 $LN3@arithmetic:
 
-; 127  :     } else if (mode == 2) {
+; 131  :     } else if (mode == 2) {
 
 	xor	edx, edx
 	je	SHORT $LN6@arithmetic
 
-; 128  :       a = reg.raw8[dest];
+; 132  :       a = reg.raw8[dest];
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _a$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+eax+1056]
+	mov	al, BYTE PTR [edx+eax+1064]
 	mov	BYTE PTR [ecx], al
 
-; 129  :       b = mem_->Read8(reg.PC++);
+; 133  :       b = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv133[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv133[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [edx], al
 $LN6@arithmetic:
 
-; 130  :     }
-; 131  :   }
+; 134  :     }
+; 135  :   }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -2133,7 +2168,7 @@ _b$ = 12						; size = 4
 ??$arithmeticMode@$00$04$0A@@Cpu@gb@emulation@@AAEXAAE0@Z PROC ; emulation::gb::Cpu::arithmeticMode<1,5,0>, COMDAT
 ; _this$ = ecx
 
-; 120  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
+; 124  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
 
 	push	ebp
 	mov	ebp, esp
@@ -2142,96 +2177,96 @@ _b$ = 12						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 121  : 	  if (mode == 0) {
+; 125  : 	  if (mode == 0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN5@arithmetic
 
-; 122  :       a = reg.raw8[dest];
+; 126  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 123  :       b = reg.raw8[src];
+; 127  :       b = reg.raw8[src];
 
 	mov	edx, 1
 	imul	edx, 5
 	mov	eax, DWORD PTR _b$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+edx+1056]
+	mov	dl, BYTE PTR [ecx+edx+1064]
 	mov	BYTE PTR [eax], dl
 	jmp	$LN6@arithmetic
 $LN5@arithmetic:
 
-; 124  :     } else if (mode == 1) {
+; 128  :     } else if (mode == 1) {
 
 	xor	eax, eax
 	je	SHORT $LN3@arithmetic
 
-; 125  :       a = reg.raw8[dest];
+; 129  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 126  :       b = mem_->Read8(reg.raw16[src]);
+; 130  :       b = mem_->Read8(reg.raw16[src]);
 
 	mov	edx, 2
 	imul	edx, 5
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [ecx], al
 	jmp	SHORT $LN6@arithmetic
 $LN3@arithmetic:
 
-; 127  :     } else if (mode == 2) {
+; 131  :     } else if (mode == 2) {
 
 	xor	edx, edx
 	je	SHORT $LN6@arithmetic
 
-; 128  :       a = reg.raw8[dest];
+; 132  :       a = reg.raw8[dest];
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _a$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+eax+1056]
+	mov	al, BYTE PTR [edx+eax+1064]
 	mov	BYTE PTR [ecx], al
 
-; 129  :       b = mem_->Read8(reg.PC++);
+; 133  :       b = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv133[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv133[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [edx], al
 $LN6@arithmetic:
 
-; 130  :     }
-; 131  :   }
+; 134  :     }
+; 135  :   }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -2252,7 +2287,7 @@ _b$ = 12						; size = 4
 ??$arithmeticMode@$00$01$0A@@Cpu@gb@emulation@@AAEXAAE0@Z PROC ; emulation::gb::Cpu::arithmeticMode<1,2,0>, COMDAT
 ; _this$ = ecx
 
-; 120  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
+; 124  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
 
 	push	ebp
 	mov	ebp, esp
@@ -2261,96 +2296,96 @@ _b$ = 12						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 121  : 	  if (mode == 0) {
+; 125  : 	  if (mode == 0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN5@arithmetic
 
-; 122  :       a = reg.raw8[dest];
+; 126  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 123  :       b = reg.raw8[src];
+; 127  :       b = reg.raw8[src];
 
 	mov	edx, 1
 	shl	edx, 1
 	mov	eax, DWORD PTR _b$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+edx+1056]
+	mov	dl, BYTE PTR [ecx+edx+1064]
 	mov	BYTE PTR [eax], dl
 	jmp	$LN6@arithmetic
 $LN5@arithmetic:
 
-; 124  :     } else if (mode == 1) {
+; 128  :     } else if (mode == 1) {
 
 	xor	eax, eax
 	je	SHORT $LN3@arithmetic
 
-; 125  :       a = reg.raw8[dest];
+; 129  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 126  :       b = mem_->Read8(reg.raw16[src]);
+; 130  :       b = mem_->Read8(reg.raw16[src]);
 
 	mov	edx, 2
 	shl	edx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [ecx], al
 	jmp	SHORT $LN6@arithmetic
 $LN3@arithmetic:
 
-; 127  :     } else if (mode == 2) {
+; 131  :     } else if (mode == 2) {
 
 	xor	edx, edx
 	je	SHORT $LN6@arithmetic
 
-; 128  :       a = reg.raw8[dest];
+; 132  :       a = reg.raw8[dest];
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _a$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+eax+1056]
+	mov	al, BYTE PTR [edx+eax+1064]
 	mov	BYTE PTR [ecx], al
 
-; 129  :       b = mem_->Read8(reg.PC++);
+; 133  :       b = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv133[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv133[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [edx], al
 $LN6@arithmetic:
 
-; 130  :     }
-; 131  :   }
+; 134  :     }
+; 135  :   }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -2371,7 +2406,7 @@ _b$ = 12						; size = 4
 ??$arithmeticMode@$00$02$0A@@Cpu@gb@emulation@@AAEXAAE0@Z PROC ; emulation::gb::Cpu::arithmeticMode<1,3,0>, COMDAT
 ; _this$ = ecx
 
-; 120  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
+; 124  :   void arithmeticMode(uint8_t& a, uint8_t& b) {
 
 	push	ebp
 	mov	ebp, esp
@@ -2380,96 +2415,96 @@ _b$ = 12						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 121  : 	  if (mode == 0) {
+; 125  : 	  if (mode == 0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN5@arithmetic
 
-; 122  :       a = reg.raw8[dest];
+; 126  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 123  :       b = reg.raw8[src];
+; 127  :       b = reg.raw8[src];
 
 	mov	edx, 1
 	imul	edx, 3
 	mov	eax, DWORD PTR _b$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+edx+1056]
+	mov	dl, BYTE PTR [ecx+edx+1064]
 	mov	BYTE PTR [eax], dl
 	jmp	$LN6@arithmetic
 $LN5@arithmetic:
 
-; 124  :     } else if (mode == 1) {
+; 128  :     } else if (mode == 1) {
 
 	xor	eax, eax
 	je	SHORT $LN3@arithmetic
 
-; 125  :       a = reg.raw8[dest];
+; 129  :       a = reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _a$[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+ecx+1056]
+	mov	cl, BYTE PTR [eax+ecx+1064]
 	mov	BYTE PTR [edx], cl
 
-; 126  :       b = mem_->Read8(reg.raw16[src]);
+; 130  :       b = mem_->Read8(reg.raw16[src]);
 
 	mov	edx, 2
 	imul	edx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [ecx], al
 	jmp	SHORT $LN6@arithmetic
 $LN3@arithmetic:
 
-; 127  :     } else if (mode == 2) {
+; 131  :     } else if (mode == 2) {
 
 	xor	edx, edx
 	je	SHORT $LN6@arithmetic
 
-; 128  :       a = reg.raw8[dest];
+; 132  :       a = reg.raw8[dest];
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _a$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+eax+1056]
+	mov	al, BYTE PTR [edx+eax+1064]
 	mov	BYTE PTR [ecx], al
 
-; 129  :       b = mem_->Read8(reg.PC++);
+; 133  :       b = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv133[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv133[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, DWORD PTR _b$[ebp]
 	mov	BYTE PTR [edx], al
 $LN6@arithmetic:
 
-; 130  :     }
-; 131  :   }
+; 134  :     }
+; 135  :   }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -2487,7 +2522,7 @@ _r$ = 8							; size = 1
 ??R<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QBEXE@Z PROC ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::operator()
 ; _this$ = ecx
 
-; 642  :   auto setr = [=](uint8_t r) {
+; 656  :   auto setr = [=](uint8_t r) {
 
 	push	ebp
 	mov	ebp, esp
@@ -2495,7 +2530,7 @@ _r$ = 8							; size = 1
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 643  :     if ((code&0x7) != 6) {
+; 657  :     if ((code&0x7) != 6) {
 
 	mov	eax, DWORD PTR _this$[ebp]
 	movzx	ecx, BYTE PTR [eax]
@@ -2503,7 +2538,7 @@ _r$ = 8							; size = 1
 	cmp	ecx, 6
 	je	SHORT $LN2@operator
 
-; 644  :       reg.raw8[reg_index[code&0x7]] = r;
+; 658  :       reg.raw8[reg_index[code&0x7]] = r;
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR [edx+4]
@@ -2512,29 +2547,29 @@ _r$ = 8							; size = 1
 	and	edx, 7
 	mov	ecx, DWORD PTR _reg_index[edx*4]
 	mov	dl, BYTE PTR _r$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 645  :     } else {
+; 659  :     } else {
 
 	jmp	SHORT $LN3@operator
 $LN2@operator:
 
-; 646  :       mem_->Write8(reg.HL,r);
+; 660  :       mem_->Write8(reg.HL,r);
 
 	movzx	eax, BYTE PTR _r$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx+4]
-	movzx	eax, WORD PTR [edx+1062]
+	movzx	eax, WORD PTR [edx+1070]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx+4]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 $LN3@operator:
 
-; 647  :     }
-; 648  :   };
+; 661  :     }
+; 662  :   };
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -2553,7 +2588,7 @@ __This$ = 12						; size = 4
 ??0<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QAE@ABEPAVCpu@gb@emulation@@@Z PROC ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::<lambda_08bfd30db2c73e418a55b8072ee85de7>
 ; _this$ = ecx
 
-; 648  :   };
+; 662  :   };
 
 	push	ebp
 	mov	ebp, esp
@@ -2580,7 +2615,7 @@ _this$ = -4						; size = 4
 ??R<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QBEEXZ PROC ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::operator()
 ; _this$ = ecx
 
-; 634  :   auto getr = [=]() {
+; 647  :   auto getr = [=]() {
 
 	push	ebp
 	mov	ebp, esp
@@ -2588,7 +2623,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 635  :     if ((code&0x7) != 6) {
+; 648  :     if ((code&0x7) != 6) {
 
 	mov	eax, DWORD PTR _this$[ebp]
 	movzx	ecx, BYTE PTR [eax]
@@ -2596,7 +2631,7 @@ _this$ = -4						; size = 4
 	cmp	ecx, 6
 	je	SHORT $LN2@operator
 
-; 636  :       return reg.raw8[reg_index[code&0x7]];
+; 649  :       return reg.raw8[reg_index[code&0x7]];
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR [edx+4]
@@ -2604,28 +2639,29 @@ _this$ = -4						; size = 4
 	movzx	edx, BYTE PTR [ecx]
 	and	edx, 7
 	mov	ecx, DWORD PTR _reg_index[edx*4]
-	mov	al, BYTE PTR [eax+ecx+1056]
+	mov	al, BYTE PTR [eax+ecx+1064]
 	jmp	SHORT $LN3@operator
 
-; 637  :     } else {
+; 650  :     } else {
 
 	jmp	SHORT $LN3@operator
 $LN2@operator:
 
-; 638  :       return mem_->Read8(reg.HL);
+; 651  : 
+; 652  :       return mem_->Read8(reg.HL);
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR [edx+4]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR [edx+4]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 $LN3@operator:
 
-; 639  :     }
-; 640  :   };
+; 653  :     }
+; 654  :   };
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -2644,7 +2680,7 @@ __This$ = 12						; size = 4
 ??0<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QAE@ABEPAVCpu@gb@emulation@@@Z PROC ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>
 ; _this$ = ecx
 
-; 640  :   };
+; 654  :   };
 
 	push	ebp
 	mov	ebp, esp
@@ -2685,7 +2721,7 @@ _this$ = -4						; size = 4
 ??$LD@$00$0A@$0P@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD<1,0,15>, COMDAT
 ; _this$ = ecx
 
-; 439  : void Cpu::LD() {
+; 446  : void Cpu::LD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -2701,182 +2737,182 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 440  :   if (mode == 10) { //dest,d8
+; 447  :   if (mode == 10) { //dest,d8
 
 	xor	eax, eax
 	je	SHORT $LN11@LD
 
-; 441  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
+; 448  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv79[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv79[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN11@LD:
 
-; 442  : 	}else if (mode == 11) { //(dest),d8
+; 449  : 	}else if (mode == 11) { //(dest),d8
 
 	xor	edx, edx
 	je	SHORT $LN9@LD
 
-; 443  : 		auto d8 = mem_->Read8(reg.PC++);
+; 450  : 		auto d8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _d8$5[ebp], al
 
-; 444  : 		mem_->Write8(reg.raw16[dest],d8);
+; 451  : 		mem_->Write8(reg.raw16[dest],d8);
 
 	movzx	ecx, BYTE PTR _d8$5[ebp]
 	push	ecx
 	mov	edx, 2
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN9@LD:
 
-; 445  : 	} else if (mode == 12) { //0xFF00+d8 src
+; 452  : 	} else if (mode == 12) { //0xFF00+d8 src
 
 	xor	eax, eax
 	je	SHORT $LN7@LD
 
-; 446  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 453  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv145[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv145[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$4[ebp], al
 
-; 447  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
+; 454  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, BYTE PTR _a8$4[ebp]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN7@LD:
 
-; 448  : 	} else if (mode == 13) { //dest,0xFF00+d8 
+; 455  : 	} else if (mode == 13) { //dest,0xFF00+d8 
 
 	xor	ecx, ecx
 	je	SHORT $LN5@LD
 
-; 449  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 456  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv169[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv169[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$3[ebp], al
 
-; 450  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
+; 457  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
 
 	movzx	eax, BYTE PTR _a8$3[ebp]
 	add	eax, 65280				; 0000ff00H
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN5@LD:
 
-; 451  : 	} else if (mode == 14) { //(d16),src
+; 458  : 	} else if (mode == 14) { //(d16),src
 
 	xor	edx, edx
 	je	$LN3@LD
 
-; 452  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 459  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv193[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv193[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 453  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 460  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv206[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv206[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -2884,59 +2920,59 @@ $LN5@LD:
 	or	ecx, eax
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 454  :     mem_->Write8(d16,reg.raw8[src]);
+; 461  :     mem_->Write8(d16,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, WORD PTR _d16$2[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN3@LD:
 
-; 455  : 	} else if (mode == 15) { //src,(d16)
+; 462  : 	} else if (mode == 15) { //src,(d16)
 
 	mov	ecx, 1
 	test	ecx, ecx
 	je	$LN12@LD
 
-; 456  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 463  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv232[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv232[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	ax, al
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 457  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 464  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv245[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv245[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
@@ -2944,21 +2980,21 @@ $LN3@LD:
 	or	eax, edx
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 458  :     reg.raw8[dest] = mem_->Read8(d16);
+; 465  :     reg.raw8[dest] = mem_->Read8(d16);
 
 	movzx	ecx, WORD PTR _d16$1[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 $LN12@LD:
 
-; 459  : 	}
-; 460  : }
+; 466  : 	}
+; 467  : }
 
 	add	esp, 32					; 00000020H
 	cmp	ebp, esp
@@ -2978,7 +3014,7 @@ _this$ = -4						; size = 4
 ??$OR@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::OR<1,0,2>, COMDAT
 ; _this$ = ecx
 
-; 595  : void Cpu::OR() {
+; 608  : void Cpu::OR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -2993,17 +3029,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 596  :   reg.F.raw = 0;
+; 609  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 597  :   uint8_t a=0,b=0;
+; 610  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 598  :   arithmeticMode<dest,src,mode>(a,b);
+; 611  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -3012,7 +3048,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$0A@$01@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,0,2>
 
-; 599  :   reg.raw8[dest] = a | b;
+; 612  :   reg.raw8[dest] = a | b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -3020,19 +3056,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 600  :   updateCpuFlagZ(reg.raw8[dest]);
+; 613  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 601  : }
+; 614  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -3073,7 +3109,7 @@ _this$ = -4						; size = 4
 ??$PUSH@$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::PUSH<0>, COMDAT
 ; _this$ = ecx
 
-; 889  : void Cpu::PUSH() {
+; 903  : void Cpu::PUSH() {
 
 	push	ebp
 	mov	ebp, esp
@@ -3081,29 +3117,34 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 890  :   push(reg.raw16[src]>>8);
+; 904  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 905  :   push(reg.raw16[src]>>8);
 
 	mov	eax, 2
 	imul	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	sar	edx, 8
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?push@Cpu@gb@emulation@@AAEXE@Z		; emulation::gb::Cpu::push
 
-; 891  :   push(reg.raw16[src]&0xFF);
+; 906  :   push(reg.raw16[src]&0xFF);
 
 	mov	eax, 2
 	imul	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	and	edx, 255				; 000000ffH
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?push@Cpu@gb@emulation@@AAEXE@Z		; emulation::gb::Cpu::push
 
-; 892  :   Tick();Tick();Tick();Tick();
+; 907  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -3114,7 +3155,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 893  : }
+; 908  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -3132,7 +3173,7 @@ _this$ = -4						; size = 4
 ??$LDr$FF00r@$00$01@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::LDr$FF00r<1,2>, COMDAT
 ; _this$ = ecx
 
-; 404  : void Cpu::LDr$FF00r() {
+; 407  : void Cpu::LDr$FF00r() {
 
 	push	ebp
 	mov	ebp, esp
@@ -3140,23 +3181,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 405  : 	reg.raw8[dest] = mem_->Read8(0xFF00+reg.raw8[src]);
+; 408  : 	reg.raw8[dest] = mem_->Read8(0xFF00+reg.raw8[src]);
 
 	mov	eax, 1
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 406  : }
+; 409  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -3174,7 +3215,7 @@ _this$ = -4						; size = 4
 ??$POP@$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::POP<0>, COMDAT
 ; _this$ = ecx
 
-; 896  : void Cpu::POP() {
+; 911  : void Cpu::POP() {
 
 	push	ebp
 	mov	ebp, esp
@@ -3183,7 +3224,12 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 897  :   reg.raw16[dest] = pop();
+; 912  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 913  :   reg.raw16[dest] = pop();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?pop@Cpu@gb@emulation@@AAEEXZ		; emulation::gb::Cpu::pop
@@ -3191,9 +3237,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 2
 	imul	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+ecx+1056], ax
+	mov	WORD PTR [edx+ecx+1064], ax
 
-; 898  :   reg.raw16[dest] |= pop() << 8;
+; 914  :   reg.raw16[dest] |= pop() << 8;
 
 	mov	esi, 2
 	imul	esi, 0
@@ -3202,29 +3248,29 @@ _this$ = -4						; size = 4
 	movzx	eax, al
 	shl	eax, 8
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+esi+1056]
+	movzx	edx, WORD PTR [ecx+esi+1064]
 	or	edx, eax
 	mov	eax, 2
 	imul	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 899  :   if (dest == RegAF)
+; 915  :   if (dest == RegAF)
 
 	mov	edx, 1
 	test	edx, edx
 	je	SHORT $LN2@POP
 
-; 900  :     reg.F._unused = 0;
+; 916  :     reg.F._unused = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 240					; 000000f0H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 $LN2@POP:
 
-; 901  : }
+; 917  : }
 
 	pop	esi
 	add	esp, 4
@@ -3256,7 +3302,7 @@ _this$ = -4						; size = 4
 ??$LD@$00$0A@$0N@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD<1,0,13>, COMDAT
 ; _this$ = ecx
 
-; 439  : void Cpu::LD() {
+; 446  : void Cpu::LD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -3272,183 +3318,183 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 440  :   if (mode == 10) { //dest,d8
+; 447  :   if (mode == 10) { //dest,d8
 
 	xor	eax, eax
 	je	SHORT $LN11@LD
 
-; 441  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
+; 448  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv79[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv79[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN11@LD:
 
-; 442  : 	}else if (mode == 11) { //(dest),d8
+; 449  : 	}else if (mode == 11) { //(dest),d8
 
 	xor	edx, edx
 	je	SHORT $LN9@LD
 
-; 443  : 		auto d8 = mem_->Read8(reg.PC++);
+; 450  : 		auto d8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _d8$5[ebp], al
 
-; 444  : 		mem_->Write8(reg.raw16[dest],d8);
+; 451  : 		mem_->Write8(reg.raw16[dest],d8);
 
 	movzx	ecx, BYTE PTR _d8$5[ebp]
 	push	ecx
 	mov	edx, 2
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN9@LD:
 
-; 445  : 	} else if (mode == 12) { //0xFF00+d8 src
+; 452  : 	} else if (mode == 12) { //0xFF00+d8 src
 
 	xor	eax, eax
 	je	SHORT $LN7@LD
 
-; 446  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 453  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv145[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv145[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$4[ebp], al
 
-; 447  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
+; 454  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, BYTE PTR _a8$4[ebp]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN7@LD:
 
-; 448  : 	} else if (mode == 13) { //dest,0xFF00+d8 
+; 455  : 	} else if (mode == 13) { //dest,0xFF00+d8 
 
 	mov	ecx, 1
 	test	ecx, ecx
 	je	SHORT $LN5@LD
 
-; 449  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 456  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv169[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv169[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$3[ebp], al
 
-; 450  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
+; 457  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
 
 	movzx	eax, BYTE PTR _a8$3[ebp]
 	add	eax, 65280				; 0000ff00H
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN5@LD:
 
-; 451  : 	} else if (mode == 14) { //(d16),src
+; 458  : 	} else if (mode == 14) { //(d16),src
 
 	xor	edx, edx
 	je	$LN3@LD
 
-; 452  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 459  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv193[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv193[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 453  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 460  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv206[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv206[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -3456,58 +3502,58 @@ $LN5@LD:
 	or	ecx, eax
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 454  :     mem_->Write8(d16,reg.raw8[src]);
+; 461  :     mem_->Write8(d16,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, WORD PTR _d16$2[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN3@LD:
 
-; 455  : 	} else if (mode == 15) { //src,(d16)
+; 462  : 	} else if (mode == 15) { //src,(d16)
 
 	xor	ecx, ecx
 	je	$LN12@LD
 
-; 456  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 463  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv232[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv232[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	ax, al
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 457  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 464  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv245[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv245[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
@@ -3515,21 +3561,21 @@ $LN3@LD:
 	or	eax, edx
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 458  :     reg.raw8[dest] = mem_->Read8(d16);
+; 465  :     reg.raw8[dest] = mem_->Read8(d16);
 
 	movzx	ecx, WORD PTR _d16$1[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 $LN12@LD:
 
-; 459  : 	}
-; 460  : }
+; 466  : 	}
+; 467  : }
 
 	add	esp, 32					; 00000020H
 	cmp	ebp, esp
@@ -3549,7 +3595,7 @@ _this$ = -4						; size = 4
 ??$XOR@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::XOR<1,0,2>, COMDAT
 ; _this$ = ecx
 
-; 586  : void Cpu::XOR() {
+; 599  : void Cpu::XOR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -3564,17 +3610,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 587  :   reg.F.raw = 0;
+; 600  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 588  :   uint8_t a=0,b=0;
+; 601  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 589  :   arithmeticMode<dest,src,mode>(a,b);
+; 602  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -3583,7 +3629,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$0A@$01@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,0,2>
 
-; 590  :   reg.raw8[dest] = a ^ b;
+; 603  :   reg.raw8[dest] = a ^ b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -3591,19 +3637,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 591  :   updateCpuFlagZ(reg.raw8[dest]);
+; 604  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 592  : }
+; 605  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -3657,7 +3703,7 @@ _this$ = -4						; size = 4
 ??$LD@$0A@$00$0O@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD<0,1,14>, COMDAT
 ; _this$ = ecx
 
-; 439  : void Cpu::LD() {
+; 446  : void Cpu::LD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -3673,183 +3719,183 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 440  :   if (mode == 10) { //dest,d8
+; 447  :   if (mode == 10) { //dest,d8
 
 	xor	eax, eax
 	je	SHORT $LN11@LD
 
-; 441  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
+; 448  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv79[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv79[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN11@LD:
 
-; 442  : 	}else if (mode == 11) { //(dest),d8
+; 449  : 	}else if (mode == 11) { //(dest),d8
 
 	xor	edx, edx
 	je	SHORT $LN9@LD
 
-; 443  : 		auto d8 = mem_->Read8(reg.PC++);
+; 450  : 		auto d8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _d8$5[ebp], al
 
-; 444  : 		mem_->Write8(reg.raw16[dest],d8);
+; 451  : 		mem_->Write8(reg.raw16[dest],d8);
 
 	movzx	ecx, BYTE PTR _d8$5[ebp]
 	push	ecx
 	mov	edx, 2
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN9@LD:
 
-; 445  : 	} else if (mode == 12) { //0xFF00+d8 src
+; 452  : 	} else if (mode == 12) { //0xFF00+d8 src
 
 	xor	eax, eax
 	je	SHORT $LN7@LD
 
-; 446  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 453  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv145[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv145[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$4[ebp], al
 
-; 447  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
+; 454  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, BYTE PTR _a8$4[ebp]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN7@LD:
 
-; 448  : 	} else if (mode == 13) { //dest,0xFF00+d8 
+; 455  : 	} else if (mode == 13) { //dest,0xFF00+d8 
 
 	xor	ecx, ecx
 	je	SHORT $LN5@LD
 
-; 449  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 456  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv169[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv169[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$3[ebp], al
 
-; 450  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
+; 457  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
 
 	movzx	eax, BYTE PTR _a8$3[ebp]
 	add	eax, 65280				; 0000ff00H
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN5@LD:
 
-; 451  : 	} else if (mode == 14) { //(d16),src
+; 458  : 	} else if (mode == 14) { //(d16),src
 
 	mov	edx, 1
 	test	edx, edx
 	je	$LN3@LD
 
-; 452  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 459  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv193[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv193[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 453  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 460  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv206[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv206[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -3857,58 +3903,58 @@ $LN5@LD:
 	or	ecx, eax
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 454  :     mem_->Write8(d16,reg.raw8[src]);
+; 461  :     mem_->Write8(d16,reg.raw8[src]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, WORD PTR _d16$2[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN3@LD:
 
-; 455  : 	} else if (mode == 15) { //src,(d16)
+; 462  : 	} else if (mode == 15) { //src,(d16)
 
 	xor	ecx, ecx
 	je	$LN12@LD
 
-; 456  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 463  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv232[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv232[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	ax, al
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 457  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 464  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv245[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv245[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
@@ -3916,21 +3962,21 @@ $LN3@LD:
 	or	eax, edx
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 458  :     reg.raw8[dest] = mem_->Read8(d16);
+; 465  :     reg.raw8[dest] = mem_->Read8(d16);
 
 	movzx	ecx, WORD PTR _d16$1[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	imul	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 $LN12@LD:
 
-; 459  : 	}
-; 460  : }
+; 466  : 	}
+; 467  : }
 
 	add	esp, 32					; 00000020H
 	cmp	ebp, esp
@@ -3950,7 +3996,7 @@ _this$ = -4						; size = 4
 ??$AND@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::AND<1,0,2>, COMDAT
 ; _this$ = ecx
 
-; 575  : void Cpu::AND() {
+; 588  : void Cpu::AND() {
 
 	push	ebp
 	mov	ebp, esp
@@ -3965,17 +4011,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 576  :   reg.F.raw = 0;
+; 589  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 577  :   uint8_t a=0,b=0;
+; 590  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 578  :   arithmeticMode<dest,src,mode>(a,b);
+; 591  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -3984,7 +4030,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$0A@$01@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,0,2>
 
-; 579  :   reg.raw8[dest] = a & b;
+; 592  :   reg.raw8[dest] = a & b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -3992,27 +4038,27 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 580  :   reg.F.H = 1;
+; 593  :   reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 581  :   updateCpuFlagZ(reg.raw8[dest]);
+; 594  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 582  : }
+; 595  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -4053,7 +4099,7 @@ _this$ = -4						; size = 4
 ??$PUSH@$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::PUSH<3>, COMDAT
 ; _this$ = ecx
 
-; 889  : void Cpu::PUSH() {
+; 903  : void Cpu::PUSH() {
 
 	push	ebp
 	mov	ebp, esp
@@ -4061,29 +4107,34 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 890  :   push(reg.raw16[src]>>8);
+; 904  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 905  :   push(reg.raw16[src]>>8);
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	sar	edx, 8
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?push@Cpu@gb@emulation@@AAEXE@Z		; emulation::gb::Cpu::push
 
-; 891  :   push(reg.raw16[src]&0xFF);
+; 906  :   push(reg.raw16[src]&0xFF);
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	and	edx, 255				; 000000ffH
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?push@Cpu@gb@emulation@@AAEXE@Z		; emulation::gb::Cpu::push
 
-; 892  :   Tick();Tick();Tick();Tick();
+; 907  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -4094,7 +4145,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 893  : }
+; 908  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -4112,7 +4163,7 @@ _this$ = -4						; size = 4
 ??$LD$FF00rr@$01$00@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::LD$FF00rr<2,1>, COMDAT
 ; _this$ = ecx
 
-; 399  : void Cpu::LD$FF00rr() {
+; 402  : void Cpu::LD$FF00rr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -4120,24 +4171,24 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 400  : 	mem_->Write8(0xFF00+reg.raw8[dest],reg.raw8[src]);
+; 403  : 	mem_->Write8(0xFF00+reg.raw8[dest],reg.raw8[src]);
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, 1
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 401  : }
+; 404  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -4155,7 +4206,7 @@ _this$ = -4						; size = 4
 ??$POP@$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::POP<3>, COMDAT
 ; _this$ = ecx
 
-; 896  : void Cpu::POP() {
+; 911  : void Cpu::POP() {
 
 	push	ebp
 	mov	ebp, esp
@@ -4164,7 +4215,12 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 897  :   reg.raw16[dest] = pop();
+; 912  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 913  :   reg.raw16[dest] = pop();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?pop@Cpu@gb@emulation@@AAEEXZ		; emulation::gb::Cpu::pop
@@ -4172,9 +4228,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 2
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+ecx+1056], ax
+	mov	WORD PTR [edx+ecx+1064], ax
 
-; 898  :   reg.raw16[dest] |= pop() << 8;
+; 914  :   reg.raw16[dest] |= pop() << 8;
 
 	mov	esi, 2
 	imul	esi, 3
@@ -4183,28 +4239,28 @@ _this$ = -4						; size = 4
 	movzx	eax, al
 	shl	eax, 8
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+esi+1056]
+	movzx	edx, WORD PTR [ecx+esi+1064]
 	or	edx, eax
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 899  :   if (dest == RegAF)
+; 915  :   if (dest == RegAF)
 
 	xor	edx, edx
 	je	SHORT $LN2@POP
 
-; 900  :     reg.F._unused = 0;
+; 916  :     reg.F._unused = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 240					; 000000f0H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 $LN2@POP:
 
-; 901  : }
+; 917  : }
 
 	pop	esi
 	add	esp, 4
@@ -4236,7 +4292,7 @@ _this$ = -4						; size = 4
 ??$LD@$0A@$00$0M@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD<0,1,12>, COMDAT
 ; _this$ = ecx
 
-; 439  : void Cpu::LD() {
+; 446  : void Cpu::LD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -4252,183 +4308,183 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 440  :   if (mode == 10) { //dest,d8
+; 447  :   if (mode == 10) { //dest,d8
 
 	xor	eax, eax
 	je	SHORT $LN11@LD
 
-; 441  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
+; 448  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv79[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv79[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN11@LD:
 
-; 442  : 	}else if (mode == 11) { //(dest),d8
+; 449  : 	}else if (mode == 11) { //(dest),d8
 
 	xor	edx, edx
 	je	SHORT $LN9@LD
 
-; 443  : 		auto d8 = mem_->Read8(reg.PC++);
+; 450  : 		auto d8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _d8$5[ebp], al
 
-; 444  : 		mem_->Write8(reg.raw16[dest],d8);
+; 451  : 		mem_->Write8(reg.raw16[dest],d8);
 
 	movzx	ecx, BYTE PTR _d8$5[ebp]
 	push	ecx
 	mov	edx, 2
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN9@LD:
 
-; 445  : 	} else if (mode == 12) { //0xFF00+d8 src
+; 452  : 	} else if (mode == 12) { //0xFF00+d8 src
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN7@LD
 
-; 446  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 453  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv145[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv145[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$4[ebp], al
 
-; 447  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
+; 454  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, BYTE PTR _a8$4[ebp]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN7@LD:
 
-; 448  : 	} else if (mode == 13) { //dest,0xFF00+d8 
+; 455  : 	} else if (mode == 13) { //dest,0xFF00+d8 
 
 	xor	ecx, ecx
 	je	SHORT $LN5@LD
 
-; 449  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 456  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv169[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv169[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$3[ebp], al
 
-; 450  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
+; 457  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
 
 	movzx	eax, BYTE PTR _a8$3[ebp]
 	add	eax, 65280				; 0000ff00H
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN5@LD:
 
-; 451  : 	} else if (mode == 14) { //(d16),src
+; 458  : 	} else if (mode == 14) { //(d16),src
 
 	xor	edx, edx
 	je	$LN3@LD
 
-; 452  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 459  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv193[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv193[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 453  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 460  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv206[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv206[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -4436,58 +4492,58 @@ $LN5@LD:
 	or	ecx, eax
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 454  :     mem_->Write8(d16,reg.raw8[src]);
+; 461  :     mem_->Write8(d16,reg.raw8[src]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, WORD PTR _d16$2[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN3@LD:
 
-; 455  : 	} else if (mode == 15) { //src,(d16)
+; 462  : 	} else if (mode == 15) { //src,(d16)
 
 	xor	ecx, ecx
 	je	$LN12@LD
 
-; 456  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 463  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv232[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv232[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	ax, al
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 457  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 464  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv245[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv245[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
@@ -4495,21 +4551,21 @@ $LN3@LD:
 	or	eax, edx
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 458  :     reg.raw8[dest] = mem_->Read8(d16);
+; 465  :     reg.raw8[dest] = mem_->Read8(d16);
 
 	movzx	ecx, WORD PTR _d16$1[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	imul	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 $LN12@LD:
 
-; 459  : 	}
-; 460  : }
+; 466  : 	}
+; 467  : }
 
 	add	esp, 32					; 00000020H
 	cmp	ebp, esp
@@ -4530,7 +4586,7 @@ _this$ = -4						; size = 4
 ??$SBC@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SBC<1,0,2>, COMDAT
 ; _this$ = ecx
 
-; 559  : void Cpu::SBC() {
+; 572  : void Cpu::SBC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -4546,20 +4602,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 560  :   reg.F.N = 1;
+; 573  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 561  :   uint8_t a=0,b=0;
+; 574  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 562  :   arithmeticMode<dest,src,mode>(a,b);
+; 575  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -4568,15 +4624,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$0A@$01@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,0,2>
 
-; 563  :   uint8_t carry = reg.F.C;
+; 576  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 564  :   reg.raw8[dest] = a - b - carry;
+; 577  :   reg.raw8[dest] = a - b - carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -4586,9 +4642,9 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 565  :   updateCpuFlagC(a,carry,1);
+; 578  :   updateCpuFlagC(a,carry,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -4598,17 +4654,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 566  :   if (reg.F.C==0)
+; 579  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
 	jne	SHORT $LN2@SBC
 
-; 567  :     updateCpuFlagC(a-carry,b,1);
+; 580  :     updateCpuFlagC(a-carry,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -4621,7 +4677,7 @@ _this$ = -4						; size = 4
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 $LN2@SBC:
 
-; 568  :   updateCpuFlagH(a,carry,1);
+; 581  :   updateCpuFlagH(a,carry,1);
 
 	push	1
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -4631,17 +4687,17 @@ $LN2@SBC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 569  :   if (reg.F.H==0)
+; 582  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
 	jne	SHORT $LN1@SBC
 
-; 570  :     updateCpuFlagH(a-carry,b,1);
+; 583  :     updateCpuFlagH(a-carry,b,1);
 
 	push	1
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -4654,17 +4710,17 @@ $LN2@SBC:
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 $LN1@SBC:
 
-; 571  :   updateCpuFlagZ(reg.raw8[dest]);
+; 584  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 572  : }
+; 585  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -4709,7 +4765,7 @@ _this$ = -4						; size = 4
 ??$CALL_cc@$03$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::CALL_cc<4,0>, COMDAT
 ; _this$ = ecx
 
-; 855  : void Cpu::CALL_cc() {
+; 869  : void Cpu::CALL_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -4724,25 +4780,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 856  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 870  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 16					; 00000010H
 	sar	ecx, 4
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 857  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 871  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 16					; 00000010H
 	sar	eax, 4
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 858  : 
-; 859  :   if (table[inv]&1) {
+; 872  : 
+; 873  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	imul	ecx, 0
@@ -4750,49 +4806,49 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN2@CALL_cc
 
-; 860  :     CALL();
+; 874  :     CALL();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CALL@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::CALL
 
-; 861  :   } else {
+; 875  :   } else {
 
 	jmp	$LN3@CALL_cc
 $LN2@CALL_cc:
 
-; 862  :     uint16_t nn;
-; 863  :     nn = mem_->Read8(reg.PC++);
+; 876  :     uint16_t nn;
+; 877  :     nn = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _nn$1[ebp], cx
 
-; 864  :     nn |= (mem_->Read8(reg.PC++))<<8;
+; 878  :     nn |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv137[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv137[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -4801,8 +4857,8 @@ $LN2@CALL_cc:
 	mov	WORD PTR _nn$1[ebp], cx
 $LN3@CALL_cc:
 
-; 865  :   }
-; 866  : }
+; 879  :   }
+; 880  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -4846,7 +4902,7 @@ _this$ = -4						; size = 4
 ??$JP_cc@$03$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::JP_cc<4,0>, COMDAT
 ; _this$ = ecx
 
-; 826  : void Cpu::JP_cc() {
+; 840  : void Cpu::JP_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -4861,25 +4917,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 827  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 841  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 16					; 00000010H
 	sar	ecx, 4
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 828  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 842  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 16					; 00000010H
 	sar	eax, 4
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 829  : 
-; 830  :   if (table[inv]&1) {
+; 843  : 
+; 844  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	imul	ecx, 0
@@ -4887,49 +4943,49 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN2@JP_cc
 
-; 831  :     JP();
+; 845  :     JP();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?JP@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::JP
 
-; 832  :   } else {
+; 846  :   } else {
 
 	jmp	$LN3@JP_cc
 $LN2@JP_cc:
 
-; 833  :     uint16_t nn;
-; 834  :     nn = mem_->Read8(reg.PC++);
+; 847  :     uint16_t nn;
+; 848  :     nn = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _nn$1[ebp], cx
 
-; 835  :     nn |= (mem_->Read8(reg.PC++))<<8;
+; 849  :     nn |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv137[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv137[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -4938,8 +4994,8 @@ $LN2@JP_cc:
 	mov	WORD PTR _nn$1[ebp], cx
 $LN3@JP_cc:
 
-; 836  :   }
-; 837  : }
+; 850  :   }
+; 851  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -4980,7 +5036,7 @@ _this$ = -4						; size = 4
 ??$RET_cc@$03$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::RET_cc<4,0>, COMDAT
 ; _this$ = ecx
 
-; 875  : void Cpu::RET_cc() {
+; 889  : void Cpu::RET_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -4993,25 +5049,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 876  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 890  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 16					; 00000010H
 	sar	ecx, 4
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 877  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 891  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 16					; 00000010H
 	sar	eax, 4
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 878  : 
-; 879  :   if (table[inv]&1) {
+; 892  : 
+; 893  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	imul	ecx, 0
@@ -5019,16 +5075,16 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN1@RET_cc
 
-; 880  :     RET();
+; 894  :     RET();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?RET@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::RET
 $LN1@RET_cc:
 
-; 881  :   } else {
-; 882  :    
-; 883  :   }
-; 884  :    Tick();Tick();Tick();Tick();
+; 895  :   } else {
+; 896  :    
+; 897  :   }
+; 898  :    Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -5039,7 +5095,7 @@ $LN1@RET_cc:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 885  : }
+; 899  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -5081,7 +5137,7 @@ _this$ = -4						; size = 4
 ??$SUB@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SUB<1,0,2>, COMDAT
 ; _this$ = ecx
 
-; 548  : void Cpu::SUB() {
+; 561  : void Cpu::SUB() {
 
 	push	ebp
 	mov	ebp, esp
@@ -5096,20 +5152,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 549  :   reg.F.N = 1;
+; 562  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 550  :   uint8_t a=0,b=0;
+; 563  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 551  :   arithmeticMode<dest,src,mode>(a,b);
+; 564  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -5118,7 +5174,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$0A@$01@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,0,2>
 
-; 552  :   reg.raw8[dest] = a - b;
+; 565  :   reg.raw8[dest] = a - b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -5126,9 +5182,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 553  :   updateCpuFlagC(a,b,1);
+; 566  :   updateCpuFlagC(a,b,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -5138,7 +5194,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 554  :   updateCpuFlagH(a,b,1);
+; 567  :   updateCpuFlagH(a,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -5148,17 +5204,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 555  :   updateCpuFlagZ(reg.raw8[dest]);
+; 568  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 556  : }
+; 569  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -5200,7 +5256,7 @@ _this$ = -4						; size = 4
 ??$PUSH@$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::PUSH<2>, COMDAT
 ; _this$ = ecx
 
-; 889  : void Cpu::PUSH() {
+; 903  : void Cpu::PUSH() {
 
 	push	ebp
 	mov	ebp, esp
@@ -5208,29 +5264,34 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 890  :   push(reg.raw16[src]>>8);
+; 904  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 905  :   push(reg.raw16[src]>>8);
 
 	mov	eax, 2
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	sar	edx, 8
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?push@Cpu@gb@emulation@@AAEXE@Z		; emulation::gb::Cpu::push
 
-; 891  :   push(reg.raw16[src]&0xFF);
+; 906  :   push(reg.raw16[src]&0xFF);
 
 	mov	eax, 2
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	and	edx, 255				; 000000ffH
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?push@Cpu@gb@emulation@@AAEXE@Z		; emulation::gb::Cpu::push
 
-; 892  :   Tick();Tick();Tick();Tick();
+; 907  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -5241,7 +5302,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 893  : }
+; 908  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -5263,7 +5324,7 @@ _this$ = -4						; size = 4
 ??$CALL_cc@$03$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::CALL_cc<4,1>, COMDAT
 ; _this$ = ecx
 
-; 855  : void Cpu::CALL_cc() {
+; 869  : void Cpu::CALL_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -5278,25 +5339,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 856  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 870  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 16					; 00000010H
 	sar	ecx, 4
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 857  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 871  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 16					; 00000010H
 	sar	eax, 4
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 858  : 
-; 859  :   if (table[inv]&1) {
+; 872  : 
+; 873  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	shl	ecx, 0
@@ -5304,49 +5365,49 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN2@CALL_cc
 
-; 860  :     CALL();
+; 874  :     CALL();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CALL@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::CALL
 
-; 861  :   } else {
+; 875  :   } else {
 
 	jmp	$LN3@CALL_cc
 $LN2@CALL_cc:
 
-; 862  :     uint16_t nn;
-; 863  :     nn = mem_->Read8(reg.PC++);
+; 876  :     uint16_t nn;
+; 877  :     nn = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _nn$1[ebp], cx
 
-; 864  :     nn |= (mem_->Read8(reg.PC++))<<8;
+; 878  :     nn |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv137[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv137[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -5355,8 +5416,8 @@ $LN2@CALL_cc:
 	mov	WORD PTR _nn$1[ebp], cx
 $LN3@CALL_cc:
 
-; 865  :   }
-; 866  : }
+; 879  :   }
+; 880  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -5400,7 +5461,7 @@ _this$ = -4						; size = 4
 ??$JP_cc@$03$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::JP_cc<4,1>, COMDAT
 ; _this$ = ecx
 
-; 826  : void Cpu::JP_cc() {
+; 840  : void Cpu::JP_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -5415,25 +5476,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 827  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 841  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 16					; 00000010H
 	sar	ecx, 4
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 828  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 842  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 16					; 00000010H
 	sar	eax, 4
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 829  : 
-; 830  :   if (table[inv]&1) {
+; 843  : 
+; 844  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	shl	ecx, 0
@@ -5441,49 +5502,49 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN2@JP_cc
 
-; 831  :     JP();
+; 845  :     JP();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?JP@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::JP
 
-; 832  :   } else {
+; 846  :   } else {
 
 	jmp	$LN3@JP_cc
 $LN2@JP_cc:
 
-; 833  :     uint16_t nn;
-; 834  :     nn = mem_->Read8(reg.PC++);
+; 847  :     uint16_t nn;
+; 848  :     nn = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _nn$1[ebp], cx
 
-; 835  :     nn |= (mem_->Read8(reg.PC++))<<8;
+; 849  :     nn |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv137[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv137[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -5492,8 +5553,8 @@ $LN2@JP_cc:
 	mov	WORD PTR _nn$1[ebp], cx
 $LN3@JP_cc:
 
-; 836  :   }
-; 837  : }
+; 850  :   }
+; 851  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -5533,7 +5594,7 @@ _this$ = -4						; size = 4
 ??$POP@$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::POP<2>, COMDAT
 ; _this$ = ecx
 
-; 896  : void Cpu::POP() {
+; 911  : void Cpu::POP() {
 
 	push	ebp
 	mov	ebp, esp
@@ -5542,7 +5603,12 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 897  :   reg.raw16[dest] = pop();
+; 912  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 913  :   reg.raw16[dest] = pop();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?pop@Cpu@gb@emulation@@AAEEXZ		; emulation::gb::Cpu::pop
@@ -5550,9 +5616,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 2
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+ecx+1056], ax
+	mov	WORD PTR [edx+ecx+1064], ax
 
-; 898  :   reg.raw16[dest] |= pop() << 8;
+; 914  :   reg.raw16[dest] |= pop() << 8;
 
 	mov	esi, 2
 	shl	esi, 1
@@ -5561,28 +5627,28 @@ _this$ = -4						; size = 4
 	movzx	eax, al
 	shl	eax, 8
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+esi+1056]
+	movzx	edx, WORD PTR [ecx+esi+1064]
 	or	edx, eax
 	mov	eax, 2
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 899  :   if (dest == RegAF)
+; 915  :   if (dest == RegAF)
 
 	xor	edx, edx
 	je	SHORT $LN2@POP
 
-; 900  :     reg.F._unused = 0;
+; 916  :     reg.F._unused = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 240					; 000000f0H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 $LN2@POP:
 
-; 901  : }
+; 917  : }
 
 	pop	esi
 	add	esp, 4
@@ -5602,7 +5668,7 @@ _this$ = -4						; size = 4
 ??$RET_cc@$03$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::RET_cc<4,1>, COMDAT
 ; _this$ = ecx
 
-; 875  : void Cpu::RET_cc() {
+; 889  : void Cpu::RET_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -5615,25 +5681,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 876  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 890  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 16					; 00000010H
 	sar	ecx, 4
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 877  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 891  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 16					; 00000010H
 	sar	eax, 4
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 878  : 
-; 879  :   if (table[inv]&1) {
+; 892  : 
+; 893  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	shl	ecx, 0
@@ -5641,16 +5707,16 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN1@RET_cc
 
-; 880  :     RET();
+; 894  :     RET();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?RET@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::RET
 $LN1@RET_cc:
 
-; 881  :   } else {
-; 882  :    
-; 883  :   }
-; 884  :    Tick();Tick();Tick();Tick();
+; 895  :   } else {
+; 896  :    
+; 897  :   }
+; 898  :    Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -5661,7 +5727,7 @@ $LN1@RET_cc:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 885  : }
+; 899  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -5704,7 +5770,7 @@ _this$ = -4						; size = 4
 ??$ADC@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADC<1,0,2>, COMDAT
 ; _this$ = ecx
 
-; 530  : void Cpu::ADC() {
+; 536  : void Cpu::ADC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -5720,20 +5786,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 531  :   reg.F.N = 0;
+; 537  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 532  :   uint8_t a=0,b=0;
+; 538  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 533  :   arithmeticMode<dest,src,mode>(a,b);
+; 539  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -5742,15 +5808,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$0A@$01@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,0,2>
 
-; 534  :   uint8_t carry = reg.F.C;
+; 540  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 535  :   reg.raw8[dest] = a + b + carry;
+; 541  :   reg.raw8[dest] = a + b + carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -5760,10 +5826,10 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 536  : 
-; 537  :   updateCpuFlagC(a,carry,0);
+; 542  : 
+; 543  :   updateCpuFlagC(a,carry,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -5773,17 +5839,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 538  :   if (reg.F.C==0)
+; 544  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
-	jne	SHORT $LN2@ADC
+	jne	SHORT $LN3@ADC
 
-; 539  :     updateCpuFlagC(a+carry,b,0);
+; 545  :     updateCpuFlagC(a+carry,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -5794,9 +5860,9 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
-$LN2@ADC:
+$LN3@ADC:
 
-; 540  :   updateCpuFlagH(a,carry,0);
+; 546  :   updateCpuFlagH(a,carry,0);
 
 	push	0
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -5806,17 +5872,17 @@ $LN2@ADC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 541  :   if (reg.F.H==0)
+; 547  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
-	jne	SHORT $LN1@ADC
+	jne	SHORT $LN2@ADC
 
-; 542  :     updateCpuFlagH(a+carry,b,0);
+; 548  :     updateCpuFlagH(a+carry,b,0);
 
 	push	0
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -5827,24 +5893,57 @@ $LN2@ADC:
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
-$LN1@ADC:
+$LN2@ADC:
 
-; 543  :   updateCpuFlagZ(reg.raw8[dest]);
+; 549  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 544  : }
+; 550  : 
+; 551  :   if (opcode == 0x8E){
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+1081]
+	cmp	eax, 142				; 0000008eH
+	jne	SHORT $LN4@ADC
+
+; 552  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+
+; 553  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+$LN4@ADC:
+
+; 554  :   }
+; 555  :   
+; 556  : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN8@ADC
+	lea	edx, DWORD PTR $LN9@ADC
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -5854,20 +5953,21 @@ $LN1@ADC:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-$LN8@ADC:
+	npad	3
+$LN9@ADC:
 	DD	2
-	DD	$LN7@ADC
-$LN7@ADC:
+	DD	$LN8@ADC
+$LN8@ADC:
 	DD	-9					; fffffff7H
 	DD	1
-	DD	$LN5@ADC
+	DD	$LN6@ADC
 	DD	-21					; ffffffebH
 	DD	1
-	DD	$LN6@ADC
-$LN6@ADC:
+	DD	$LN7@ADC
+$LN7@ADC:
 	DB	98					; 00000062H
 	DB	0
-$LN5@ADC:
+$LN6@ADC:
 	DB	97					; 00000061H
 	DB	0
 ??$ADC@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ENDP		; emulation::gb::Cpu::ADC<1,0,2>
@@ -5884,7 +5984,7 @@ _this$ = -4						; size = 4
 ??$CALL_cc@$06$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::CALL_cc<7,0>, COMDAT
 ; _this$ = ecx
 
-; 855  : void Cpu::CALL_cc() {
+; 869  : void Cpu::CALL_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -5899,25 +5999,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 856  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 870  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 128				; 00000080H
 	sar	ecx, 7
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 857  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 871  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 128				; 00000080H
 	sar	eax, 7
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 858  : 
-; 859  :   if (table[inv]&1) {
+; 872  : 
+; 873  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	imul	ecx, 0
@@ -5925,49 +6025,49 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN2@CALL_cc
 
-; 860  :     CALL();
+; 874  :     CALL();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CALL@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::CALL
 
-; 861  :   } else {
+; 875  :   } else {
 
 	jmp	$LN3@CALL_cc
 $LN2@CALL_cc:
 
-; 862  :     uint16_t nn;
-; 863  :     nn = mem_->Read8(reg.PC++);
+; 876  :     uint16_t nn;
+; 877  :     nn = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _nn$1[ebp], cx
 
-; 864  :     nn |= (mem_->Read8(reg.PC++))<<8;
+; 878  :     nn |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv137[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv137[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -5976,8 +6076,8 @@ $LN2@CALL_cc:
 	mov	WORD PTR _nn$1[ebp], cx
 $LN3@CALL_cc:
 
-; 865  :   }
-; 866  : }
+; 879  :   }
+; 880  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -6021,7 +6121,7 @@ _this$ = -4						; size = 4
 ??$JP_cc@$06$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::JP_cc<7,0>, COMDAT
 ; _this$ = ecx
 
-; 826  : void Cpu::JP_cc() {
+; 840  : void Cpu::JP_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -6036,25 +6136,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 827  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 841  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 128				; 00000080H
 	sar	ecx, 7
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 828  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 842  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 128				; 00000080H
 	sar	eax, 7
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 829  : 
-; 830  :   if (table[inv]&1) {
+; 843  : 
+; 844  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	imul	ecx, 0
@@ -6062,49 +6162,49 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN2@JP_cc
 
-; 831  :     JP();
+; 845  :     JP();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?JP@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::JP
 
-; 832  :   } else {
+; 846  :   } else {
 
 	jmp	$LN3@JP_cc
 $LN2@JP_cc:
 
-; 833  :     uint16_t nn;
-; 834  :     nn = mem_->Read8(reg.PC++);
+; 847  :     uint16_t nn;
+; 848  :     nn = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _nn$1[ebp], cx
 
-; 835  :     nn |= (mem_->Read8(reg.PC++))<<8;
+; 849  :     nn |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv137[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv137[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -6113,8 +6213,8 @@ $LN2@JP_cc:
 	mov	WORD PTR _nn$1[ebp], cx
 $LN3@JP_cc:
 
-; 836  :   }
-; 837  : }
+; 850  :   }
+; 851  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -6155,7 +6255,7 @@ _this$ = -4						; size = 4
 ??$RET_cc@$06$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::RET_cc<7,0>, COMDAT
 ; _this$ = ecx
 
-; 875  : void Cpu::RET_cc() {
+; 889  : void Cpu::RET_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -6168,25 +6268,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 876  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 890  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 128				; 00000080H
 	sar	ecx, 7
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 877  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 891  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 128				; 00000080H
 	sar	eax, 7
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 878  : 
-; 879  :   if (table[inv]&1) {
+; 892  : 
+; 893  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	imul	ecx, 0
@@ -6194,16 +6294,16 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN1@RET_cc
 
-; 880  :     RET();
+; 894  :     RET();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?RET@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::RET
 $LN1@RET_cc:
 
-; 881  :   } else {
-; 882  :    
-; 883  :   }
-; 884  :    Tick();Tick();Tick();Tick();
+; 895  :   } else {
+; 896  :    
+; 897  :   }
+; 898  :    Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -6214,7 +6314,7 @@ $LN1@RET_cc:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 885  : }
+; 899  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -6256,7 +6356,7 @@ _this$ = -4						; size = 4
 ??$ADD@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADD<1,0,2>, COMDAT
 ; _this$ = ecx
 
-; 492  : void Cpu::ADD() {
+; 499  : void Cpu::ADD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -6271,20 +6371,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 493  :   reg.F.N = 0;
+; 500  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 494  :   uint8_t a=0,b=0;
+; 501  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 495  :   arithmeticMode<dest,src,mode>(a,b);
+; 502  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -6293,8 +6393,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$0A@$01@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,0,2>
 
-; 496  : 
-; 497  :   reg.raw8[dest] = a + b;
+; 503  :   reg.raw8[dest] = a + b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -6302,9 +6401,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 498  :   updateCpuFlagC(a,b,0);
+; 504  :   updateCpuFlagC(a,b,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -6314,7 +6413,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 499  :   updateCpuFlagH(a,b,0);
+; 505  :   updateCpuFlagH(a,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -6324,17 +6423,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 500  :   updateCpuFlagZ(reg.raw8[dest]);
+; 506  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 501  : }
+; 507  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -6376,7 +6475,7 @@ _this$ = -4						; size = 4
 ??$PUSH@$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::PUSH<1>, COMDAT
 ; _this$ = ecx
 
-; 889  : void Cpu::PUSH() {
+; 903  : void Cpu::PUSH() {
 
 	push	ebp
 	mov	ebp, esp
@@ -6384,29 +6483,34 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 890  :   push(reg.raw16[src]>>8);
+; 904  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 905  :   push(reg.raw16[src]>>8);
 
 	mov	eax, 2
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	sar	edx, 8
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?push@Cpu@gb@emulation@@AAEXE@Z		; emulation::gb::Cpu::push
 
-; 891  :   push(reg.raw16[src]&0xFF);
+; 906  :   push(reg.raw16[src]&0xFF);
 
 	mov	eax, 2
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	and	edx, 255				; 000000ffH
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?push@Cpu@gb@emulation@@AAEXE@Z		; emulation::gb::Cpu::push
 
-; 892  :   Tick();Tick();Tick();Tick();
+; 907  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -6417,7 +6521,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 893  : }
+; 908  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -6439,7 +6543,7 @@ _this$ = -4						; size = 4
 ??$CALL_cc@$06$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::CALL_cc<7,1>, COMDAT
 ; _this$ = ecx
 
-; 855  : void Cpu::CALL_cc() {
+; 869  : void Cpu::CALL_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -6454,25 +6558,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 856  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 870  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 128				; 00000080H
 	sar	ecx, 7
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 857  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 871  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 128				; 00000080H
 	sar	eax, 7
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 858  : 
-; 859  :   if (table[inv]&1) {
+; 872  : 
+; 873  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	shl	ecx, 0
@@ -6480,49 +6584,49 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN2@CALL_cc
 
-; 860  :     CALL();
+; 874  :     CALL();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CALL@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::CALL
 
-; 861  :   } else {
+; 875  :   } else {
 
 	jmp	$LN3@CALL_cc
 $LN2@CALL_cc:
 
-; 862  :     uint16_t nn;
-; 863  :     nn = mem_->Read8(reg.PC++);
+; 876  :     uint16_t nn;
+; 877  :     nn = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _nn$1[ebp], cx
 
-; 864  :     nn |= (mem_->Read8(reg.PC++))<<8;
+; 878  :     nn |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv137[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv137[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -6531,8 +6635,8 @@ $LN2@CALL_cc:
 	mov	WORD PTR _nn$1[ebp], cx
 $LN3@CALL_cc:
 
-; 865  :   }
-; 866  : }
+; 879  :   }
+; 880  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -6576,7 +6680,7 @@ _this$ = -4						; size = 4
 ??$JP_cc@$06$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::JP_cc<7,1>, COMDAT
 ; _this$ = ecx
 
-; 826  : void Cpu::JP_cc() {
+; 840  : void Cpu::JP_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -6591,25 +6695,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 827  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 841  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 128				; 00000080H
 	sar	ecx, 7
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 828  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 842  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 128				; 00000080H
 	sar	eax, 7
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 829  : 
-; 830  :   if (table[inv]&1) {
+; 843  : 
+; 844  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	shl	ecx, 0
@@ -6617,49 +6721,49 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN2@JP_cc
 
-; 831  :     JP();
+; 845  :     JP();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?JP@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::JP
 
-; 832  :   } else {
+; 846  :   } else {
 
 	jmp	$LN3@JP_cc
 $LN2@JP_cc:
 
-; 833  :     uint16_t nn;
-; 834  :     nn = mem_->Read8(reg.PC++);
+; 847  :     uint16_t nn;
+; 848  :     nn = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _nn$1[ebp], cx
 
-; 835  :     nn |= (mem_->Read8(reg.PC++))<<8;
+; 849  :     nn |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv137[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv137[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -6668,8 +6772,8 @@ $LN2@JP_cc:
 	mov	WORD PTR _nn$1[ebp], cx
 $LN3@JP_cc:
 
-; 836  :   }
-; 837  : }
+; 850  :   }
+; 851  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -6709,7 +6813,7 @@ _this$ = -4						; size = 4
 ??$POP@$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::POP<1>, COMDAT
 ; _this$ = ecx
 
-; 896  : void Cpu::POP() {
+; 911  : void Cpu::POP() {
 
 	push	ebp
 	mov	ebp, esp
@@ -6718,7 +6822,12 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 897  :   reg.raw16[dest] = pop();
+; 912  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 913  :   reg.raw16[dest] = pop();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?pop@Cpu@gb@emulation@@AAEEXZ		; emulation::gb::Cpu::pop
@@ -6726,9 +6835,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 2
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+ecx+1056], ax
+	mov	WORD PTR [edx+ecx+1064], ax
 
-; 898  :   reg.raw16[dest] |= pop() << 8;
+; 914  :   reg.raw16[dest] |= pop() << 8;
 
 	mov	esi, 2
 	shl	esi, 0
@@ -6737,28 +6846,28 @@ _this$ = -4						; size = 4
 	movzx	eax, al
 	shl	eax, 8
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+esi+1056]
+	movzx	edx, WORD PTR [ecx+esi+1064]
 	or	edx, eax
 	mov	eax, 2
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 899  :   if (dest == RegAF)
+; 915  :   if (dest == RegAF)
 
 	xor	edx, edx
 	je	SHORT $LN2@POP
 
-; 900  :     reg.F._unused = 0;
+; 916  :     reg.F._unused = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 240					; 000000f0H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 $LN2@POP:
 
-; 901  : }
+; 917  : }
 
 	pop	esi
 	add	esp, 4
@@ -6778,7 +6887,7 @@ _this$ = -4						; size = 4
 ??$RET_cc@$06$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::RET_cc<7,1>, COMDAT
 ; _this$ = ecx
 
-; 875  : void Cpu::RET_cc() {
+; 889  : void Cpu::RET_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -6791,25 +6900,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 876  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 890  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 128				; 00000080H
 	sar	ecx, 7
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 877  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 891  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 128				; 00000080H
 	sar	eax, 7
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 878  : 
-; 879  :   if (table[inv]&1) {
+; 892  : 
+; 893  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	shl	ecx, 0
@@ -6817,16 +6926,16 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN1@RET_cc
 
-; 880  :     RET();
+; 894  :     RET();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?RET@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::RET
 $LN1@RET_cc:
 
-; 881  :   } else {
-; 882  :    
-; 883  :   }
-; 884  :    Tick();Tick();Tick();Tick();
+; 895  :   } else {
+; 896  :    
+; 897  :   }
+; 898  :    Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -6837,7 +6946,7 @@ $LN1@RET_cc:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 885  : }
+; 899  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -6877,7 +6986,7 @@ _this$ = -4						; size = 4
 ??$CP_reg@$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::CP_reg<1>, COMDAT
 ; _this$ = ecx
 
-; 953  : void Cpu::CP_reg() {
+; 969  : void Cpu::CP_reg() {
 
 	push	ebp
 	mov	ebp, esp
@@ -6885,20 +6994,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 954  :   CP(reg.A,reg.raw8[r]);
+; 970  :   CP(reg.A,reg.raw8[r]);
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1057]
+	movzx	ecx, BYTE PTR [eax+1065]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CP@Cpu@gb@emulation@@AAEXEE@Z		; emulation::gb::Cpu::CP
 
-; 955  : }
+; 971  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -6916,7 +7025,7 @@ _this$ = -4						; size = 4
 ??$CP_reg@$05@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::CP_reg<6>, COMDAT
 ; _this$ = ecx
 
-; 953  : void Cpu::CP_reg() {
+; 969  : void Cpu::CP_reg() {
 
 	push	ebp
 	mov	ebp, esp
@@ -6924,20 +7033,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 954  :   CP(reg.A,reg.raw8[r]);
+; 970  :   CP(reg.A,reg.raw8[r]);
 
 	mov	eax, 1
 	imul	eax, 6
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1057]
+	movzx	ecx, BYTE PTR [eax+1065]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CP@Cpu@gb@emulation@@AAEXEE@Z		; emulation::gb::Cpu::CP
 
-; 955  : }
+; 971  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -6955,7 +7064,7 @@ _this$ = -4						; size = 4
 ??$CP_reg@$06@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::CP_reg<7>, COMDAT
 ; _this$ = ecx
 
-; 953  : void Cpu::CP_reg() {
+; 969  : void Cpu::CP_reg() {
 
 	push	ebp
 	mov	ebp, esp
@@ -6963,20 +7072,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 954  :   CP(reg.A,reg.raw8[r]);
+; 970  :   CP(reg.A,reg.raw8[r]);
 
 	mov	eax, 1
 	imul	eax, 7
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1057]
+	movzx	ecx, BYTE PTR [eax+1065]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CP@Cpu@gb@emulation@@AAEXEE@Z		; emulation::gb::Cpu::CP
 
-; 955  : }
+; 971  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -6994,7 +7103,7 @@ _this$ = -4						; size = 4
 ??$CP_reg@$03@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::CP_reg<4>, COMDAT
 ; _this$ = ecx
 
-; 953  : void Cpu::CP_reg() {
+; 969  : void Cpu::CP_reg() {
 
 	push	ebp
 	mov	ebp, esp
@@ -7002,20 +7111,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 954  :   CP(reg.A,reg.raw8[r]);
+; 970  :   CP(reg.A,reg.raw8[r]);
 
 	mov	eax, 1
 	shl	eax, 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1057]
+	movzx	ecx, BYTE PTR [eax+1065]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CP@Cpu@gb@emulation@@AAEXEE@Z		; emulation::gb::Cpu::CP
 
-; 955  : }
+; 971  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -7033,7 +7142,7 @@ _this$ = -4						; size = 4
 ??$CP_reg@$04@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::CP_reg<5>, COMDAT
 ; _this$ = ecx
 
-; 953  : void Cpu::CP_reg() {
+; 969  : void Cpu::CP_reg() {
 
 	push	ebp
 	mov	ebp, esp
@@ -7041,20 +7150,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 954  :   CP(reg.A,reg.raw8[r]);
+; 970  :   CP(reg.A,reg.raw8[r]);
 
 	mov	eax, 1
 	imul	eax, 5
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1057]
+	movzx	ecx, BYTE PTR [eax+1065]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CP@Cpu@gb@emulation@@AAEXEE@Z		; emulation::gb::Cpu::CP
 
-; 955  : }
+; 971  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -7072,7 +7181,7 @@ _this$ = -4						; size = 4
 ??$CP_reg@$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::CP_reg<2>, COMDAT
 ; _this$ = ecx
 
-; 953  : void Cpu::CP_reg() {
+; 969  : void Cpu::CP_reg() {
 
 	push	ebp
 	mov	ebp, esp
@@ -7080,20 +7189,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 954  :   CP(reg.A,reg.raw8[r]);
+; 970  :   CP(reg.A,reg.raw8[r]);
 
 	mov	eax, 1
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1057]
+	movzx	ecx, BYTE PTR [eax+1065]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CP@Cpu@gb@emulation@@AAEXEE@Z		; emulation::gb::Cpu::CP
 
-; 955  : }
+; 971  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -7111,7 +7220,7 @@ _this$ = -4						; size = 4
 ??$CP_reg@$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::CP_reg<3>, COMDAT
 ; _this$ = ecx
 
-; 953  : void Cpu::CP_reg() {
+; 969  : void Cpu::CP_reg() {
 
 	push	ebp
 	mov	ebp, esp
@@ -7119,20 +7228,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 954  :   CP(reg.A,reg.raw8[r]);
+; 970  :   CP(reg.A,reg.raw8[r]);
 
 	mov	eax, 1
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1057]
+	movzx	ecx, BYTE PTR [eax+1065]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CP@Cpu@gb@emulation@@AAEXEE@Z		; emulation::gb::Cpu::CP
 
-; 955  : }
+; 971  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -7152,7 +7261,7 @@ _this$ = -4						; size = 4
 ??$OR@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::OR<1,1,0>, COMDAT
 ; _this$ = ecx
 
-; 595  : void Cpu::OR() {
+; 608  : void Cpu::OR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -7167,17 +7276,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 596  :   reg.F.raw = 0;
+; 609  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 597  :   uint8_t a=0,b=0;
+; 610  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 598  :   arithmeticMode<dest,src,mode>(a,b);
+; 611  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -7186,7 +7295,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$00$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,1,0>
 
-; 599  :   reg.raw8[dest] = a | b;
+; 612  :   reg.raw8[dest] = a | b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -7194,19 +7303,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 600  :   updateCpuFlagZ(reg.raw8[dest]);
+; 613  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 601  : }
+; 614  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -7249,7 +7358,7 @@ _this$ = -4						; size = 4
 ??$OR@$00$02$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::OR<1,3,1>, COMDAT
 ; _this$ = ecx
 
-; 595  : void Cpu::OR() {
+; 608  : void Cpu::OR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -7264,17 +7373,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 596  :   reg.F.raw = 0;
+; 609  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 597  :   uint8_t a=0,b=0;
+; 610  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 598  :   arithmeticMode<dest,src,mode>(a,b);
+; 611  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -7283,7 +7392,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$00@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,1>
 
-; 599  :   reg.raw8[dest] = a | b;
+; 612  :   reg.raw8[dest] = a | b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -7291,19 +7400,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 600  :   updateCpuFlagZ(reg.raw8[dest]);
+; 613  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 601  : }
+; 614  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -7346,7 +7455,7 @@ _this$ = -4						; size = 4
 ??$OR@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::OR<1,6,0>, COMDAT
 ; _this$ = ecx
 
-; 595  : void Cpu::OR() {
+; 608  : void Cpu::OR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -7361,17 +7470,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 596  :   reg.F.raw = 0;
+; 609  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 597  :   uint8_t a=0,b=0;
+; 610  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 598  :   arithmeticMode<dest,src,mode>(a,b);
+; 611  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -7380,7 +7489,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$05$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,6,0>
 
-; 599  :   reg.raw8[dest] = a | b;
+; 612  :   reg.raw8[dest] = a | b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -7388,19 +7497,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 600  :   updateCpuFlagZ(reg.raw8[dest]);
+; 613  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 601  : }
+; 614  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -7443,7 +7552,7 @@ _this$ = -4						; size = 4
 ??$OR@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::OR<1,7,0>, COMDAT
 ; _this$ = ecx
 
-; 595  : void Cpu::OR() {
+; 608  : void Cpu::OR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -7458,17 +7567,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 596  :   reg.F.raw = 0;
+; 609  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 597  :   uint8_t a=0,b=0;
+; 610  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 598  :   arithmeticMode<dest,src,mode>(a,b);
+; 611  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -7477,7 +7586,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$06$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,7,0>
 
-; 599  :   reg.raw8[dest] = a | b;
+; 612  :   reg.raw8[dest] = a | b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -7485,19 +7594,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 600  :   updateCpuFlagZ(reg.raw8[dest]);
+; 613  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 601  : }
+; 614  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -7540,7 +7649,7 @@ _this$ = -4						; size = 4
 ??$OR@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::OR<1,4,0>, COMDAT
 ; _this$ = ecx
 
-; 595  : void Cpu::OR() {
+; 608  : void Cpu::OR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -7555,17 +7664,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 596  :   reg.F.raw = 0;
+; 609  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 597  :   uint8_t a=0,b=0;
+; 610  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 598  :   arithmeticMode<dest,src,mode>(a,b);
+; 611  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -7574,7 +7683,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$03$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,4,0>
 
-; 599  :   reg.raw8[dest] = a | b;
+; 612  :   reg.raw8[dest] = a | b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -7582,19 +7691,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 600  :   updateCpuFlagZ(reg.raw8[dest]);
+; 613  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 601  : }
+; 614  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -7637,7 +7746,7 @@ _this$ = -4						; size = 4
 ??$OR@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::OR<1,5,0>, COMDAT
 ; _this$ = ecx
 
-; 595  : void Cpu::OR() {
+; 608  : void Cpu::OR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -7652,17 +7761,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 596  :   reg.F.raw = 0;
+; 609  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 597  :   uint8_t a=0,b=0;
+; 610  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 598  :   arithmeticMode<dest,src,mode>(a,b);
+; 611  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -7671,7 +7780,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$04$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,5,0>
 
-; 599  :   reg.raw8[dest] = a | b;
+; 612  :   reg.raw8[dest] = a | b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -7679,19 +7788,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 600  :   updateCpuFlagZ(reg.raw8[dest]);
+; 613  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 601  : }
+; 614  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -7734,7 +7843,7 @@ _this$ = -4						; size = 4
 ??$OR@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::OR<1,2,0>, COMDAT
 ; _this$ = ecx
 
-; 595  : void Cpu::OR() {
+; 608  : void Cpu::OR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -7749,17 +7858,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 596  :   reg.F.raw = 0;
+; 609  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 597  :   uint8_t a=0,b=0;
+; 610  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 598  :   arithmeticMode<dest,src,mode>(a,b);
+; 611  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -7768,7 +7877,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$01$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,2,0>
 
-; 599  :   reg.raw8[dest] = a | b;
+; 612  :   reg.raw8[dest] = a | b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -7776,19 +7885,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 600  :   updateCpuFlagZ(reg.raw8[dest]);
+; 613  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 601  : }
+; 614  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -7831,7 +7940,7 @@ _this$ = -4						; size = 4
 ??$OR@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::OR<1,3,0>, COMDAT
 ; _this$ = ecx
 
-; 595  : void Cpu::OR() {
+; 608  : void Cpu::OR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -7846,17 +7955,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 596  :   reg.F.raw = 0;
+; 609  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 597  :   uint8_t a=0,b=0;
+; 610  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 598  :   arithmeticMode<dest,src,mode>(a,b);
+; 611  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -7865,7 +7974,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,0>
 
-; 599  :   reg.raw8[dest] = a | b;
+; 612  :   reg.raw8[dest] = a | b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -7873,19 +7982,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 600  :   updateCpuFlagZ(reg.raw8[dest]);
+; 613  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 601  : }
+; 614  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -7928,7 +8037,7 @@ _this$ = -4						; size = 4
 ??$XOR@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::XOR<1,1,0>, COMDAT
 ; _this$ = ecx
 
-; 586  : void Cpu::XOR() {
+; 599  : void Cpu::XOR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -7943,17 +8052,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 587  :   reg.F.raw = 0;
+; 600  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 588  :   uint8_t a=0,b=0;
+; 601  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 589  :   arithmeticMode<dest,src,mode>(a,b);
+; 602  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -7962,7 +8071,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$00$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,1,0>
 
-; 590  :   reg.raw8[dest] = a ^ b;
+; 603  :   reg.raw8[dest] = a ^ b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -7970,19 +8079,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 591  :   updateCpuFlagZ(reg.raw8[dest]);
+; 604  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 592  : }
+; 605  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -8025,7 +8134,7 @@ _this$ = -4						; size = 4
 ??$XOR@$00$02$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::XOR<1,3,1>, COMDAT
 ; _this$ = ecx
 
-; 586  : void Cpu::XOR() {
+; 599  : void Cpu::XOR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -8040,17 +8149,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 587  :   reg.F.raw = 0;
+; 600  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 588  :   uint8_t a=0,b=0;
+; 601  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 589  :   arithmeticMode<dest,src,mode>(a,b);
+; 602  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -8059,7 +8168,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$00@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,1>
 
-; 590  :   reg.raw8[dest] = a ^ b;
+; 603  :   reg.raw8[dest] = a ^ b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -8067,19 +8176,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 591  :   updateCpuFlagZ(reg.raw8[dest]);
+; 604  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 592  : }
+; 605  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -8122,7 +8231,7 @@ _this$ = -4						; size = 4
 ??$XOR@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::XOR<1,6,0>, COMDAT
 ; _this$ = ecx
 
-; 586  : void Cpu::XOR() {
+; 599  : void Cpu::XOR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -8137,17 +8246,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 587  :   reg.F.raw = 0;
+; 600  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 588  :   uint8_t a=0,b=0;
+; 601  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 589  :   arithmeticMode<dest,src,mode>(a,b);
+; 602  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -8156,7 +8265,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$05$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,6,0>
 
-; 590  :   reg.raw8[dest] = a ^ b;
+; 603  :   reg.raw8[dest] = a ^ b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -8164,19 +8273,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 591  :   updateCpuFlagZ(reg.raw8[dest]);
+; 604  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 592  : }
+; 605  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -8219,7 +8328,7 @@ _this$ = -4						; size = 4
 ??$XOR@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::XOR<1,7,0>, COMDAT
 ; _this$ = ecx
 
-; 586  : void Cpu::XOR() {
+; 599  : void Cpu::XOR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -8234,17 +8343,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 587  :   reg.F.raw = 0;
+; 600  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 588  :   uint8_t a=0,b=0;
+; 601  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 589  :   arithmeticMode<dest,src,mode>(a,b);
+; 602  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -8253,7 +8362,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$06$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,7,0>
 
-; 590  :   reg.raw8[dest] = a ^ b;
+; 603  :   reg.raw8[dest] = a ^ b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -8261,19 +8370,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 591  :   updateCpuFlagZ(reg.raw8[dest]);
+; 604  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 592  : }
+; 605  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -8316,7 +8425,7 @@ _this$ = -4						; size = 4
 ??$XOR@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::XOR<1,4,0>, COMDAT
 ; _this$ = ecx
 
-; 586  : void Cpu::XOR() {
+; 599  : void Cpu::XOR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -8331,17 +8440,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 587  :   reg.F.raw = 0;
+; 600  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 588  :   uint8_t a=0,b=0;
+; 601  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 589  :   arithmeticMode<dest,src,mode>(a,b);
+; 602  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -8350,7 +8459,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$03$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,4,0>
 
-; 590  :   reg.raw8[dest] = a ^ b;
+; 603  :   reg.raw8[dest] = a ^ b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -8358,19 +8467,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 591  :   updateCpuFlagZ(reg.raw8[dest]);
+; 604  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 592  : }
+; 605  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -8413,7 +8522,7 @@ _this$ = -4						; size = 4
 ??$XOR@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::XOR<1,5,0>, COMDAT
 ; _this$ = ecx
 
-; 586  : void Cpu::XOR() {
+; 599  : void Cpu::XOR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -8428,17 +8537,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 587  :   reg.F.raw = 0;
+; 600  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 588  :   uint8_t a=0,b=0;
+; 601  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 589  :   arithmeticMode<dest,src,mode>(a,b);
+; 602  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -8447,7 +8556,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$04$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,5,0>
 
-; 590  :   reg.raw8[dest] = a ^ b;
+; 603  :   reg.raw8[dest] = a ^ b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -8455,19 +8564,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 591  :   updateCpuFlagZ(reg.raw8[dest]);
+; 604  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 592  : }
+; 605  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -8510,7 +8619,7 @@ _this$ = -4						; size = 4
 ??$XOR@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::XOR<1,2,0>, COMDAT
 ; _this$ = ecx
 
-; 586  : void Cpu::XOR() {
+; 599  : void Cpu::XOR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -8525,17 +8634,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 587  :   reg.F.raw = 0;
+; 600  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 588  :   uint8_t a=0,b=0;
+; 601  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 589  :   arithmeticMode<dest,src,mode>(a,b);
+; 602  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -8544,7 +8653,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$01$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,2,0>
 
-; 590  :   reg.raw8[dest] = a ^ b;
+; 603  :   reg.raw8[dest] = a ^ b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -8552,19 +8661,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 591  :   updateCpuFlagZ(reg.raw8[dest]);
+; 604  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 592  : }
+; 605  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -8607,7 +8716,7 @@ _this$ = -4						; size = 4
 ??$XOR@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::XOR<1,3,0>, COMDAT
 ; _this$ = ecx
 
-; 586  : void Cpu::XOR() {
+; 599  : void Cpu::XOR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -8622,17 +8731,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 587  :   reg.F.raw = 0;
+; 600  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 588  :   uint8_t a=0,b=0;
+; 601  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 589  :   arithmeticMode<dest,src,mode>(a,b);
+; 602  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -8641,7 +8750,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,0>
 
-; 590  :   reg.raw8[dest] = a ^ b;
+; 603  :   reg.raw8[dest] = a ^ b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -8649,19 +8758,19 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 591  :   updateCpuFlagZ(reg.raw8[dest]);
+; 604  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 592  : }
+; 605  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -8704,7 +8813,7 @@ _this$ = -4						; size = 4
 ??$AND@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::AND<1,1,0>, COMDAT
 ; _this$ = ecx
 
-; 575  : void Cpu::AND() {
+; 588  : void Cpu::AND() {
 
 	push	ebp
 	mov	ebp, esp
@@ -8719,17 +8828,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 576  :   reg.F.raw = 0;
+; 589  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 577  :   uint8_t a=0,b=0;
+; 590  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 578  :   arithmeticMode<dest,src,mode>(a,b);
+; 591  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -8738,7 +8847,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$00$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,1,0>
 
-; 579  :   reg.raw8[dest] = a & b;
+; 592  :   reg.raw8[dest] = a & b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -8746,27 +8855,27 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 580  :   reg.F.H = 1;
+; 593  :   reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 581  :   updateCpuFlagZ(reg.raw8[dest]);
+; 594  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 582  : }
+; 595  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -8809,7 +8918,7 @@ _this$ = -4						; size = 4
 ??$AND@$00$02$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::AND<1,3,1>, COMDAT
 ; _this$ = ecx
 
-; 575  : void Cpu::AND() {
+; 588  : void Cpu::AND() {
 
 	push	ebp
 	mov	ebp, esp
@@ -8824,17 +8933,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 576  :   reg.F.raw = 0;
+; 589  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 577  :   uint8_t a=0,b=0;
+; 590  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 578  :   arithmeticMode<dest,src,mode>(a,b);
+; 591  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -8843,7 +8952,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$00@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,1>
 
-; 579  :   reg.raw8[dest] = a & b;
+; 592  :   reg.raw8[dest] = a & b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -8851,27 +8960,27 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 580  :   reg.F.H = 1;
+; 593  :   reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 581  :   updateCpuFlagZ(reg.raw8[dest]);
+; 594  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 582  : }
+; 595  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -8914,7 +9023,7 @@ _this$ = -4						; size = 4
 ??$AND@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::AND<1,6,0>, COMDAT
 ; _this$ = ecx
 
-; 575  : void Cpu::AND() {
+; 588  : void Cpu::AND() {
 
 	push	ebp
 	mov	ebp, esp
@@ -8929,17 +9038,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 576  :   reg.F.raw = 0;
+; 589  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 577  :   uint8_t a=0,b=0;
+; 590  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 578  :   arithmeticMode<dest,src,mode>(a,b);
+; 591  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -8948,7 +9057,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$05$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,6,0>
 
-; 579  :   reg.raw8[dest] = a & b;
+; 592  :   reg.raw8[dest] = a & b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -8956,27 +9065,27 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 580  :   reg.F.H = 1;
+; 593  :   reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 581  :   updateCpuFlagZ(reg.raw8[dest]);
+; 594  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 582  : }
+; 595  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -9019,7 +9128,7 @@ _this$ = -4						; size = 4
 ??$AND@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::AND<1,7,0>, COMDAT
 ; _this$ = ecx
 
-; 575  : void Cpu::AND() {
+; 588  : void Cpu::AND() {
 
 	push	ebp
 	mov	ebp, esp
@@ -9034,17 +9143,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 576  :   reg.F.raw = 0;
+; 589  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 577  :   uint8_t a=0,b=0;
+; 590  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 578  :   arithmeticMode<dest,src,mode>(a,b);
+; 591  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -9053,7 +9162,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$06$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,7,0>
 
-; 579  :   reg.raw8[dest] = a & b;
+; 592  :   reg.raw8[dest] = a & b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -9061,27 +9170,27 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 580  :   reg.F.H = 1;
+; 593  :   reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 581  :   updateCpuFlagZ(reg.raw8[dest]);
+; 594  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 582  : }
+; 595  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -9124,7 +9233,7 @@ _this$ = -4						; size = 4
 ??$AND@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::AND<1,4,0>, COMDAT
 ; _this$ = ecx
 
-; 575  : void Cpu::AND() {
+; 588  : void Cpu::AND() {
 
 	push	ebp
 	mov	ebp, esp
@@ -9139,17 +9248,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 576  :   reg.F.raw = 0;
+; 589  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 577  :   uint8_t a=0,b=0;
+; 590  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 578  :   arithmeticMode<dest,src,mode>(a,b);
+; 591  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -9158,7 +9267,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$03$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,4,0>
 
-; 579  :   reg.raw8[dest] = a & b;
+; 592  :   reg.raw8[dest] = a & b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -9166,27 +9275,27 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 580  :   reg.F.H = 1;
+; 593  :   reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 581  :   updateCpuFlagZ(reg.raw8[dest]);
+; 594  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 582  : }
+; 595  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -9229,7 +9338,7 @@ _this$ = -4						; size = 4
 ??$AND@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::AND<1,5,0>, COMDAT
 ; _this$ = ecx
 
-; 575  : void Cpu::AND() {
+; 588  : void Cpu::AND() {
 
 	push	ebp
 	mov	ebp, esp
@@ -9244,17 +9353,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 576  :   reg.F.raw = 0;
+; 589  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 577  :   uint8_t a=0,b=0;
+; 590  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 578  :   arithmeticMode<dest,src,mode>(a,b);
+; 591  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -9263,7 +9372,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$04$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,5,0>
 
-; 579  :   reg.raw8[dest] = a & b;
+; 592  :   reg.raw8[dest] = a & b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -9271,27 +9380,27 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 580  :   reg.F.H = 1;
+; 593  :   reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 581  :   updateCpuFlagZ(reg.raw8[dest]);
+; 594  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 582  : }
+; 595  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -9334,7 +9443,7 @@ _this$ = -4						; size = 4
 ??$AND@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::AND<1,2,0>, COMDAT
 ; _this$ = ecx
 
-; 575  : void Cpu::AND() {
+; 588  : void Cpu::AND() {
 
 	push	ebp
 	mov	ebp, esp
@@ -9349,17 +9458,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 576  :   reg.F.raw = 0;
+; 589  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 577  :   uint8_t a=0,b=0;
+; 590  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 578  :   arithmeticMode<dest,src,mode>(a,b);
+; 591  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -9368,7 +9477,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$01$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,2,0>
 
-; 579  :   reg.raw8[dest] = a & b;
+; 592  :   reg.raw8[dest] = a & b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -9376,27 +9485,27 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 580  :   reg.F.H = 1;
+; 593  :   reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 581  :   updateCpuFlagZ(reg.raw8[dest]);
+; 594  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 582  : }
+; 595  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -9439,7 +9548,7 @@ _this$ = -4						; size = 4
 ??$AND@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::AND<1,3,0>, COMDAT
 ; _this$ = ecx
 
-; 575  : void Cpu::AND() {
+; 588  : void Cpu::AND() {
 
 	push	ebp
 	mov	ebp, esp
@@ -9454,17 +9563,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 576  :   reg.F.raw = 0;
+; 589  :   reg.F.raw = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], 0
+	mov	BYTE PTR [eax+1064], 0
 
-; 577  :   uint8_t a=0,b=0;
+; 590  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 578  :   arithmeticMode<dest,src,mode>(a,b);
+; 591  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	ecx, DWORD PTR _b$[ebp]
 	push	ecx
@@ -9473,7 +9582,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,0>
 
-; 579  :   reg.raw8[dest] = a & b;
+; 592  :   reg.raw8[dest] = a & b;
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -9481,27 +9590,27 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 
-; 580  :   reg.F.H = 1;
+; 593  :   reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 581  :   updateCpuFlagZ(reg.raw8[dest]);
+; 594  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 582  : }
+; 595  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -9545,7 +9654,7 @@ _this$ = -4						; size = 4
 ??$SBC@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SBC<1,1,0>, COMDAT
 ; _this$ = ecx
 
-; 559  : void Cpu::SBC() {
+; 572  : void Cpu::SBC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -9561,20 +9670,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 560  :   reg.F.N = 1;
+; 573  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 561  :   uint8_t a=0,b=0;
+; 574  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 562  :   arithmeticMode<dest,src,mode>(a,b);
+; 575  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -9583,15 +9692,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$00$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,1,0>
 
-; 563  :   uint8_t carry = reg.F.C;
+; 576  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 564  :   reg.raw8[dest] = a - b - carry;
+; 577  :   reg.raw8[dest] = a - b - carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -9601,9 +9710,9 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 565  :   updateCpuFlagC(a,carry,1);
+; 578  :   updateCpuFlagC(a,carry,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -9613,17 +9722,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 566  :   if (reg.F.C==0)
+; 579  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
 	jne	SHORT $LN2@SBC
 
-; 567  :     updateCpuFlagC(a-carry,b,1);
+; 580  :     updateCpuFlagC(a-carry,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -9636,7 +9745,7 @@ _this$ = -4						; size = 4
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 $LN2@SBC:
 
-; 568  :   updateCpuFlagH(a,carry,1);
+; 581  :   updateCpuFlagH(a,carry,1);
 
 	push	1
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -9646,17 +9755,17 @@ $LN2@SBC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 569  :   if (reg.F.H==0)
+; 582  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
 	jne	SHORT $LN1@SBC
 
-; 570  :     updateCpuFlagH(a-carry,b,1);
+; 583  :     updateCpuFlagH(a-carry,b,1);
 
 	push	1
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -9669,17 +9778,17 @@ $LN2@SBC:
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 $LN1@SBC:
 
-; 571  :   updateCpuFlagZ(reg.raw8[dest]);
+; 584  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 572  : }
+; 585  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -9723,7 +9832,7 @@ _this$ = -4						; size = 4
 ??$SBC@$00$02$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SBC<1,3,1>, COMDAT
 ; _this$ = ecx
 
-; 559  : void Cpu::SBC() {
+; 572  : void Cpu::SBC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -9739,20 +9848,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 560  :   reg.F.N = 1;
+; 573  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 561  :   uint8_t a=0,b=0;
+; 574  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 562  :   arithmeticMode<dest,src,mode>(a,b);
+; 575  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -9761,15 +9870,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$00@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,1>
 
-; 563  :   uint8_t carry = reg.F.C;
+; 576  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 564  :   reg.raw8[dest] = a - b - carry;
+; 577  :   reg.raw8[dest] = a - b - carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -9779,9 +9888,9 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 565  :   updateCpuFlagC(a,carry,1);
+; 578  :   updateCpuFlagC(a,carry,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -9791,17 +9900,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 566  :   if (reg.F.C==0)
+; 579  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
 	jne	SHORT $LN2@SBC
 
-; 567  :     updateCpuFlagC(a-carry,b,1);
+; 580  :     updateCpuFlagC(a-carry,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -9814,7 +9923,7 @@ _this$ = -4						; size = 4
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 $LN2@SBC:
 
-; 568  :   updateCpuFlagH(a,carry,1);
+; 581  :   updateCpuFlagH(a,carry,1);
 
 	push	1
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -9824,17 +9933,17 @@ $LN2@SBC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 569  :   if (reg.F.H==0)
+; 582  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
 	jne	SHORT $LN1@SBC
 
-; 570  :     updateCpuFlagH(a-carry,b,1);
+; 583  :     updateCpuFlagH(a-carry,b,1);
 
 	push	1
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -9847,17 +9956,17 @@ $LN2@SBC:
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 $LN1@SBC:
 
-; 571  :   updateCpuFlagZ(reg.raw8[dest]);
+; 584  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 572  : }
+; 585  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -9901,7 +10010,7 @@ _this$ = -4						; size = 4
 ??$SBC@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SBC<1,6,0>, COMDAT
 ; _this$ = ecx
 
-; 559  : void Cpu::SBC() {
+; 572  : void Cpu::SBC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -9917,20 +10026,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 560  :   reg.F.N = 1;
+; 573  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 561  :   uint8_t a=0,b=0;
+; 574  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 562  :   arithmeticMode<dest,src,mode>(a,b);
+; 575  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -9939,15 +10048,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$05$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,6,0>
 
-; 563  :   uint8_t carry = reg.F.C;
+; 576  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 564  :   reg.raw8[dest] = a - b - carry;
+; 577  :   reg.raw8[dest] = a - b - carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -9957,9 +10066,9 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 565  :   updateCpuFlagC(a,carry,1);
+; 578  :   updateCpuFlagC(a,carry,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -9969,17 +10078,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 566  :   if (reg.F.C==0)
+; 579  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
 	jne	SHORT $LN2@SBC
 
-; 567  :     updateCpuFlagC(a-carry,b,1);
+; 580  :     updateCpuFlagC(a-carry,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -9992,7 +10101,7 @@ _this$ = -4						; size = 4
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 $LN2@SBC:
 
-; 568  :   updateCpuFlagH(a,carry,1);
+; 581  :   updateCpuFlagH(a,carry,1);
 
 	push	1
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -10002,17 +10111,17 @@ $LN2@SBC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 569  :   if (reg.F.H==0)
+; 582  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
 	jne	SHORT $LN1@SBC
 
-; 570  :     updateCpuFlagH(a-carry,b,1);
+; 583  :     updateCpuFlagH(a-carry,b,1);
 
 	push	1
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -10025,17 +10134,17 @@ $LN2@SBC:
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 $LN1@SBC:
 
-; 571  :   updateCpuFlagZ(reg.raw8[dest]);
+; 584  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 572  : }
+; 585  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -10079,7 +10188,7 @@ _this$ = -4						; size = 4
 ??$SBC@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SBC<1,7,0>, COMDAT
 ; _this$ = ecx
 
-; 559  : void Cpu::SBC() {
+; 572  : void Cpu::SBC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -10095,20 +10204,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 560  :   reg.F.N = 1;
+; 573  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 561  :   uint8_t a=0,b=0;
+; 574  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 562  :   arithmeticMode<dest,src,mode>(a,b);
+; 575  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -10117,15 +10226,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$06$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,7,0>
 
-; 563  :   uint8_t carry = reg.F.C;
+; 576  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 564  :   reg.raw8[dest] = a - b - carry;
+; 577  :   reg.raw8[dest] = a - b - carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -10135,9 +10244,9 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 565  :   updateCpuFlagC(a,carry,1);
+; 578  :   updateCpuFlagC(a,carry,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -10147,17 +10256,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 566  :   if (reg.F.C==0)
+; 579  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
 	jne	SHORT $LN2@SBC
 
-; 567  :     updateCpuFlagC(a-carry,b,1);
+; 580  :     updateCpuFlagC(a-carry,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -10170,7 +10279,7 @@ _this$ = -4						; size = 4
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 $LN2@SBC:
 
-; 568  :   updateCpuFlagH(a,carry,1);
+; 581  :   updateCpuFlagH(a,carry,1);
 
 	push	1
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -10180,17 +10289,17 @@ $LN2@SBC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 569  :   if (reg.F.H==0)
+; 582  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
 	jne	SHORT $LN1@SBC
 
-; 570  :     updateCpuFlagH(a-carry,b,1);
+; 583  :     updateCpuFlagH(a-carry,b,1);
 
 	push	1
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -10203,17 +10312,17 @@ $LN2@SBC:
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 $LN1@SBC:
 
-; 571  :   updateCpuFlagZ(reg.raw8[dest]);
+; 584  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 572  : }
+; 585  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -10257,7 +10366,7 @@ _this$ = -4						; size = 4
 ??$SBC@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SBC<1,4,0>, COMDAT
 ; _this$ = ecx
 
-; 559  : void Cpu::SBC() {
+; 572  : void Cpu::SBC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -10273,20 +10382,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 560  :   reg.F.N = 1;
+; 573  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 561  :   uint8_t a=0,b=0;
+; 574  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 562  :   arithmeticMode<dest,src,mode>(a,b);
+; 575  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -10295,15 +10404,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$03$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,4,0>
 
-; 563  :   uint8_t carry = reg.F.C;
+; 576  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 564  :   reg.raw8[dest] = a - b - carry;
+; 577  :   reg.raw8[dest] = a - b - carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -10313,9 +10422,9 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 565  :   updateCpuFlagC(a,carry,1);
+; 578  :   updateCpuFlagC(a,carry,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -10325,17 +10434,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 566  :   if (reg.F.C==0)
+; 579  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
 	jne	SHORT $LN2@SBC
 
-; 567  :     updateCpuFlagC(a-carry,b,1);
+; 580  :     updateCpuFlagC(a-carry,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -10348,7 +10457,7 @@ _this$ = -4						; size = 4
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 $LN2@SBC:
 
-; 568  :   updateCpuFlagH(a,carry,1);
+; 581  :   updateCpuFlagH(a,carry,1);
 
 	push	1
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -10358,17 +10467,17 @@ $LN2@SBC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 569  :   if (reg.F.H==0)
+; 582  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
 	jne	SHORT $LN1@SBC
 
-; 570  :     updateCpuFlagH(a-carry,b,1);
+; 583  :     updateCpuFlagH(a-carry,b,1);
 
 	push	1
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -10381,17 +10490,17 @@ $LN2@SBC:
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 $LN1@SBC:
 
-; 571  :   updateCpuFlagZ(reg.raw8[dest]);
+; 584  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 572  : }
+; 585  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -10435,7 +10544,7 @@ _this$ = -4						; size = 4
 ??$SBC@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SBC<1,5,0>, COMDAT
 ; _this$ = ecx
 
-; 559  : void Cpu::SBC() {
+; 572  : void Cpu::SBC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -10451,20 +10560,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 560  :   reg.F.N = 1;
+; 573  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 561  :   uint8_t a=0,b=0;
+; 574  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 562  :   arithmeticMode<dest,src,mode>(a,b);
+; 575  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -10473,15 +10582,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$04$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,5,0>
 
-; 563  :   uint8_t carry = reg.F.C;
+; 576  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 564  :   reg.raw8[dest] = a - b - carry;
+; 577  :   reg.raw8[dest] = a - b - carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -10491,9 +10600,9 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 565  :   updateCpuFlagC(a,carry,1);
+; 578  :   updateCpuFlagC(a,carry,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -10503,17 +10612,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 566  :   if (reg.F.C==0)
+; 579  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
 	jne	SHORT $LN2@SBC
 
-; 567  :     updateCpuFlagC(a-carry,b,1);
+; 580  :     updateCpuFlagC(a-carry,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -10526,7 +10635,7 @@ _this$ = -4						; size = 4
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 $LN2@SBC:
 
-; 568  :   updateCpuFlagH(a,carry,1);
+; 581  :   updateCpuFlagH(a,carry,1);
 
 	push	1
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -10536,17 +10645,17 @@ $LN2@SBC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 569  :   if (reg.F.H==0)
+; 582  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
 	jne	SHORT $LN1@SBC
 
-; 570  :     updateCpuFlagH(a-carry,b,1);
+; 583  :     updateCpuFlagH(a-carry,b,1);
 
 	push	1
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -10559,17 +10668,17 @@ $LN2@SBC:
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 $LN1@SBC:
 
-; 571  :   updateCpuFlagZ(reg.raw8[dest]);
+; 584  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 572  : }
+; 585  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -10613,7 +10722,7 @@ _this$ = -4						; size = 4
 ??$SBC@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SBC<1,2,0>, COMDAT
 ; _this$ = ecx
 
-; 559  : void Cpu::SBC() {
+; 572  : void Cpu::SBC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -10629,20 +10738,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 560  :   reg.F.N = 1;
+; 573  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 561  :   uint8_t a=0,b=0;
+; 574  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 562  :   arithmeticMode<dest,src,mode>(a,b);
+; 575  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -10651,15 +10760,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$01$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,2,0>
 
-; 563  :   uint8_t carry = reg.F.C;
+; 576  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 564  :   reg.raw8[dest] = a - b - carry;
+; 577  :   reg.raw8[dest] = a - b - carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -10669,9 +10778,9 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 565  :   updateCpuFlagC(a,carry,1);
+; 578  :   updateCpuFlagC(a,carry,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -10681,17 +10790,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 566  :   if (reg.F.C==0)
+; 579  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
 	jne	SHORT $LN2@SBC
 
-; 567  :     updateCpuFlagC(a-carry,b,1);
+; 580  :     updateCpuFlagC(a-carry,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -10704,7 +10813,7 @@ _this$ = -4						; size = 4
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 $LN2@SBC:
 
-; 568  :   updateCpuFlagH(a,carry,1);
+; 581  :   updateCpuFlagH(a,carry,1);
 
 	push	1
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -10714,17 +10823,17 @@ $LN2@SBC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 569  :   if (reg.F.H==0)
+; 582  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
 	jne	SHORT $LN1@SBC
 
-; 570  :     updateCpuFlagH(a-carry,b,1);
+; 583  :     updateCpuFlagH(a-carry,b,1);
 
 	push	1
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -10737,17 +10846,17 @@ $LN2@SBC:
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 $LN1@SBC:
 
-; 571  :   updateCpuFlagZ(reg.raw8[dest]);
+; 584  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 572  : }
+; 585  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -10791,7 +10900,7 @@ _this$ = -4						; size = 4
 ??$SBC@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SBC<1,3,0>, COMDAT
 ; _this$ = ecx
 
-; 559  : void Cpu::SBC() {
+; 572  : void Cpu::SBC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -10807,20 +10916,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 560  :   reg.F.N = 1;
+; 573  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 561  :   uint8_t a=0,b=0;
+; 574  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 562  :   arithmeticMode<dest,src,mode>(a,b);
+; 575  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -10829,15 +10938,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,0>
 
-; 563  :   uint8_t carry = reg.F.C;
+; 576  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 564  :   reg.raw8[dest] = a - b - carry;
+; 577  :   reg.raw8[dest] = a - b - carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -10847,9 +10956,9 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 565  :   updateCpuFlagC(a,carry,1);
+; 578  :   updateCpuFlagC(a,carry,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -10859,17 +10968,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 566  :   if (reg.F.C==0)
+; 579  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
 	jne	SHORT $LN2@SBC
 
-; 567  :     updateCpuFlagC(a-carry,b,1);
+; 580  :     updateCpuFlagC(a-carry,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -10882,7 +10991,7 @@ _this$ = -4						; size = 4
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 $LN2@SBC:
 
-; 568  :   updateCpuFlagH(a,carry,1);
+; 581  :   updateCpuFlagH(a,carry,1);
 
 	push	1
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -10892,17 +11001,17 @@ $LN2@SBC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 569  :   if (reg.F.H==0)
+; 582  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
 	jne	SHORT $LN1@SBC
 
-; 570  :     updateCpuFlagH(a-carry,b,1);
+; 583  :     updateCpuFlagH(a-carry,b,1);
 
 	push	1
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -10915,17 +11024,17 @@ $LN2@SBC:
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 $LN1@SBC:
 
-; 571  :   updateCpuFlagZ(reg.raw8[dest]);
+; 584  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 572  : }
+; 585  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -10968,7 +11077,7 @@ _this$ = -4						; size = 4
 ??$SUB@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SUB<1,1,0>, COMDAT
 ; _this$ = ecx
 
-; 548  : void Cpu::SUB() {
+; 561  : void Cpu::SUB() {
 
 	push	ebp
 	mov	ebp, esp
@@ -10983,20 +11092,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 549  :   reg.F.N = 1;
+; 562  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 550  :   uint8_t a=0,b=0;
+; 563  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 551  :   arithmeticMode<dest,src,mode>(a,b);
+; 564  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -11005,7 +11114,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$00$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,1,0>
 
-; 552  :   reg.raw8[dest] = a - b;
+; 565  :   reg.raw8[dest] = a - b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11013,9 +11122,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 553  :   updateCpuFlagC(a,b,1);
+; 566  :   updateCpuFlagC(a,b,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -11025,7 +11134,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 554  :   updateCpuFlagH(a,b,1);
+; 567  :   updateCpuFlagH(a,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11035,17 +11144,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 555  :   updateCpuFlagZ(reg.raw8[dest]);
+; 568  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 556  : }
+; 569  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -11089,7 +11198,7 @@ _this$ = -4						; size = 4
 ??$SUB@$00$02$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SUB<1,3,1>, COMDAT
 ; _this$ = ecx
 
-; 548  : void Cpu::SUB() {
+; 561  : void Cpu::SUB() {
 
 	push	ebp
 	mov	ebp, esp
@@ -11104,20 +11213,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 549  :   reg.F.N = 1;
+; 562  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 550  :   uint8_t a=0,b=0;
+; 563  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 551  :   arithmeticMode<dest,src,mode>(a,b);
+; 564  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -11126,7 +11235,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$00@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,1>
 
-; 552  :   reg.raw8[dest] = a - b;
+; 565  :   reg.raw8[dest] = a - b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11134,9 +11243,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 553  :   updateCpuFlagC(a,b,1);
+; 566  :   updateCpuFlagC(a,b,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -11146,7 +11255,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 554  :   updateCpuFlagH(a,b,1);
+; 567  :   updateCpuFlagH(a,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11156,17 +11265,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 555  :   updateCpuFlagZ(reg.raw8[dest]);
+; 568  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 556  : }
+; 569  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -11210,7 +11319,7 @@ _this$ = -4						; size = 4
 ??$SUB@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SUB<1,6,0>, COMDAT
 ; _this$ = ecx
 
-; 548  : void Cpu::SUB() {
+; 561  : void Cpu::SUB() {
 
 	push	ebp
 	mov	ebp, esp
@@ -11225,20 +11334,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 549  :   reg.F.N = 1;
+; 562  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 550  :   uint8_t a=0,b=0;
+; 563  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 551  :   arithmeticMode<dest,src,mode>(a,b);
+; 564  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -11247,7 +11356,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$05$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,6,0>
 
-; 552  :   reg.raw8[dest] = a - b;
+; 565  :   reg.raw8[dest] = a - b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11255,9 +11364,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 553  :   updateCpuFlagC(a,b,1);
+; 566  :   updateCpuFlagC(a,b,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -11267,7 +11376,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 554  :   updateCpuFlagH(a,b,1);
+; 567  :   updateCpuFlagH(a,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11277,17 +11386,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 555  :   updateCpuFlagZ(reg.raw8[dest]);
+; 568  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 556  : }
+; 569  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -11331,7 +11440,7 @@ _this$ = -4						; size = 4
 ??$SUB@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SUB<1,7,0>, COMDAT
 ; _this$ = ecx
 
-; 548  : void Cpu::SUB() {
+; 561  : void Cpu::SUB() {
 
 	push	ebp
 	mov	ebp, esp
@@ -11346,20 +11455,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 549  :   reg.F.N = 1;
+; 562  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 550  :   uint8_t a=0,b=0;
+; 563  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 551  :   arithmeticMode<dest,src,mode>(a,b);
+; 564  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -11368,7 +11477,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$06$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,7,0>
 
-; 552  :   reg.raw8[dest] = a - b;
+; 565  :   reg.raw8[dest] = a - b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11376,9 +11485,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 553  :   updateCpuFlagC(a,b,1);
+; 566  :   updateCpuFlagC(a,b,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -11388,7 +11497,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 554  :   updateCpuFlagH(a,b,1);
+; 567  :   updateCpuFlagH(a,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11398,17 +11507,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 555  :   updateCpuFlagZ(reg.raw8[dest]);
+; 568  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 556  : }
+; 569  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -11452,7 +11561,7 @@ _this$ = -4						; size = 4
 ??$SUB@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SUB<1,4,0>, COMDAT
 ; _this$ = ecx
 
-; 548  : void Cpu::SUB() {
+; 561  : void Cpu::SUB() {
 
 	push	ebp
 	mov	ebp, esp
@@ -11467,20 +11576,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 549  :   reg.F.N = 1;
+; 562  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 550  :   uint8_t a=0,b=0;
+; 563  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 551  :   arithmeticMode<dest,src,mode>(a,b);
+; 564  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -11489,7 +11598,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$03$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,4,0>
 
-; 552  :   reg.raw8[dest] = a - b;
+; 565  :   reg.raw8[dest] = a - b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11497,9 +11606,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 553  :   updateCpuFlagC(a,b,1);
+; 566  :   updateCpuFlagC(a,b,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -11509,7 +11618,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 554  :   updateCpuFlagH(a,b,1);
+; 567  :   updateCpuFlagH(a,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11519,17 +11628,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 555  :   updateCpuFlagZ(reg.raw8[dest]);
+; 568  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 556  : }
+; 569  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -11573,7 +11682,7 @@ _this$ = -4						; size = 4
 ??$SUB@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SUB<1,5,0>, COMDAT
 ; _this$ = ecx
 
-; 548  : void Cpu::SUB() {
+; 561  : void Cpu::SUB() {
 
 	push	ebp
 	mov	ebp, esp
@@ -11588,20 +11697,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 549  :   reg.F.N = 1;
+; 562  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 550  :   uint8_t a=0,b=0;
+; 563  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 551  :   arithmeticMode<dest,src,mode>(a,b);
+; 564  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -11610,7 +11719,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$04$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,5,0>
 
-; 552  :   reg.raw8[dest] = a - b;
+; 565  :   reg.raw8[dest] = a - b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11618,9 +11727,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 553  :   updateCpuFlagC(a,b,1);
+; 566  :   updateCpuFlagC(a,b,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -11630,7 +11739,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 554  :   updateCpuFlagH(a,b,1);
+; 567  :   updateCpuFlagH(a,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11640,17 +11749,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 555  :   updateCpuFlagZ(reg.raw8[dest]);
+; 568  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 556  : }
+; 569  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -11694,7 +11803,7 @@ _this$ = -4						; size = 4
 ??$SUB@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SUB<1,2,0>, COMDAT
 ; _this$ = ecx
 
-; 548  : void Cpu::SUB() {
+; 561  : void Cpu::SUB() {
 
 	push	ebp
 	mov	ebp, esp
@@ -11709,20 +11818,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 549  :   reg.F.N = 1;
+; 562  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 550  :   uint8_t a=0,b=0;
+; 563  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 551  :   arithmeticMode<dest,src,mode>(a,b);
+; 564  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -11731,7 +11840,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$01$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,2,0>
 
-; 552  :   reg.raw8[dest] = a - b;
+; 565  :   reg.raw8[dest] = a - b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11739,9 +11848,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 553  :   updateCpuFlagC(a,b,1);
+; 566  :   updateCpuFlagC(a,b,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -11751,7 +11860,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 554  :   updateCpuFlagH(a,b,1);
+; 567  :   updateCpuFlagH(a,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11761,17 +11870,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 555  :   updateCpuFlagZ(reg.raw8[dest]);
+; 568  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 556  : }
+; 569  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -11815,7 +11924,7 @@ _this$ = -4						; size = 4
 ??$SUB@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::SUB<1,3,0>, COMDAT
 ; _this$ = ecx
 
-; 548  : void Cpu::SUB() {
+; 561  : void Cpu::SUB() {
 
 	push	ebp
 	mov	ebp, esp
@@ -11830,20 +11939,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 549  :   reg.F.N = 1;
+; 562  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 550  :   uint8_t a=0,b=0;
+; 563  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 551  :   arithmeticMode<dest,src,mode>(a,b);
+; 564  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -11852,7 +11961,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,0>
 
-; 552  :   reg.raw8[dest] = a - b;
+; 565  :   reg.raw8[dest] = a - b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11860,9 +11969,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 553  :   updateCpuFlagC(a,b,1);
+; 566  :   updateCpuFlagC(a,b,1);
 
 	push	1
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -11872,7 +11981,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 554  :   updateCpuFlagH(a,b,1);
+; 567  :   updateCpuFlagH(a,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -11882,17 +11991,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 555  :   updateCpuFlagZ(reg.raw8[dest]);
+; 568  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 556  : }
+; 569  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -11937,7 +12046,7 @@ _this$ = -4						; size = 4
 ??$ADC@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADC<1,1,0>, COMDAT
 ; _this$ = ecx
 
-; 530  : void Cpu::ADC() {
+; 536  : void Cpu::ADC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -11953,20 +12062,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 531  :   reg.F.N = 0;
+; 537  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 532  :   uint8_t a=0,b=0;
+; 538  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 533  :   arithmeticMode<dest,src,mode>(a,b);
+; 539  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -11975,15 +12084,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$00$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,1,0>
 
-; 534  :   uint8_t carry = reg.F.C;
+; 540  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 535  :   reg.raw8[dest] = a + b + carry;
+; 541  :   reg.raw8[dest] = a + b + carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -11993,10 +12102,10 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 536  : 
-; 537  :   updateCpuFlagC(a,carry,0);
+; 542  : 
+; 543  :   updateCpuFlagC(a,carry,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -12006,17 +12115,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 538  :   if (reg.F.C==0)
+; 544  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
-	jne	SHORT $LN2@ADC
+	jne	SHORT $LN3@ADC
 
-; 539  :     updateCpuFlagC(a+carry,b,0);
+; 545  :     updateCpuFlagC(a+carry,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -12027,9 +12136,9 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
-$LN2@ADC:
+$LN3@ADC:
 
-; 540  :   updateCpuFlagH(a,carry,0);
+; 546  :   updateCpuFlagH(a,carry,0);
 
 	push	0
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -12039,17 +12148,17 @@ $LN2@ADC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 541  :   if (reg.F.H==0)
+; 547  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
-	jne	SHORT $LN1@ADC
+	jne	SHORT $LN2@ADC
 
-; 542  :     updateCpuFlagH(a+carry,b,0);
+; 548  :     updateCpuFlagH(a+carry,b,0);
 
 	push	0
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -12060,24 +12169,57 @@ $LN2@ADC:
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
-$LN1@ADC:
+$LN2@ADC:
 
-; 543  :   updateCpuFlagZ(reg.raw8[dest]);
+; 549  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 544  : }
+; 550  : 
+; 551  :   if (opcode == 0x8E){
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+1081]
+	cmp	eax, 142				; 0000008eH
+	jne	SHORT $LN4@ADC
+
+; 552  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+
+; 553  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+$LN4@ADC:
+
+; 554  :   }
+; 555  :   
+; 556  : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN8@ADC
+	lea	edx, DWORD PTR $LN9@ADC
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -12087,20 +12229,21 @@ $LN1@ADC:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-$LN8@ADC:
+	npad	3
+$LN9@ADC:
 	DD	2
-	DD	$LN7@ADC
-$LN7@ADC:
+	DD	$LN8@ADC
+$LN8@ADC:
 	DD	-9					; fffffff7H
 	DD	1
-	DD	$LN5@ADC
+	DD	$LN6@ADC
 	DD	-21					; ffffffebH
 	DD	1
-	DD	$LN6@ADC
-$LN6@ADC:
+	DD	$LN7@ADC
+$LN7@ADC:
 	DB	98					; 00000062H
 	DB	0
-$LN5@ADC:
+$LN6@ADC:
 	DB	97					; 00000061H
 	DB	0
 ??$ADC@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ENDP		; emulation::gb::Cpu::ADC<1,1,0>
@@ -12116,7 +12259,7 @@ _this$ = -4						; size = 4
 ??$ADC@$00$02$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADC<1,3,1>, COMDAT
 ; _this$ = ecx
 
-; 530  : void Cpu::ADC() {
+; 536  : void Cpu::ADC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -12132,20 +12275,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 531  :   reg.F.N = 0;
+; 537  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 532  :   uint8_t a=0,b=0;
+; 538  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 533  :   arithmeticMode<dest,src,mode>(a,b);
+; 539  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -12154,15 +12297,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$00@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,1>
 
-; 534  :   uint8_t carry = reg.F.C;
+; 540  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 535  :   reg.raw8[dest] = a + b + carry;
+; 541  :   reg.raw8[dest] = a + b + carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -12172,10 +12315,10 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 536  : 
-; 537  :   updateCpuFlagC(a,carry,0);
+; 542  : 
+; 543  :   updateCpuFlagC(a,carry,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -12185,17 +12328,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 538  :   if (reg.F.C==0)
+; 544  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
-	jne	SHORT $LN2@ADC
+	jne	SHORT $LN3@ADC
 
-; 539  :     updateCpuFlagC(a+carry,b,0);
+; 545  :     updateCpuFlagC(a+carry,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -12206,9 +12349,9 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
-$LN2@ADC:
+$LN3@ADC:
 
-; 540  :   updateCpuFlagH(a,carry,0);
+; 546  :   updateCpuFlagH(a,carry,0);
 
 	push	0
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -12218,17 +12361,17 @@ $LN2@ADC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 541  :   if (reg.F.H==0)
+; 547  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
-	jne	SHORT $LN1@ADC
+	jne	SHORT $LN2@ADC
 
-; 542  :     updateCpuFlagH(a+carry,b,0);
+; 548  :     updateCpuFlagH(a+carry,b,0);
 
 	push	0
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -12239,24 +12382,57 @@ $LN2@ADC:
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
-$LN1@ADC:
+$LN2@ADC:
 
-; 543  :   updateCpuFlagZ(reg.raw8[dest]);
+; 549  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 544  : }
+; 550  : 
+; 551  :   if (opcode == 0x8E){
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+1081]
+	cmp	eax, 142				; 0000008eH
+	jne	SHORT $LN4@ADC
+
+; 552  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+
+; 553  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+$LN4@ADC:
+
+; 554  :   }
+; 555  :   
+; 556  : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN8@ADC
+	lea	edx, DWORD PTR $LN9@ADC
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -12266,20 +12442,21 @@ $LN1@ADC:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-$LN8@ADC:
+	npad	3
+$LN9@ADC:
 	DD	2
-	DD	$LN7@ADC
-$LN7@ADC:
+	DD	$LN8@ADC
+$LN8@ADC:
 	DD	-9					; fffffff7H
 	DD	1
-	DD	$LN5@ADC
+	DD	$LN6@ADC
 	DD	-21					; ffffffebH
 	DD	1
-	DD	$LN6@ADC
-$LN6@ADC:
+	DD	$LN7@ADC
+$LN7@ADC:
 	DB	98					; 00000062H
 	DB	0
-$LN5@ADC:
+$LN6@ADC:
 	DB	97					; 00000061H
 	DB	0
 ??$ADC@$00$02$00@Cpu@gb@emulation@@AAEXXZ ENDP		; emulation::gb::Cpu::ADC<1,3,1>
@@ -12295,7 +12472,7 @@ _this$ = -4						; size = 4
 ??$ADC@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADC<1,6,0>, COMDAT
 ; _this$ = ecx
 
-; 530  : void Cpu::ADC() {
+; 536  : void Cpu::ADC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -12311,20 +12488,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 531  :   reg.F.N = 0;
+; 537  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 532  :   uint8_t a=0,b=0;
+; 538  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 533  :   arithmeticMode<dest,src,mode>(a,b);
+; 539  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -12333,15 +12510,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$05$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,6,0>
 
-; 534  :   uint8_t carry = reg.F.C;
+; 540  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 535  :   reg.raw8[dest] = a + b + carry;
+; 541  :   reg.raw8[dest] = a + b + carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -12351,10 +12528,10 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 536  : 
-; 537  :   updateCpuFlagC(a,carry,0);
+; 542  : 
+; 543  :   updateCpuFlagC(a,carry,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -12364,17 +12541,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 538  :   if (reg.F.C==0)
+; 544  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
-	jne	SHORT $LN2@ADC
+	jne	SHORT $LN3@ADC
 
-; 539  :     updateCpuFlagC(a+carry,b,0);
+; 545  :     updateCpuFlagC(a+carry,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -12385,9 +12562,9 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
-$LN2@ADC:
+$LN3@ADC:
 
-; 540  :   updateCpuFlagH(a,carry,0);
+; 546  :   updateCpuFlagH(a,carry,0);
 
 	push	0
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -12397,17 +12574,17 @@ $LN2@ADC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 541  :   if (reg.F.H==0)
+; 547  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
-	jne	SHORT $LN1@ADC
+	jne	SHORT $LN2@ADC
 
-; 542  :     updateCpuFlagH(a+carry,b,0);
+; 548  :     updateCpuFlagH(a+carry,b,0);
 
 	push	0
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -12418,24 +12595,57 @@ $LN2@ADC:
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
-$LN1@ADC:
+$LN2@ADC:
 
-; 543  :   updateCpuFlagZ(reg.raw8[dest]);
+; 549  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 544  : }
+; 550  : 
+; 551  :   if (opcode == 0x8E){
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+1081]
+	cmp	eax, 142				; 0000008eH
+	jne	SHORT $LN4@ADC
+
+; 552  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+
+; 553  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+$LN4@ADC:
+
+; 554  :   }
+; 555  :   
+; 556  : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN8@ADC
+	lea	edx, DWORD PTR $LN9@ADC
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -12445,20 +12655,21 @@ $LN1@ADC:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-$LN8@ADC:
+	npad	3
+$LN9@ADC:
 	DD	2
-	DD	$LN7@ADC
-$LN7@ADC:
+	DD	$LN8@ADC
+$LN8@ADC:
 	DD	-9					; fffffff7H
 	DD	1
-	DD	$LN5@ADC
+	DD	$LN6@ADC
 	DD	-21					; ffffffebH
 	DD	1
-	DD	$LN6@ADC
-$LN6@ADC:
+	DD	$LN7@ADC
+$LN7@ADC:
 	DB	98					; 00000062H
 	DB	0
-$LN5@ADC:
+$LN6@ADC:
 	DB	97					; 00000061H
 	DB	0
 ??$ADC@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ENDP		; emulation::gb::Cpu::ADC<1,6,0>
@@ -12474,7 +12685,7 @@ _this$ = -4						; size = 4
 ??$ADC@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADC<1,7,0>, COMDAT
 ; _this$ = ecx
 
-; 530  : void Cpu::ADC() {
+; 536  : void Cpu::ADC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -12490,20 +12701,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 531  :   reg.F.N = 0;
+; 537  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 532  :   uint8_t a=0,b=0;
+; 538  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 533  :   arithmeticMode<dest,src,mode>(a,b);
+; 539  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -12512,15 +12723,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$06$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,7,0>
 
-; 534  :   uint8_t carry = reg.F.C;
+; 540  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 535  :   reg.raw8[dest] = a + b + carry;
+; 541  :   reg.raw8[dest] = a + b + carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -12530,10 +12741,10 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 536  : 
-; 537  :   updateCpuFlagC(a,carry,0);
+; 542  : 
+; 543  :   updateCpuFlagC(a,carry,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -12543,17 +12754,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 538  :   if (reg.F.C==0)
+; 544  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
-	jne	SHORT $LN2@ADC
+	jne	SHORT $LN3@ADC
 
-; 539  :     updateCpuFlagC(a+carry,b,0);
+; 545  :     updateCpuFlagC(a+carry,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -12564,9 +12775,9 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
-$LN2@ADC:
+$LN3@ADC:
 
-; 540  :   updateCpuFlagH(a,carry,0);
+; 546  :   updateCpuFlagH(a,carry,0);
 
 	push	0
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -12576,17 +12787,17 @@ $LN2@ADC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 541  :   if (reg.F.H==0)
+; 547  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
-	jne	SHORT $LN1@ADC
+	jne	SHORT $LN2@ADC
 
-; 542  :     updateCpuFlagH(a+carry,b,0);
+; 548  :     updateCpuFlagH(a+carry,b,0);
 
 	push	0
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -12597,24 +12808,57 @@ $LN2@ADC:
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
-$LN1@ADC:
+$LN2@ADC:
 
-; 543  :   updateCpuFlagZ(reg.raw8[dest]);
+; 549  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 544  : }
+; 550  : 
+; 551  :   if (opcode == 0x8E){
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+1081]
+	cmp	eax, 142				; 0000008eH
+	jne	SHORT $LN4@ADC
+
+; 552  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+
+; 553  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+$LN4@ADC:
+
+; 554  :   }
+; 555  :   
+; 556  : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN8@ADC
+	lea	edx, DWORD PTR $LN9@ADC
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -12624,20 +12868,21 @@ $LN1@ADC:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-$LN8@ADC:
+	npad	3
+$LN9@ADC:
 	DD	2
-	DD	$LN7@ADC
-$LN7@ADC:
+	DD	$LN8@ADC
+$LN8@ADC:
 	DD	-9					; fffffff7H
 	DD	1
-	DD	$LN5@ADC
+	DD	$LN6@ADC
 	DD	-21					; ffffffebH
 	DD	1
-	DD	$LN6@ADC
-$LN6@ADC:
+	DD	$LN7@ADC
+$LN7@ADC:
 	DB	98					; 00000062H
 	DB	0
-$LN5@ADC:
+$LN6@ADC:
 	DB	97					; 00000061H
 	DB	0
 ??$ADC@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ENDP		; emulation::gb::Cpu::ADC<1,7,0>
@@ -12653,7 +12898,7 @@ _this$ = -4						; size = 4
 ??$ADC@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADC<1,4,0>, COMDAT
 ; _this$ = ecx
 
-; 530  : void Cpu::ADC() {
+; 536  : void Cpu::ADC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -12669,20 +12914,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 531  :   reg.F.N = 0;
+; 537  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 532  :   uint8_t a=0,b=0;
+; 538  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 533  :   arithmeticMode<dest,src,mode>(a,b);
+; 539  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -12691,15 +12936,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$03$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,4,0>
 
-; 534  :   uint8_t carry = reg.F.C;
+; 540  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 535  :   reg.raw8[dest] = a + b + carry;
+; 541  :   reg.raw8[dest] = a + b + carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -12709,10 +12954,10 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 536  : 
-; 537  :   updateCpuFlagC(a,carry,0);
+; 542  : 
+; 543  :   updateCpuFlagC(a,carry,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -12722,17 +12967,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 538  :   if (reg.F.C==0)
+; 544  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
-	jne	SHORT $LN2@ADC
+	jne	SHORT $LN3@ADC
 
-; 539  :     updateCpuFlagC(a+carry,b,0);
+; 545  :     updateCpuFlagC(a+carry,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -12743,9 +12988,9 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
-$LN2@ADC:
+$LN3@ADC:
 
-; 540  :   updateCpuFlagH(a,carry,0);
+; 546  :   updateCpuFlagH(a,carry,0);
 
 	push	0
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -12755,17 +13000,17 @@ $LN2@ADC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 541  :   if (reg.F.H==0)
+; 547  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
-	jne	SHORT $LN1@ADC
+	jne	SHORT $LN2@ADC
 
-; 542  :     updateCpuFlagH(a+carry,b,0);
+; 548  :     updateCpuFlagH(a+carry,b,0);
 
 	push	0
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -12776,24 +13021,57 @@ $LN2@ADC:
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
-$LN1@ADC:
+$LN2@ADC:
 
-; 543  :   updateCpuFlagZ(reg.raw8[dest]);
+; 549  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 544  : }
+; 550  : 
+; 551  :   if (opcode == 0x8E){
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+1081]
+	cmp	eax, 142				; 0000008eH
+	jne	SHORT $LN4@ADC
+
+; 552  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+
+; 553  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+$LN4@ADC:
+
+; 554  :   }
+; 555  :   
+; 556  : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN8@ADC
+	lea	edx, DWORD PTR $LN9@ADC
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -12803,20 +13081,21 @@ $LN1@ADC:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-$LN8@ADC:
+	npad	3
+$LN9@ADC:
 	DD	2
-	DD	$LN7@ADC
-$LN7@ADC:
+	DD	$LN8@ADC
+$LN8@ADC:
 	DD	-9					; fffffff7H
 	DD	1
-	DD	$LN5@ADC
+	DD	$LN6@ADC
 	DD	-21					; ffffffebH
 	DD	1
-	DD	$LN6@ADC
-$LN6@ADC:
+	DD	$LN7@ADC
+$LN7@ADC:
 	DB	98					; 00000062H
 	DB	0
-$LN5@ADC:
+$LN6@ADC:
 	DB	97					; 00000061H
 	DB	0
 ??$ADC@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ENDP		; emulation::gb::Cpu::ADC<1,4,0>
@@ -12832,7 +13111,7 @@ _this$ = -4						; size = 4
 ??$ADC@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADC<1,5,0>, COMDAT
 ; _this$ = ecx
 
-; 530  : void Cpu::ADC() {
+; 536  : void Cpu::ADC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -12848,20 +13127,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 531  :   reg.F.N = 0;
+; 537  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 532  :   uint8_t a=0,b=0;
+; 538  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 533  :   arithmeticMode<dest,src,mode>(a,b);
+; 539  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -12870,15 +13149,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$04$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,5,0>
 
-; 534  :   uint8_t carry = reg.F.C;
+; 540  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 535  :   reg.raw8[dest] = a + b + carry;
+; 541  :   reg.raw8[dest] = a + b + carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -12888,10 +13167,10 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 536  : 
-; 537  :   updateCpuFlagC(a,carry,0);
+; 542  : 
+; 543  :   updateCpuFlagC(a,carry,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -12901,17 +13180,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 538  :   if (reg.F.C==0)
+; 544  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
-	jne	SHORT $LN2@ADC
+	jne	SHORT $LN3@ADC
 
-; 539  :     updateCpuFlagC(a+carry,b,0);
+; 545  :     updateCpuFlagC(a+carry,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -12922,9 +13201,9 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
-$LN2@ADC:
+$LN3@ADC:
 
-; 540  :   updateCpuFlagH(a,carry,0);
+; 546  :   updateCpuFlagH(a,carry,0);
 
 	push	0
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -12934,17 +13213,17 @@ $LN2@ADC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 541  :   if (reg.F.H==0)
+; 547  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
-	jne	SHORT $LN1@ADC
+	jne	SHORT $LN2@ADC
 
-; 542  :     updateCpuFlagH(a+carry,b,0);
+; 548  :     updateCpuFlagH(a+carry,b,0);
 
 	push	0
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -12955,24 +13234,57 @@ $LN2@ADC:
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
-$LN1@ADC:
+$LN2@ADC:
 
-; 543  :   updateCpuFlagZ(reg.raw8[dest]);
+; 549  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 544  : }
+; 550  : 
+; 551  :   if (opcode == 0x8E){
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+1081]
+	cmp	eax, 142				; 0000008eH
+	jne	SHORT $LN4@ADC
+
+; 552  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+
+; 553  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+$LN4@ADC:
+
+; 554  :   }
+; 555  :   
+; 556  : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN8@ADC
+	lea	edx, DWORD PTR $LN9@ADC
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -12982,20 +13294,21 @@ $LN1@ADC:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-$LN8@ADC:
+	npad	3
+$LN9@ADC:
 	DD	2
-	DD	$LN7@ADC
-$LN7@ADC:
+	DD	$LN8@ADC
+$LN8@ADC:
 	DD	-9					; fffffff7H
 	DD	1
-	DD	$LN5@ADC
+	DD	$LN6@ADC
 	DD	-21					; ffffffebH
 	DD	1
-	DD	$LN6@ADC
-$LN6@ADC:
+	DD	$LN7@ADC
+$LN7@ADC:
 	DB	98					; 00000062H
 	DB	0
-$LN5@ADC:
+$LN6@ADC:
 	DB	97					; 00000061H
 	DB	0
 ??$ADC@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ENDP		; emulation::gb::Cpu::ADC<1,5,0>
@@ -13011,7 +13324,7 @@ _this$ = -4						; size = 4
 ??$ADC@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADC<1,2,0>, COMDAT
 ; _this$ = ecx
 
-; 530  : void Cpu::ADC() {
+; 536  : void Cpu::ADC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -13027,20 +13340,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 531  :   reg.F.N = 0;
+; 537  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 532  :   uint8_t a=0,b=0;
+; 538  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 533  :   arithmeticMode<dest,src,mode>(a,b);
+; 539  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -13049,15 +13362,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$01$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,2,0>
 
-; 534  :   uint8_t carry = reg.F.C;
+; 540  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 535  :   reg.raw8[dest] = a + b + carry;
+; 541  :   reg.raw8[dest] = a + b + carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -13067,10 +13380,10 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 536  : 
-; 537  :   updateCpuFlagC(a,carry,0);
+; 542  : 
+; 543  :   updateCpuFlagC(a,carry,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -13080,17 +13393,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 538  :   if (reg.F.C==0)
+; 544  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
-	jne	SHORT $LN2@ADC
+	jne	SHORT $LN3@ADC
 
-; 539  :     updateCpuFlagC(a+carry,b,0);
+; 545  :     updateCpuFlagC(a+carry,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -13101,9 +13414,9 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
-$LN2@ADC:
+$LN3@ADC:
 
-; 540  :   updateCpuFlagH(a,carry,0);
+; 546  :   updateCpuFlagH(a,carry,0);
 
 	push	0
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -13113,17 +13426,17 @@ $LN2@ADC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 541  :   if (reg.F.H==0)
+; 547  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
-	jne	SHORT $LN1@ADC
+	jne	SHORT $LN2@ADC
 
-; 542  :     updateCpuFlagH(a+carry,b,0);
+; 548  :     updateCpuFlagH(a+carry,b,0);
 
 	push	0
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -13134,24 +13447,57 @@ $LN2@ADC:
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
-$LN1@ADC:
+$LN2@ADC:
 
-; 543  :   updateCpuFlagZ(reg.raw8[dest]);
+; 549  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 544  : }
+; 550  : 
+; 551  :   if (opcode == 0x8E){
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+1081]
+	cmp	eax, 142				; 0000008eH
+	jne	SHORT $LN4@ADC
+
+; 552  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+
+; 553  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+$LN4@ADC:
+
+; 554  :   }
+; 555  :   
+; 556  : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN8@ADC
+	lea	edx, DWORD PTR $LN9@ADC
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -13161,20 +13507,21 @@ $LN1@ADC:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-$LN8@ADC:
+	npad	3
+$LN9@ADC:
 	DD	2
-	DD	$LN7@ADC
-$LN7@ADC:
+	DD	$LN8@ADC
+$LN8@ADC:
 	DD	-9					; fffffff7H
 	DD	1
-	DD	$LN5@ADC
+	DD	$LN6@ADC
 	DD	-21					; ffffffebH
 	DD	1
-	DD	$LN6@ADC
-$LN6@ADC:
+	DD	$LN7@ADC
+$LN7@ADC:
 	DB	98					; 00000062H
 	DB	0
-$LN5@ADC:
+$LN6@ADC:
 	DB	97					; 00000061H
 	DB	0
 ??$ADC@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ENDP		; emulation::gb::Cpu::ADC<1,2,0>
@@ -13190,7 +13537,7 @@ _this$ = -4						; size = 4
 ??$ADC@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADC<1,3,0>, COMDAT
 ; _this$ = ecx
 
-; 530  : void Cpu::ADC() {
+; 536  : void Cpu::ADC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -13206,20 +13553,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 531  :   reg.F.N = 0;
+; 537  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 532  :   uint8_t a=0,b=0;
+; 538  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 533  :   arithmeticMode<dest,src,mode>(a,b);
+; 539  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -13228,15 +13575,15 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,0>
 
-; 534  :   uint8_t carry = reg.F.C;
+; 540  :   uint8_t carry = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
 	mov	BYTE PTR _carry$[ebp], al
 
-; 535  :   reg.raw8[dest] = a + b + carry;
+; 541  :   reg.raw8[dest] = a + b + carry;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -13246,10 +13593,10 @@ _this$ = -4						; size = 4
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+edx+1056], cl
+	mov	BYTE PTR [eax+edx+1064], cl
 
-; 536  : 
-; 537  :   updateCpuFlagC(a,carry,0);
+; 542  : 
+; 543  :   updateCpuFlagC(a,carry,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _carry$[ebp]
@@ -13259,17 +13606,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 538  :   if (reg.F.C==0)
+; 544  :   if (reg.F.C==0)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
-	jne	SHORT $LN2@ADC
+	jne	SHORT $LN3@ADC
 
-; 539  :     updateCpuFlagC(a+carry,b,0);
+; 545  :     updateCpuFlagC(a+carry,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -13280,9 +13627,9 @@ _this$ = -4						; size = 4
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
-$LN2@ADC:
+$LN3@ADC:
 
-; 540  :   updateCpuFlagH(a,carry,0);
+; 546  :   updateCpuFlagH(a,carry,0);
 
 	push	0
 	movzx	eax, BYTE PTR _carry$[ebp]
@@ -13292,17 +13639,17 @@ $LN2@ADC:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 541  :   if (reg.F.H==0)
+; 547  :   if (reg.F.H==0)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
-	jne	SHORT $LN1@ADC
+	jne	SHORT $LN2@ADC
 
-; 542  :     updateCpuFlagH(a+carry,b,0);
+; 548  :     updateCpuFlagH(a+carry,b,0);
 
 	push	0
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -13313,24 +13660,57 @@ $LN2@ADC:
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
-$LN1@ADC:
+$LN2@ADC:
 
-; 543  :   updateCpuFlagZ(reg.raw8[dest]);
+; 549  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 544  : }
+; 550  : 
+; 551  :   if (opcode == 0x8E){
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+1081]
+	cmp	eax, 142				; 0000008eH
+	jne	SHORT $LN4@ADC
+
+; 552  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+
+; 553  :           Tick();Tick();Tick();Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
+$LN4@ADC:
+
+; 554  :   }
+; 555  :   
+; 556  : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN8@ADC
+	lea	edx, DWORD PTR $LN9@ADC
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -13340,20 +13720,21 @@ $LN1@ADC:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-$LN8@ADC:
+	npad	3
+$LN9@ADC:
 	DD	2
-	DD	$LN7@ADC
-$LN7@ADC:
+	DD	$LN8@ADC
+$LN8@ADC:
 	DD	-9					; fffffff7H
 	DD	1
-	DD	$LN5@ADC
+	DD	$LN6@ADC
 	DD	-21					; ffffffebH
 	DD	1
-	DD	$LN6@ADC
-$LN6@ADC:
+	DD	$LN7@ADC
+$LN7@ADC:
 	DB	98					; 00000062H
 	DB	0
-$LN5@ADC:
+$LN6@ADC:
 	DB	97					; 00000061H
 	DB	0
 ??$ADC@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ENDP		; emulation::gb::Cpu::ADC<1,3,0>
@@ -13368,7 +13749,7 @@ _this$ = -4						; size = 4
 ??$ADD@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADD<1,1,0>, COMDAT
 ; _this$ = ecx
 
-; 492  : void Cpu::ADD() {
+; 499  : void Cpu::ADD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -13383,20 +13764,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 493  :   reg.F.N = 0;
+; 500  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 494  :   uint8_t a=0,b=0;
+; 501  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 495  :   arithmeticMode<dest,src,mode>(a,b);
+; 502  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -13405,8 +13786,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$00$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,1,0>
 
-; 496  : 
-; 497  :   reg.raw8[dest] = a + b;
+; 503  :   reg.raw8[dest] = a + b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -13414,9 +13794,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 498  :   updateCpuFlagC(a,b,0);
+; 504  :   updateCpuFlagC(a,b,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -13426,7 +13806,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 499  :   updateCpuFlagH(a,b,0);
+; 505  :   updateCpuFlagH(a,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -13436,17 +13816,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 500  :   updateCpuFlagZ(reg.raw8[dest]);
+; 506  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 501  : }
+; 507  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -13490,7 +13870,7 @@ _this$ = -4						; size = 4
 ??$ADD@$00$02$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADD<1,3,1>, COMDAT
 ; _this$ = ecx
 
-; 492  : void Cpu::ADD() {
+; 499  : void Cpu::ADD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -13505,20 +13885,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 493  :   reg.F.N = 0;
+; 500  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 494  :   uint8_t a=0,b=0;
+; 501  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 495  :   arithmeticMode<dest,src,mode>(a,b);
+; 502  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -13527,8 +13907,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$00@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,1>
 
-; 496  : 
-; 497  :   reg.raw8[dest] = a + b;
+; 503  :   reg.raw8[dest] = a + b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -13536,9 +13915,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 498  :   updateCpuFlagC(a,b,0);
+; 504  :   updateCpuFlagC(a,b,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -13548,7 +13927,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 499  :   updateCpuFlagH(a,b,0);
+; 505  :   updateCpuFlagH(a,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -13558,17 +13937,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 500  :   updateCpuFlagZ(reg.raw8[dest]);
+; 506  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 501  : }
+; 507  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -13612,7 +13991,7 @@ _this$ = -4						; size = 4
 ??$ADD@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADD<1,6,0>, COMDAT
 ; _this$ = ecx
 
-; 492  : void Cpu::ADD() {
+; 499  : void Cpu::ADD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -13627,20 +14006,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 493  :   reg.F.N = 0;
+; 500  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 494  :   uint8_t a=0,b=0;
+; 501  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 495  :   arithmeticMode<dest,src,mode>(a,b);
+; 502  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -13649,8 +14028,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$05$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,6,0>
 
-; 496  : 
-; 497  :   reg.raw8[dest] = a + b;
+; 503  :   reg.raw8[dest] = a + b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -13658,9 +14036,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 498  :   updateCpuFlagC(a,b,0);
+; 504  :   updateCpuFlagC(a,b,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -13670,7 +14048,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 499  :   updateCpuFlagH(a,b,0);
+; 505  :   updateCpuFlagH(a,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -13680,17 +14058,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 500  :   updateCpuFlagZ(reg.raw8[dest]);
+; 506  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 501  : }
+; 507  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -13734,7 +14112,7 @@ _this$ = -4						; size = 4
 ??$ADD@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADD<1,7,0>, COMDAT
 ; _this$ = ecx
 
-; 492  : void Cpu::ADD() {
+; 499  : void Cpu::ADD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -13749,20 +14127,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 493  :   reg.F.N = 0;
+; 500  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 494  :   uint8_t a=0,b=0;
+; 501  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 495  :   arithmeticMode<dest,src,mode>(a,b);
+; 502  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -13771,8 +14149,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$06$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,7,0>
 
-; 496  : 
-; 497  :   reg.raw8[dest] = a + b;
+; 503  :   reg.raw8[dest] = a + b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -13780,9 +14157,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 498  :   updateCpuFlagC(a,b,0);
+; 504  :   updateCpuFlagC(a,b,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -13792,7 +14169,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 499  :   updateCpuFlagH(a,b,0);
+; 505  :   updateCpuFlagH(a,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -13802,17 +14179,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 500  :   updateCpuFlagZ(reg.raw8[dest]);
+; 506  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 501  : }
+; 507  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -13856,7 +14233,7 @@ _this$ = -4						; size = 4
 ??$ADD@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADD<1,4,0>, COMDAT
 ; _this$ = ecx
 
-; 492  : void Cpu::ADD() {
+; 499  : void Cpu::ADD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -13871,20 +14248,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 493  :   reg.F.N = 0;
+; 500  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 494  :   uint8_t a=0,b=0;
+; 501  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 495  :   arithmeticMode<dest,src,mode>(a,b);
+; 502  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -13893,8 +14270,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$03$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,4,0>
 
-; 496  : 
-; 497  :   reg.raw8[dest] = a + b;
+; 503  :   reg.raw8[dest] = a + b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -13902,9 +14278,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 498  :   updateCpuFlagC(a,b,0);
+; 504  :   updateCpuFlagC(a,b,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -13914,7 +14290,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 499  :   updateCpuFlagH(a,b,0);
+; 505  :   updateCpuFlagH(a,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -13924,17 +14300,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 500  :   updateCpuFlagZ(reg.raw8[dest]);
+; 506  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 501  : }
+; 507  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -13978,7 +14354,7 @@ _this$ = -4						; size = 4
 ??$ADD@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADD<1,5,0>, COMDAT
 ; _this$ = ecx
 
-; 492  : void Cpu::ADD() {
+; 499  : void Cpu::ADD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -13993,20 +14369,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 493  :   reg.F.N = 0;
+; 500  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 494  :   uint8_t a=0,b=0;
+; 501  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 495  :   arithmeticMode<dest,src,mode>(a,b);
+; 502  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -14015,8 +14391,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$04$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,5,0>
 
-; 496  : 
-; 497  :   reg.raw8[dest] = a + b;
+; 503  :   reg.raw8[dest] = a + b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -14024,9 +14399,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 498  :   updateCpuFlagC(a,b,0);
+; 504  :   updateCpuFlagC(a,b,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -14036,7 +14411,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 499  :   updateCpuFlagH(a,b,0);
+; 505  :   updateCpuFlagH(a,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -14046,17 +14421,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 500  :   updateCpuFlagZ(reg.raw8[dest]);
+; 506  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 501  : }
+; 507  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -14100,7 +14475,7 @@ _this$ = -4						; size = 4
 ??$ADD@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADD<1,2,0>, COMDAT
 ; _this$ = ecx
 
-; 492  : void Cpu::ADD() {
+; 499  : void Cpu::ADD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -14115,20 +14490,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 493  :   reg.F.N = 0;
+; 500  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 494  :   uint8_t a=0,b=0;
+; 501  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 495  :   arithmeticMode<dest,src,mode>(a,b);
+; 502  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -14137,8 +14512,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$01$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,2,0>
 
-; 496  : 
-; 497  :   reg.raw8[dest] = a + b;
+; 503  :   reg.raw8[dest] = a + b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -14146,9 +14520,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 498  :   updateCpuFlagC(a,b,0);
+; 504  :   updateCpuFlagC(a,b,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -14158,7 +14532,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 499  :   updateCpuFlagH(a,b,0);
+; 505  :   updateCpuFlagH(a,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -14168,17 +14542,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 500  :   updateCpuFlagZ(reg.raw8[dest]);
+; 506  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 501  : }
+; 507  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -14222,7 +14596,7 @@ _this$ = -4						; size = 4
 ??$ADD@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::ADD<1,3,0>, COMDAT
 ; _this$ = ecx
 
-; 492  : void Cpu::ADD() {
+; 499  : void Cpu::ADD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -14237,20 +14611,20 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 493  :   reg.F.N = 0;
+; 500  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 494  :   uint8_t a=0,b=0;
+; 501  :   uint8_t a=0,b=0;
 
 	mov	BYTE PTR _a$[ebp], 0
 	mov	BYTE PTR _b$[ebp], 0
 
-; 495  :   arithmeticMode<dest,src,mode>(a,b);
+; 502  :   arithmeticMode<dest,src,mode>(a,b);
 
 	lea	eax, DWORD PTR _b$[ebp]
 	push	eax
@@ -14259,8 +14633,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$arithmeticMode@$00$02$0A@@Cpu@gb@emulation@@AAEXAAE0@Z ; emulation::gb::Cpu::arithmeticMode<1,3,0>
 
-; 496  : 
-; 497  :   reg.raw8[dest] = a + b;
+; 503  :   reg.raw8[dest] = a + b;
 
 	movzx	edx, BYTE PTR _a$[ebp]
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -14268,9 +14641,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+ecx+1056], dl
+	mov	BYTE PTR [eax+ecx+1064], dl
 
-; 498  :   updateCpuFlagC(a,b,0);
+; 504  :   updateCpuFlagC(a,b,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _b$[ebp]
@@ -14280,7 +14653,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 499  :   updateCpuFlagH(a,b,0);
+; 505  :   updateCpuFlagH(a,b,0);
 
 	push	0
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -14290,17 +14663,17 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 500  :   updateCpuFlagZ(reg.raw8[dest]);
+; 506  :   updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	edx, 1
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 501  : }
+; 507  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -14342,7 +14715,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$00$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<1,1>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -14351,7 +14724,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 0
@@ -14359,10 +14732,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -14378,7 +14751,7 @@ _this$ = -4						; size = 4
 ??$LDr$r@$00$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDr$r<1,3>, COMDAT
 ; _this$ = ecx
 
-; 394  : void Cpu::LDr$r() {
+; 397  : void Cpu::LDr$r() {
 
 	push	ebp
 	mov	ebp, esp
@@ -14386,22 +14759,22 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 395  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+; 398  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 396  : }
+; 399  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -14419,7 +14792,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$00$05@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<1,6>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -14428,7 +14801,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 6
@@ -14436,10 +14809,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -14455,7 +14828,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$00$06@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<1,7>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -14464,7 +14837,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 7
@@ -14472,10 +14845,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -14491,7 +14864,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$00$03@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<1,4>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -14500,7 +14873,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 2
@@ -14508,10 +14881,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -14527,7 +14900,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$00$04@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<1,5>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -14536,7 +14909,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 5
@@ -14544,10 +14917,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -14563,7 +14936,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$00$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<1,2>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -14572,7 +14945,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 1
@@ -14580,10 +14953,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -14599,7 +14972,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$00$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<1,3>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -14608,7 +14981,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 3
@@ -14616,10 +14989,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -14635,7 +15008,7 @@ _this$ = -4						; size = 4
 ??$LD$rr@$02$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD$rr<3,1>, COMDAT
 ; _this$ = ecx
 
-; 389  : void Cpu::LD$rr() { //(dest), src
+; 392  : void Cpu::LD$rr() { //(dest), src
 
 	push	ebp
 	mov	ebp, esp
@@ -14643,23 +15016,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 390  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+; 393  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 391  : }
+; 394  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -14677,7 +15050,7 @@ _this$ = -4						; size = 4
 ??$LD$rr@$02$05@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD$rr<3,6>, COMDAT
 ; _this$ = ecx
 
-; 389  : void Cpu::LD$rr() { //(dest), src
+; 392  : void Cpu::LD$rr() { //(dest), src
 
 	push	ebp
 	mov	ebp, esp
@@ -14685,23 +15058,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 390  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+; 393  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
 
 	mov	eax, 1
 	imul	eax, 6
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 391  : }
+; 394  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -14719,7 +15092,7 @@ _this$ = -4						; size = 4
 ??$LD$rr@$02$06@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD$rr<3,7>, COMDAT
 ; _this$ = ecx
 
-; 389  : void Cpu::LD$rr() { //(dest), src
+; 392  : void Cpu::LD$rr() { //(dest), src
 
 	push	ebp
 	mov	ebp, esp
@@ -14727,23 +15100,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 390  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+; 393  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
 
 	mov	eax, 1
 	imul	eax, 7
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 391  : }
+; 394  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -14761,7 +15134,7 @@ _this$ = -4						; size = 4
 ??$LD$rr@$02$03@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD$rr<3,4>, COMDAT
 ; _this$ = ecx
 
-; 389  : void Cpu::LD$rr() { //(dest), src
+; 392  : void Cpu::LD$rr() { //(dest), src
 
 	push	ebp
 	mov	ebp, esp
@@ -14769,23 +15142,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 390  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+; 393  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
 
 	mov	eax, 1
 	shl	eax, 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 391  : }
+; 394  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -14803,7 +15176,7 @@ _this$ = -4						; size = 4
 ??$LD$rr@$02$04@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD$rr<3,5>, COMDAT
 ; _this$ = ecx
 
-; 389  : void Cpu::LD$rr() { //(dest), src
+; 392  : void Cpu::LD$rr() { //(dest), src
 
 	push	ebp
 	mov	ebp, esp
@@ -14811,23 +15184,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 390  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+; 393  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
 
 	mov	eax, 1
 	imul	eax, 5
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 391  : }
+; 394  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -14845,7 +15218,7 @@ _this$ = -4						; size = 4
 ??$LD$rr@$02$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD$rr<3,2>, COMDAT
 ; _this$ = ecx
 
-; 389  : void Cpu::LD$rr() { //(dest), src
+; 392  : void Cpu::LD$rr() { //(dest), src
 
 	push	ebp
 	mov	ebp, esp
@@ -14853,23 +15226,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 390  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+; 393  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
 
 	mov	eax, 1
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 391  : }
+; 394  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -14887,7 +15260,7 @@ _this$ = -4						; size = 4
 ??$LD$rr@$02$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD$rr<3,3>, COMDAT
 ; _this$ = ecx
 
-; 389  : void Cpu::LD$rr() { //(dest), src
+; 392  : void Cpu::LD$rr() { //(dest), src
 
 	push	ebp
 	mov	ebp, esp
@@ -14895,23 +15268,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 390  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+; 393  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
 
 	mov	eax, 1
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 391  : }
+; 394  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -14929,7 +15302,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$05$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<6,1>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -14938,7 +15311,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 0
@@ -14946,10 +15319,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -14965,7 +15338,7 @@ _this$ = -4						; size = 4
 ??$LDr$r@$05$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDr$r<6,3>, COMDAT
 ; _this$ = ecx
 
-; 394  : void Cpu::LDr$r() {
+; 397  : void Cpu::LDr$r() {
 
 	push	ebp
 	mov	ebp, esp
@@ -14973,22 +15346,22 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 395  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+; 398  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 396  : }
+; 399  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -15006,7 +15379,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$05$05@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<6,6>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15015,7 +15388,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 6
@@ -15023,10 +15396,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15042,7 +15415,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$05$06@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<6,7>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15051,7 +15424,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 7
@@ -15059,10 +15432,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15078,7 +15451,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$05$03@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<6,4>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15087,7 +15460,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 2
@@ -15095,10 +15468,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15114,7 +15487,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$05$04@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<6,5>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15123,7 +15496,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 5
@@ -15131,10 +15504,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15150,7 +15523,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$05$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<6,2>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15159,7 +15532,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 1
@@ -15167,10 +15540,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15186,7 +15559,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$05$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<6,3>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15195,7 +15568,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 3
@@ -15203,10 +15576,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15222,7 +15595,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$06$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<7,1>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15231,7 +15604,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 0
@@ -15239,10 +15612,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15258,7 +15631,7 @@ _this$ = -4						; size = 4
 ??$LDr$r@$06$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDr$r<7,3>, COMDAT
 ; _this$ = ecx
 
-; 394  : void Cpu::LDr$r() {
+; 397  : void Cpu::LDr$r() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15266,22 +15639,22 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 395  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+; 398  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 396  : }
+; 399  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -15299,7 +15672,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$06$05@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<7,6>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15308,7 +15681,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 6
@@ -15316,10 +15689,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15335,7 +15708,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$06$06@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<7,7>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15344,7 +15717,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 7
@@ -15352,10 +15725,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15371,7 +15744,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$06$03@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<7,4>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15380,7 +15753,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 2
@@ -15388,10 +15761,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15407,7 +15780,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$06$04@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<7,5>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15416,7 +15789,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 5
@@ -15424,10 +15797,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15443,7 +15816,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$06$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<7,2>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15452,7 +15825,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 1
@@ -15460,10 +15833,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15479,7 +15852,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$06$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<7,3>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15488,7 +15861,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 3
@@ -15496,10 +15869,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15515,7 +15888,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$03$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<4,1>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15524,7 +15897,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 0
@@ -15532,10 +15905,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15551,7 +15924,7 @@ _this$ = -4						; size = 4
 ??$LDr$r@$03$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDr$r<4,3>, COMDAT
 ; _this$ = ecx
 
-; 394  : void Cpu::LDr$r() {
+; 397  : void Cpu::LDr$r() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15559,22 +15932,22 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 395  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+; 398  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 396  : }
+; 399  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -15592,7 +15965,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$03$05@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<4,6>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15601,7 +15974,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 6
@@ -15609,10 +15982,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15628,7 +16001,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$03$06@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<4,7>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15637,7 +16010,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 7
@@ -15645,10 +16018,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15664,7 +16037,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$03$03@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<4,4>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15673,7 +16046,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 2
@@ -15681,10 +16054,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15700,7 +16073,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$03$04@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<4,5>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15709,7 +16082,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 5
@@ -15717,10 +16090,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15736,7 +16109,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$03$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<4,2>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15745,7 +16118,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 1
@@ -15753,10 +16126,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15772,7 +16145,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$03$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<4,3>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15781,7 +16154,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 3
@@ -15789,10 +16162,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15808,7 +16181,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$04$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<5,1>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15817,7 +16190,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 0
@@ -15825,10 +16198,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15844,7 +16217,7 @@ _this$ = -4						; size = 4
 ??$LDr$r@$04$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDr$r<5,3>, COMDAT
 ; _this$ = ecx
 
-; 394  : void Cpu::LDr$r() {
+; 397  : void Cpu::LDr$r() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15852,22 +16225,22 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 395  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+; 398  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 396  : }
+; 399  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -15885,7 +16258,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$04$05@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<5,6>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15894,7 +16267,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 6
@@ -15902,10 +16275,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15921,7 +16294,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$04$06@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<5,7>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15930,7 +16303,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 7
@@ -15938,10 +16311,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15957,7 +16330,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$04$03@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<5,4>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -15966,7 +16339,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 2
@@ -15974,10 +16347,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -15993,7 +16366,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$04$04@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<5,5>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16002,7 +16375,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 5
@@ -16010,10 +16383,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16029,7 +16402,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$04$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<5,2>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16038,7 +16411,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 1
@@ -16046,10 +16419,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16065,7 +16438,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$04$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<5,3>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16074,7 +16447,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 3
@@ -16082,10 +16455,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16101,7 +16474,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$01$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<2,1>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16110,7 +16483,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 0
@@ -16118,10 +16491,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16137,7 +16510,7 @@ _this$ = -4						; size = 4
 ??$LDr$r@$01$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDr$r<2,3>, COMDAT
 ; _this$ = ecx
 
-; 394  : void Cpu::LDr$r() {
+; 397  : void Cpu::LDr$r() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16145,22 +16518,22 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 395  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+; 398  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 396  : }
+; 399  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -16178,7 +16551,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$01$05@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<2,6>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16187,7 +16560,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 6
@@ -16195,10 +16568,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16214,7 +16587,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$01$06@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<2,7>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16223,7 +16596,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 7
@@ -16231,10 +16604,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16250,7 +16623,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$01$03@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<2,4>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16259,7 +16632,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 2
@@ -16267,10 +16640,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16286,7 +16659,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$01$04@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<2,5>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16295,7 +16668,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 5
@@ -16303,10 +16676,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16322,7 +16695,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$01$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<2,2>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16331,7 +16704,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 1
@@ -16339,10 +16712,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16358,7 +16731,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$01$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<2,3>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16367,7 +16740,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 3
@@ -16375,10 +16748,10 @@ _this$ = -4						; size = 4
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16394,7 +16767,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$02$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<3,1>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16403,7 +16776,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 0
@@ -16411,10 +16784,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16430,7 +16803,7 @@ _this$ = -4						; size = 4
 ??$LDr$r@$02$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDr$r<3,3>, COMDAT
 ; _this$ = ecx
 
-; 394  : void Cpu::LDr$r() {
+; 397  : void Cpu::LDr$r() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16438,22 +16811,22 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 395  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+; 398  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 396  : }
+; 399  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -16471,7 +16844,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$02$05@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<3,6>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16480,7 +16853,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 6
@@ -16488,10 +16861,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16507,7 +16880,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$02$06@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<3,7>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16516,7 +16889,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 7
@@ -16524,10 +16897,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16543,7 +16916,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$02$03@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<3,4>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16552,7 +16925,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 2
@@ -16560,10 +16933,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16579,7 +16952,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$02$04@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<3,5>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16588,7 +16961,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 5
@@ -16596,10 +16969,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16615,7 +16988,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$02$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<3,2>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16624,7 +16997,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	shl	eax, 1
@@ -16632,10 +17005,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16651,7 +17024,7 @@ _this$ = -4						; size = 4
 ??$LDrr@$02$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrr<3,3>, COMDAT
 ; _this$ = ecx
 
-; 384  : void Cpu::LDrr() {
+; 387  : void Cpu::LDrr() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16660,7 +17033,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 385  : 	reg.raw8[dest] = reg.raw8[src];
+; 388  : 	reg.raw8[dest] = reg.raw8[src];
 
 	mov	eax, 1
 	imul	eax, 3
@@ -16668,10 +17041,10 @@ _this$ = -4						; size = 4
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	esi, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [esi+eax+1056]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	al, BYTE PTR [esi+eax+1064]
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 386  : }
+; 389  : }
 
 	pop	esi
 	mov	esp, ebp
@@ -16700,7 +17073,7 @@ _this$ = -4						; size = 4
 ??$LD@$00$0A@$09@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD<1,0,10>, COMDAT
 ; _this$ = ecx
 
-; 439  : void Cpu::LD() {
+; 446  : void Cpu::LD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -16716,183 +17089,183 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 440  :   if (mode == 10) { //dest,d8
+; 447  :   if (mode == 10) { //dest,d8
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN11@LD
 
-; 441  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
+; 448  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv79[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv79[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN11@LD:
 
-; 442  : 	}else if (mode == 11) { //(dest),d8
+; 449  : 	}else if (mode == 11) { //(dest),d8
 
 	xor	edx, edx
 	je	SHORT $LN9@LD
 
-; 443  : 		auto d8 = mem_->Read8(reg.PC++);
+; 450  : 		auto d8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _d8$5[ebp], al
 
-; 444  : 		mem_->Write8(reg.raw16[dest],d8);
+; 451  : 		mem_->Write8(reg.raw16[dest],d8);
 
 	movzx	ecx, BYTE PTR _d8$5[ebp]
 	push	ecx
 	mov	edx, 2
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN9@LD:
 
-; 445  : 	} else if (mode == 12) { //0xFF00+d8 src
+; 452  : 	} else if (mode == 12) { //0xFF00+d8 src
 
 	xor	eax, eax
 	je	SHORT $LN7@LD
 
-; 446  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 453  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv145[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv145[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$4[ebp], al
 
-; 447  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
+; 454  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, BYTE PTR _a8$4[ebp]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN7@LD:
 
-; 448  : 	} else if (mode == 13) { //dest,0xFF00+d8 
+; 455  : 	} else if (mode == 13) { //dest,0xFF00+d8 
 
 	xor	ecx, ecx
 	je	SHORT $LN5@LD
 
-; 449  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 456  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv169[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv169[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$3[ebp], al
 
-; 450  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
+; 457  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
 
 	movzx	eax, BYTE PTR _a8$3[ebp]
 	add	eax, 65280				; 0000ff00H
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	shl	edx, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN5@LD:
 
-; 451  : 	} else if (mode == 14) { //(d16),src
+; 458  : 	} else if (mode == 14) { //(d16),src
 
 	xor	edx, edx
 	je	$LN3@LD
 
-; 452  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 459  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv193[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv193[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 453  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 460  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv206[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv206[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -16900,58 +17273,58 @@ $LN5@LD:
 	or	ecx, eax
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 454  :     mem_->Write8(d16,reg.raw8[src]);
+; 461  :     mem_->Write8(d16,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, WORD PTR _d16$2[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN3@LD:
 
-; 455  : 	} else if (mode == 15) { //src,(d16)
+; 462  : 	} else if (mode == 15) { //src,(d16)
 
 	xor	ecx, ecx
 	je	$LN12@LD
 
-; 456  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 463  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv232[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv232[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	ax, al
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 457  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 464  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv245[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv245[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
@@ -16959,21 +17332,21 @@ $LN3@LD:
 	or	eax, edx
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 458  :     reg.raw8[dest] = mem_->Read8(d16);
+; 465  :     reg.raw8[dest] = mem_->Read8(d16);
 
 	movzx	ecx, WORD PTR _d16$1[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 $LN12@LD:
 
-; 459  : 	}
-; 460  : }
+; 466  : 	}
+; 467  : }
 
 	add	esp, 32					; 00000020H
 	cmp	ebp, esp
@@ -16992,7 +17365,7 @@ _this$ = -4						; size = 4
 ??$DEC_8bit@$00$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::DEC_8bit<1,0>, COMDAT
 ; _this$ = ecx
 
-; 783  : void Cpu::DEC_8bit() {
+; 796  : void Cpu::DEC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -17001,151 +17374,151 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 784  :   reg.F.N = 1;
+; 797  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 785  : 
-; 786  :   if (mode==0) {
+; 798  : 
+; 799  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	$LN6@DEC_8bit
 
-; 787  :     //updateCpuFlagH(reg.raw8[dest],1,1);
-; 788  :     --reg.raw8[dest];
+; 800  :     //updateCpuFlagH(reg.raw8[dest],1,1);
+; 801  :     --reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	sub	al, 1
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 789  :     if ((reg.raw8[dest]&0xF)==0xF)
+; 802  :     if ((reg.raw8[dest]&0xF)==0xF)
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	and	edx, 15					; 0000000fH
 	cmp	edx, 15					; 0000000fH
 	jne	SHORT $LN5@DEC_8bit
 
-; 790  :       reg.F.H = 1;
+; 803  :       reg.F.H = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 32					; 00000020H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 791  :     else 
+; 804  :     else 
 
 	jmp	SHORT $LN4@DEC_8bit
 $LN5@DEC_8bit:
 
-; 792  :       reg.F.H = 0;
+; 805  :       reg.F.H = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 $LN4@DEC_8bit:
 
-; 793  :     updateCpuFlagZ(reg.raw8[dest]);
+; 806  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 794  :   } else {
+; 807  :   } else {
 
 	jmp	$LN7@DEC_8bit
 $LN6@DEC_8bit:
 
-; 795  :     uint8_t data = mem_->Read8(reg.HL);
+; 808  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 796  : 
-; 797  :     //updateCpuFlagH(data,1,1);
-; 798  :     --data;
+; 809  : 
+; 810  :     //updateCpuFlagH(data,1,1);
+; 811  :     --data;
 
 	mov	al, BYTE PTR _data$1[ebp]
 	sub	al, 1
 	mov	BYTE PTR _data$1[ebp], al
 
-; 799  :     if ((data&0xF)==0xF)
+; 812  :     if ((data&0xF)==0xF)
 
 	movzx	ecx, BYTE PTR _data$1[ebp]
 	and	ecx, 15					; 0000000fH
 	cmp	ecx, 15					; 0000000fH
 	jne	SHORT $LN2@DEC_8bit
 
-; 800  :       reg.F.H = 1;
+; 813  :       reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 801  :     else
+; 814  :     else
 
 	jmp	SHORT $LN1@DEC_8bit
 $LN2@DEC_8bit:
 
-; 802  :       reg.F.H = 0;
+; 815  :       reg.F.H = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 $LN1@DEC_8bit:
 
-; 803  :     updateCpuFlagZ(data);
+; 816  :     updateCpuFlagZ(data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 804  :     mem_->Write8(reg.HL,data);
+; 817  :     mem_->Write8(reg.HL,data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+1062]
+	movzx	edx, WORD PTR [ecx+1070]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 $LN7@DEC_8bit:
 
-; 805  : 
-; 806  :   }
-; 807  :   
-; 808  : }
+; 818  : 
+; 819  :   }
+; 820  :   
+; 821  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -17164,7 +17537,7 @@ _this$ = -4						; size = 4
 ??$INC_8bit@$00$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::INC_8bit<1,0>, COMDAT
 ; _this$ = ecx
 
-; 758  : void Cpu::INC_8bit() {
+; 770  : void Cpu::INC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -17173,71 +17546,71 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 759  :   reg.F.N = 0;
+; 771  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 760  : 
-; 761  :   if (mode==0) {
+; 772  : 
+; 773  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN2@INC_8bit
 
-; 762  :     updateCpuFlagH(reg.raw8[dest],1,0);
+; 774  :     updateCpuFlagH(reg.raw8[dest],1,0);
 
 	push	0
 	push	1
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+ecx+1056]
+	movzx	eax, BYTE PTR [edx+ecx+1064]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 763  :     ++reg.raw8[dest];
+; 775  :     ++reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	add	al, 1
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 764  :     updateCpuFlagZ(reg.raw8[dest]);
+; 776  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 765  :   } else {
+; 777  :   } else {
 
 	jmp	SHORT $LN3@INC_8bit
 $LN2@INC_8bit:
 
-; 766  :     uint8_t data = mem_->Read8(reg.HL);
+; 778  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 767  : 		updateCpuFlagH(data,1,0);
+; 779  : 		updateCpuFlagH(data,1,0);
 
 	push	0
 	push	1
@@ -17246,24 +17619,24 @@ $LN2@INC_8bit:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 768  :     ++data;
+; 780  :     ++data;
 
 	mov	cl, BYTE PTR _data$1[ebp]
 	add	cl, 1
 	mov	BYTE PTR _data$1[ebp], cl
 
-; 769  :     mem_->Write8(reg.HL,data);
+; 781  :     mem_->Write8(reg.HL,data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 770  :      updateCpuFlagZ(data);
+; 782  :      updateCpuFlagZ(data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
@@ -17271,10 +17644,10 @@ $LN2@INC_8bit:
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 $LN3@INC_8bit:
 
-; 771  :   }
-; 772  :     
-; 773  :  
-; 774  : }
+; 783  :   }
+; 784  :     
+; 785  :  
+; 786  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -17292,7 +17665,7 @@ _this$ = -4						; size = 4
 ??$DEC_16bit@$03@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::DEC_16bit<4>, COMDAT
 ; _this$ = ecx
 
-; 811  : void Cpu::DEC_16bit() {
+; 824  : void Cpu::DEC_16bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -17300,19 +17673,24 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 812  :   --reg.raw16[dest];
+; 825  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 826  :   --reg.raw16[dest];
 
 	mov	eax, 2
 	shl	eax, 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+eax+1056]
+	mov	dx, WORD PTR [ecx+eax+1064]
 	sub	dx, 1
 	mov	eax, 2
 	shl	eax, 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 813  :   Tick();Tick();Tick();Tick();
+; 827  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -17323,7 +17701,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 814  : }
+; 828  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -17341,7 +17719,7 @@ _this$ = -4						; size = 4
 ??$LDDreg$reg@$00$02@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::LDDreg$reg<1,3>, COMDAT
 ; _this$ = ecx
 
-; 433  : void Cpu::LDDreg$reg() {
+; 439  : void Cpu::LDDreg$reg() {
 
 	push	ebp
 	mov	ebp, esp
@@ -17349,34 +17727,39 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 434  :   reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+; 440  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 441  :   reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 435  :   --reg.raw16[src];
+; 442  :   --reg.raw16[src];
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+eax+1056]
+	mov	dx, WORD PTR [ecx+eax+1064]
 	sub	dx, 1
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 436  : }
+; 443  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -17400,7 +17783,7 @@ _this$ = -4						; size = 4
 ??$ADD_16bit@$02$03@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::ADD_16bit<3,4>, COMDAT
 ; _this$ = ecx
 
-; 504  : void Cpu::ADD_16bit() {
+; 510  : void Cpu::ADD_16bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -17415,38 +17798,38 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 505  :   reg.F.N = 0;
+; 511  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 506  :   uint16_t a=0,b=0;
+; 512  :   uint16_t a=0,b=0;
 
 	xor	eax, eax
 	mov	WORD PTR _a$[ebp], ax
 	xor	ecx, ecx
 	mov	WORD PTR _b$[ebp], cx
 
-; 507  :   a = reg.raw16[dest];
+; 513  :   a = reg.raw16[dest];
 
 	mov	edx, 2
 	imul	edx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+edx+1056]
+	mov	cx, WORD PTR [eax+edx+1064]
 	mov	WORD PTR _a$[ebp], cx
 
-; 508  :   b = reg.raw16[src];
+; 514  :   b = reg.raw16[src];
 
 	mov	edx, 2
 	shl	edx, 2
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+edx+1056]
+	mov	cx, WORD PTR [eax+edx+1064]
 	mov	WORD PTR _b$[ebp], cx
 
-; 509  :   reg.raw16[dest] = a + b;
+; 515  :   reg.raw16[dest] = a + b;
 
 	movzx	edx, WORD PTR _a$[ebp]
 	movzx	eax, WORD PTR _b$[ebp]
@@ -17454,9 +17837,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 2
 	imul	ecx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+ecx+1056], dx
+	mov	WORD PTR [eax+ecx+1064], dx
 
-; 510  :   uint16_t r1 = (a&0xFFF) + (b&0xFFF);
+; 516  :   uint16_t r1 = (a&0xFFF) + (b&0xFFF);
 
 	movzx	ecx, WORD PTR _a$[ebp]
 	and	ecx, 4095				; 00000fffH
@@ -17465,7 +17848,7 @@ _this$ = -4						; size = 4
 	add	ecx, edx
 	mov	WORD PTR _r1$[ebp], cx
 
-; 511  :   reg.F.H = r1>0xFFF?1:0;
+; 517  :   reg.F.H = r1>0xFFF?1:0;
 
 	movzx	eax, WORD PTR _r1$[ebp]
 	cmp	eax, 4095				; 00000fffH
@@ -17479,13 +17862,13 @@ $LN4@ADD_16bit:
 	and	cl, 1
 	shl	cl, 5
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	or	al, cl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 512  :   uint32_t r2 = (a&0xFFFF) + (b&0xFFFF);
+; 518  :   uint32_t r2 = (a&0xFFFF) + (b&0xFFFF);
 
 	movzx	edx, WORD PTR _a$[ebp]
 	and	edx, 65535				; 0000ffffH
@@ -17494,7 +17877,7 @@ $LN4@ADD_16bit:
 	add	edx, eax
 	mov	DWORD PTR _r2$[ebp], edx
 
-; 513  :   reg.F.C = r2>0xFFFF?1:0;
+; 519  :   reg.F.C = r2>0xFFFF?1:0;
 
 	cmp	DWORD PTR _r2$[ebp], 65535		; 0000ffffH
 	jbe	SHORT $LN5@ADD_16bit
@@ -17507,13 +17890,13 @@ $LN6@ADD_16bit:
 	and	cl, 1
 	shl	cl, 4
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 239					; 000000efH
 	or	al, cl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 514  : 	Tick();Tick();Tick();Tick();
+; 520  : 	Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -17524,7 +17907,7 @@ $LN6@ADD_16bit:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 515  : }
+; 521  : }
 
 	add	esp, 28					; 0000001cH
 	cmp	ebp, esp
@@ -17545,7 +17928,7 @@ _this$ = -4						; size = 4
 ??$JR_cc@$03$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::JR_cc<4,0>, COMDAT
 ; _this$ = ecx
 
-; 745  : void Cpu::JR_cc() {
+; 757  : void Cpu::JR_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -17559,25 +17942,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 746  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 758  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 16					; 00000010H
 	sar	ecx, 4
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 747  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 759  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 16					; 00000010H
 	sar	eax, 4
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 748  : 
-; 749  :   if (table[inv]&1) {
+; 760  : 
+; 761  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	imul	ecx, 0
@@ -17585,37 +17968,37 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN2@JR_cc
 
-; 750  : 		JR();
+; 762  : 		JR();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?JR@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::JR
 
-; 751  :   } else {
+; 763  :   } else {
 
 	jmp	SHORT $LN3@JR_cc
 $LN2@JR_cc:
 
-; 752  :     int8_t disp8 = mem_->Read8(reg.PC++);
+; 764  :     int8_t disp8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _disp8$1[ebp], al
 $LN3@JR_cc:
 
-; 753  :   }
-; 754  : 
-; 755  : }
+; 765  :   }
+; 766  : 
+; 767  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -17668,7 +18051,7 @@ _this$ = -4						; size = 4
 ??$LD@$02$0A@$0L@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD<3,0,11>, COMDAT
 ; _this$ = ecx
 
-; 439  : void Cpu::LD() {
+; 446  : void Cpu::LD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -17684,183 +18067,183 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 440  :   if (mode == 10) { //dest,d8
+; 447  :   if (mode == 10) { //dest,d8
 
 	xor	eax, eax
 	je	SHORT $LN11@LD
 
-; 441  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
+; 448  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv79[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv79[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN11@LD:
 
-; 442  : 	}else if (mode == 11) { //(dest),d8
+; 449  : 	}else if (mode == 11) { //(dest),d8
 
 	mov	edx, 1
 	test	edx, edx
 	je	SHORT $LN9@LD
 
-; 443  : 		auto d8 = mem_->Read8(reg.PC++);
+; 450  : 		auto d8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _d8$5[ebp], al
 
-; 444  : 		mem_->Write8(reg.raw16[dest],d8);
+; 451  : 		mem_->Write8(reg.raw16[dest],d8);
 
 	movzx	ecx, BYTE PTR _d8$5[ebp]
 	push	ecx
 	mov	edx, 2
 	imul	edx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN9@LD:
 
-; 445  : 	} else if (mode == 12) { //0xFF00+d8 src
+; 452  : 	} else if (mode == 12) { //0xFF00+d8 src
 
 	xor	eax, eax
 	je	SHORT $LN7@LD
 
-; 446  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 453  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv145[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv145[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$4[ebp], al
 
-; 447  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
+; 454  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, BYTE PTR _a8$4[ebp]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN7@LD:
 
-; 448  : 	} else if (mode == 13) { //dest,0xFF00+d8 
+; 455  : 	} else if (mode == 13) { //dest,0xFF00+d8 
 
 	xor	ecx, ecx
 	je	SHORT $LN5@LD
 
-; 449  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 456  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv169[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv169[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$3[ebp], al
 
-; 450  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
+; 457  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
 
 	movzx	eax, BYTE PTR _a8$3[ebp]
 	add	eax, 65280				; 0000ff00H
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN5@LD:
 
-; 451  : 	} else if (mode == 14) { //(d16),src
+; 458  : 	} else if (mode == 14) { //(d16),src
 
 	xor	edx, edx
 	je	$LN3@LD
 
-; 452  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 459  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv193[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv193[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 453  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 460  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv206[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv206[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -17868,58 +18251,58 @@ $LN5@LD:
 	or	ecx, eax
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 454  :     mem_->Write8(d16,reg.raw8[src]);
+; 461  :     mem_->Write8(d16,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, WORD PTR _d16$2[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN3@LD:
 
-; 455  : 	} else if (mode == 15) { //src,(d16)
+; 462  : 	} else if (mode == 15) { //src,(d16)
 
 	xor	ecx, ecx
 	je	$LN12@LD
 
-; 456  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 463  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv232[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv232[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	ax, al
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 457  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 464  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv245[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv245[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
@@ -17927,21 +18310,21 @@ $LN3@LD:
 	or	eax, edx
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 458  :     reg.raw8[dest] = mem_->Read8(d16);
+; 465  :     reg.raw8[dest] = mem_->Read8(d16);
 
 	movzx	ecx, WORD PTR _d16$1[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 $LN12@LD:
 
-; 459  : 	}
-; 460  : }
+; 466  : 	}
+; 467  : }
 
 	add	esp, 32					; 00000020H
 	cmp	ebp, esp
@@ -17960,7 +18343,7 @@ _this$ = -4						; size = 4
 ??$DEC_8bit@$02$00@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::DEC_8bit<3,1>, COMDAT
 ; _this$ = ecx
 
-; 783  : void Cpu::DEC_8bit() {
+; 796  : void Cpu::DEC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -17969,150 +18352,150 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 784  :   reg.F.N = 1;
+; 797  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 785  : 
-; 786  :   if (mode==0) {
+; 798  : 
+; 799  :   if (mode==0) {
 
 	xor	eax, eax
 	je	$LN6@DEC_8bit
 
-; 787  :     //updateCpuFlagH(reg.raw8[dest],1,1);
-; 788  :     --reg.raw8[dest];
+; 800  :     //updateCpuFlagH(reg.raw8[dest],1,1);
+; 801  :     --reg.raw8[dest];
 
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	sub	al, 1
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 789  :     if ((reg.raw8[dest]&0xF)==0xF)
+; 802  :     if ((reg.raw8[dest]&0xF)==0xF)
 
 	mov	eax, 1
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	and	edx, 15					; 0000000fH
 	cmp	edx, 15					; 0000000fH
 	jne	SHORT $LN5@DEC_8bit
 
-; 790  :       reg.F.H = 1;
+; 803  :       reg.F.H = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 32					; 00000020H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 791  :     else 
+; 804  :     else 
 
 	jmp	SHORT $LN4@DEC_8bit
 $LN5@DEC_8bit:
 
-; 792  :       reg.F.H = 0;
+; 805  :       reg.F.H = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 $LN4@DEC_8bit:
 
-; 793  :     updateCpuFlagZ(reg.raw8[dest]);
+; 806  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 794  :   } else {
+; 807  :   } else {
 
 	jmp	$LN7@DEC_8bit
 $LN6@DEC_8bit:
 
-; 795  :     uint8_t data = mem_->Read8(reg.HL);
+; 808  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 796  : 
-; 797  :     //updateCpuFlagH(data,1,1);
-; 798  :     --data;
+; 809  : 
+; 810  :     //updateCpuFlagH(data,1,1);
+; 811  :     --data;
 
 	mov	al, BYTE PTR _data$1[ebp]
 	sub	al, 1
 	mov	BYTE PTR _data$1[ebp], al
 
-; 799  :     if ((data&0xF)==0xF)
+; 812  :     if ((data&0xF)==0xF)
 
 	movzx	ecx, BYTE PTR _data$1[ebp]
 	and	ecx, 15					; 0000000fH
 	cmp	ecx, 15					; 0000000fH
 	jne	SHORT $LN2@DEC_8bit
 
-; 800  :       reg.F.H = 1;
+; 813  :       reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 801  :     else
+; 814  :     else
 
 	jmp	SHORT $LN1@DEC_8bit
 $LN2@DEC_8bit:
 
-; 802  :       reg.F.H = 0;
+; 815  :       reg.F.H = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 $LN1@DEC_8bit:
 
-; 803  :     updateCpuFlagZ(data);
+; 816  :     updateCpuFlagZ(data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 804  :     mem_->Write8(reg.HL,data);
+; 817  :     mem_->Write8(reg.HL,data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+1062]
+	movzx	edx, WORD PTR [ecx+1070]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 $LN7@DEC_8bit:
 
-; 805  : 
-; 806  :   }
-; 807  :   
-; 808  : }
+; 818  : 
+; 819  :   }
+; 820  :   
+; 821  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -18131,7 +18514,7 @@ _this$ = -4						; size = 4
 ??$INC_8bit@$02$00@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::INC_8bit<3,1>, COMDAT
 ; _this$ = ecx
 
-; 758  : void Cpu::INC_8bit() {
+; 770  : void Cpu::INC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -18140,70 +18523,70 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 759  :   reg.F.N = 0;
+; 771  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 760  : 
-; 761  :   if (mode==0) {
+; 772  : 
+; 773  :   if (mode==0) {
 
 	xor	eax, eax
 	je	SHORT $LN2@INC_8bit
 
-; 762  :     updateCpuFlagH(reg.raw8[dest],1,0);
+; 774  :     updateCpuFlagH(reg.raw8[dest],1,0);
 
 	push	0
 	push	1
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+ecx+1056]
+	movzx	eax, BYTE PTR [edx+ecx+1064]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 763  :     ++reg.raw8[dest];
+; 775  :     ++reg.raw8[dest];
 
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	add	al, 1
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 764  :     updateCpuFlagZ(reg.raw8[dest]);
+; 776  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 765  :   } else {
+; 777  :   } else {
 
 	jmp	SHORT $LN3@INC_8bit
 $LN2@INC_8bit:
 
-; 766  :     uint8_t data = mem_->Read8(reg.HL);
+; 778  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 767  : 		updateCpuFlagH(data,1,0);
+; 779  : 		updateCpuFlagH(data,1,0);
 
 	push	0
 	push	1
@@ -18212,24 +18595,24 @@ $LN2@INC_8bit:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 768  :     ++data;
+; 780  :     ++data;
 
 	mov	cl, BYTE PTR _data$1[ebp]
 	add	cl, 1
 	mov	BYTE PTR _data$1[ebp], cl
 
-; 769  :     mem_->Write8(reg.HL,data);
+; 781  :     mem_->Write8(reg.HL,data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 770  :      updateCpuFlagZ(data);
+; 782  :      updateCpuFlagZ(data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
@@ -18237,10 +18620,10 @@ $LN2@INC_8bit:
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 $LN3@INC_8bit:
 
-; 771  :   }
-; 772  :     
-; 773  :  
-; 774  : }
+; 783  :   }
+; 784  :     
+; 785  :  
+; 786  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -18258,7 +18641,7 @@ _this$ = -4						; size = 4
 ??$INC_16bit@$03@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::INC_16bit<4>, COMDAT
 ; _this$ = ecx
 
-; 777  : void Cpu::INC_16bit() {
+; 789  : void Cpu::INC_16bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -18266,19 +18649,24 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 778  :   ++reg.raw16[dest];
+; 790  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 791  :   ++reg.raw16[dest];
 
 	mov	eax, 2
 	shl	eax, 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+eax+1056]
+	mov	dx, WORD PTR [ecx+eax+1064]
 	add	dx, 1
 	mov	eax, 2
 	shl	eax, 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 779  :   Tick();Tick();Tick();Tick();
+; 792  :   Tick();Tick();Tick();Tick(); 
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -18289,7 +18677,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 780  : }
+; 793  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -18307,7 +18695,7 @@ _this$ = -4						; size = 4
 ??$LDD$regreg@$02$00@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::LDD$regreg<3,1>, COMDAT
 ; _this$ = ecx
 
-; 421  : void Cpu::LDD$regreg() {
+; 426  : void Cpu::LDD$regreg() {
 
 	push	ebp
 	mov	ebp, esp
@@ -18315,35 +18703,35 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 422  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+; 427  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 423  : 	--reg.raw16[dest];
+; 428  : 	--reg.raw16[dest];
 
 	mov	ecx, 2
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+ecx+1056]
+	mov	ax, WORD PTR [edx+ecx+1064]
 	sub	ax, 1
 	mov	ecx, 2
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+ecx+1056], ax
+	mov	WORD PTR [edx+ecx+1064], ax
 
-; 424  : }
+; 429  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -18363,7 +18751,7 @@ _this$ = -4						; size = 4
 ??$LDrd16@$03@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrd16<4>, COMDAT
 ; _this$ = ecx
 
-; 409  : void Cpu::LDrd16() {
+; 412  : void Cpu::LDrd16() {
 
 	push	ebp
 	mov	ebp, esp
@@ -18372,55 +18760,90 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 410  : 	reg.raw16[dest] = mem_->Read8(reg.PC++);
+; 413  : 	reg.raw16[dest] = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv78[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv78[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	edx, 2
 	shl	edx, 2
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+edx+1056], cx
+	mov	WORD PTR [eax+edx+1064], cx
 
-; 411  : 	reg.raw16[dest] |= (mem_->Read8(reg.PC++))<<8;
+; 414  : 	reg.raw16[dest] |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv95[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv95[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
 	mov	eax, 2
 	shl	eax, 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	eax, WORD PTR [ecx+eax+1056]
+	movzx	eax, WORD PTR [ecx+eax+1064]
 	or	eax, edx
 	mov	ecx, 2
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+ecx+1056], ax
+	mov	WORD PTR [edx+ecx+1064], ax
 
-; 412  : }
+; 415  :   if (dest != RegAF && (reg.raw16[dest]>=0xFE00&&reg.raw16[dest]<=0xFEFF) && emu_->lcd_driver()->lcdc().lcd_enable == 1)
+
+	mov	eax, 1
+	test	eax, eax
+	je	SHORT $LN2@LDrd16
+	mov	ecx, 2
+	shl	ecx, 2
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, WORD PTR [edx+ecx+1064]
+	cmp	eax, 65024				; 0000fe00H
+	jl	SHORT $LN2@LDrd16
+	mov	ecx, 2
+	shl	ecx, 2
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, WORD PTR [edx+ecx+1064]
+	cmp	eax, 65279				; 0000feffH
+	jg	SHORT $LN2@LDrd16
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
+	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
+	mov	ecx, eax
+	call	?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ ; emulation::gb::LCDDriver::lcdc
+	mov	dl, BYTE PTR [eax]
+	shr	dl, 7
+	and	dl, 1
+	movzx	eax, dl
+	cmp	eax, 1
+	jne	SHORT $LN2@LDrd16
+
+; 416  :     sprite_bug = 2;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+8], 2
+$LN2@LDrd16:
+
+; 417  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -18441,7 +18864,7 @@ _this$ = -4						; size = 4
 ??$JR_cc@$03$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::JR_cc<4,1>, COMDAT
 ; _this$ = ecx
 
-; 745  : void Cpu::JR_cc() {
+; 757  : void Cpu::JR_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -18455,25 +18878,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 746  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 758  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 16					; 00000010H
 	sar	ecx, 4
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 747  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 759  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 16					; 00000010H
 	sar	eax, 4
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 748  : 
-; 749  :   if (table[inv]&1) {
+; 760  : 
+; 761  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	shl	ecx, 0
@@ -18481,37 +18904,37 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN2@JR_cc
 
-; 750  : 		JR();
+; 762  : 		JR();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?JR@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::JR
 
-; 751  :   } else {
+; 763  :   } else {
 
 	jmp	SHORT $LN3@JR_cc
 $LN2@JR_cc:
 
-; 752  :     int8_t disp8 = mem_->Read8(reg.PC++);
+; 764  :     int8_t disp8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _disp8$1[ebp], al
 $LN3@JR_cc:
 
-; 753  :   }
-; 754  : 
-; 755  : }
+; 765  :   }
+; 766  : 
+; 767  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -18564,7 +18987,7 @@ _this$ = -4						; size = 4
 ??$LD@$05$0A@$09@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD<6,0,10>, COMDAT
 ; _this$ = ecx
 
-; 439  : void Cpu::LD() {
+; 446  : void Cpu::LD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -18580,183 +19003,183 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 440  :   if (mode == 10) { //dest,d8
+; 447  :   if (mode == 10) { //dest,d8
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN11@LD
 
-; 441  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
+; 448  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv79[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv79[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 6
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN11@LD:
 
-; 442  : 	}else if (mode == 11) { //(dest),d8
+; 449  : 	}else if (mode == 11) { //(dest),d8
 
 	xor	edx, edx
 	je	SHORT $LN9@LD
 
-; 443  : 		auto d8 = mem_->Read8(reg.PC++);
+; 450  : 		auto d8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _d8$5[ebp], al
 
-; 444  : 		mem_->Write8(reg.raw16[dest],d8);
+; 451  : 		mem_->Write8(reg.raw16[dest],d8);
 
 	movzx	ecx, BYTE PTR _d8$5[ebp]
 	push	ecx
 	mov	edx, 2
 	imul	edx, 6
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN9@LD:
 
-; 445  : 	} else if (mode == 12) { //0xFF00+d8 src
+; 452  : 	} else if (mode == 12) { //0xFF00+d8 src
 
 	xor	eax, eax
 	je	SHORT $LN7@LD
 
-; 446  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 453  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv145[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv145[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$4[ebp], al
 
-; 447  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
+; 454  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, BYTE PTR _a8$4[ebp]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN7@LD:
 
-; 448  : 	} else if (mode == 13) { //dest,0xFF00+d8 
+; 455  : 	} else if (mode == 13) { //dest,0xFF00+d8 
 
 	xor	ecx, ecx
 	je	SHORT $LN5@LD
 
-; 449  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 456  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv169[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv169[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$3[ebp], al
 
-; 450  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
+; 457  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
 
 	movzx	eax, BYTE PTR _a8$3[ebp]
 	add	eax, 65280				; 0000ff00H
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 6
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN5@LD:
 
-; 451  : 	} else if (mode == 14) { //(d16),src
+; 458  : 	} else if (mode == 14) { //(d16),src
 
 	xor	edx, edx
 	je	$LN3@LD
 
-; 452  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 459  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv193[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv193[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 453  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 460  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv206[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv206[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -18764,58 +19187,58 @@ $LN5@LD:
 	or	ecx, eax
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 454  :     mem_->Write8(d16,reg.raw8[src]);
+; 461  :     mem_->Write8(d16,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, WORD PTR _d16$2[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN3@LD:
 
-; 455  : 	} else if (mode == 15) { //src,(d16)
+; 462  : 	} else if (mode == 15) { //src,(d16)
 
 	xor	ecx, ecx
 	je	$LN12@LD
 
-; 456  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 463  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv232[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv232[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	ax, al
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 457  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 464  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv245[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv245[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
@@ -18823,21 +19246,21 @@ $LN3@LD:
 	or	eax, edx
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 458  :     reg.raw8[dest] = mem_->Read8(d16);
+; 465  :     reg.raw8[dest] = mem_->Read8(d16);
 
 	movzx	ecx, WORD PTR _d16$1[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 $LN12@LD:
 
-; 459  : 	}
-; 460  : }
+; 466  : 	}
+; 467  : }
 
 	add	esp, 32					; 00000020H
 	cmp	ebp, esp
@@ -18856,7 +19279,7 @@ _this$ = -4						; size = 4
 ??$DEC_8bit@$05$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::DEC_8bit<6,0>, COMDAT
 ; _this$ = ecx
 
-; 783  : void Cpu::DEC_8bit() {
+; 796  : void Cpu::DEC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -18865,151 +19288,151 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 784  :   reg.F.N = 1;
+; 797  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 785  : 
-; 786  :   if (mode==0) {
+; 798  : 
+; 799  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	$LN6@DEC_8bit
 
-; 787  :     //updateCpuFlagH(reg.raw8[dest],1,1);
-; 788  :     --reg.raw8[dest];
+; 800  :     //updateCpuFlagH(reg.raw8[dest],1,1);
+; 801  :     --reg.raw8[dest];
 
 	mov	ecx, 1
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	sub	al, 1
 	mov	ecx, 1
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 789  :     if ((reg.raw8[dest]&0xF)==0xF)
+; 802  :     if ((reg.raw8[dest]&0xF)==0xF)
 
 	mov	eax, 1
 	imul	eax, 6
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	and	edx, 15					; 0000000fH
 	cmp	edx, 15					; 0000000fH
 	jne	SHORT $LN5@DEC_8bit
 
-; 790  :       reg.F.H = 1;
+; 803  :       reg.F.H = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 32					; 00000020H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 791  :     else 
+; 804  :     else 
 
 	jmp	SHORT $LN4@DEC_8bit
 $LN5@DEC_8bit:
 
-; 792  :       reg.F.H = 0;
+; 805  :       reg.F.H = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 $LN4@DEC_8bit:
 
-; 793  :     updateCpuFlagZ(reg.raw8[dest]);
+; 806  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	imul	eax, 6
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 794  :   } else {
+; 807  :   } else {
 
 	jmp	$LN7@DEC_8bit
 $LN6@DEC_8bit:
 
-; 795  :     uint8_t data = mem_->Read8(reg.HL);
+; 808  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 796  : 
-; 797  :     //updateCpuFlagH(data,1,1);
-; 798  :     --data;
+; 809  : 
+; 810  :     //updateCpuFlagH(data,1,1);
+; 811  :     --data;
 
 	mov	al, BYTE PTR _data$1[ebp]
 	sub	al, 1
 	mov	BYTE PTR _data$1[ebp], al
 
-; 799  :     if ((data&0xF)==0xF)
+; 812  :     if ((data&0xF)==0xF)
 
 	movzx	ecx, BYTE PTR _data$1[ebp]
 	and	ecx, 15					; 0000000fH
 	cmp	ecx, 15					; 0000000fH
 	jne	SHORT $LN2@DEC_8bit
 
-; 800  :       reg.F.H = 1;
+; 813  :       reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 801  :     else
+; 814  :     else
 
 	jmp	SHORT $LN1@DEC_8bit
 $LN2@DEC_8bit:
 
-; 802  :       reg.F.H = 0;
+; 815  :       reg.F.H = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 $LN1@DEC_8bit:
 
-; 803  :     updateCpuFlagZ(data);
+; 816  :     updateCpuFlagZ(data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 804  :     mem_->Write8(reg.HL,data);
+; 817  :     mem_->Write8(reg.HL,data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+1062]
+	movzx	edx, WORD PTR [ecx+1070]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 $LN7@DEC_8bit:
 
-; 805  : 
-; 806  :   }
-; 807  :   
-; 808  : }
+; 818  : 
+; 819  :   }
+; 820  :   
+; 821  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -19028,7 +19451,7 @@ _this$ = -4						; size = 4
 ??$INC_8bit@$05$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::INC_8bit<6,0>, COMDAT
 ; _this$ = ecx
 
-; 758  : void Cpu::INC_8bit() {
+; 770  : void Cpu::INC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -19037,71 +19460,71 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 759  :   reg.F.N = 0;
+; 771  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 760  : 
-; 761  :   if (mode==0) {
+; 772  : 
+; 773  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN2@INC_8bit
 
-; 762  :     updateCpuFlagH(reg.raw8[dest],1,0);
+; 774  :     updateCpuFlagH(reg.raw8[dest],1,0);
 
 	push	0
 	push	1
 	mov	ecx, 1
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+ecx+1056]
+	movzx	eax, BYTE PTR [edx+ecx+1064]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 763  :     ++reg.raw8[dest];
+; 775  :     ++reg.raw8[dest];
 
 	mov	ecx, 1
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	add	al, 1
 	mov	ecx, 1
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 764  :     updateCpuFlagZ(reg.raw8[dest]);
+; 776  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	imul	eax, 6
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 765  :   } else {
+; 777  :   } else {
 
 	jmp	SHORT $LN3@INC_8bit
 $LN2@INC_8bit:
 
-; 766  :     uint8_t data = mem_->Read8(reg.HL);
+; 778  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 767  : 		updateCpuFlagH(data,1,0);
+; 779  : 		updateCpuFlagH(data,1,0);
 
 	push	0
 	push	1
@@ -19110,24 +19533,24 @@ $LN2@INC_8bit:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 768  :     ++data;
+; 780  :     ++data;
 
 	mov	cl, BYTE PTR _data$1[ebp]
 	add	cl, 1
 	mov	BYTE PTR _data$1[ebp], cl
 
-; 769  :     mem_->Write8(reg.HL,data);
+; 781  :     mem_->Write8(reg.HL,data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 770  :      updateCpuFlagZ(data);
+; 782  :      updateCpuFlagZ(data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
@@ -19135,10 +19558,10 @@ $LN2@INC_8bit:
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 $LN3@INC_8bit:
 
-; 771  :   }
-; 772  :     
-; 773  :  
-; 774  : }
+; 783  :   }
+; 784  :     
+; 785  :  
+; 786  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -19156,7 +19579,7 @@ _this$ = -4						; size = 4
 ??$DEC_16bit@$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::DEC_16bit<3>, COMDAT
 ; _this$ = ecx
 
-; 811  : void Cpu::DEC_16bit() {
+; 824  : void Cpu::DEC_16bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -19164,19 +19587,24 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 812  :   --reg.raw16[dest];
+; 825  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 826  :   --reg.raw16[dest];
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+eax+1056]
+	mov	dx, WORD PTR [ecx+eax+1064]
 	sub	dx, 1
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 813  :   Tick();Tick();Tick();Tick();
+; 827  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -19187,7 +19615,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 814  : }
+; 828  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -19205,7 +19633,7 @@ _this$ = -4						; size = 4
 ??$LDIreg$reg@$00$02@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::LDIreg$reg<1,3>, COMDAT
 ; _this$ = ecx
 
-; 427  : void Cpu::LDIreg$reg() {
+; 432  : void Cpu::LDIreg$reg() {
 
 	push	ebp
 	mov	ebp, esp
@@ -19213,34 +19641,39 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 428  :   reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+; 433  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 434  :   reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 429  :   ++reg.raw16[src];
+; 435  :   ++reg.raw16[src];
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+eax+1056]
+	mov	dx, WORD PTR [ecx+eax+1064]
 	add	dx, 1
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 430  : }
+; 436  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -19264,7 +19697,7 @@ _this$ = -4						; size = 4
 ??$ADD_16bit@$02$02@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::ADD_16bit<3,3>, COMDAT
 ; _this$ = ecx
 
-; 504  : void Cpu::ADD_16bit() {
+; 510  : void Cpu::ADD_16bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -19279,38 +19712,38 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 505  :   reg.F.N = 0;
+; 511  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 506  :   uint16_t a=0,b=0;
+; 512  :   uint16_t a=0,b=0;
 
 	xor	eax, eax
 	mov	WORD PTR _a$[ebp], ax
 	xor	ecx, ecx
 	mov	WORD PTR _b$[ebp], cx
 
-; 507  :   a = reg.raw16[dest];
+; 513  :   a = reg.raw16[dest];
 
 	mov	edx, 2
 	imul	edx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+edx+1056]
+	mov	cx, WORD PTR [eax+edx+1064]
 	mov	WORD PTR _a$[ebp], cx
 
-; 508  :   b = reg.raw16[src];
+; 514  :   b = reg.raw16[src];
 
 	mov	edx, 2
 	imul	edx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+edx+1056]
+	mov	cx, WORD PTR [eax+edx+1064]
 	mov	WORD PTR _b$[ebp], cx
 
-; 509  :   reg.raw16[dest] = a + b;
+; 515  :   reg.raw16[dest] = a + b;
 
 	movzx	edx, WORD PTR _a$[ebp]
 	movzx	eax, WORD PTR _b$[ebp]
@@ -19318,9 +19751,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 2
 	imul	ecx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+ecx+1056], dx
+	mov	WORD PTR [eax+ecx+1064], dx
 
-; 510  :   uint16_t r1 = (a&0xFFF) + (b&0xFFF);
+; 516  :   uint16_t r1 = (a&0xFFF) + (b&0xFFF);
 
 	movzx	ecx, WORD PTR _a$[ebp]
 	and	ecx, 4095				; 00000fffH
@@ -19329,7 +19762,7 @@ _this$ = -4						; size = 4
 	add	ecx, edx
 	mov	WORD PTR _r1$[ebp], cx
 
-; 511  :   reg.F.H = r1>0xFFF?1:0;
+; 517  :   reg.F.H = r1>0xFFF?1:0;
 
 	movzx	eax, WORD PTR _r1$[ebp]
 	cmp	eax, 4095				; 00000fffH
@@ -19343,13 +19776,13 @@ $LN4@ADD_16bit:
 	and	cl, 1
 	shl	cl, 5
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	or	al, cl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 512  :   uint32_t r2 = (a&0xFFFF) + (b&0xFFFF);
+; 518  :   uint32_t r2 = (a&0xFFFF) + (b&0xFFFF);
 
 	movzx	edx, WORD PTR _a$[ebp]
 	and	edx, 65535				; 0000ffffH
@@ -19358,7 +19791,7 @@ $LN4@ADD_16bit:
 	add	edx, eax
 	mov	DWORD PTR _r2$[ebp], edx
 
-; 513  :   reg.F.C = r2>0xFFFF?1:0;
+; 519  :   reg.F.C = r2>0xFFFF?1:0;
 
 	cmp	DWORD PTR _r2$[ebp], 65535		; 0000ffffH
 	jbe	SHORT $LN5@ADD_16bit
@@ -19371,13 +19804,13 @@ $LN6@ADD_16bit:
 	and	cl, 1
 	shl	cl, 4
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 239					; 000000efH
 	or	al, cl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 514  : 	Tick();Tick();Tick();Tick();
+; 520  : 	Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -19388,7 +19821,7 @@ $LN6@ADD_16bit:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 515  : }
+; 521  : }
 
 	add	esp, 28					; 0000001cH
 	cmp	ebp, esp
@@ -19409,7 +19842,7 @@ _this$ = -4						; size = 4
 ??$JR_cc@$06$0A@@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::JR_cc<7,0>, COMDAT
 ; _this$ = ecx
 
-; 745  : void Cpu::JR_cc() {
+; 757  : void Cpu::JR_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -19423,25 +19856,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 746  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 758  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 128				; 00000080H
 	sar	ecx, 7
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 747  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 759  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 128				; 00000080H
 	sar	eax, 7
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 748  : 
-; 749  :   if (table[inv]&1) {
+; 760  : 
+; 761  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	imul	ecx, 0
@@ -19449,37 +19882,37 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN2@JR_cc
 
-; 750  : 		JR();
+; 762  : 		JR();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?JR@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::JR
 
-; 751  :   } else {
+; 763  :   } else {
 
 	jmp	SHORT $LN3@JR_cc
 $LN2@JR_cc:
 
-; 752  :     int8_t disp8 = mem_->Read8(reg.PC++);
+; 764  :     int8_t disp8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _disp8$1[ebp], al
 $LN3@JR_cc:
 
-; 753  :   }
-; 754  : 
-; 755  : }
+; 765  :   }
+; 766  : 
+; 767  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -19532,7 +19965,7 @@ _this$ = -4						; size = 4
 ??$LD@$06$0A@$09@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD<7,0,10>, COMDAT
 ; _this$ = ecx
 
-; 439  : void Cpu::LD() {
+; 446  : void Cpu::LD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -19548,183 +19981,183 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 440  :   if (mode == 10) { //dest,d8
+; 447  :   if (mode == 10) { //dest,d8
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN11@LD
 
-; 441  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
+; 448  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv79[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv79[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 7
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN11@LD:
 
-; 442  : 	}else if (mode == 11) { //(dest),d8
+; 449  : 	}else if (mode == 11) { //(dest),d8
 
 	xor	edx, edx
 	je	SHORT $LN9@LD
 
-; 443  : 		auto d8 = mem_->Read8(reg.PC++);
+; 450  : 		auto d8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _d8$5[ebp], al
 
-; 444  : 		mem_->Write8(reg.raw16[dest],d8);
+; 451  : 		mem_->Write8(reg.raw16[dest],d8);
 
 	movzx	ecx, BYTE PTR _d8$5[ebp]
 	push	ecx
 	mov	edx, 2
 	imul	edx, 7
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN9@LD:
 
-; 445  : 	} else if (mode == 12) { //0xFF00+d8 src
+; 452  : 	} else if (mode == 12) { //0xFF00+d8 src
 
 	xor	eax, eax
 	je	SHORT $LN7@LD
 
-; 446  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 453  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv145[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv145[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$4[ebp], al
 
-; 447  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
+; 454  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, BYTE PTR _a8$4[ebp]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN7@LD:
 
-; 448  : 	} else if (mode == 13) { //dest,0xFF00+d8 
+; 455  : 	} else if (mode == 13) { //dest,0xFF00+d8 
 
 	xor	ecx, ecx
 	je	SHORT $LN5@LD
 
-; 449  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 456  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv169[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv169[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$3[ebp], al
 
-; 450  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
+; 457  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
 
 	movzx	eax, BYTE PTR _a8$3[ebp]
 	add	eax, 65280				; 0000ff00H
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 7
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN5@LD:
 
-; 451  : 	} else if (mode == 14) { //(d16),src
+; 458  : 	} else if (mode == 14) { //(d16),src
 
 	xor	edx, edx
 	je	$LN3@LD
 
-; 452  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 459  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv193[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv193[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 453  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 460  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv206[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv206[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -19732,58 +20165,58 @@ $LN5@LD:
 	or	ecx, eax
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 454  :     mem_->Write8(d16,reg.raw8[src]);
+; 461  :     mem_->Write8(d16,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, WORD PTR _d16$2[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN3@LD:
 
-; 455  : 	} else if (mode == 15) { //src,(d16)
+; 462  : 	} else if (mode == 15) { //src,(d16)
 
 	xor	ecx, ecx
 	je	$LN12@LD
 
-; 456  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 463  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv232[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv232[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	ax, al
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 457  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 464  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv245[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv245[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
@@ -19791,21 +20224,21 @@ $LN3@LD:
 	or	eax, edx
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 458  :     reg.raw8[dest] = mem_->Read8(d16);
+; 465  :     reg.raw8[dest] = mem_->Read8(d16);
 
 	movzx	ecx, WORD PTR _d16$1[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 $LN12@LD:
 
-; 459  : 	}
-; 460  : }
+; 466  : 	}
+; 467  : }
 
 	add	esp, 32					; 00000020H
 	cmp	ebp, esp
@@ -19824,7 +20257,7 @@ _this$ = -4						; size = 4
 ??$DEC_8bit@$06$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::DEC_8bit<7,0>, COMDAT
 ; _this$ = ecx
 
-; 783  : void Cpu::DEC_8bit() {
+; 796  : void Cpu::DEC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -19833,151 +20266,151 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 784  :   reg.F.N = 1;
+; 797  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 785  : 
-; 786  :   if (mode==0) {
+; 798  : 
+; 799  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	$LN6@DEC_8bit
 
-; 787  :     //updateCpuFlagH(reg.raw8[dest],1,1);
-; 788  :     --reg.raw8[dest];
+; 800  :     //updateCpuFlagH(reg.raw8[dest],1,1);
+; 801  :     --reg.raw8[dest];
 
 	mov	ecx, 1
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	sub	al, 1
 	mov	ecx, 1
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 789  :     if ((reg.raw8[dest]&0xF)==0xF)
+; 802  :     if ((reg.raw8[dest]&0xF)==0xF)
 
 	mov	eax, 1
 	imul	eax, 7
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	and	edx, 15					; 0000000fH
 	cmp	edx, 15					; 0000000fH
 	jne	SHORT $LN5@DEC_8bit
 
-; 790  :       reg.F.H = 1;
+; 803  :       reg.F.H = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 32					; 00000020H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 791  :     else 
+; 804  :     else 
 
 	jmp	SHORT $LN4@DEC_8bit
 $LN5@DEC_8bit:
 
-; 792  :       reg.F.H = 0;
+; 805  :       reg.F.H = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 $LN4@DEC_8bit:
 
-; 793  :     updateCpuFlagZ(reg.raw8[dest]);
+; 806  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	imul	eax, 7
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 794  :   } else {
+; 807  :   } else {
 
 	jmp	$LN7@DEC_8bit
 $LN6@DEC_8bit:
 
-; 795  :     uint8_t data = mem_->Read8(reg.HL);
+; 808  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 796  : 
-; 797  :     //updateCpuFlagH(data,1,1);
-; 798  :     --data;
+; 809  : 
+; 810  :     //updateCpuFlagH(data,1,1);
+; 811  :     --data;
 
 	mov	al, BYTE PTR _data$1[ebp]
 	sub	al, 1
 	mov	BYTE PTR _data$1[ebp], al
 
-; 799  :     if ((data&0xF)==0xF)
+; 812  :     if ((data&0xF)==0xF)
 
 	movzx	ecx, BYTE PTR _data$1[ebp]
 	and	ecx, 15					; 0000000fH
 	cmp	ecx, 15					; 0000000fH
 	jne	SHORT $LN2@DEC_8bit
 
-; 800  :       reg.F.H = 1;
+; 813  :       reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 801  :     else
+; 814  :     else
 
 	jmp	SHORT $LN1@DEC_8bit
 $LN2@DEC_8bit:
 
-; 802  :       reg.F.H = 0;
+; 815  :       reg.F.H = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 $LN1@DEC_8bit:
 
-; 803  :     updateCpuFlagZ(data);
+; 816  :     updateCpuFlagZ(data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 804  :     mem_->Write8(reg.HL,data);
+; 817  :     mem_->Write8(reg.HL,data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+1062]
+	movzx	edx, WORD PTR [ecx+1070]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 $LN7@DEC_8bit:
 
-; 805  : 
-; 806  :   }
-; 807  :   
-; 808  : }
+; 818  : 
+; 819  :   }
+; 820  :   
+; 821  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -19996,7 +20429,7 @@ _this$ = -4						; size = 4
 ??$INC_8bit@$06$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::INC_8bit<7,0>, COMDAT
 ; _this$ = ecx
 
-; 758  : void Cpu::INC_8bit() {
+; 770  : void Cpu::INC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -20005,71 +20438,71 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 759  :   reg.F.N = 0;
+; 771  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 760  : 
-; 761  :   if (mode==0) {
+; 772  : 
+; 773  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN2@INC_8bit
 
-; 762  :     updateCpuFlagH(reg.raw8[dest],1,0);
+; 774  :     updateCpuFlagH(reg.raw8[dest],1,0);
 
 	push	0
 	push	1
 	mov	ecx, 1
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+ecx+1056]
+	movzx	eax, BYTE PTR [edx+ecx+1064]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 763  :     ++reg.raw8[dest];
+; 775  :     ++reg.raw8[dest];
 
 	mov	ecx, 1
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	add	al, 1
 	mov	ecx, 1
 	imul	ecx, 7
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 764  :     updateCpuFlagZ(reg.raw8[dest]);
+; 776  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	imul	eax, 7
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 765  :   } else {
+; 777  :   } else {
 
 	jmp	SHORT $LN3@INC_8bit
 $LN2@INC_8bit:
 
-; 766  :     uint8_t data = mem_->Read8(reg.HL);
+; 778  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 767  : 		updateCpuFlagH(data,1,0);
+; 779  : 		updateCpuFlagH(data,1,0);
 
 	push	0
 	push	1
@@ -20078,24 +20511,24 @@ $LN2@INC_8bit:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 768  :     ++data;
+; 780  :     ++data;
 
 	mov	cl, BYTE PTR _data$1[ebp]
 	add	cl, 1
 	mov	BYTE PTR _data$1[ebp], cl
 
-; 769  :     mem_->Write8(reg.HL,data);
+; 781  :     mem_->Write8(reg.HL,data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 770  :      updateCpuFlagZ(data);
+; 782  :      updateCpuFlagZ(data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
@@ -20103,10 +20536,10 @@ $LN2@INC_8bit:
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 $LN3@INC_8bit:
 
-; 771  :   }
-; 772  :     
-; 773  :  
-; 774  : }
+; 783  :   }
+; 784  :     
+; 785  :  
+; 786  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -20124,7 +20557,7 @@ _this$ = -4						; size = 4
 ??$INC_16bit@$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::INC_16bit<3>, COMDAT
 ; _this$ = ecx
 
-; 777  : void Cpu::INC_16bit() {
+; 789  : void Cpu::INC_16bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -20132,19 +20565,24 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 778  :   ++reg.raw16[dest];
+; 790  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 791  :   ++reg.raw16[dest];
 
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+eax+1056]
+	mov	dx, WORD PTR [ecx+eax+1064]
 	add	dx, 1
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 779  :   Tick();Tick();Tick();Tick();
+; 792  :   Tick();Tick();Tick();Tick(); 
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -20155,7 +20593,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 780  : }
+; 793  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -20173,7 +20611,7 @@ _this$ = -4						; size = 4
 ??$LDI$regreg@$02$00@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::LDI$regreg<3,1>, COMDAT
 ; _this$ = ecx
 
-; 415  : void Cpu::LDI$regreg() {
+; 420  : void Cpu::LDI$regreg() {
 
 	push	ebp
 	mov	ebp, esp
@@ -20181,35 +20619,35 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 416  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+; 421  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 417  : 	++reg.raw16[dest];
+; 422  : 	++reg.raw16[dest];
 
 	mov	ecx, 2
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+ecx+1056]
+	mov	ax, WORD PTR [edx+ecx+1064]
 	add	ax, 1
 	mov	ecx, 2
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+ecx+1056], ax
+	mov	WORD PTR [edx+ecx+1064], ax
 
-; 418  : }
+; 423  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -20229,7 +20667,7 @@ _this$ = -4						; size = 4
 ??$LDrd16@$02@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrd16<3>, COMDAT
 ; _this$ = ecx
 
-; 409  : void Cpu::LDrd16() {
+; 412  : void Cpu::LDrd16() {
 
 	push	ebp
 	mov	ebp, esp
@@ -20238,55 +20676,90 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 410  : 	reg.raw16[dest] = mem_->Read8(reg.PC++);
+; 413  : 	reg.raw16[dest] = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv78[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv78[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	edx, 2
 	imul	edx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+edx+1056], cx
+	mov	WORD PTR [eax+edx+1064], cx
 
-; 411  : 	reg.raw16[dest] |= (mem_->Read8(reg.PC++))<<8;
+; 414  : 	reg.raw16[dest] |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv95[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv95[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
 	mov	eax, 2
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	eax, WORD PTR [ecx+eax+1056]
+	movzx	eax, WORD PTR [ecx+eax+1064]
 	or	eax, edx
 	mov	ecx, 2
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+ecx+1056], ax
+	mov	WORD PTR [edx+ecx+1064], ax
 
-; 412  : }
+; 415  :   if (dest != RegAF && (reg.raw16[dest]>=0xFE00&&reg.raw16[dest]<=0xFEFF) && emu_->lcd_driver()->lcdc().lcd_enable == 1)
+
+	mov	eax, 1
+	test	eax, eax
+	je	SHORT $LN2@LDrd16
+	mov	ecx, 2
+	imul	ecx, 3
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, WORD PTR [edx+ecx+1064]
+	cmp	eax, 65024				; 0000fe00H
+	jl	SHORT $LN2@LDrd16
+	mov	ecx, 2
+	imul	ecx, 3
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, WORD PTR [edx+ecx+1064]
+	cmp	eax, 65279				; 0000feffH
+	jg	SHORT $LN2@LDrd16
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
+	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
+	mov	ecx, eax
+	call	?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ ; emulation::gb::LCDDriver::lcdc
+	mov	dl, BYTE PTR [eax]
+	shr	dl, 7
+	and	dl, 1
+	movzx	eax, dl
+	cmp	eax, 1
+	jne	SHORT $LN2@LDrd16
+
+; 416  :     sprite_bug = 2;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+8], 2
+$LN2@LDrd16:
+
+; 417  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -20307,7 +20780,7 @@ _this$ = -4						; size = 4
 ??$JR_cc@$06$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::JR_cc<7,1>, COMDAT
 ; _this$ = ecx
 
-; 745  : void Cpu::JR_cc() {
+; 757  : void Cpu::JR_cc() {
 
 	push	ebp
 	mov	ebp, esp
@@ -20321,25 +20794,25 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 746  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
+; 758  :   int table[2] = {((reg.F.raw & (1<<condbit))>>condbit),
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1056]
+	movzx	ecx, BYTE PTR [eax+1064]
 	and	ecx, 128				; 00000080H
 	sar	ecx, 7
 	mov	DWORD PTR _table$[ebp], ecx
 
-; 747  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
+; 759  :     ~((reg.F.raw & (1<<condbit))>>condbit)};
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1056]
+	movzx	eax, BYTE PTR [edx+1064]
 	and	eax, 128				; 00000080H
 	sar	eax, 7
 	not	eax
 	mov	DWORD PTR _table$[ebp+4], eax
 
-; 748  : 
-; 749  :   if (table[inv]&1) {
+; 760  : 
+; 761  :   if (table[inv]&1) {
 
 	mov	ecx, 4
 	shl	ecx, 0
@@ -20347,37 +20820,37 @@ _this$ = -4						; size = 4
 	and	edx, 1
 	je	SHORT $LN2@JR_cc
 
-; 750  : 		JR();
+; 762  : 		JR();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?JR@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::JR
 
-; 751  :   } else {
+; 763  :   } else {
 
 	jmp	SHORT $LN3@JR_cc
 $LN2@JR_cc:
 
-; 752  :     int8_t disp8 = mem_->Read8(reg.PC++);
+; 764  :     int8_t disp8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _disp8$1[ebp], al
 $LN3@JR_cc:
 
-; 753  :   }
-; 754  : 
-; 755  : }
+; 765  :   }
+; 766  : 
+; 767  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -20430,7 +20903,7 @@ _this$ = -4						; size = 4
 ??$LD@$03$0A@$09@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD<4,0,10>, COMDAT
 ; _this$ = ecx
 
-; 439  : void Cpu::LD() {
+; 446  : void Cpu::LD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -20446,183 +20919,183 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 440  :   if (mode == 10) { //dest,d8
+; 447  :   if (mode == 10) { //dest,d8
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN11@LD
 
-; 441  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
+; 448  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv79[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv79[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	shl	edx, 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN11@LD:
 
-; 442  : 	}else if (mode == 11) { //(dest),d8
+; 449  : 	}else if (mode == 11) { //(dest),d8
 
 	xor	edx, edx
 	je	SHORT $LN9@LD
 
-; 443  : 		auto d8 = mem_->Read8(reg.PC++);
+; 450  : 		auto d8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _d8$5[ebp], al
 
-; 444  : 		mem_->Write8(reg.raw16[dest],d8);
+; 451  : 		mem_->Write8(reg.raw16[dest],d8);
 
 	movzx	ecx, BYTE PTR _d8$5[ebp]
 	push	ecx
 	mov	edx, 2
 	shl	edx, 2
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN9@LD:
 
-; 445  : 	} else if (mode == 12) { //0xFF00+d8 src
+; 452  : 	} else if (mode == 12) { //0xFF00+d8 src
 
 	xor	eax, eax
 	je	SHORT $LN7@LD
 
-; 446  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 453  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv145[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv145[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$4[ebp], al
 
-; 447  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
+; 454  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, BYTE PTR _a8$4[ebp]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN7@LD:
 
-; 448  : 	} else if (mode == 13) { //dest,0xFF00+d8 
+; 455  : 	} else if (mode == 13) { //dest,0xFF00+d8 
 
 	xor	ecx, ecx
 	je	SHORT $LN5@LD
 
-; 449  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 456  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv169[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv169[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$3[ebp], al
 
-; 450  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
+; 457  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
 
 	movzx	eax, BYTE PTR _a8$3[ebp]
 	add	eax, 65280				; 0000ff00H
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	shl	edx, 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN5@LD:
 
-; 451  : 	} else if (mode == 14) { //(d16),src
+; 458  : 	} else if (mode == 14) { //(d16),src
 
 	xor	edx, edx
 	je	$LN3@LD
 
-; 452  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 459  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv193[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv193[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 453  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 460  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv206[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv206[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -20630,58 +21103,58 @@ $LN5@LD:
 	or	ecx, eax
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 454  :     mem_->Write8(d16,reg.raw8[src]);
+; 461  :     mem_->Write8(d16,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, WORD PTR _d16$2[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN3@LD:
 
-; 455  : 	} else if (mode == 15) { //src,(d16)
+; 462  : 	} else if (mode == 15) { //src,(d16)
 
 	xor	ecx, ecx
 	je	$LN12@LD
 
-; 456  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 463  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv232[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv232[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	ax, al
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 457  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 464  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv245[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv245[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
@@ -20689,21 +21162,21 @@ $LN3@LD:
 	or	eax, edx
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 458  :     reg.raw8[dest] = mem_->Read8(d16);
+; 465  :     reg.raw8[dest] = mem_->Read8(d16);
 
 	movzx	ecx, WORD PTR _d16$1[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 $LN12@LD:
 
-; 459  : 	}
-; 460  : }
+; 466  : 	}
+; 467  : }
 
 	add	esp, 32					; 00000020H
 	cmp	ebp, esp
@@ -20722,7 +21195,7 @@ _this$ = -4						; size = 4
 ??$DEC_8bit@$03$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::DEC_8bit<4,0>, COMDAT
 ; _this$ = ecx
 
-; 783  : void Cpu::DEC_8bit() {
+; 796  : void Cpu::DEC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -20731,151 +21204,151 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 784  :   reg.F.N = 1;
+; 797  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 785  : 
-; 786  :   if (mode==0) {
+; 798  : 
+; 799  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	$LN6@DEC_8bit
 
-; 787  :     //updateCpuFlagH(reg.raw8[dest],1,1);
-; 788  :     --reg.raw8[dest];
+; 800  :     //updateCpuFlagH(reg.raw8[dest],1,1);
+; 801  :     --reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	sub	al, 1
 	mov	ecx, 1
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 789  :     if ((reg.raw8[dest]&0xF)==0xF)
+; 802  :     if ((reg.raw8[dest]&0xF)==0xF)
 
 	mov	eax, 1
 	shl	eax, 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	and	edx, 15					; 0000000fH
 	cmp	edx, 15					; 0000000fH
 	jne	SHORT $LN5@DEC_8bit
 
-; 790  :       reg.F.H = 1;
+; 803  :       reg.F.H = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 32					; 00000020H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 791  :     else 
+; 804  :     else 
 
 	jmp	SHORT $LN4@DEC_8bit
 $LN5@DEC_8bit:
 
-; 792  :       reg.F.H = 0;
+; 805  :       reg.F.H = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 $LN4@DEC_8bit:
 
-; 793  :     updateCpuFlagZ(reg.raw8[dest]);
+; 806  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	shl	eax, 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 794  :   } else {
+; 807  :   } else {
 
 	jmp	$LN7@DEC_8bit
 $LN6@DEC_8bit:
 
-; 795  :     uint8_t data = mem_->Read8(reg.HL);
+; 808  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 796  : 
-; 797  :     //updateCpuFlagH(data,1,1);
-; 798  :     --data;
+; 809  : 
+; 810  :     //updateCpuFlagH(data,1,1);
+; 811  :     --data;
 
 	mov	al, BYTE PTR _data$1[ebp]
 	sub	al, 1
 	mov	BYTE PTR _data$1[ebp], al
 
-; 799  :     if ((data&0xF)==0xF)
+; 812  :     if ((data&0xF)==0xF)
 
 	movzx	ecx, BYTE PTR _data$1[ebp]
 	and	ecx, 15					; 0000000fH
 	cmp	ecx, 15					; 0000000fH
 	jne	SHORT $LN2@DEC_8bit
 
-; 800  :       reg.F.H = 1;
+; 813  :       reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 801  :     else
+; 814  :     else
 
 	jmp	SHORT $LN1@DEC_8bit
 $LN2@DEC_8bit:
 
-; 802  :       reg.F.H = 0;
+; 815  :       reg.F.H = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 $LN1@DEC_8bit:
 
-; 803  :     updateCpuFlagZ(data);
+; 816  :     updateCpuFlagZ(data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 804  :     mem_->Write8(reg.HL,data);
+; 817  :     mem_->Write8(reg.HL,data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+1062]
+	movzx	edx, WORD PTR [ecx+1070]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 $LN7@DEC_8bit:
 
-; 805  : 
-; 806  :   }
-; 807  :   
-; 808  : }
+; 818  : 
+; 819  :   }
+; 820  :   
+; 821  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -20894,7 +21367,7 @@ _this$ = -4						; size = 4
 ??$INC_8bit@$03$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::INC_8bit<4,0>, COMDAT
 ; _this$ = ecx
 
-; 758  : void Cpu::INC_8bit() {
+; 770  : void Cpu::INC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -20903,71 +21376,71 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 759  :   reg.F.N = 0;
+; 771  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 760  : 
-; 761  :   if (mode==0) {
+; 772  : 
+; 773  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN2@INC_8bit
 
-; 762  :     updateCpuFlagH(reg.raw8[dest],1,0);
+; 774  :     updateCpuFlagH(reg.raw8[dest],1,0);
 
 	push	0
 	push	1
 	mov	ecx, 1
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+ecx+1056]
+	movzx	eax, BYTE PTR [edx+ecx+1064]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 763  :     ++reg.raw8[dest];
+; 775  :     ++reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	add	al, 1
 	mov	ecx, 1
 	shl	ecx, 2
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 764  :     updateCpuFlagZ(reg.raw8[dest]);
+; 776  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	shl	eax, 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 765  :   } else {
+; 777  :   } else {
 
 	jmp	SHORT $LN3@INC_8bit
 $LN2@INC_8bit:
 
-; 766  :     uint8_t data = mem_->Read8(reg.HL);
+; 778  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 767  : 		updateCpuFlagH(data,1,0);
+; 779  : 		updateCpuFlagH(data,1,0);
 
 	push	0
 	push	1
@@ -20976,24 +21449,24 @@ $LN2@INC_8bit:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 768  :     ++data;
+; 780  :     ++data;
 
 	mov	cl, BYTE PTR _data$1[ebp]
 	add	cl, 1
 	mov	BYTE PTR _data$1[ebp], cl
 
-; 769  :     mem_->Write8(reg.HL,data);
+; 781  :     mem_->Write8(reg.HL,data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 770  :      updateCpuFlagZ(data);
+; 782  :      updateCpuFlagZ(data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
@@ -21001,10 +21474,10 @@ $LN2@INC_8bit:
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 $LN3@INC_8bit:
 
-; 771  :   }
-; 772  :     
-; 773  :  
-; 774  : }
+; 783  :   }
+; 784  :     
+; 785  :  
+; 786  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -21022,7 +21495,7 @@ _this$ = -4						; size = 4
 ??$DEC_16bit@$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::DEC_16bit<2>, COMDAT
 ; _this$ = ecx
 
-; 811  : void Cpu::DEC_16bit() {
+; 824  : void Cpu::DEC_16bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -21030,19 +21503,24 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 812  :   --reg.raw16[dest];
+; 825  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 826  :   --reg.raw16[dest];
 
 	mov	eax, 2
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+eax+1056]
+	mov	dx, WORD PTR [ecx+eax+1064]
 	sub	dx, 1
 	mov	eax, 2
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 813  :   Tick();Tick();Tick();Tick();
+; 827  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -21053,7 +21531,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 814  : }
+; 828  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -21071,7 +21549,7 @@ _this$ = -4						; size = 4
 ??$LDr$r@$00$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDr$r<1,2>, COMDAT
 ; _this$ = ecx
 
-; 394  : void Cpu::LDr$r() {
+; 397  : void Cpu::LDr$r() {
 
 	push	ebp
 	mov	ebp, esp
@@ -21079,22 +21557,22 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 395  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+; 398  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
 
 	mov	eax, 2
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 396  : }
+; 399  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -21118,7 +21596,7 @@ _this$ = -4						; size = 4
 ??$ADD_16bit@$02$01@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::ADD_16bit<3,2>, COMDAT
 ; _this$ = ecx
 
-; 504  : void Cpu::ADD_16bit() {
+; 510  : void Cpu::ADD_16bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -21133,38 +21611,38 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 505  :   reg.F.N = 0;
+; 511  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 506  :   uint16_t a=0,b=0;
+; 512  :   uint16_t a=0,b=0;
 
 	xor	eax, eax
 	mov	WORD PTR _a$[ebp], ax
 	xor	ecx, ecx
 	mov	WORD PTR _b$[ebp], cx
 
-; 507  :   a = reg.raw16[dest];
+; 513  :   a = reg.raw16[dest];
 
 	mov	edx, 2
 	imul	edx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+edx+1056]
+	mov	cx, WORD PTR [eax+edx+1064]
 	mov	WORD PTR _a$[ebp], cx
 
-; 508  :   b = reg.raw16[src];
+; 514  :   b = reg.raw16[src];
 
 	mov	edx, 2
 	shl	edx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+edx+1056]
+	mov	cx, WORD PTR [eax+edx+1064]
 	mov	WORD PTR _b$[ebp], cx
 
-; 509  :   reg.raw16[dest] = a + b;
+; 515  :   reg.raw16[dest] = a + b;
 
 	movzx	edx, WORD PTR _a$[ebp]
 	movzx	eax, WORD PTR _b$[ebp]
@@ -21172,9 +21650,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 2
 	imul	ecx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+ecx+1056], dx
+	mov	WORD PTR [eax+ecx+1064], dx
 
-; 510  :   uint16_t r1 = (a&0xFFF) + (b&0xFFF);
+; 516  :   uint16_t r1 = (a&0xFFF) + (b&0xFFF);
 
 	movzx	ecx, WORD PTR _a$[ebp]
 	and	ecx, 4095				; 00000fffH
@@ -21183,7 +21661,7 @@ _this$ = -4						; size = 4
 	add	ecx, edx
 	mov	WORD PTR _r1$[ebp], cx
 
-; 511  :   reg.F.H = r1>0xFFF?1:0;
+; 517  :   reg.F.H = r1>0xFFF?1:0;
 
 	movzx	eax, WORD PTR _r1$[ebp]
 	cmp	eax, 4095				; 00000fffH
@@ -21197,13 +21675,13 @@ $LN4@ADD_16bit:
 	and	cl, 1
 	shl	cl, 5
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	or	al, cl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 512  :   uint32_t r2 = (a&0xFFFF) + (b&0xFFFF);
+; 518  :   uint32_t r2 = (a&0xFFFF) + (b&0xFFFF);
 
 	movzx	edx, WORD PTR _a$[ebp]
 	and	edx, 65535				; 0000ffffH
@@ -21212,7 +21690,7 @@ $LN4@ADD_16bit:
 	add	edx, eax
 	mov	DWORD PTR _r2$[ebp], edx
 
-; 513  :   reg.F.C = r2>0xFFFF?1:0;
+; 519  :   reg.F.C = r2>0xFFFF?1:0;
 
 	cmp	DWORD PTR _r2$[ebp], 65535		; 0000ffffH
 	jbe	SHORT $LN5@ADD_16bit
@@ -21225,13 +21703,13 @@ $LN6@ADD_16bit:
 	and	cl, 1
 	shl	cl, 4
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 239					; 000000efH
 	or	al, cl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 514  : 	Tick();Tick();Tick();Tick();
+; 520  : 	Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -21242,7 +21720,7 @@ $LN6@ADD_16bit:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 515  : }
+; 521  : }
 
 	add	esp, 28					; 0000001cH
 	cmp	ebp, esp
@@ -21273,7 +21751,7 @@ _this$ = -4						; size = 4
 ??$LD@$04$0A@$09@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD<5,0,10>, COMDAT
 ; _this$ = ecx
 
-; 439  : void Cpu::LD() {
+; 446  : void Cpu::LD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -21289,183 +21767,183 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 440  :   if (mode == 10) { //dest,d8
+; 447  :   if (mode == 10) { //dest,d8
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN11@LD
 
-; 441  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
+; 448  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv79[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv79[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 5
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN11@LD:
 
-; 442  : 	}else if (mode == 11) { //(dest),d8
+; 449  : 	}else if (mode == 11) { //(dest),d8
 
 	xor	edx, edx
 	je	SHORT $LN9@LD
 
-; 443  : 		auto d8 = mem_->Read8(reg.PC++);
+; 450  : 		auto d8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _d8$5[ebp], al
 
-; 444  : 		mem_->Write8(reg.raw16[dest],d8);
+; 451  : 		mem_->Write8(reg.raw16[dest],d8);
 
 	movzx	ecx, BYTE PTR _d8$5[ebp]
 	push	ecx
 	mov	edx, 2
 	imul	edx, 5
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN9@LD:
 
-; 445  : 	} else if (mode == 12) { //0xFF00+d8 src
+; 452  : 	} else if (mode == 12) { //0xFF00+d8 src
 
 	xor	eax, eax
 	je	SHORT $LN7@LD
 
-; 446  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 453  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv145[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv145[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$4[ebp], al
 
-; 447  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
+; 454  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, BYTE PTR _a8$4[ebp]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN7@LD:
 
-; 448  : 	} else if (mode == 13) { //dest,0xFF00+d8 
+; 455  : 	} else if (mode == 13) { //dest,0xFF00+d8 
 
 	xor	ecx, ecx
 	je	SHORT $LN5@LD
 
-; 449  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 456  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv169[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv169[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$3[ebp], al
 
-; 450  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
+; 457  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
 
 	movzx	eax, BYTE PTR _a8$3[ebp]
 	add	eax, 65280				; 0000ff00H
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 5
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN5@LD:
 
-; 451  : 	} else if (mode == 14) { //(d16),src
+; 458  : 	} else if (mode == 14) { //(d16),src
 
 	xor	edx, edx
 	je	$LN3@LD
 
-; 452  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 459  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv193[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv193[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 453  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 460  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv206[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv206[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -21473,58 +21951,58 @@ $LN5@LD:
 	or	ecx, eax
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 454  :     mem_->Write8(d16,reg.raw8[src]);
+; 461  :     mem_->Write8(d16,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, WORD PTR _d16$2[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN3@LD:
 
-; 455  : 	} else if (mode == 15) { //src,(d16)
+; 462  : 	} else if (mode == 15) { //src,(d16)
 
 	xor	ecx, ecx
 	je	$LN12@LD
 
-; 456  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 463  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv232[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv232[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	ax, al
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 457  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 464  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv245[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv245[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
@@ -21532,21 +22010,21 @@ $LN3@LD:
 	or	eax, edx
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 458  :     reg.raw8[dest] = mem_->Read8(d16);
+; 465  :     reg.raw8[dest] = mem_->Read8(d16);
 
 	movzx	ecx, WORD PTR _d16$1[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 $LN12@LD:
 
-; 459  : 	}
-; 460  : }
+; 466  : 	}
+; 467  : }
 
 	add	esp, 32					; 00000020H
 	cmp	ebp, esp
@@ -21565,7 +22043,7 @@ _this$ = -4						; size = 4
 ??$DEC_8bit@$04$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::DEC_8bit<5,0>, COMDAT
 ; _this$ = ecx
 
-; 783  : void Cpu::DEC_8bit() {
+; 796  : void Cpu::DEC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -21574,151 +22052,151 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 784  :   reg.F.N = 1;
+; 797  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 785  : 
-; 786  :   if (mode==0) {
+; 798  : 
+; 799  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	$LN6@DEC_8bit
 
-; 787  :     //updateCpuFlagH(reg.raw8[dest],1,1);
-; 788  :     --reg.raw8[dest];
+; 800  :     //updateCpuFlagH(reg.raw8[dest],1,1);
+; 801  :     --reg.raw8[dest];
 
 	mov	ecx, 1
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	sub	al, 1
 	mov	ecx, 1
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 789  :     if ((reg.raw8[dest]&0xF)==0xF)
+; 802  :     if ((reg.raw8[dest]&0xF)==0xF)
 
 	mov	eax, 1
 	imul	eax, 5
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	and	edx, 15					; 0000000fH
 	cmp	edx, 15					; 0000000fH
 	jne	SHORT $LN5@DEC_8bit
 
-; 790  :       reg.F.H = 1;
+; 803  :       reg.F.H = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 32					; 00000020H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 791  :     else 
+; 804  :     else 
 
 	jmp	SHORT $LN4@DEC_8bit
 $LN5@DEC_8bit:
 
-; 792  :       reg.F.H = 0;
+; 805  :       reg.F.H = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 $LN4@DEC_8bit:
 
-; 793  :     updateCpuFlagZ(reg.raw8[dest]);
+; 806  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	imul	eax, 5
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 794  :   } else {
+; 807  :   } else {
 
 	jmp	$LN7@DEC_8bit
 $LN6@DEC_8bit:
 
-; 795  :     uint8_t data = mem_->Read8(reg.HL);
+; 808  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 796  : 
-; 797  :     //updateCpuFlagH(data,1,1);
-; 798  :     --data;
+; 809  : 
+; 810  :     //updateCpuFlagH(data,1,1);
+; 811  :     --data;
 
 	mov	al, BYTE PTR _data$1[ebp]
 	sub	al, 1
 	mov	BYTE PTR _data$1[ebp], al
 
-; 799  :     if ((data&0xF)==0xF)
+; 812  :     if ((data&0xF)==0xF)
 
 	movzx	ecx, BYTE PTR _data$1[ebp]
 	and	ecx, 15					; 0000000fH
 	cmp	ecx, 15					; 0000000fH
 	jne	SHORT $LN2@DEC_8bit
 
-; 800  :       reg.F.H = 1;
+; 813  :       reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 801  :     else
+; 814  :     else
 
 	jmp	SHORT $LN1@DEC_8bit
 $LN2@DEC_8bit:
 
-; 802  :       reg.F.H = 0;
+; 815  :       reg.F.H = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 $LN1@DEC_8bit:
 
-; 803  :     updateCpuFlagZ(data);
+; 816  :     updateCpuFlagZ(data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 804  :     mem_->Write8(reg.HL,data);
+; 817  :     mem_->Write8(reg.HL,data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+1062]
+	movzx	edx, WORD PTR [ecx+1070]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 $LN7@DEC_8bit:
 
-; 805  : 
-; 806  :   }
-; 807  :   
-; 808  : }
+; 818  : 
+; 819  :   }
+; 820  :   
+; 821  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -21737,7 +22215,7 @@ _this$ = -4						; size = 4
 ??$INC_8bit@$04$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::INC_8bit<5,0>, COMDAT
 ; _this$ = ecx
 
-; 758  : void Cpu::INC_8bit() {
+; 770  : void Cpu::INC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -21746,71 +22224,71 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 759  :   reg.F.N = 0;
+; 771  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 760  : 
-; 761  :   if (mode==0) {
+; 772  : 
+; 773  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN2@INC_8bit
 
-; 762  :     updateCpuFlagH(reg.raw8[dest],1,0);
+; 774  :     updateCpuFlagH(reg.raw8[dest],1,0);
 
 	push	0
 	push	1
 	mov	ecx, 1
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+ecx+1056]
+	movzx	eax, BYTE PTR [edx+ecx+1064]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 763  :     ++reg.raw8[dest];
+; 775  :     ++reg.raw8[dest];
 
 	mov	ecx, 1
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	add	al, 1
 	mov	ecx, 1
 	imul	ecx, 5
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 764  :     updateCpuFlagZ(reg.raw8[dest]);
+; 776  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	imul	eax, 5
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 765  :   } else {
+; 777  :   } else {
 
 	jmp	SHORT $LN3@INC_8bit
 $LN2@INC_8bit:
 
-; 766  :     uint8_t data = mem_->Read8(reg.HL);
+; 778  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 767  : 		updateCpuFlagH(data,1,0);
+; 779  : 		updateCpuFlagH(data,1,0);
 
 	push	0
 	push	1
@@ -21819,24 +22297,24 @@ $LN2@INC_8bit:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 768  :     ++data;
+; 780  :     ++data;
 
 	mov	cl, BYTE PTR _data$1[ebp]
 	add	cl, 1
 	mov	BYTE PTR _data$1[ebp], cl
 
-; 769  :     mem_->Write8(reg.HL,data);
+; 781  :     mem_->Write8(reg.HL,data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 770  :      updateCpuFlagZ(data);
+; 782  :      updateCpuFlagZ(data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
@@ -21844,10 +22322,10 @@ $LN2@INC_8bit:
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 $LN3@INC_8bit:
 
-; 771  :   }
-; 772  :     
-; 773  :  
-; 774  : }
+; 783  :   }
+; 784  :     
+; 785  :  
+; 786  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -21865,7 +22343,7 @@ _this$ = -4						; size = 4
 ??$INC_16bit@$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::INC_16bit<2>, COMDAT
 ; _this$ = ecx
 
-; 777  : void Cpu::INC_16bit() {
+; 789  : void Cpu::INC_16bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -21873,19 +22351,24 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 778  :   ++reg.raw16[dest];
+; 790  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 791  :   ++reg.raw16[dest];
 
 	mov	eax, 2
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+eax+1056]
+	mov	dx, WORD PTR [ecx+eax+1064]
 	add	dx, 1
 	mov	eax, 2
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 779  :   Tick();Tick();Tick();Tick();
+; 792  :   Tick();Tick();Tick();Tick(); 
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -21896,7 +22379,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 780  : }
+; 793  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -21914,7 +22397,7 @@ _this$ = -4						; size = 4
 ??$LD$rr@$01$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD$rr<2,1>, COMDAT
 ; _this$ = ecx
 
-; 389  : void Cpu::LD$rr() { //(dest), src
+; 392  : void Cpu::LD$rr() { //(dest), src
 
 	push	ebp
 	mov	ebp, esp
@@ -21922,23 +22405,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 390  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+; 393  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, 2
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 391  : }
+; 394  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -21958,7 +22441,7 @@ _this$ = -4						; size = 4
 ??$LDrd16@$01@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrd16<2>, COMDAT
 ; _this$ = ecx
 
-; 409  : void Cpu::LDrd16() {
+; 412  : void Cpu::LDrd16() {
 
 	push	ebp
 	mov	ebp, esp
@@ -21967,55 +22450,90 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 410  : 	reg.raw16[dest] = mem_->Read8(reg.PC++);
+; 413  : 	reg.raw16[dest] = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv78[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv78[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	edx, 2
 	shl	edx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+edx+1056], cx
+	mov	WORD PTR [eax+edx+1064], cx
 
-; 411  : 	reg.raw16[dest] |= (mem_->Read8(reg.PC++))<<8;
+; 414  : 	reg.raw16[dest] |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv95[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv95[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
 	mov	eax, 2
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	eax, WORD PTR [ecx+eax+1056]
+	movzx	eax, WORD PTR [ecx+eax+1064]
 	or	eax, edx
 	mov	ecx, 2
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+ecx+1056], ax
+	mov	WORD PTR [edx+ecx+1064], ax
 
-; 412  : }
+; 415  :   if (dest != RegAF && (reg.raw16[dest]>=0xFE00&&reg.raw16[dest]<=0xFEFF) && emu_->lcd_driver()->lcdc().lcd_enable == 1)
+
+	mov	eax, 1
+	test	eax, eax
+	je	SHORT $LN2@LDrd16
+	mov	ecx, 2
+	shl	ecx, 1
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, WORD PTR [edx+ecx+1064]
+	cmp	eax, 65024				; 0000fe00H
+	jl	SHORT $LN2@LDrd16
+	mov	ecx, 2
+	shl	ecx, 1
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, WORD PTR [edx+ecx+1064]
+	cmp	eax, 65279				; 0000feffH
+	jg	SHORT $LN2@LDrd16
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
+	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
+	mov	ecx, eax
+	call	?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ ; emulation::gb::LCDDriver::lcdc
+	mov	dl, BYTE PTR [eax]
+	shr	dl, 7
+	and	dl, 1
+	movzx	eax, dl
+	cmp	eax, 1
+	jne	SHORT $LN2@LDrd16
+
+; 416  :     sprite_bug = 2;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+8], 2
+$LN2@LDrd16:
+
+; 417  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -22046,7 +22564,7 @@ _this$ = -4						; size = 4
 ??$LD@$01$0A@$09@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD<2,0,10>, COMDAT
 ; _this$ = ecx
 
-; 439  : void Cpu::LD() {
+; 446  : void Cpu::LD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -22062,183 +22580,183 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 440  :   if (mode == 10) { //dest,d8
+; 447  :   if (mode == 10) { //dest,d8
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN11@LD
 
-; 441  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
+; 448  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv79[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv79[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	shl	edx, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN11@LD:
 
-; 442  : 	}else if (mode == 11) { //(dest),d8
+; 449  : 	}else if (mode == 11) { //(dest),d8
 
 	xor	edx, edx
 	je	SHORT $LN9@LD
 
-; 443  : 		auto d8 = mem_->Read8(reg.PC++);
+; 450  : 		auto d8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _d8$5[ebp], al
 
-; 444  : 		mem_->Write8(reg.raw16[dest],d8);
+; 451  : 		mem_->Write8(reg.raw16[dest],d8);
 
 	movzx	ecx, BYTE PTR _d8$5[ebp]
 	push	ecx
 	mov	edx, 2
 	shl	edx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN9@LD:
 
-; 445  : 	} else if (mode == 12) { //0xFF00+d8 src
+; 452  : 	} else if (mode == 12) { //0xFF00+d8 src
 
 	xor	eax, eax
 	je	SHORT $LN7@LD
 
-; 446  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 453  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv145[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv145[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$4[ebp], al
 
-; 447  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
+; 454  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, BYTE PTR _a8$4[ebp]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN7@LD:
 
-; 448  : 	} else if (mode == 13) { //dest,0xFF00+d8 
+; 455  : 	} else if (mode == 13) { //dest,0xFF00+d8 
 
 	xor	ecx, ecx
 	je	SHORT $LN5@LD
 
-; 449  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 456  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv169[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv169[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$3[ebp], al
 
-; 450  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
+; 457  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
 
 	movzx	eax, BYTE PTR _a8$3[ebp]
 	add	eax, 65280				; 0000ff00H
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	shl	edx, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN5@LD:
 
-; 451  : 	} else if (mode == 14) { //(d16),src
+; 458  : 	} else if (mode == 14) { //(d16),src
 
 	xor	edx, edx
 	je	$LN3@LD
 
-; 452  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 459  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv193[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv193[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 453  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 460  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv206[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv206[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -22246,58 +22764,58 @@ $LN5@LD:
 	or	ecx, eax
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 454  :     mem_->Write8(d16,reg.raw8[src]);
+; 461  :     mem_->Write8(d16,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, WORD PTR _d16$2[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN3@LD:
 
-; 455  : 	} else if (mode == 15) { //src,(d16)
+; 462  : 	} else if (mode == 15) { //src,(d16)
 
 	xor	ecx, ecx
 	je	$LN12@LD
 
-; 456  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 463  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv232[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv232[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	ax, al
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 457  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 464  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv245[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv245[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
@@ -22305,21 +22823,21 @@ $LN3@LD:
 	or	eax, edx
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 458  :     reg.raw8[dest] = mem_->Read8(d16);
+; 465  :     reg.raw8[dest] = mem_->Read8(d16);
 
 	movzx	ecx, WORD PTR _d16$1[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 $LN12@LD:
 
-; 459  : 	}
-; 460  : }
+; 466  : 	}
+; 467  : }
 
 	add	esp, 32					; 00000020H
 	cmp	ebp, esp
@@ -22338,7 +22856,7 @@ _this$ = -4						; size = 4
 ??$DEC_8bit@$01$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::DEC_8bit<2,0>, COMDAT
 ; _this$ = ecx
 
-; 783  : void Cpu::DEC_8bit() {
+; 796  : void Cpu::DEC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -22347,151 +22865,151 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 784  :   reg.F.N = 1;
+; 797  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 785  : 
-; 786  :   if (mode==0) {
+; 798  : 
+; 799  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	$LN6@DEC_8bit
 
-; 787  :     //updateCpuFlagH(reg.raw8[dest],1,1);
-; 788  :     --reg.raw8[dest];
+; 800  :     //updateCpuFlagH(reg.raw8[dest],1,1);
+; 801  :     --reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	sub	al, 1
 	mov	ecx, 1
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 789  :     if ((reg.raw8[dest]&0xF)==0xF)
+; 802  :     if ((reg.raw8[dest]&0xF)==0xF)
 
 	mov	eax, 1
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	and	edx, 15					; 0000000fH
 	cmp	edx, 15					; 0000000fH
 	jne	SHORT $LN5@DEC_8bit
 
-; 790  :       reg.F.H = 1;
+; 803  :       reg.F.H = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 32					; 00000020H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 791  :     else 
+; 804  :     else 
 
 	jmp	SHORT $LN4@DEC_8bit
 $LN5@DEC_8bit:
 
-; 792  :       reg.F.H = 0;
+; 805  :       reg.F.H = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 $LN4@DEC_8bit:
 
-; 793  :     updateCpuFlagZ(reg.raw8[dest]);
+; 806  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 794  :   } else {
+; 807  :   } else {
 
 	jmp	$LN7@DEC_8bit
 $LN6@DEC_8bit:
 
-; 795  :     uint8_t data = mem_->Read8(reg.HL);
+; 808  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 796  : 
-; 797  :     //updateCpuFlagH(data,1,1);
-; 798  :     --data;
+; 809  : 
+; 810  :     //updateCpuFlagH(data,1,1);
+; 811  :     --data;
 
 	mov	al, BYTE PTR _data$1[ebp]
 	sub	al, 1
 	mov	BYTE PTR _data$1[ebp], al
 
-; 799  :     if ((data&0xF)==0xF)
+; 812  :     if ((data&0xF)==0xF)
 
 	movzx	ecx, BYTE PTR _data$1[ebp]
 	and	ecx, 15					; 0000000fH
 	cmp	ecx, 15					; 0000000fH
 	jne	SHORT $LN2@DEC_8bit
 
-; 800  :       reg.F.H = 1;
+; 813  :       reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 801  :     else
+; 814  :     else
 
 	jmp	SHORT $LN1@DEC_8bit
 $LN2@DEC_8bit:
 
-; 802  :       reg.F.H = 0;
+; 815  :       reg.F.H = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 $LN1@DEC_8bit:
 
-; 803  :     updateCpuFlagZ(data);
+; 816  :     updateCpuFlagZ(data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 804  :     mem_->Write8(reg.HL,data);
+; 817  :     mem_->Write8(reg.HL,data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+1062]
+	movzx	edx, WORD PTR [ecx+1070]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 $LN7@DEC_8bit:
 
-; 805  : 
-; 806  :   }
-; 807  :   
-; 808  : }
+; 818  : 
+; 819  :   }
+; 820  :   
+; 821  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -22510,7 +23028,7 @@ _this$ = -4						; size = 4
 ??$INC_8bit@$01$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::INC_8bit<2,0>, COMDAT
 ; _this$ = ecx
 
-; 758  : void Cpu::INC_8bit() {
+; 770  : void Cpu::INC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -22519,71 +23037,71 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 759  :   reg.F.N = 0;
+; 771  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 760  : 
-; 761  :   if (mode==0) {
+; 772  : 
+; 773  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN2@INC_8bit
 
-; 762  :     updateCpuFlagH(reg.raw8[dest],1,0);
+; 774  :     updateCpuFlagH(reg.raw8[dest],1,0);
 
 	push	0
 	push	1
 	mov	ecx, 1
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+ecx+1056]
+	movzx	eax, BYTE PTR [edx+ecx+1064]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 763  :     ++reg.raw8[dest];
+; 775  :     ++reg.raw8[dest];
 
 	mov	ecx, 1
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	add	al, 1
 	mov	ecx, 1
 	shl	ecx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 764  :     updateCpuFlagZ(reg.raw8[dest]);
+; 776  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	shl	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 765  :   } else {
+; 777  :   } else {
 
 	jmp	SHORT $LN3@INC_8bit
 $LN2@INC_8bit:
 
-; 766  :     uint8_t data = mem_->Read8(reg.HL);
+; 778  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 767  : 		updateCpuFlagH(data,1,0);
+; 779  : 		updateCpuFlagH(data,1,0);
 
 	push	0
 	push	1
@@ -22592,24 +23110,24 @@ $LN2@INC_8bit:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 768  :     ++data;
+; 780  :     ++data;
 
 	mov	cl, BYTE PTR _data$1[ebp]
 	add	cl, 1
 	mov	BYTE PTR _data$1[ebp], cl
 
-; 769  :     mem_->Write8(reg.HL,data);
+; 781  :     mem_->Write8(reg.HL,data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 770  :      updateCpuFlagZ(data);
+; 782  :      updateCpuFlagZ(data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
@@ -22617,10 +23135,10 @@ $LN2@INC_8bit:
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 $LN3@INC_8bit:
 
-; 771  :   }
-; 772  :     
-; 773  :  
-; 774  : }
+; 783  :   }
+; 784  :     
+; 785  :  
+; 786  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -22638,7 +23156,7 @@ _this$ = -4						; size = 4
 ??$DEC_16bit@$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::DEC_16bit<1>, COMDAT
 ; _this$ = ecx
 
-; 811  : void Cpu::DEC_16bit() {
+; 824  : void Cpu::DEC_16bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -22646,19 +23164,24 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 812  :   --reg.raw16[dest];
+; 825  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 826  :   --reg.raw16[dest];
 
 	mov	eax, 2
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+eax+1056]
+	mov	dx, WORD PTR [ecx+eax+1064]
 	sub	dx, 1
 	mov	eax, 2
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 813  :   Tick();Tick();Tick();Tick();
+; 827  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -22669,7 +23192,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 814  : }
+; 828  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -22687,7 +23210,7 @@ _this$ = -4						; size = 4
 ??$LDr$r@$00$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDr$r<1,1>, COMDAT
 ; _this$ = ecx
 
-; 394  : void Cpu::LDr$r() {
+; 397  : void Cpu::LDr$r() {
 
 	push	ebp
 	mov	ebp, esp
@@ -22695,22 +23218,22 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 395  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+; 398  : 	reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
 
 	mov	eax, 2
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 396  : }
+; 399  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -22734,7 +23257,7 @@ _this$ = -4						; size = 4
 ??$ADD_16bit@$02$00@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::ADD_16bit<3,1>, COMDAT
 ; _this$ = ecx
 
-; 504  : void Cpu::ADD_16bit() {
+; 510  : void Cpu::ADD_16bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -22749,38 +23272,38 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 505  :   reg.F.N = 0;
+; 511  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 506  :   uint16_t a=0,b=0;
+; 512  :   uint16_t a=0,b=0;
 
 	xor	eax, eax
 	mov	WORD PTR _a$[ebp], ax
 	xor	ecx, ecx
 	mov	WORD PTR _b$[ebp], cx
 
-; 507  :   a = reg.raw16[dest];
+; 513  :   a = reg.raw16[dest];
 
 	mov	edx, 2
 	imul	edx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+edx+1056]
+	mov	cx, WORD PTR [eax+edx+1064]
 	mov	WORD PTR _a$[ebp], cx
 
-; 508  :   b = reg.raw16[src];
+; 514  :   b = reg.raw16[src];
 
 	mov	edx, 2
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+edx+1056]
+	mov	cx, WORD PTR [eax+edx+1064]
 	mov	WORD PTR _b$[ebp], cx
 
-; 509  :   reg.raw16[dest] = a + b;
+; 515  :   reg.raw16[dest] = a + b;
 
 	movzx	edx, WORD PTR _a$[ebp]
 	movzx	eax, WORD PTR _b$[ebp]
@@ -22788,9 +23311,9 @@ _this$ = -4						; size = 4
 	mov	ecx, 2
 	imul	ecx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+ecx+1056], dx
+	mov	WORD PTR [eax+ecx+1064], dx
 
-; 510  :   uint16_t r1 = (a&0xFFF) + (b&0xFFF);
+; 516  :   uint16_t r1 = (a&0xFFF) + (b&0xFFF);
 
 	movzx	ecx, WORD PTR _a$[ebp]
 	and	ecx, 4095				; 00000fffH
@@ -22799,7 +23322,7 @@ _this$ = -4						; size = 4
 	add	ecx, edx
 	mov	WORD PTR _r1$[ebp], cx
 
-; 511  :   reg.F.H = r1>0xFFF?1:0;
+; 517  :   reg.F.H = r1>0xFFF?1:0;
 
 	movzx	eax, WORD PTR _r1$[ebp]
 	cmp	eax, 4095				; 00000fffH
@@ -22813,13 +23336,13 @@ $LN4@ADD_16bit:
 	and	cl, 1
 	shl	cl, 5
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	or	al, cl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 512  :   uint32_t r2 = (a&0xFFFF) + (b&0xFFFF);
+; 518  :   uint32_t r2 = (a&0xFFFF) + (b&0xFFFF);
 
 	movzx	edx, WORD PTR _a$[ebp]
 	and	edx, 65535				; 0000ffffH
@@ -22828,7 +23351,7 @@ $LN4@ADD_16bit:
 	add	edx, eax
 	mov	DWORD PTR _r2$[ebp], edx
 
-; 513  :   reg.F.C = r2>0xFFFF?1:0;
+; 519  :   reg.F.C = r2>0xFFFF?1:0;
 
 	cmp	DWORD PTR _r2$[ebp], 65535		; 0000ffffH
 	jbe	SHORT $LN5@ADD_16bit
@@ -22841,13 +23364,13 @@ $LN6@ADD_16bit:
 	and	cl, 1
 	shl	cl, 4
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 239					; 000000efH
 	or	al, cl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 514  : 	Tick();Tick();Tick();Tick();
+; 520  : 	Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -22858,7 +23381,7 @@ $LN6@ADD_16bit:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 515  : }
+; 521  : }
 
 	add	esp, 28					; 0000001cH
 	cmp	ebp, esp
@@ -22889,7 +23412,7 @@ _this$ = -4						; size = 4
 ??$LD@$02$0A@$09@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD<3,0,10>, COMDAT
 ; _this$ = ecx
 
-; 439  : void Cpu::LD() {
+; 446  : void Cpu::LD() {
 
 	push	ebp
 	mov	ebp, esp
@@ -22905,183 +23428,183 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 440  :   if (mode == 10) { //dest,d8
+; 447  :   if (mode == 10) { //dest,d8
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN11@LD
 
-; 441  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
+; 448  : 		reg.raw8[dest] = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv79[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv79[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN11@LD:
 
-; 442  : 	}else if (mode == 11) { //(dest),d8
+; 449  : 	}else if (mode == 11) { //(dest),d8
 
 	xor	edx, edx
 	je	SHORT $LN9@LD
 
-; 443  : 		auto d8 = mem_->Read8(reg.PC++);
+; 450  : 		auto d8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv92[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv92[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _d8$5[ebp], al
 
-; 444  : 		mem_->Write8(reg.raw16[dest],d8);
+; 451  : 		mem_->Write8(reg.raw16[dest],d8);
 
 	movzx	ecx, BYTE PTR _d8$5[ebp]
 	push	ecx
 	mov	edx, 2
 	imul	edx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+edx+1056]
+	movzx	ecx, WORD PTR [eax+edx+1064]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN9@LD:
 
-; 445  : 	} else if (mode == 12) { //0xFF00+d8 src
+; 452  : 	} else if (mode == 12) { //0xFF00+d8 src
 
 	xor	eax, eax
 	je	SHORT $LN7@LD
 
-; 446  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 453  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv145[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv145[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$4[ebp], al
 
-; 447  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
+; 454  : 		mem_->Write8(0xFF00+a8,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, BYTE PTR _a8$4[ebp]
 	add	edx, 65280				; 0000ff00H
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN7@LD:
 
-; 448  : 	} else if (mode == 13) { //dest,0xFF00+d8 
+; 455  : 	} else if (mode == 13) { //dest,0xFF00+d8 
 
 	xor	ecx, ecx
 	je	SHORT $LN5@LD
 
-; 449  :     uint8_t a8 = mem_->Read8(reg.PC++);
+; 456  :     uint8_t a8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv169[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv169[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _a8$3[ebp], al
 
-; 450  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
+; 457  : 		reg.raw8[dest] = mem_->Read8(0xFF00+a8);
 
 	movzx	eax, BYTE PTR _a8$3[ebp]
 	add	eax, 65280				; 0000ff00H
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	edx, 1
 	imul	edx, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+edx+1056], al
+	mov	BYTE PTR [ecx+edx+1064], al
 	jmp	$LN12@LD
 $LN5@LD:
 
-; 451  : 	} else if (mode == 14) { //(d16),src
+; 458  : 	} else if (mode == 14) { //(d16),src
 
 	xor	edx, edx
 	je	$LN3@LD
 
-; 452  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 459  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv193[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv193[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 453  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 460  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv206[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv206[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -23089,58 +23612,58 @@ $LN5@LD:
 	or	ecx, eax
 	mov	WORD PTR _d16$2[ebp], cx
 
-; 454  :     mem_->Write8(d16,reg.raw8[src]);
+; 461  :     mem_->Write8(d16,reg.raw8[src]);
 
 	mov	edx, 1
 	imul	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+edx+1056]
+	movzx	ecx, BYTE PTR [eax+edx+1064]
 	push	ecx
 	movzx	edx, WORD PTR _d16$2[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 	jmp	$LN12@LD
 $LN3@LD:
 
-; 455  : 	} else if (mode == 15) { //src,(d16)
+; 462  : 	} else if (mode == 15) { //src,(d16)
 
 	xor	ecx, ecx
 	je	$LN12@LD
 
-; 456  : 		uint16_t d16 = mem_->Read8(reg.PC++);
+; 463  : 		uint16_t d16 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv232[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv232[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	ax, al
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 457  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
+; 464  : 		d16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv245[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv245[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
@@ -23148,21 +23671,21 @@ $LN3@LD:
 	or	eax, edx
 	mov	WORD PTR _d16$1[ebp], ax
 
-; 458  :     reg.raw8[dest] = mem_->Read8(d16);
+; 465  :     reg.raw8[dest] = mem_->Read8(d16);
 
 	movzx	ecx, WORD PTR _d16$1[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 $LN12@LD:
 
-; 459  : 	}
-; 460  : }
+; 466  : 	}
+; 467  : }
 
 	add	esp, 32					; 00000020H
 	cmp	ebp, esp
@@ -23181,7 +23704,7 @@ _this$ = -4						; size = 4
 ??$DEC_8bit@$02$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::DEC_8bit<3,0>, COMDAT
 ; _this$ = ecx
 
-; 783  : void Cpu::DEC_8bit() {
+; 796  : void Cpu::DEC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -23190,151 +23713,151 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 784  :   reg.F.N = 1;
+; 797  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 785  : 
-; 786  :   if (mode==0) {
+; 798  : 
+; 799  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	$LN6@DEC_8bit
 
-; 787  :     //updateCpuFlagH(reg.raw8[dest],1,1);
-; 788  :     --reg.raw8[dest];
+; 800  :     //updateCpuFlagH(reg.raw8[dest],1,1);
+; 801  :     --reg.raw8[dest];
 
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	sub	al, 1
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 789  :     if ((reg.raw8[dest]&0xF)==0xF)
+; 802  :     if ((reg.raw8[dest]&0xF)==0xF)
 
 	mov	eax, 1
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	and	edx, 15					; 0000000fH
 	cmp	edx, 15					; 0000000fH
 	jne	SHORT $LN5@DEC_8bit
 
-; 790  :       reg.F.H = 1;
+; 803  :       reg.F.H = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 32					; 00000020H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 791  :     else 
+; 804  :     else 
 
 	jmp	SHORT $LN4@DEC_8bit
 $LN5@DEC_8bit:
 
-; 792  :       reg.F.H = 0;
+; 805  :       reg.F.H = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 $LN4@DEC_8bit:
 
-; 793  :     updateCpuFlagZ(reg.raw8[dest]);
+; 806  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 794  :   } else {
+; 807  :   } else {
 
 	jmp	$LN7@DEC_8bit
 $LN6@DEC_8bit:
 
-; 795  :     uint8_t data = mem_->Read8(reg.HL);
+; 808  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 796  : 
-; 797  :     //updateCpuFlagH(data,1,1);
-; 798  :     --data;
+; 809  : 
+; 810  :     //updateCpuFlagH(data,1,1);
+; 811  :     --data;
 
 	mov	al, BYTE PTR _data$1[ebp]
 	sub	al, 1
 	mov	BYTE PTR _data$1[ebp], al
 
-; 799  :     if ((data&0xF)==0xF)
+; 812  :     if ((data&0xF)==0xF)
 
 	movzx	ecx, BYTE PTR _data$1[ebp]
 	and	ecx, 15					; 0000000fH
 	cmp	ecx, 15					; 0000000fH
 	jne	SHORT $LN2@DEC_8bit
 
-; 800  :       reg.F.H = 1;
+; 813  :       reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 801  :     else
+; 814  :     else
 
 	jmp	SHORT $LN1@DEC_8bit
 $LN2@DEC_8bit:
 
-; 802  :       reg.F.H = 0;
+; 815  :       reg.F.H = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 $LN1@DEC_8bit:
 
-; 803  :     updateCpuFlagZ(data);
+; 816  :     updateCpuFlagZ(data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 804  :     mem_->Write8(reg.HL,data);
+; 817  :     mem_->Write8(reg.HL,data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+1062]
+	movzx	edx, WORD PTR [ecx+1070]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 $LN7@DEC_8bit:
 
-; 805  : 
-; 806  :   }
-; 807  :   
-; 808  : }
+; 818  : 
+; 819  :   }
+; 820  :   
+; 821  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -23353,7 +23876,7 @@ _this$ = -4						; size = 4
 ??$INC_8bit@$02$0A@@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::INC_8bit<3,0>, COMDAT
 ; _this$ = ecx
 
-; 758  : void Cpu::INC_8bit() {
+; 770  : void Cpu::INC_8bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -23362,71 +23885,71 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 759  :   reg.F.N = 0;
+; 771  :   reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 760  : 
-; 761  :   if (mode==0) {
+; 772  : 
+; 773  :   if (mode==0) {
 
 	mov	eax, 1
 	test	eax, eax
 	je	SHORT $LN2@INC_8bit
 
-; 762  :     updateCpuFlagH(reg.raw8[dest],1,0);
+; 774  :     updateCpuFlagH(reg.raw8[dest],1,0);
 
 	push	0
 	push	1
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+ecx+1056]
+	movzx	eax, BYTE PTR [edx+ecx+1064]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 763  :     ++reg.raw8[dest];
+; 775  :     ++reg.raw8[dest];
 
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+ecx+1056]
+	mov	al, BYTE PTR [edx+ecx+1064]
 	add	al, 1
 	mov	ecx, 1
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+ecx+1056], al
+	mov	BYTE PTR [edx+ecx+1064], al
 
-; 764  :     updateCpuFlagZ(reg.raw8[dest]);
+; 776  :     updateCpuFlagZ(reg.raw8[dest]);
 
 	mov	eax, 1
 	imul	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 765  :   } else {
+; 777  :   } else {
 
 	jmp	SHORT $LN3@INC_8bit
 $LN2@INC_8bit:
 
-; 766  :     uint8_t data = mem_->Read8(reg.HL);
+; 778  :     uint8_t data = mem_->Read8(reg.HL);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _data$1[ebp], al
 
-; 767  : 		updateCpuFlagH(data,1,0);
+; 779  : 		updateCpuFlagH(data,1,0);
 
 	push	0
 	push	1
@@ -23435,24 +23958,24 @@ $LN2@INC_8bit:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 768  :     ++data;
+; 780  :     ++data;
 
 	mov	cl, BYTE PTR _data$1[ebp]
 	add	cl, 1
 	mov	BYTE PTR _data$1[ebp], cl
 
-; 769  :     mem_->Write8(reg.HL,data);
+; 781  :     mem_->Write8(reg.HL,data);
 
 	movzx	edx, BYTE PTR _data$1[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 770  :      updateCpuFlagZ(data);
+; 782  :      updateCpuFlagZ(data);
 
 	movzx	eax, BYTE PTR _data$1[ebp]
 	push	eax
@@ -23460,10 +23983,10 @@ $LN2@INC_8bit:
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 $LN3@INC_8bit:
 
-; 771  :   }
-; 772  :     
-; 773  :  
-; 774  : }
+; 783  :   }
+; 784  :     
+; 785  :  
+; 786  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -23481,7 +24004,7 @@ _this$ = -4						; size = 4
 ??$INC_16bit@$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::INC_16bit<1>, COMDAT
 ; _this$ = ecx
 
-; 777  : void Cpu::INC_16bit() {
+; 789  : void Cpu::INC_16bit() {
 
 	push	ebp
 	mov	ebp, esp
@@ -23489,19 +24012,24 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 778  :   ++reg.raw16[dest];
+; 790  :   simulateSpriteBug();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::simulateSpriteBug
+
+; 791  :   ++reg.raw16[dest];
 
 	mov	eax, 2
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+eax+1056]
+	mov	dx, WORD PTR [ecx+eax+1064]
 	add	dx, 1
 	mov	eax, 2
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+eax+1056], dx
+	mov	WORD PTR [ecx+eax+1064], dx
 
-; 779  :   Tick();Tick();Tick();Tick();
+; 792  :   Tick();Tick();Tick();Tick(); 
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -23512,7 +24040,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 780  : }
+; 793  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -23530,7 +24058,7 @@ _this$ = -4						; size = 4
 ??$LD$rr@$00$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LD$rr<1,1>, COMDAT
 ; _this$ = ecx
 
-; 389  : void Cpu::LD$rr() { //(dest), src
+; 392  : void Cpu::LD$rr() { //(dest), src
 
 	push	ebp
 	mov	ebp, esp
@@ -23538,23 +24066,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 390  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+; 393  : 	mem_->Write8(reg.raw16[dest],reg.raw8[src]);
 
 	mov	eax, 1
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+eax+1056]
+	movzx	edx, BYTE PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, 2
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+eax+1056]
+	movzx	edx, WORD PTR [ecx+eax+1064]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 391  : }
+; 394  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -23574,7 +24102,7 @@ _this$ = -4						; size = 4
 ??$LDrd16@$00@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::LDrd16<1>, COMDAT
 ; _this$ = ecx
 
-; 409  : void Cpu::LDrd16() {
+; 412  : void Cpu::LDrd16() {
 
 	push	ebp
 	mov	ebp, esp
@@ -23583,55 +24111,90 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 410  : 	reg.raw16[dest] = mem_->Read8(reg.PC++);
+; 413  : 	reg.raw16[dest] = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv78[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv78[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	edx, 2
 	shl	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+edx+1056], cx
+	mov	WORD PTR [eax+edx+1064], cx
 
-; 411  : 	reg.raw16[dest] |= (mem_->Read8(reg.PC++))<<8;
+; 414  : 	reg.raw16[dest] |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	mov	WORD PTR tv95[ebp], dx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 	movzx	eax, WORD PTR tv95[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+1068]
+	mov	ecx, DWORD PTR [ecx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	edx, al
 	shl	edx, 8
 	mov	eax, 2
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	eax, WORD PTR [ecx+eax+1056]
+	movzx	eax, WORD PTR [ecx+eax+1064]
 	or	eax, edx
 	mov	ecx, 2
 	shl	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+ecx+1056], ax
+	mov	WORD PTR [edx+ecx+1064], ax
 
-; 412  : }
+; 415  :   if (dest != RegAF && (reg.raw16[dest]>=0xFE00&&reg.raw16[dest]<=0xFEFF) && emu_->lcd_driver()->lcdc().lcd_enable == 1)
+
+	mov	eax, 1
+	test	eax, eax
+	je	SHORT $LN2@LDrd16
+	mov	ecx, 2
+	shl	ecx, 0
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, WORD PTR [edx+ecx+1064]
+	cmp	eax, 65024				; 0000fe00H
+	jl	SHORT $LN2@LDrd16
+	mov	ecx, 2
+	shl	ecx, 0
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, WORD PTR [edx+ecx+1064]
+	cmp	eax, 65279				; 0000feffH
+	jg	SHORT $LN2@LDrd16
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
+	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
+	mov	ecx, eax
+	call	?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ ; emulation::gb::LCDDriver::lcdc
+	mov	dl, BYTE PTR [eax]
+	shr	dl, 7
+	and	dl, 1
+	movzx	eax, dl
+	cmp	eax, 1
+	jne	SHORT $LN2@LDrd16
+
+; 416  :     sprite_bug = 2;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+8], 2
+$LN2@LDrd16:
+
+; 417  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -23657,7 +24220,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1688				; 00000698H
+	add	eax, 1992				; 000007c8H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -23679,7 +24242,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1672				; 00000688H
+	add	eax, 1696				; 000006a0H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -23701,7 +24264,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1600				; 00000640H
+	add	eax, 1616				; 00000650H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -23723,11 +24286,33 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1152				; 00000480H
+	add	eax, 1160				; 00000488H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
 ?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ENDP	; emulation::gb::Emu::memory
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\emu.h
+;	COMDAT ?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ PROC	; emulation::gb::Emu::cartridge, COMDAT
+; _this$ = ecx
+
+; 19   :   Cartridge* cartridge() { return &cartridge_; }
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 48					; 00000030H
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ ENDP	; emulation::gb::Emu::cartridge
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\cpu.cpp
@@ -23737,7 +24322,7 @@ _this$ = -4						; size = 4
 ?DAA@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::DAA
 ; _this$ = ecx
 
-; 979  : void Cpu::DAA() {
+; 995  : void Cpu::DAA() {
 
 	push	ebp
 	mov	ebp, esp
@@ -23746,28 +24331,28 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 980  :  int a = reg.A;
+; 996  :  int a = reg.A;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1057]
+	movzx	ecx, BYTE PTR [eax+1065]
 	mov	DWORD PTR _a$[ebp], ecx
 
-; 981  : 
-; 982  :   if (!reg.F.N)
+; 997  : 
+; 998  :   if (!reg.F.N)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 6
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
 	jne	SHORT $LN9@DAA
 
-; 983  :   {
-; 984  :       if (reg.F.H || (a & 0xF) > 9)
+; 999  :   {
+; 1000 :       if (reg.F.H || (a & 0xF) > 9)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
@@ -23779,17 +24364,17 @@ _this$ = -4						; size = 4
 	jle	SHORT $LN8@DAA
 $LN7@DAA:
 
-; 985  :           a += 0x06;
+; 1001 :           a += 0x06;
 
 	mov	eax, DWORD PTR _a$[ebp]
 	add	eax, 6
 	mov	DWORD PTR _a$[ebp], eax
 $LN8@DAA:
 
-; 986  :       if (reg.F.C || a > 0x9F)
+; 1002 :       if (reg.F.C || a > 0x9F)
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+1056]
+	mov	dl, BYTE PTR [ecx+1064]
 	shr	dl, 4
 	and	dl, 1
 	movzx	eax, dl
@@ -23799,31 +24384,31 @@ $LN8@DAA:
 	jle	SHORT $LN6@DAA
 $LN5@DAA:
 
-; 987  :           a += 0x60;
+; 1003 :           a += 0x60;
 
 	mov	ecx, DWORD PTR _a$[ebp]
 	add	ecx, 96					; 00000060H
 	mov	DWORD PTR _a$[ebp], ecx
 $LN6@DAA:
 
-; 988  :   }
-; 989  :   else
+; 1004 :   }
+; 1005 :   else
 
 	jmp	SHORT $LN4@DAA
 $LN9@DAA:
 
-; 990  :   {
-; 991  :     if (reg.F.H)
+; 1006 :   {
+; 1007 :     if (reg.F.H)
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 5
 	and	al, 1
 	movzx	ecx, al
 	test	ecx, ecx
 	je	SHORT $LN3@DAA
 
-; 992  :       a = (a - 6) & 0xFF;
+; 1008 :       a = (a - 6) & 0xFF;
 
 	mov	edx, DWORD PTR _a$[ebp]
 	sub	edx, 6
@@ -23831,71 +24416,71 @@ $LN9@DAA:
 	mov	DWORD PTR _a$[ebp], edx
 $LN3@DAA:
 
-; 993  :       if (reg.F.C)
+; 1009 :       if (reg.F.C)
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
 	test	edx, edx
 	je	SHORT $LN4@DAA
 
-; 994  :           a -= 0x60;
+; 1010 :           a -= 0x60;
 
 	mov	eax, DWORD PTR _a$[ebp]
 	sub	eax, 96					; 00000060H
 	mov	DWORD PTR _a$[ebp], eax
 $LN4@DAA:
 
-; 995  :   }
-; 996  : 
-; 997  : 
-; 998  :   if ((a & 0x100) == 0x100)
+; 1011 :   }
+; 1012 : 
+; 1013 : 
+; 1014 :   if ((a & 0x100) == 0x100)
 
 	mov	ecx, DWORD PTR _a$[ebp]
 	and	ecx, 256				; 00000100H
 	je	SHORT $LN1@DAA
 
-; 999  :       reg.F.C = 1;
+; 1015 :       reg.F.C = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 16					; 00000010H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 $LN1@DAA:
 
-; 1000 : 
-; 1001 :   a &= 0xFF;
+; 1016 : 
+; 1017 :   a &= 0xFF;
 
 	mov	edx, DWORD PTR _a$[ebp]
 	and	edx, 255				; 000000ffH
 	mov	DWORD PTR _a$[ebp], edx
 
-; 1002 : 
-; 1003 :   updateCpuFlagZ(a);
+; 1018 : 
+; 1019 :   updateCpuFlagZ(a);
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 1004 :   reg.F.H = 0;
+; 1020 :   reg.F.H = 0;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+1056]
+	mov	dl, BYTE PTR [ecx+1064]
 	and	dl, 223					; 000000dfH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], dl
+	mov	BYTE PTR [eax+1064], dl
 
-; 1005 :   reg.A = (uint8_t)a;
+; 1021 :   reg.A = (uint8_t)a;
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	dl, BYTE PTR _a$[ebp]
-	mov	BYTE PTR [ecx+1057], dl
+	mov	BYTE PTR [ecx+1065], dl
 
-; 1006 : }
+; 1022 : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -23912,7 +24497,7 @@ _this$ = -4						; size = 4
 ?RETI@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::RETI
 ; _this$ = ecx
 
-; 974  : void Cpu::RETI() {
+; 990  : void Cpu::RETI() {
 
 	push	ebp
 	mov	ebp, esp
@@ -23920,17 +24505,17 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 975  : 	EI();
+; 991  : 	EI();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?EI@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::EI
 
-; 976  : 	RET();
+; 992  : 	RET();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?RET@Cpu@gb@emulation@@AAEXXZ		; emulation::gb::Cpu::RET
 
-; 977  : }
+; 993  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -23947,7 +24532,7 @@ _this$ = -4						; size = 4
 ?EI@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::EI
 ; _this$ = ecx
 
-; 969  : void Cpu::EI() {
+; 985  : void Cpu::EI() {
 
 	push	ebp
 	mov	ebp, esp
@@ -23955,12 +24540,12 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 970  :   ime = true;
+; 986  :   ime = true;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1072], 1
+	mov	BYTE PTR [eax+1080], 1
 
-; 971  : }
+; 987  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -23974,7 +24559,7 @@ _this$ = -4						; size = 4
 ?DI@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::DI
 ; _this$ = ecx
 
-; 965  : void Cpu::DI() {
+; 981  : void Cpu::DI() {
 
 	push	ebp
 	mov	ebp, esp
@@ -23982,12 +24567,12 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 966  :   ime = false;
+; 982  :   ime = false;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1072], 0
+	mov	BYTE PTR [eax+1080], 0
 
-; 967  : }
+; 983  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -24001,7 +24586,7 @@ _this$ = -4						; size = 4
 ?CP_HL@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::CP_HL
 ; _this$ = ecx
 
-; 961  : void Cpu::CP_HL() {
+; 977  : void Cpu::CP_HL() {
 
 	push	ebp
 	mov	ebp, esp
@@ -24009,23 +24594,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 962  :   CP(reg.A,mem_->Read8(reg.HL));
+; 978  :   CP(reg.A,mem_->Read8(reg.HL));
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1062]
+	movzx	ecx, WORD PTR [eax+1070]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, BYTE PTR [ecx+1057]
+	movzx	edx, BYTE PTR [ecx+1065]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CP@Cpu@gb@emulation@@AAEXEE@Z		; emulation::gb::Cpu::CP
 
-; 963  : }
+; 979  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -24043,7 +24628,7 @@ _this$ = -4						; size = 4
 ?CP_d8@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::CP_d8
 ; _this$ = ecx
 
-; 957  : void Cpu::CP_d8() {
+; 973  : void Cpu::CP_d8() {
 
 	push	ebp
 	mov	ebp, esp
@@ -24052,30 +24637,30 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 958  :   CP(reg.A,mem_->Read8(reg.PC++));
+; 974  :   CP(reg.A,mem_->Read8(reg.PC++));
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv75[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv75[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	ecx, al
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1057]
+	movzx	eax, BYTE PTR [edx+1065]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CP@Cpu@gb@emulation@@AAEXEE@Z		; emulation::gb::Cpu::CP
 
-; 959  : }
+; 975  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -24094,7 +24679,7 @@ _b$ = 12						; size = 1
 ?CP@Cpu@gb@emulation@@AAEXEE@Z PROC			; emulation::gb::Cpu::CP
 ; _this$ = ecx
 
-; 945  : void Cpu::CP(uint8_t a, uint8_t b) {
+; 961  : void Cpu::CP(uint8_t a, uint8_t b) {
 
 	push	ebp
 	mov	ebp, esp
@@ -24102,15 +24687,15 @@ _b$ = 12						; size = 1
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 946  :   reg.F.N = 1;
+; 962  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 947  :   updateCpuFlagC(a,b,1);
+; 963  :   updateCpuFlagC(a,b,1);
 
 	push	1
 	movzx	eax, BYTE PTR _b$[ebp]
@@ -24120,7 +24705,7 @@ _b$ = 12						; size = 1
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 948  :   updateCpuFlagH(a,b,1);
+; 964  :   updateCpuFlagH(a,b,1);
 
 	push	1
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -24130,7 +24715,7 @@ _b$ = 12						; size = 1
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 949  :   updateCpuFlagZ(a-b);
+; 965  :   updateCpuFlagZ(a-b);
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -24139,7 +24724,7 @@ _b$ = 12						; size = 1
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
 
-; 950  : }
+; 966  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -24158,7 +24743,7 @@ _this$ = -4						; size = 4
 ?RRA@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::RRA
 ; _this$ = ecx
 
-; 934  : void Cpu::RRA() {
+; 950  : void Cpu::RRA() {
 
 	push	ebp
 	mov	ebp, esp
@@ -24168,21 +24753,21 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 935  :   uint8_t& r = reg.A;;
+; 951  :   uint8_t& r = reg.A;;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1057				; 00000421H
+	add	eax, 1065				; 00000429H
 	mov	DWORD PTR _r$[ebp], eax
 
-; 936  :   uint8_t oldC = reg.F.C;
+; 952  :   uint8_t oldC = reg.F.C;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+1056]
+	mov	dl, BYTE PTR [ecx+1064]
 	shr	dl, 4
 	and	dl, 1
 	mov	BYTE PTR _oldC$[ebp], dl
 
-; 937  :   reg.F.C = r & 1;
+; 953  :   reg.F.C = r & 1;
 
 	mov	eax, DWORD PTR _r$[ebp]
 	movzx	ecx, BYTE PTR [eax]
@@ -24190,13 +24775,13 @@ _this$ = -4						; size = 4
 	and	cl, 1
 	shl	cl, 4
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 239					; 000000efH
 	or	al, cl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 938  :   r = r >> 1;
+; 954  :   r = r >> 1;
 
 	mov	edx, DWORD PTR _r$[ebp]
 	movzx	eax, BYTE PTR [edx]
@@ -24204,7 +24789,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _r$[ebp]
 	mov	BYTE PTR [ecx], al
 
-; 939  :   r |= oldC << 7;
+; 955  :   r |= oldC << 7;
 
 	movzx	edx, BYTE PTR _oldC$[ebp]
 	shl	edx, 7
@@ -24214,29 +24799,29 @@ _this$ = -4						; size = 4
 	mov	edx, DWORD PTR _r$[ebp]
 	mov	BYTE PTR [edx], cl
 
-; 940  :   reg.F.H = reg.F.N = 0;
+; 956  :   reg.F.H = reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 941  :   reg.F.Z = 0;
+; 957  :   reg.F.Z = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 127					; 0000007fH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 942  :   //updateCpuFlagZ(r);
-; 943  : }
+; 958  :   //updateCpuFlagZ(r);
+; 959  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -24252,7 +24837,7 @@ _this$ = -4						; size = 4
 ?RLA@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::RLA
 ; _this$ = ecx
 
-; 923  : void Cpu::RLA() {
+; 939  : void Cpu::RLA() {
 
 	push	ebp
 	mov	ebp, esp
@@ -24262,21 +24847,21 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 924  :   uint8_t& r = reg.A;;
+; 940  :   uint8_t& r = reg.A;;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1057				; 00000421H
+	add	eax, 1065				; 00000429H
 	mov	DWORD PTR _r$[ebp], eax
 
-; 925  :   uint8_t oldC = reg.F.C;
+; 941  :   uint8_t oldC = reg.F.C;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+1056]
+	mov	dl, BYTE PTR [ecx+1064]
 	shr	dl, 4
 	and	dl, 1
 	mov	BYTE PTR _oldC$[ebp], dl
 
-; 926  :   reg.F.C = (r&0x80)>>7;
+; 942  :   reg.F.C = (r&0x80)>>7;
 
 	mov	eax, DWORD PTR _r$[ebp]
 	movzx	ecx, BYTE PTR [eax]
@@ -24285,13 +24870,13 @@ _this$ = -4						; size = 4
 	and	cl, 1
 	shl	cl, 4
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 239					; 000000efH
 	or	al, cl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 927  :   r = r << 1;
+; 943  :   r = r << 1;
 
 	mov	edx, DWORD PTR _r$[ebp]
 	movzx	eax, BYTE PTR [edx]
@@ -24299,7 +24884,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _r$[ebp]
 	mov	BYTE PTR [ecx], al
 
-; 928  :   r |= oldC;
+; 944  :   r |= oldC;
 
 	movzx	edx, BYTE PTR _oldC$[ebp]
 	mov	eax, DWORD PTR _r$[ebp]
@@ -24308,29 +24893,29 @@ _this$ = -4						; size = 4
 	mov	edx, DWORD PTR _r$[ebp]
 	mov	BYTE PTR [edx], cl
 
-; 929  :   reg.F.H = reg.F.N = 0;
+; 945  :   reg.F.H = reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 930  :     reg.F.Z = 0;
+; 946  :     reg.F.Z = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 127					; 0000007fH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 931  :   //updateCpuFlagZ(r);
-; 932  : }
+; 947  :   //updateCpuFlagZ(r);
+; 948  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -24345,7 +24930,7 @@ _this$ = -4						; size = 4
 ?RRCA@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::RRCA
 ; _this$ = ecx
 
-; 913  : void Cpu::RRCA() {
+; 929  : void Cpu::RRCA() {
 
 	push	ebp
 	mov	ebp, esp
@@ -24354,13 +24939,13 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 914  :   uint8_t& r = reg.A;
+; 930  :   uint8_t& r = reg.A;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1057				; 00000421H
+	add	eax, 1065				; 00000429H
 	mov	DWORD PTR _r$[ebp], eax
 
-; 915  :   reg.F.C = r&1;
+; 931  :   reg.F.C = r&1;
 
 	mov	ecx, DWORD PTR _r$[ebp]
 	movzx	edx, BYTE PTR [ecx]
@@ -24368,13 +24953,13 @@ _this$ = -4						; size = 4
 	and	dl, 1
 	shl	dl, 4
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 239					; 000000efH
 	or	cl, dl
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 916  :   r = r >> 1;
+; 932  :   r = r >> 1;
 
 	mov	eax, DWORD PTR _r$[ebp]
 	movzx	ecx, BYTE PTR [eax]
@@ -24382,10 +24967,10 @@ _this$ = -4						; size = 4
 	mov	edx, DWORD PTR _r$[ebp]
 	mov	BYTE PTR [edx], cl
 
-; 917  :   r |= reg.F.C<<7;
+; 933  :   r |= reg.F.C<<7;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
@@ -24396,29 +24981,29 @@ _this$ = -4						; size = 4
 	mov	edx, DWORD PTR _r$[ebp]
 	mov	BYTE PTR [edx], cl
 
-; 918  :   reg.F.H = reg.F.N = 0;
+; 934  :   reg.F.H = reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 919  :     reg.F.Z = 0;
+; 935  :     reg.F.Z = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 127					; 0000007fH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 920  :   //updateCpuFlagZ(r);
-; 921  : }
+; 936  :   //updateCpuFlagZ(r);
+; 937  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -24433,7 +25018,7 @@ _this$ = -4						; size = 4
 ?RLCA@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::RLCA
 ; _this$ = ecx
 
-; 903  : void Cpu::RLCA() {
+; 919  : void Cpu::RLCA() {
 
 	push	ebp
 	mov	ebp, esp
@@ -24442,13 +25027,13 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 904  :   uint8_t& r = reg.A;
+; 920  :   uint8_t& r = reg.A;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1057				; 00000421H
+	add	eax, 1065				; 00000429H
 	mov	DWORD PTR _r$[ebp], eax
 
-; 905  :   reg.F.C = (r&0x80)>>7;
+; 921  :   reg.F.C = (r&0x80)>>7;
 
 	mov	ecx, DWORD PTR _r$[ebp]
 	movzx	edx, BYTE PTR [ecx]
@@ -24457,13 +25042,13 @@ _this$ = -4						; size = 4
 	and	dl, 1
 	shl	dl, 4
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 239					; 000000efH
 	or	cl, dl
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 906  :   r = r << 1;
+; 922  :   r = r << 1;
 
 	mov	eax, DWORD PTR _r$[ebp]
 	movzx	ecx, BYTE PTR [eax]
@@ -24471,10 +25056,10 @@ _this$ = -4						; size = 4
 	mov	edx, DWORD PTR _r$[ebp]
 	mov	BYTE PTR [edx], cl
 
-; 907  :   r |= reg.F.C;
+; 923  :   r |= reg.F.C;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
@@ -24484,29 +25069,29 @@ _this$ = -4						; size = 4
 	mov	edx, DWORD PTR _r$[ebp]
 	mov	BYTE PTR [edx], cl
 
-; 908  :   reg.F.H = reg.F.N = 0;
+; 924  :   reg.F.H = reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 909  :     reg.F.Z = 0;
+; 925  :     reg.F.Z = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 127					; 0000007fH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 910  :  // updateCpuFlagZ(r);
-; 911  : }
+; 926  :  // updateCpuFlagZ(r);
+; 927  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -24520,7 +25105,7 @@ _this$ = -4						; size = 4
 ?RET@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::RET
 ; _this$ = ecx
 
-; 868  : void Cpu::RET() {
+; 882  : void Cpu::RET() {
 
 	push	ebp
 	mov	ebp, esp
@@ -24528,27 +25113,27 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 869  :   reg.PC = pop();
+; 883  :   reg.PC = pop();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?pop@Cpu@gb@emulation@@AAEEXZ		; emulation::gb::Cpu::pop
 	movzx	ax, al
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 
-; 870  :   reg.PC |= pop() << 8;
+; 884  :   reg.PC |= pop() << 8;
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?pop@Cpu@gb@emulation@@AAEEXZ		; emulation::gb::Cpu::pop
 	movzx	edx, al
 	shl	edx, 8
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1066]
+	movzx	ecx, WORD PTR [eax+1074]
 	or	ecx, edx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 
-; 871  :   Tick();Tick();Tick();Tick();
+; 885  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -24559,7 +25144,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 872  : }
+; 886  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -24579,7 +25164,7 @@ _this$ = -4						; size = 4
 ?CALL@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::CALL
 ; _this$ = ecx
 
-; 844  : void Cpu::CALL() {
+; 858  : void Cpu::CALL() {
 
 	push	ebp
 	mov	ebp, esp
@@ -24589,39 +25174,39 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 845  :   uint16_t nn;
-; 846  :   nn = mem_->Read8(reg.PC++);
+; 859  :   uint16_t nn;
+; 860  :   nn = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv74[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv74[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _nn$[ebp], cx
 
-; 847  :   nn |= (mem_->Read8(reg.PC++))<<8;
+; 861  :   nn |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv87[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv87[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -24629,19 +25214,19 @@ _this$ = -4						; size = 4
 	or	ecx, eax
 	mov	WORD PTR _nn$[ebp], cx
 
-; 848  :   pushPC();
+; 862  :   pushPC();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?pushPC@Cpu@gb@emulation@@AAEXXZ	; emulation::gb::Cpu::pushPC
 
-; 849  :   reg.PC = nn;
+; 863  :   reg.PC = nn;
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ax, WORD PTR _nn$[ebp]
-	mov	WORD PTR [edx+1066], ax
+	mov	WORD PTR [edx+1074], ax
 
-; 850  : 
-; 851  :   Tick();Tick();Tick();Tick();
+; 864  : 
+; 865  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -24652,7 +25237,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 852  : }
+; 866  : }
 
 	add	esp, 12					; 0000000cH
 	cmp	ebp, esp
@@ -24669,7 +25254,7 @@ _this$ = -4						; size = 4
 ?JP_HL@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::JP_HL
 ; _this$ = ecx
 
-; 839  : void Cpu::JP_HL() {
+; 853  : void Cpu::JP_HL() {
 
 	push	ebp
 	mov	ebp, esp
@@ -24677,14 +25262,14 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 840  :   reg.PC = reg.HL;
+; 854  :   reg.PC = reg.HL;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1062]
-	mov	WORD PTR [eax+1066], dx
+	mov	dx, WORD PTR [ecx+1070]
+	mov	WORD PTR [eax+1074], dx
 
-; 841  : }
+; 855  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -24701,7 +25286,7 @@ _this$ = -4						; size = 4
 ?JP@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::JP
 ; _this$ = ecx
 
-; 816  : void Cpu::JP() {
+; 830  : void Cpu::JP() {
 
 	push	ebp
 	mov	ebp, esp
@@ -24711,39 +25296,39 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 817  :   uint16_t nn;
-; 818  :   nn = mem_->Read8(reg.PC++);
+; 831  :   uint16_t nn;
+; 832  :   nn = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv74[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv74[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _nn$[ebp], cx
 
-; 819  :   nn |= (mem_->Read8(reg.PC++))<<8;
+; 833  :   nn |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv87[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv87[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -24751,14 +25336,14 @@ _this$ = -4						; size = 4
 	or	ecx, eax
 	mov	WORD PTR _nn$[ebp], cx
 
-; 820  :   reg.PC = nn;
+; 834  :   reg.PC = nn;
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ax, WORD PTR _nn$[ebp]
-	mov	WORD PTR [edx+1066], ax
+	mov	WORD PTR [edx+1074], ax
 
-; 821  : 
-; 822  :   Tick();Tick();Tick();Tick();
+; 835  : 
+; 836  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -24769,7 +25354,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 823  : }
+; 837  : }
 
 	add	esp, 12					; 0000000cH
 	cmp	ebp, esp
@@ -24788,7 +25373,7 @@ _this$ = -4						; size = 4
 ?JR@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::JR
 ; _this$ = ecx
 
-; 738  : void Cpu::JR() {
+; 750  : void Cpu::JR() {
 
 	push	ebp
 	mov	ebp, esp
@@ -24797,33 +25382,33 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 739  : 	 int8_t disp8 = mem_->Read8(reg.PC++);
+; 751  : 	 int8_t disp8 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv74[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv74[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _disp8$[ebp], al
 
-; 740  :    reg.PC += disp8;
+; 752  :    reg.PC += disp8;
 
 	movsx	ecx, BYTE PTR _disp8$[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, WORD PTR [edx+1066]
+	movzx	eax, WORD PTR [edx+1074]
 	add	eax, ecx
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 
-; 741  :    Tick();Tick();Tick();Tick();
+; 753  :    Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -24834,7 +25419,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 742  : }
+; 754  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -24847,27 +25432,26 @@ _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\cpu.cpp
 _TEXT	SEGMENT
-tv248 = -80						; size = 4
-tv80 = -74						; size = 2
-_a$1 = -72						; size = 4
-_r$2 = -66						; size = 1
-_r$3 = -65						; size = 1
-_r$4 = -64						; size = 1
-_oldC$5 = -63						; size = 1
-_r$6 = -62						; size = 1
-_oldC$7 = -61						; size = 1
-_r$8 = -60						; size = 1
-_r$9 = -59						; size = 1
-_r$10 = -58						; size = 1
-_n1$11 = -57						; size = 1
-_n0$12 = -56						; size = 1
-_r$13 = -55						; size = 1
-_bitshift$14 = -54					; size = 1
-_test$15 = -53						; size = 1
-_bitshift$16 = -52					; size = 1
-_test$17 = -51						; size = 1
-_bitshift$18 = -50					; size = 1
-_test$19 = -49						; size = 1
+tv248 = -72						; size = 4
+tv80 = -68						; size = 2
+_r$1 = -66						; size = 1
+_r$2 = -65						; size = 1
+_r$3 = -64						; size = 1
+_oldC$4 = -63						; size = 1
+_r$5 = -62						; size = 1
+_oldC$6 = -61						; size = 1
+_r$7 = -60						; size = 1
+_r$8 = -59						; size = 1
+_r$9 = -58						; size = 1
+_n1$10 = -57						; size = 1
+_n0$11 = -56						; size = 1
+_r$12 = -55						; size = 1
+_bitshift$13 = -54					; size = 1
+_test$14 = -53						; size = 1
+_bitshift$15 = -52					; size = 1
+_test$16 = -51						; size = 1
+_bitshift$17 = -50					; size = 1
+_test$18 = -49						; size = 1
 _setr$ = -44						; size = 8
 _getr$ = -28						; size = 8
 _code$ = -9						; size = 1
@@ -24875,30 +25459,30 @@ _this$ = -4						; size = 4
 ?PREFIX_CB@Cpu@gb@emulation@@AAEXXZ PROC		; emulation::gb::Cpu::PREFIX_CB
 ; _this$ = ecx
 
-; 631  : void Cpu::PREFIX_CB() {
+; 644  : void Cpu::PREFIX_CB() {
 
 	push	ebp
 	mov	ebp, esp
-	sub	esp, 80					; 00000050H
+	sub	esp, 72					; 00000048H
 	push	edi
 	push	ecx
-	lea	edi, DWORD PTR [ebp-80]
-	mov	ecx, 20					; 00000014H
+	lea	edi, DWORD PTR [ebp-72]
+	mov	ecx, 18					; 00000012H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 632  : 	uint8_t code = emu_->memory()->Read8(reg.PC++);
+; 645  : 	uint8_t code = emu_->memory()->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv80[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv80[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
@@ -24908,14 +25492,15 @@ _this$ = -4						; size = 4
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _code$[ebp], al
 
-; 633  : 
-; 634  :   auto getr = [=]() {
-; 635  :     if ((code&0x7) != 6) {
-; 636  :       return reg.raw8[reg_index[code&0x7]];
-; 637  :     } else {
-; 638  :       return mem_->Read8(reg.HL);
-; 639  :     }
-; 640  :   };
+; 646  : 
+; 647  :   auto getr = [=]() {
+; 648  :     if ((code&0x7) != 6) {
+; 649  :       return reg.raw8[reg_index[code&0x7]];
+; 650  :     } else {
+; 651  : 
+; 652  :       return mem_->Read8(reg.HL);
+; 653  :     }
+; 654  :   };
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	push	ecx
@@ -24924,14 +25509,14 @@ _this$ = -4						; size = 4
 	lea	ecx, DWORD PTR _getr$[ebp]
 	call	??0<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QAE@ABEPAVCpu@gb@emulation@@@Z ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>
 
-; 641  : 
-; 642  :   auto setr = [=](uint8_t r) {
-; 643  :     if ((code&0x7) != 6) {
-; 644  :       reg.raw8[reg_index[code&0x7]] = r;
-; 645  :     } else {
-; 646  :       mem_->Write8(reg.HL,r);
-; 647  :     }
-; 648  :   };
+; 655  : 
+; 656  :   auto setr = [=](uint8_t r) {
+; 657  :     if ((code&0x7) != 6) {
+; 658  :       reg.raw8[reg_index[code&0x7]] = r;
+; 659  :     } else {
+; 660  :       mem_->Write8(reg.HL,r);
+; 661  :     }
+; 662  :   };
 
 	mov	eax, DWORD PTR _this$[ebp]
 	push	eax
@@ -24940,720 +25525,711 @@ _this$ = -4						; size = 4
 	lea	ecx, DWORD PTR _setr$[ebp]
 	call	??0<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QAE@ABEPAVCpu@gb@emulation@@@Z ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::<lambda_08bfd30db2c73e418a55b8072ee85de7>
 
-; 649  : 
-; 650  :    if ((code & 0xC0) == 0x40) { //bit
+; 663  : 
+; 664  :    if ((code & 0xC0) == 0x40) { //bit
 
 	movzx	edx, BYTE PTR _code$[ebp]
 	and	edx, 192				; 000000c0H
 	cmp	edx, 64					; 00000040H
-	jne	SHORT $LN22@PREFIX_CB
+	jne	SHORT $LN21@PREFIX_CB
 
-; 651  :     uint8_t test = getr();
+; 665  :     uint8_t test = getr();
 
 	lea	ecx, DWORD PTR _getr$[ebp]
 	call	??R<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QBEEXZ ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::operator()
-	mov	BYTE PTR _test$19[ebp], al
+	mov	BYTE PTR _test$18[ebp], al
 
-; 652  :     uint8_t bitshift = (code&0x38) >> 3;
+; 666  :     uint8_t bitshift = (code&0x38) >> 3;
 
 	movzx	eax, BYTE PTR _code$[ebp]
 	and	eax, 56					; 00000038H
 	sar	eax, 3
-	mov	BYTE PTR _bitshift$18[ebp], al
+	mov	BYTE PTR _bitshift$17[ebp], al
 
-; 653  :     reg.F.Z = (~(((test&(1<<bitshift))>>bitshift))&0x1);
+; 667  :     reg.F.Z = (~(((test&(1<<bitshift))>>bitshift))&0x1);
 
-	movzx	edx, BYTE PTR _test$19[ebp]
-	movzx	ecx, BYTE PTR _bitshift$18[ebp]
+	movzx	edx, BYTE PTR _test$18[ebp]
+	movzx	ecx, BYTE PTR _bitshift$17[ebp]
 	mov	eax, 1
 	shl	eax, cl
 	and	edx, eax
-	movzx	ecx, BYTE PTR _bitshift$18[ebp]
+	movzx	ecx, BYTE PTR _bitshift$17[ebp]
 	sar	edx, cl
 	not	edx
 	and	edx, 1
 	and	dl, 1
 	shl	dl, 7
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [ecx+1056]
+	mov	al, BYTE PTR [ecx+1064]
 	and	al, 127					; 0000007fH
 	or	al, dl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 654  :     reg.F.H = 1;
+; 668  :     reg.F.H = 1;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	or	al, 32					; 00000020H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 655  :     reg.F.N = 0;
+; 669  :     reg.F.N = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 191					; 000000bfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
-	jmp	$LN21@PREFIX_CB
-$LN22@PREFIX_CB:
+	mov	BYTE PTR [ecx+1064], al
+	jmp	$LN20@PREFIX_CB
+$LN21@PREFIX_CB:
 
-; 656  :   } else if ((code & 0xC0) == 0x80) { //res
+; 670  : 
+; 671  :   } else if ((code & 0xC0) == 0x80) { //res
 
 	movzx	edx, BYTE PTR _code$[ebp]
 	and	edx, 192				; 000000c0H
 	cmp	edx, 128				; 00000080H
-	jne	SHORT $LN20@PREFIX_CB
+	jne	SHORT $LN19@PREFIX_CB
 
-; 657  :     uint8_t test = getr();
+; 672  :     uint8_t test = getr();
 
 	lea	ecx, DWORD PTR _getr$[ebp]
 	call	??R<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QBEEXZ ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::operator()
-	mov	BYTE PTR _test$17[ebp], al
+	mov	BYTE PTR _test$16[ebp], al
 
-; 658  :     uint8_t bitshift = (code&0x38) >> 3;
+; 673  :     uint8_t bitshift = (code&0x38) >> 3;
 
 	movzx	eax, BYTE PTR _code$[ebp]
 	and	eax, 56					; 00000038H
 	sar	eax, 3
-	mov	BYTE PTR _bitshift$16[ebp], al
+	mov	BYTE PTR _bitshift$15[ebp], al
 
-; 659  :     test &= ~(1<<bitshift);
+; 674  :     test &= ~(1<<bitshift);
 
-	movzx	ecx, BYTE PTR _bitshift$16[ebp]
+	movzx	ecx, BYTE PTR _bitshift$15[ebp]
 	mov	edx, 1
 	shl	edx, cl
 	not	edx
-	movzx	eax, BYTE PTR _test$17[ebp]
+	movzx	eax, BYTE PTR _test$16[ebp]
 	and	eax, edx
-	mov	BYTE PTR _test$17[ebp], al
+	mov	BYTE PTR _test$16[ebp], al
 
-; 660  :     setr(test);
+; 675  :     setr(test);
 
-	movzx	ecx, BYTE PTR _test$17[ebp]
+	movzx	ecx, BYTE PTR _test$16[ebp]
 	push	ecx
 	lea	ecx, DWORD PTR _setr$[ebp]
 	call	??R<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QBEXE@Z ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::operator()
-	jmp	$LN21@PREFIX_CB
-$LN20@PREFIX_CB:
+	jmp	$LN20@PREFIX_CB
+$LN19@PREFIX_CB:
 
-; 661  :   } else if ((code & 0xC0) == 0xC0) { //set
+; 676  :   } else if ((code & 0xC0) == 0xC0) { //set
 
 	movzx	edx, BYTE PTR _code$[ebp]
 	and	edx, 192				; 000000c0H
 	cmp	edx, 192				; 000000c0H
-	jne	SHORT $LN18@PREFIX_CB
+	jne	SHORT $LN17@PREFIX_CB
 
-; 662  :     uint8_t test = getr();
+; 677  :     uint8_t test = getr();
 
 	lea	ecx, DWORD PTR _getr$[ebp]
 	call	??R<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QBEEXZ ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::operator()
-	mov	BYTE PTR _test$15[ebp], al
+	mov	BYTE PTR _test$14[ebp], al
 
-; 663  :     uint8_t bitshift = (code&0x38) >> 3;
+; 678  :     uint8_t bitshift = (code&0x38) >> 3;
 
 	movzx	eax, BYTE PTR _code$[ebp]
 	and	eax, 56					; 00000038H
 	sar	eax, 3
-	mov	BYTE PTR _bitshift$14[ebp], al
+	mov	BYTE PTR _bitshift$13[ebp], al
 
-; 664  :     test |= (1<<bitshift);
+; 679  :     test |= (1<<bitshift);
 
-	movzx	ecx, BYTE PTR _bitshift$14[ebp]
+	movzx	ecx, BYTE PTR _bitshift$13[ebp]
 	mov	edx, 1
 	shl	edx, cl
-	movzx	eax, BYTE PTR _test$15[ebp]
+	movzx	eax, BYTE PTR _test$14[ebp]
 	or	eax, edx
-	mov	BYTE PTR _test$15[ebp], al
+	mov	BYTE PTR _test$14[ebp], al
 
-; 665  :     setr(test);
+; 680  :     setr(test);
 
-	movzx	ecx, BYTE PTR _test$15[ebp]
+	movzx	ecx, BYTE PTR _test$14[ebp]
 	push	ecx
 	lea	ecx, DWORD PTR _setr$[ebp]
 	call	??R<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QBEXE@Z ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::operator()
-	jmp	$LN21@PREFIX_CB
-$LN18@PREFIX_CB:
+	jmp	$LN20@PREFIX_CB
+$LN17@PREFIX_CB:
 
-; 666  :   } else  if ((code & 0xF8) == 0x30) { //swap
+; 681  :   } else  if ((code & 0xF8) == 0x30) { //swap
 
 	movzx	edx, BYTE PTR _code$[ebp]
 	and	edx, 248				; 000000f8H
 	cmp	edx, 48					; 00000030H
-	jne	$LN16@PREFIX_CB
+	jne	$LN15@PREFIX_CB
 
-; 667  :     uint8_t r = getr();
+; 682  :     uint8_t r = getr();
 
 	lea	ecx, DWORD PTR _getr$[ebp]
 	call	??R<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QBEEXZ ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::operator()
-	mov	BYTE PTR _r$13[ebp], al
+	mov	BYTE PTR _r$12[ebp], al
 
-; 668  :     uint8_t n0 = r&0xF;
+; 683  :     uint8_t n0 = r&0xF;
 
-	movzx	eax, BYTE PTR _r$13[ebp]
+	movzx	eax, BYTE PTR _r$12[ebp]
 	and	eax, 15					; 0000000fH
-	mov	BYTE PTR _n0$12[ebp], al
+	mov	BYTE PTR _n0$11[ebp], al
 
-; 669  :     uint8_t n1 = (r&0xF0)>>4;
+; 684  :     uint8_t n1 = (r&0xF0)>>4;
 
-	movzx	ecx, BYTE PTR _r$13[ebp]
+	movzx	ecx, BYTE PTR _r$12[ebp]
 	and	ecx, 240				; 000000f0H
 	sar	ecx, 4
-	mov	BYTE PTR _n1$11[ebp], cl
+	mov	BYTE PTR _n1$10[ebp], cl
 
-; 670  :     r = n1 | (n0<<4);
+; 685  :     r = n1 | (n0<<4);
 
-	movzx	edx, BYTE PTR _n1$11[ebp]
-	movzx	eax, BYTE PTR _n0$12[ebp]
+	movzx	edx, BYTE PTR _n1$10[ebp]
+	movzx	eax, BYTE PTR _n0$11[ebp]
 	shl	eax, 4
 	or	edx, eax
-	mov	BYTE PTR _r$13[ebp], dl
+	mov	BYTE PTR _r$12[ebp], dl
 
-; 671  :     setr(r);
+; 686  :     setr(r);
 
-	movzx	ecx, BYTE PTR _r$13[ebp]
+	movzx	ecx, BYTE PTR _r$12[ebp]
 	push	ecx
 	lea	ecx, DWORD PTR _setr$[ebp]
 	call	??R<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QBEXE@Z ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::operator()
 
-; 672  :     reg.F.H  = reg.F.N = reg.F.C = 0;
+; 687  :     reg.F.H  = reg.F.N = reg.F.C = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 239					; 000000efH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 191					; 000000bfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 673  :     updateCpuFlagZ(r);
+; 688  :     updateCpuFlagZ(r);
 
-	movzx	edx, BYTE PTR _r$13[ebp]
+	movzx	edx, BYTE PTR _r$12[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
-	jmp	$LN21@PREFIX_CB
-$LN16@PREFIX_CB:
+	jmp	$LN20@PREFIX_CB
+$LN15@PREFIX_CB:
 
-; 674  :   } else if ((code&0xF8) == 0) { //RLC r
+; 689  :   } else if ((code&0xF8) == 0) { //RLC r
 
 	movzx	eax, BYTE PTR _code$[ebp]
 	and	eax, 248				; 000000f8H
-	jne	$LN14@PREFIX_CB
+	jne	$LN13@PREFIX_CB
 
-; 675  :     uint8_t r = getr();
+; 690  :     uint8_t r = getr();
 
 	lea	ecx, DWORD PTR _getr$[ebp]
 	call	??R<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QBEEXZ ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::operator()
-	mov	BYTE PTR _r$10[ebp], al
+	mov	BYTE PTR _r$9[ebp], al
 
-; 676  :     reg.F.C = (r&0x80)!=0?1:0;
+; 691  :     reg.F.C = (r&0x80)!=0?1:0;
 
-	movzx	ecx, BYTE PTR _r$10[ebp]
+	movzx	ecx, BYTE PTR _r$9[ebp]
 	and	ecx, 128				; 00000080H
-	je	SHORT $LN25@PREFIX_CB
+	je	SHORT $LN24@PREFIX_CB
 	mov	DWORD PTR tv248[ebp], 1
-	jmp	SHORT $LN26@PREFIX_CB
-$LN25@PREFIX_CB:
+	jmp	SHORT $LN25@PREFIX_CB
+$LN24@PREFIX_CB:
 	mov	DWORD PTR tv248[ebp], 0
-$LN26@PREFIX_CB:
+$LN25@PREFIX_CB:
 	mov	dl, BYTE PTR tv248[ebp]
 	and	dl, 1
 	shl	dl, 4
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 239					; 000000efH
 	or	cl, dl
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 677  :     r = r << 1;
-
-	movzx	eax, BYTE PTR _r$10[ebp]
-	shl	eax, 1
-	mov	BYTE PTR _r$10[ebp], al
-
-; 678  :     r |= reg.F.C;
-
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+1056]
-	shr	dl, 4
-	and	dl, 1
-	movzx	eax, dl
-	movzx	ecx, BYTE PTR _r$10[ebp]
-	or	ecx, eax
-	mov	BYTE PTR _r$10[ebp], cl
-
-; 679  :     setr(r);
-
-	movzx	edx, BYTE PTR _r$10[ebp]
-	push	edx
-	lea	ecx, DWORD PTR _setr$[ebp]
-	call	??R<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QBEXE@Z ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::operator()
-
-; 680  :     reg.F.H  = reg.F.N = 0;
-
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
-	and	cl, 191					; 000000bfH
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
-	and	cl, 223					; 000000dfH
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
-
-; 681  :     updateCpuFlagZ(r);
-
-	movzx	eax, BYTE PTR _r$10[ebp]
-	push	eax
-	mov	ecx, DWORD PTR _this$[ebp]
-	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
-	jmp	$LN21@PREFIX_CB
-$LN14@PREFIX_CB:
-
-; 682  :   } else if ((code&0xF8) == 0x08) { //RRC r
-
-	movzx	ecx, BYTE PTR _code$[ebp]
-	and	ecx, 248				; 000000f8H
-	cmp	ecx, 8
-	jne	$LN12@PREFIX_CB
-
-; 683  :     uint8_t r = getr();
-
-	lea	ecx, DWORD PTR _getr$[ebp]
-	call	??R<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QBEEXZ ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::operator()
-	mov	BYTE PTR _r$9[ebp], al
-
-; 684  :     reg.F.C = r&1;
-
-	movzx	edx, BYTE PTR _r$9[ebp]
-	and	edx, 1
-	and	dl, 1
-	shl	dl, 4
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
-	and	cl, 239					; 000000efH
-	or	cl, dl
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
-
-; 685  :     r = r >> 1;
+; 692  :     r = r << 1;
 
 	movzx	eax, BYTE PTR _r$9[ebp]
-	sar	eax, 1
+	shl	eax, 1
 	mov	BYTE PTR _r$9[ebp], al
 
-; 686  :     r |= reg.F.C<<7;
+; 693  :     r |= reg.F.C;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+1056]
+	mov	dl, BYTE PTR [ecx+1064]
 	shr	dl, 4
 	and	dl, 1
 	movzx	eax, dl
-	shl	eax, 7
 	movzx	ecx, BYTE PTR _r$9[ebp]
 	or	ecx, eax
 	mov	BYTE PTR _r$9[ebp], cl
 
-; 687  :     setr(r);
+; 694  :     setr(r);
 
 	movzx	edx, BYTE PTR _r$9[ebp]
 	push	edx
 	lea	ecx, DWORD PTR _setr$[ebp]
 	call	??R<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QBEXE@Z ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::operator()
 
-; 688  :     reg.F.H  = reg.F.N = 0;
+; 695  :     reg.F.H  = reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 689  :     updateCpuFlagZ(r);
+; 696  :     updateCpuFlagZ(r);
 
 	movzx	eax, BYTE PTR _r$9[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
-	jmp	$LN21@PREFIX_CB
-$LN12@PREFIX_CB:
+	jmp	$LN20@PREFIX_CB
+$LN13@PREFIX_CB:
 
-; 690  :   } else if ((code&0xF8) == 0x10) { //RL r
+; 697  :   } else if ((code&0xF8) == 0x08) { //RRC r
 
 	movzx	ecx, BYTE PTR _code$[ebp]
 	and	ecx, 248				; 000000f8H
-	cmp	ecx, 16					; 00000010H
-	jne	$LN10@PREFIX_CB
+	cmp	ecx, 8
+	jne	$LN11@PREFIX_CB
 
-; 691  :     uint8_t r = getr();
+; 698  :     uint8_t r = getr();
 
 	lea	ecx, DWORD PTR _getr$[ebp]
 	call	??R<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QBEEXZ ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::operator()
 	mov	BYTE PTR _r$8[ebp], al
 
-; 692  :     uint8_t oldC = reg.F.C;
-
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
-	shr	al, 4
-	and	al, 1
-	mov	BYTE PTR _oldC$7[ebp], al
-
-; 693  :     reg.F.C = ((r&0x80)>>7);
-
-	movzx	ecx, BYTE PTR _r$8[ebp]
-	and	ecx, 128				; 00000080H
-	sar	ecx, 7
-	and	cl, 1
-	shl	cl, 4
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
-	and	al, 239					; 000000efH
-	or	al, cl
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
-
-; 694  :     r = r << 1;
+; 699  :     reg.F.C = r&1;
 
 	movzx	edx, BYTE PTR _r$8[ebp]
-	shl	edx, 1
-	mov	BYTE PTR _r$8[ebp], dl
+	and	edx, 1
+	and	dl, 1
+	shl	dl, 4
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+1064]
+	and	cl, 239					; 000000efH
+	or	cl, dl
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+1064], cl
 
-; 695  :     r |= oldC;
+; 700  :     r = r >> 1;
 
-	movzx	eax, BYTE PTR _oldC$7[ebp]
+	movzx	eax, BYTE PTR _r$8[ebp]
+	sar	eax, 1
+	mov	BYTE PTR _r$8[ebp], al
+
+; 701  :     r |= reg.F.C<<7;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [ecx+1064]
+	shr	dl, 4
+	and	dl, 1
+	movzx	eax, dl
+	shl	eax, 7
 	movzx	ecx, BYTE PTR _r$8[ebp]
 	or	ecx, eax
 	mov	BYTE PTR _r$8[ebp], cl
 
-; 696  :     setr(r);
+; 702  :     setr(r);
 
 	movzx	edx, BYTE PTR _r$8[ebp]
 	push	edx
 	lea	ecx, DWORD PTR _setr$[ebp]
 	call	??R<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QBEXE@Z ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::operator()
 
-; 697  :     reg.F.H  = reg.F.N = 0;
+; 703  :     reg.F.H  = reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 698  :     updateCpuFlagZ(r);
+; 704  :     updateCpuFlagZ(r);
 
 	movzx	eax, BYTE PTR _r$8[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
-	jmp	$LN21@PREFIX_CB
-$LN10@PREFIX_CB:
+	jmp	$LN20@PREFIX_CB
+$LN11@PREFIX_CB:
 
-; 699  :   } else if ((code&0xF8) == 0x18) { //RR r
+; 705  :   } else if ((code&0xF8) == 0x10) { //RL r
 
 	movzx	ecx, BYTE PTR _code$[ebp]
 	and	ecx, 248				; 000000f8H
-	cmp	ecx, 24					; 00000018H
-	jne	$LN8@PREFIX_CB
+	cmp	ecx, 16					; 00000010H
+	jne	$LN9@PREFIX_CB
 
-; 700  :     uint8_t r = getr();
+; 706  :     uint8_t r = getr();
 
 	lea	ecx, DWORD PTR _getr$[ebp]
 	call	??R<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QBEEXZ ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::operator()
-	mov	BYTE PTR _r$6[ebp], al
+	mov	BYTE PTR _r$7[ebp], al
 
-; 701  :     uint8_t oldC = reg.F.C;
+; 707  :     uint8_t oldC = reg.F.C;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	shr	al, 4
 	and	al, 1
-	mov	BYTE PTR _oldC$5[ebp], al
+	mov	BYTE PTR _oldC$6[ebp], al
 
-; 702  :     reg.F.C = r&1;
+; 708  :     reg.F.C = ((r&0x80)>>7);
 
-	movzx	ecx, BYTE PTR _r$6[ebp]
-	and	ecx, 1
+	movzx	ecx, BYTE PTR _r$7[ebp]
+	and	ecx, 128				; 00000080H
+	sar	ecx, 7
 	and	cl, 1
 	shl	cl, 4
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 239					; 000000efH
 	or	al, cl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 703  :     r = r >> 1;
+; 709  :     r = r << 1;
 
-	movzx	edx, BYTE PTR _r$6[ebp]
-	sar	edx, 1
-	mov	BYTE PTR _r$6[ebp], dl
+	movzx	edx, BYTE PTR _r$7[ebp]
+	shl	edx, 1
+	mov	BYTE PTR _r$7[ebp], dl
 
-; 704  :     r |= oldC<<7;
+; 710  :     r |= oldC;
 
-	movzx	eax, BYTE PTR _oldC$5[ebp]
-	shl	eax, 7
-	movzx	ecx, BYTE PTR _r$6[ebp]
+	movzx	eax, BYTE PTR _oldC$6[ebp]
+	movzx	ecx, BYTE PTR _r$7[ebp]
 	or	ecx, eax
-	mov	BYTE PTR _r$6[ebp], cl
+	mov	BYTE PTR _r$7[ebp], cl
 
-; 705  :     setr(r);
+; 711  :     setr(r);
 
-	movzx	edx, BYTE PTR _r$6[ebp]
+	movzx	edx, BYTE PTR _r$7[ebp]
 	push	edx
 	lea	ecx, DWORD PTR _setr$[ebp]
 	call	??R<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QBEXE@Z ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::operator()
 
-; 706  :     reg.F.H  = reg.F.N = 0;
+; 712  :     reg.F.H  = reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 707  :     updateCpuFlagZ(r);
+; 713  :     updateCpuFlagZ(r);
 
-	movzx	eax, BYTE PTR _r$6[ebp]
+	movzx	eax, BYTE PTR _r$7[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
-	jmp	$LN21@PREFIX_CB
-$LN8@PREFIX_CB:
+	jmp	$LN20@PREFIX_CB
+$LN9@PREFIX_CB:
 
-; 708  : 
-; 709  :   } else if ((code&0xF8) == 0x20) { //SLA r
+; 714  :   } else if ((code&0xF8) == 0x18) { //RR r
+
+	movzx	ecx, BYTE PTR _code$[ebp]
+	and	ecx, 248				; 000000f8H
+	cmp	ecx, 24					; 00000018H
+	jne	$LN7@PREFIX_CB
+
+; 715  :     uint8_t r = getr();
+
+	lea	ecx, DWORD PTR _getr$[ebp]
+	call	??R<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QBEEXZ ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::operator()
+	mov	BYTE PTR _r$5[ebp], al
+
+; 716  :     uint8_t oldC = reg.F.C;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+1064]
+	shr	al, 4
+	and	al, 1
+	mov	BYTE PTR _oldC$4[ebp], al
+
+; 717  :     reg.F.C = r&1;
+
+	movzx	ecx, BYTE PTR _r$5[ebp]
+	and	ecx, 1
+	and	cl, 1
+	shl	cl, 4
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+1064]
+	and	al, 239					; 000000efH
+	or	al, cl
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+1064], al
+
+; 718  :     r = r >> 1;
+
+	movzx	edx, BYTE PTR _r$5[ebp]
+	sar	edx, 1
+	mov	BYTE PTR _r$5[ebp], dl
+
+; 719  :     r |= oldC<<7;
+
+	movzx	eax, BYTE PTR _oldC$4[ebp]
+	shl	eax, 7
+	movzx	ecx, BYTE PTR _r$5[ebp]
+	or	ecx, eax
+	mov	BYTE PTR _r$5[ebp], cl
+
+; 720  :     setr(r);
+
+	movzx	edx, BYTE PTR _r$5[ebp]
+	push	edx
+	lea	ecx, DWORD PTR _setr$[ebp]
+	call	??R<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QBEXE@Z ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::operator()
+
+; 721  :     reg.F.H  = reg.F.N = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+1064]
+	and	cl, 191					; 000000bfH
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+1064], cl
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+1064]
+	and	cl, 223					; 000000dfH
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+1064], cl
+
+; 722  :     updateCpuFlagZ(r);
+
+	movzx	eax, BYTE PTR _r$5[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
+	jmp	$LN20@PREFIX_CB
+$LN7@PREFIX_CB:
+
+; 723  : 
+; 724  :   } else if ((code&0xF8) == 0x20) { //SLA r
 
 	movzx	ecx, BYTE PTR _code$[ebp]
 	and	ecx, 248				; 000000f8H
 	cmp	ecx, 32					; 00000020H
-	jne	$LN6@PREFIX_CB
+	jne	$LN5@PREFIX_CB
 
-; 710  :     uint8_t r = getr();
+; 725  :     uint8_t r = getr();
 
 	lea	ecx, DWORD PTR _getr$[ebp]
 	call	??R<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QBEEXZ ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::operator()
-	mov	BYTE PTR _r$4[ebp], al
+	mov	BYTE PTR _r$3[ebp], al
 
-; 711  :     reg.F.C = ((r&0x80)>>7);
+; 726  :     reg.F.C = ((r&0x80)>>7);
 
-	movzx	edx, BYTE PTR _r$4[ebp]
+	movzx	edx, BYTE PTR _r$3[ebp]
 	and	edx, 128				; 00000080H
 	sar	edx, 7
 	and	dl, 1
 	shl	dl, 4
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 239					; 000000efH
 	or	cl, dl
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 712  :     r = r << 1;
+; 727  :     r = r << 1;
 
-	movzx	eax, BYTE PTR _r$4[ebp]
+	movzx	eax, BYTE PTR _r$3[ebp]
 	shl	eax, 1
-	mov	BYTE PTR _r$4[ebp], al
+	mov	BYTE PTR _r$3[ebp], al
 
-; 713  :     r &= ~0x01;
+; 728  :     r &= ~0x01;
 
-	movzx	ecx, BYTE PTR _r$4[ebp]
+	movzx	ecx, BYTE PTR _r$3[ebp]
 	and	ecx, -2					; fffffffeH
-	mov	BYTE PTR _r$4[ebp], cl
+	mov	BYTE PTR _r$3[ebp], cl
 
-; 714  :     setr(r);
+; 729  :     setr(r);
 
-	movzx	edx, BYTE PTR _r$4[ebp]
+	movzx	edx, BYTE PTR _r$3[ebp]
 	push	edx
 	lea	ecx, DWORD PTR _setr$[ebp]
 	call	??R<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QBEXE@Z ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::operator()
 
-; 715  :     reg.F.H  = reg.F.N = 0;
+; 730  :     reg.F.H  = reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 716  :     updateCpuFlagZ(r);
+; 731  :     updateCpuFlagZ(r);
 
-	movzx	eax, BYTE PTR _r$4[ebp]
+	movzx	eax, BYTE PTR _r$3[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
-	jmp	$LN21@PREFIX_CB
-$LN6@PREFIX_CB:
+	jmp	$LN20@PREFIX_CB
+$LN5@PREFIX_CB:
 
-; 717  :   } else if ((code&0xF8) == 0x28) { //SRA r
+; 732  :   } else if ((code&0xF8) == 0x28) { //SRA r
 
 	movzx	ecx, BYTE PTR _code$[ebp]
 	and	ecx, 248				; 000000f8H
 	cmp	ecx, 40					; 00000028H
-	jne	$LN4@PREFIX_CB
+	jne	$LN3@PREFIX_CB
 
-; 718  :     uint8_t r = getr();
+; 733  :     uint8_t r = getr();
 
 	lea	ecx, DWORD PTR _getr$[ebp]
 	call	??R<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QBEEXZ ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::operator()
-	mov	BYTE PTR _r$3[ebp], al
+	mov	BYTE PTR _r$2[ebp], al
 
-; 719  :     reg.F.C = r&1;
+; 734  :     reg.F.C = r&1;
 
-	movzx	edx, BYTE PTR _r$3[ebp]
+	movzx	edx, BYTE PTR _r$2[ebp]
 	and	edx, 1
 	and	dl, 1
 	shl	dl, 4
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 239					; 000000efH
 	or	cl, dl
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 720  :     r = (r&0x80) + (r >> 1);
+; 735  :     r = (r&0x80) + (r >> 1);
 
-	movzx	eax, BYTE PTR _r$3[ebp]
+	movzx	eax, BYTE PTR _r$2[ebp]
 	and	eax, 128				; 00000080H
-	movzx	ecx, BYTE PTR _r$3[ebp]
+	movzx	ecx, BYTE PTR _r$2[ebp]
 	sar	ecx, 1
 	add	eax, ecx
-	mov	BYTE PTR _r$3[ebp], al
+	mov	BYTE PTR _r$2[ebp], al
 
-; 721  :     setr(r);
+; 736  :     setr(r);
 
-	movzx	edx, BYTE PTR _r$3[ebp]
+	movzx	edx, BYTE PTR _r$2[ebp]
 	push	edx
 	lea	ecx, DWORD PTR _setr$[ebp]
 	call	??R<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QBEXE@Z ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::operator()
 
-; 722  :     reg.F.H  = reg.F.N = 0;
+; 737  :     reg.F.H  = reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 723  :     updateCpuFlagZ(r);
+; 738  :     updateCpuFlagZ(r);
 
-	movzx	eax, BYTE PTR _r$3[ebp]
+	movzx	eax, BYTE PTR _r$2[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
-	jmp	$LN21@PREFIX_CB
-$LN4@PREFIX_CB:
+	jmp	$LN20@PREFIX_CB
+$LN3@PREFIX_CB:
 
-; 724  :   } else if ((code & 0xF8) == 0x38) { //SRL n
+; 739  :   } else if ((code & 0xF8) == 0x38) { //SRL n
 
 	movzx	ecx, BYTE PTR _code$[ebp]
 	and	ecx, 248				; 000000f8H
 	cmp	ecx, 56					; 00000038H
-	jne	SHORT $LN2@PREFIX_CB
+	jne	SHORT $LN20@PREFIX_CB
 
-; 725  :     auto r = getr();
+; 740  :     auto r = getr();
 
 	lea	ecx, DWORD PTR _getr$[ebp]
 	call	??R<lambda_cf4d431a50c7ddf749029b7e3fcc8a53>@@QBEEXZ ; <lambda_cf4d431a50c7ddf749029b7e3fcc8a53>::operator()
-	mov	BYTE PTR _r$2[ebp], al
+	mov	BYTE PTR _r$1[ebp], al
 
-; 726  :     reg.F.C = r&1;
+; 741  :     reg.F.C = r&1;
 
-	movzx	edx, BYTE PTR _r$2[ebp]
+	movzx	edx, BYTE PTR _r$1[ebp]
 	and	edx, 1
 	and	dl, 1
 	shl	dl, 4
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 239					; 000000efH
 	or	cl, dl
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 727  :     r >>= 1;
+; 742  :     r >>= 1;
 
-	mov	al, BYTE PTR _r$2[ebp]
+	mov	al, BYTE PTR _r$1[ebp]
 	shr	al, 1
-	mov	BYTE PTR _r$2[ebp], al
+	mov	BYTE PTR _r$1[ebp], al
 
-; 728  :     setr(r);
+; 743  :     setr(r);
 
-	movzx	ecx, BYTE PTR _r$2[ebp]
+	movzx	ecx, BYTE PTR _r$1[ebp]
 	push	ecx
 	lea	ecx, DWORD PTR _setr$[ebp]
 	call	??R<lambda_08bfd30db2c73e418a55b8072ee85de7>@@QBEXE@Z ; <lambda_08bfd30db2c73e418a55b8072ee85de7>::operator()
 
-; 729  :     reg.F.H  = reg.F.N = 0;
+; 744  :     reg.F.H  = reg.F.N = 0;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 191					; 000000bfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 223					; 000000dfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 730  :     updateCpuFlagZ(r);
+; 745  :     updateCpuFlagZ(r);
 
-	movzx	edx, BYTE PTR _r$2[ebp]
+	movzx	edx, BYTE PTR _r$1[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z ; emulation::gb::Cpu::updateCpuFlagZ
+$LN20@PREFIX_CB:
 
-; 731  :   }
-; 732  :   else {
-
-	jmp	SHORT $LN21@PREFIX_CB
-$LN2@PREFIX_CB:
-
-; 733  :     int a = 1;
-
-	mov	DWORD PTR _a$1[ebp], 1
-$LN21@PREFIX_CB:
-
-; 734  :   }
-; 735  :   Tick();Tick();Tick();Tick();
+; 746  :   }
+; 747  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -25664,48 +26240,49 @@ $LN21@PREFIX_CB:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 736  : }
+; 748  : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN31@PREFIX_CB
+	lea	edx, DWORD PTR $LN30@PREFIX_CB
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
 	pop	edi
-	add	esp, 80					; 00000050H
+	add	esp, 72					; 00000048H
 	cmp	ebp, esp
 	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-$LN31@PREFIX_CB:
-	DD	3
-	DD	$LN30@PREFIX_CB
+	npad	1
 $LN30@PREFIX_CB:
-	DD	-9					; fffffff7H
-	DD	1
-	DD	$LN27@PREFIX_CB
-	DD	-28					; ffffffe4H
-	DD	8
-	DD	$LN28@PREFIX_CB
-	DD	-44					; ffffffd4H
-	DD	8
+	DD	3
 	DD	$LN29@PREFIX_CB
 $LN29@PREFIX_CB:
+	DD	-9					; fffffff7H
+	DD	1
+	DD	$LN26@PREFIX_CB
+	DD	-28					; ffffffe4H
+	DD	8
+	DD	$LN27@PREFIX_CB
+	DD	-44					; ffffffd4H
+	DD	8
+	DD	$LN28@PREFIX_CB
+$LN28@PREFIX_CB:
 	DB	115					; 00000073H
 	DB	101					; 00000065H
 	DB	116					; 00000074H
 	DB	114					; 00000072H
 	DB	0
-$LN28@PREFIX_CB:
+$LN27@PREFIX_CB:
 	DB	103					; 00000067H
 	DB	101					; 00000065H
 	DB	116					; 00000074H
 	DB	114					; 00000072H
 	DB	0
-$LN27@PREFIX_CB:
+$LN26@PREFIX_CB:
 	DB	99					; 00000063H
 	DB	111					; 0000006fH
 	DB	100					; 00000064H
@@ -25720,7 +26297,7 @@ _this$ = -4						; size = 4
 ?CPL@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::CPL
 ; _this$ = ecx
 
-; 621  : void Cpu::CPL() {
+; 634  : void Cpu::CPL() {
 
 	push	ebp
 	mov	ebp, esp
@@ -25728,31 +26305,31 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 622  :   reg.F.H = 1;
+; 635  :   reg.F.H = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 32					; 00000020H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 623  :   reg.F.N = 1;
+; 636  :   reg.F.N = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 64					; 00000040H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 624  :   reg.A = ~reg.A;
+; 637  :   reg.A = ~reg.A;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1057]
+	movzx	ecx, BYTE PTR [eax+1065]
 	not	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1057], cl
+	mov	BYTE PTR [edx+1065], cl
 
-; 625  : }
+; 638  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -25766,7 +26343,7 @@ _this$ = -4						; size = 4
 ?STOP@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::STOP
 ; _this$ = ecx
 
-; 617  : void Cpu::STOP() {
+; 630  : void Cpu::STOP() {
 
 	push	ebp
 	mov	ebp, esp
@@ -25774,12 +26351,12 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 618  :   cpumode_ = CpuModeStop;
+; 631  :   cpumode_ = CpuModeStop;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+16], 2
+	mov	DWORD PTR [eax+24], 2
 
-; 619  : }
+; 632  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -25793,7 +26370,7 @@ _this$ = -4						; size = 4
 ?HALT@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::HALT
 ; _this$ = ecx
 
-; 613  : void Cpu::HALT() {
+; 626  : void Cpu::HALT() {
 
 	push	ebp
 	mov	ebp, esp
@@ -25801,12 +26378,12 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 614  :   cpumode_ = CpuModeHalt;
+; 627  :   cpumode_ = CpuModeHalt;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+16], 1
+	mov	DWORD PTR [eax+24], 1
 
-; 615  : }
+; 628  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -25820,7 +26397,7 @@ _this$ = -4						; size = 4
 ?CCF@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::CCF
 ; _this$ = ecx
 
-; 608  : void Cpu::CCF() {
+; 621  : void Cpu::CCF() {
 
 	push	ebp
 	mov	ebp, esp
@@ -25828,23 +26405,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 609  :   reg.F.H = reg.F.N = 0;
+; 622  :   reg.F.H = reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 610  :   reg.F.C = ~reg.F.C;
+; 623  :   reg.F.C = ~reg.F.C;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	shr	cl, 4
 	and	cl, 1
 	movzx	edx, cl
@@ -25852,13 +26429,13 @@ _this$ = -4						; size = 4
 	and	dl, 1
 	shl	dl, 4
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 239					; 000000efH
 	or	cl, dl
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 611  : }
+; 624  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -25872,7 +26449,7 @@ _this$ = -4						; size = 4
 ?SCF@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::SCF
 ; _this$ = ecx
 
-; 603  : void Cpu::SCF() {
+; 616  : void Cpu::SCF() {
 
 	push	ebp
 	mov	ebp, esp
@@ -25880,28 +26457,28 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 604  :   reg.F.H = reg.F.N = 0;
+; 617  :   reg.F.H = reg.F.N = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 223					; 000000dfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 605  :   reg.F.C = 1;
+; 618  :   reg.F.C = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	or	cl, 16					; 00000010H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 606  : }
+; 619  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -25918,7 +26495,7 @@ _this$ = -4						; size = 4
 ?ADD_SPr8@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::ADD_SPr8
 ; _this$ = ecx
 
-; 517  : void Cpu::ADD_SPr8() {
+; 523  : void Cpu::ADD_SPr8() {
 
 	push	ebp
 	mov	ebp, esp
@@ -25928,53 +26505,53 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 518  :   reg.F.N  = reg.F.Z = 0;
+; 524  :   reg.F.N  = reg.F.Z = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 127					; 0000007fH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 519  : 	uint16_t a = reg.SP;
+; 525  : 	uint16_t a = reg.SP;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1064]
+	mov	cx, WORD PTR [eax+1072]
 	mov	WORD PTR _a$[ebp], cx
 
-; 520  : 	int8_t r8 = mem_->Read8(reg.PC++);
+; 526  : 	int8_t r8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv90[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv90[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _r8$[ebp], al
 
-; 521  : 	reg.SP += r8;
+; 527  : 	reg.SP += r8;
 
 	movsx	eax, BYTE PTR _r8$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	movzx	edx, WORD PTR [ecx+1064]
+	movzx	edx, WORD PTR [ecx+1072]
 	add	edx, eax
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1064], dx
+	mov	WORD PTR [eax+1072], dx
 
-; 522  : 
-; 523  :   updateCpuFlagC(a&0xFF,r8,0);
+; 528  : 
+; 529  :   updateCpuFlagC(a&0xFF,r8,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _r8$[ebp]
@@ -25985,7 +26562,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 524  :   updateCpuFlagH(a&0xFF,r8,0);
+; 530  :   updateCpuFlagH(a&0xFF,r8,0);
 
 	push	0
 	movzx	eax, BYTE PTR _r8$[ebp]
@@ -25996,7 +26573,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 525  : 	Tick();Tick();Tick();Tick();
+; 531  : 	Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -26007,7 +26584,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 526  : 	Tick();Tick();Tick();Tick();
+; 532  : 	Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -26018,7 +26595,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 527  : }
+; 533  : }
 
 	add	esp, 12					; 0000000cH
 	cmp	ebp, esp
@@ -26038,7 +26615,7 @@ _this$ = -4						; size = 4
 ?LDa16SP@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::LDa16SP
 ; _this$ = ecx
 
-; 484  : void Cpu::LDa16SP() {
+; 491  : void Cpu::LDa16SP() {
 
 	push	ebp
 	mov	ebp, esp
@@ -26048,38 +26625,38 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 485  :   uint16_t a16 = mem_->Read8(reg.PC++);
+; 492  :   uint16_t a16 = mem_->Read8(reg.PC++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1066]
+	mov	cx, WORD PTR [eax+1074]
 	mov	WORD PTR tv74[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 	movzx	edx, WORD PTR tv74[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	cx, al
 	mov	WORD PTR _a16$[ebp], cx
 
-; 486  :   a16 |= (mem_->Read8(reg.PC++))<<8;
+; 493  :   a16 |= (mem_->Read8(reg.PC++))<<8;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv87[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv87[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	movzx	eax, al
 	shl	eax, 8
@@ -26087,32 +26664,32 @@ _this$ = -4						; size = 4
 	or	ecx, eax
 	mov	WORD PTR _a16$[ebp], cx
 
-; 487  :   mem_->Write8(a16,reg.SP&0xFF);
+; 494  :   mem_->Write8(a16,reg.SP&0xFF);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, WORD PTR [edx+1064]
+	movzx	eax, WORD PTR [edx+1072]
 	and	eax, 255				; 000000ffH
 	push	eax
 	movzx	ecx, WORD PTR _a16$[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 488  :   mem_->Write8(a16+1,reg.SP>>8);
+; 495  :   mem_->Write8(a16+1,reg.SP>>8);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1064]
+	movzx	ecx, WORD PTR [eax+1072]
 	sar	ecx, 8
 	push	ecx
 	movzx	edx, WORD PTR _a16$[ebp]
 	add	edx, 1
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 489  : }
+; 496  : }
 
 	add	esp, 12					; 0000000cH
 	cmp	ebp, esp
@@ -26132,7 +26709,7 @@ _this$ = -4						; size = 4
 ?LDHLSPr8@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::LDHLSPr8
 ; _this$ = ecx
 
-; 467  : void Cpu::LDHLSPr8() {
+; 474  : void Cpu::LDHLSPr8() {
 
 	push	ebp
 	mov	ebp, esp
@@ -26142,55 +26719,55 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 468  : 
-; 469  : 
-; 470  : 
-; 471  :   reg.F.N  = reg.F.Z = 0;
+; 475  : 
+; 476  : 
+; 477  : 
+; 478  :   reg.F.N  = reg.F.Z = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 127					; 0000007fH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cl, BYTE PTR [eax+1056]
+	mov	cl, BYTE PTR [eax+1064]
 	and	cl, 191					; 000000bfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1056], cl
+	mov	BYTE PTR [edx+1064], cl
 
-; 472  : 	uint16_t a = reg.SP;
+; 479  : 	uint16_t a = reg.SP;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1064]
+	mov	cx, WORD PTR [eax+1072]
 	mov	WORD PTR _a$[ebp], cx
 
-; 473  : 	int8_t r8 = mem_->Read8(reg.PC++);
+; 480  : 	int8_t r8 = mem_->Read8(reg.PC++);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
+	mov	ax, WORD PTR [edx+1074]
 	mov	WORD PTR tv90[ebp], ax
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
+	mov	dx, WORD PTR [ecx+1074]
 	add	dx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 	movzx	ecx, WORD PTR tv90[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+1068]
+	mov	ecx, DWORD PTR [edx+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 	mov	BYTE PTR _r8$[ebp], al
 
-; 474  : 	reg.HL = (reg.SP + r8);
+; 481  : 	reg.HL = (reg.SP + r8);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1064]
+	movzx	ecx, WORD PTR [eax+1072]
 	movsx	edx, BYTE PTR _r8$[ebp]
 	add	ecx, edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1062], cx
+	mov	WORD PTR [eax+1070], cx
 
-; 475  :   updateCpuFlagC(a&0xFF,r8,0);
+; 482  :   updateCpuFlagC(a&0xFF,r8,0);
 
 	push	0
 	movzx	ecx, BYTE PTR _r8$[ebp]
@@ -26201,7 +26778,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagC
 
-; 476  :   updateCpuFlagH(a&0xFF,r8,0);
+; 483  :   updateCpuFlagH(a&0xFF,r8,0);
 
 	push	0
 	movzx	eax, BYTE PTR _r8$[ebp]
@@ -26212,11 +26789,11 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z ; emulation::gb::Cpu::updateCpuFlagH
 
-; 477  :   /*uint16_t r1 = (a&0xFFF) + (r8&0xFFF);
-; 478  :   reg.F.H = r1>0xFFF?1:0;
-; 479  :   uint32_t r2 = (a&0xFFFF) + (r8&0xFFFF);
-; 480  :   reg.F.C = r2>0xFFFF?1:0;*/
-; 481  : 	Tick();Tick();Tick();Tick();
+; 484  :   /*uint16_t r1 = (a&0xFFF) + (r8&0xFFF);
+; 485  :   reg.F.H = r1>0xFFF?1:0;
+; 486  :   uint32_t r2 = (a&0xFFFF) + (r8&0xFFFF);
+; 487  :   reg.F.C = r2>0xFFFF?1:0;*/
+; 488  : 	Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -26227,7 +26804,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 482  : }
+; 489  : }
 
 	add	esp, 12					; 0000000cH
 	cmp	ebp, esp
@@ -26244,7 +26821,7 @@ _this$ = -4						; size = 4
 ?LDSPHL@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::LDSPHL
 ; _this$ = ecx
 
-; 462  : void Cpu::LDSPHL() {
+; 469  : void Cpu::LDSPHL() {
 
 	push	ebp
 	mov	ebp, esp
@@ -26252,14 +26829,14 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 463  :   reg.SP = reg.HL;
+; 470  :   reg.SP = reg.HL;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1062]
-	mov	WORD PTR [eax+1064], dx
+	mov	dx, WORD PTR [ecx+1070]
+	mov	WORD PTR [eax+1072], dx
 
-; 464  :   Tick();Tick();Tick();Tick();
+; 471  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -26270,7 +26847,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 465  : }
+; 472  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -26288,7 +26865,7 @@ _this$ = -4						; size = 4
 ?RST@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::RST
 ; _this$ = ecx
 
-; 376  : void Cpu::RST() {
+; 379  : void Cpu::RST() {
 
 	push	ebp
 	mov	ebp, esp
@@ -26297,27 +26874,27 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 377  :   pushPC();
+; 380  :   pushPC();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?pushPC@Cpu@gb@emulation@@AAEXXZ	; emulation::gb::Cpu::pushPC
 
-; 378  :   uint8_t t = (opcode&0x38)>>3;
+; 381  :   uint8_t t = (opcode&0x38)>>3;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, BYTE PTR [eax+1073]
+	movzx	ecx, BYTE PTR [eax+1081]
 	and	ecx, 56					; 00000038H
 	sar	ecx, 3
 	mov	BYTE PTR _t$[ebp], cl
 
-; 379  :   reg.PC = t*8;
+; 382  :   reg.PC = t*8;
 
 	movzx	edx, BYTE PTR _t$[ebp]
 	shl	edx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 
-; 380  :   Tick();Tick();Tick();Tick();
+; 383  :   Tick();Tick();Tick();Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
@@ -26328,7 +26905,7 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 
-; 381  : }
+; 384  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -26346,7 +26923,7 @@ _this$ = -4						; size = 4
 ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::ILLEGAL
 ; _this$ = ecx
 
-; 372  : void Cpu::ILLEGAL() {
+; 375  : void Cpu::ILLEGAL() {
 
 	push	ebp
 	mov	ebp, esp
@@ -26355,11 +26932,11 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 373  : 	int a = 1;
+; 376  : 	int a = 1;
 
 	mov	DWORD PTR _a$[ebp], 1
 
-; 374  : }
+; 377  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -26373,7 +26950,7 @@ _this$ = -4						; size = 4
 ?NOP@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::NOP
 ; _this$ = ecx
 
-; 365  : void Cpu::NOP() { 
+; 368  : void Cpu::NOP() { 
 
 	push	ebp
 	mov	ebp, esp
@@ -26381,11 +26958,11 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 366  :   //Tick();
-; 367  :   //Tick();
-; 368  :   //Tick();
 ; 369  :   //Tick();
-; 370  : }
+; 370  :   //Tick();
+; 371  :   //Tick();
+; 372  :   //Tick();
+; 373  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -26400,7 +26977,7 @@ _this$ = -4						; size = 4
 ?pushPC@Cpu@gb@emulation@@AAEXXZ PROC			; emulation::gb::Cpu::pushPC, COMDAT
 ; _this$ = ecx
 
-; 133  :   void pushPC() {
+; 137  :   void pushPC() {
 
 	push	ebp
 	mov	ebp, esp
@@ -26408,26 +26985,26 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 134  :     push((reg.PC&0xFF00)>>8);
+; 138  :     push((reg.PC&0xFF00)>>8);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	movzx	ecx, WORD PTR [eax+1066]
+	movzx	ecx, WORD PTR [eax+1074]
 	and	ecx, 65280				; 0000ff00H
 	sar	ecx, 8
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?push@Cpu@gb@emulation@@AAEXE@Z		; emulation::gb::Cpu::push
 
-; 135  :     push(reg.PC&0xFF);
+; 139  :     push(reg.PC&0xFF);
 
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, WORD PTR [edx+1066]
+	movzx	eax, WORD PTR [edx+1074]
 	and	eax, 255				; 000000ffH
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?push@Cpu@gb@emulation@@AAEXE@Z		; emulation::gb::Cpu::push
 
-; 136  :   }
+; 140  :   }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -26446,7 +27023,7 @@ _this$ = -4						; size = 4
 ?pop@Cpu@gb@emulation@@AAEEXZ PROC			; emulation::gb::Cpu::pop, COMDAT
 ; _this$ = ecx
 
-; 115  :   uint8_t pop() {
+; 119  :   uint8_t pop() {
 
 	push	ebp
 	mov	ebp, esp
@@ -26455,23 +27032,23 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 116  :     return mem_->Read8(reg.SP++);
+; 120  :     return mem_->Read8(reg.SP++);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1064]
+	mov	cx, WORD PTR [eax+1072]
 	mov	WORD PTR tv74[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1064]
+	mov	ax, WORD PTR [edx+1072]
 	add	ax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1064], ax
+	mov	WORD PTR [ecx+1072], ax
 	movzx	edx, WORD PTR tv74[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
 
-; 117  :   }
+; 121  :   }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -26491,7 +27068,7 @@ _data$ = 8						; size = 1
 ?push@Cpu@gb@emulation@@AAEXE@Z PROC			; emulation::gb::Cpu::push, COMDAT
 ; _this$ = ecx
 
-; 111  :   void push(uint8_t data) {
+; 115  :   void push(uint8_t data) {
 
 	push	ebp
 	mov	ebp, esp
@@ -26500,24 +27077,24 @@ _data$ = 8						; size = 1
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 112  :     mem_->Write8(--reg.SP,data);
+; 116  :     mem_->Write8(--reg.SP,data);
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	cx, WORD PTR [eax+1064]
+	mov	cx, WORD PTR [eax+1072]
 	sub	cx, 1
 	mov	WORD PTR tv71[ebp], cx
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ax, WORD PTR tv71[ebp]
-	mov	WORD PTR [edx+1064], ax
+	mov	WORD PTR [edx+1072], ax
 	movzx	ecx, BYTE PTR _data$[ebp]
 	push	ecx
 	movzx	edx, WORD PTR tv71[ebp]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+1068]
+	mov	ecx, DWORD PTR [eax+1076]
 	call	?Write8@Memory@gb@emulation@@QAEXGE@Z	; emulation::gb::Memory::Write8
 
-; 113  :   }
+; 117  :   }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -26537,7 +27114,7 @@ _r$ = 8							; size = 1
 ?updateCpuFlagZ@Cpu@gb@emulation@@AAEXE@Z PROC		; emulation::gb::Cpu::updateCpuFlagZ, COMDAT
 ; _this$ = ecx
 
-; 107  :   void updateCpuFlagZ(uint8_t r) {
+; 111  :   void updateCpuFlagZ(uint8_t r) {
 
 	push	ebp
 	mov	ebp, esp
@@ -26546,7 +27123,7 @@ _r$ = 8							; size = 1
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 108  :     reg.F.Z = r == 0?1:0;
+; 112  :     reg.F.Z = r == 0?1:0;
 
 	movzx	eax, BYTE PTR _r$[ebp]
 	test	eax, eax
@@ -26560,13 +27137,13 @@ $LN4@updateCpuF:
 	and	cl, 1
 	shl	cl, 7
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [edx+1056]
+	mov	al, BYTE PTR [edx+1064]
 	and	al, 127					; 0000007fH
 	or	al, cl
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1056], al
+	mov	BYTE PTR [ecx+1064], al
 
-; 109  :   }
+; 113  :   }
 
 	mov	esp, ebp
 	pop	ebp
@@ -26587,7 +27164,7 @@ _mode$ = 16						; size = 4
 ?updateCpuFlagH@Cpu@gb@emulation@@AAEXEEH@Z PROC	; emulation::gb::Cpu::updateCpuFlagH, COMDAT
 ; _this$ = ecx
 
-; 94   :   void updateCpuFlagH(uint8_t a,uint8_t b,int mode) {
+; 98   :   void updateCpuFlagH(uint8_t a,uint8_t b,int mode) {
 
 	push	ebp
 	mov	ebp, esp
@@ -26599,16 +27176,16 @@ _mode$ = 16						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 95   :     /*if((dest^b^a)&0x10)
-; 96   :       reg.F.H=1;
-; 97   :     else
-; 98   :       reg.F.H=0;*/
-; 99   :     if (mode == 0) {
+; 99   :     /*if((dest^b^a)&0x10)
+; 100  :       reg.F.H=1;
+; 101  :     else
+; 102  :       reg.F.H=0;*/
+; 103  :     if (mode == 0) {
 
 	cmp	DWORD PTR _mode$[ebp], 0
 	jne	SHORT $LN2@updateCpuF
 
-; 100  :       uint8_t r1 = (a&0xF) + (b&0xF);
+; 104  :       uint8_t r1 = (a&0xF) + (b&0xF);
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	and	eax, 15					; 0000000fH
@@ -26617,7 +27194,7 @@ _mode$ = 16						; size = 4
 	add	eax, ecx
 	mov	BYTE PTR _r1$1[ebp], al
 
-; 101  :       reg.F.H = r1>0xF?1:0;
+; 105  :       reg.F.H = r1>0xF?1:0;
 
 	movzx	edx, BYTE PTR _r1$1[ebp]
 	cmp	edx, 15					; 0000000fH
@@ -26631,18 +27208,18 @@ $LN6@updateCpuF:
 	and	al, 1
 	shl	al, 5
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+1056]
+	mov	dl, BYTE PTR [ecx+1064]
 	and	dl, 223					; 000000dfH
 	or	dl, al
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], dl
+	mov	BYTE PTR [eax+1064], dl
 
-; 102  :     } else {
+; 106  :     } else {
 
 	jmp	SHORT $LN3@updateCpuF
 $LN2@updateCpuF:
 
-; 103  :       reg.F.H = (a&0xF) < (b&0xF) ? 1 : 0;
+; 107  :       reg.F.H = (a&0xF) < (b&0xF) ? 1 : 0;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	and	ecx, 15					; 0000000fH
@@ -26659,15 +27236,15 @@ $LN8@updateCpuF:
 	and	al, 1
 	shl	al, 5
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+1056]
+	mov	dl, BYTE PTR [ecx+1064]
 	and	dl, 223					; 000000dfH
 	or	dl, al
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], dl
+	mov	BYTE PTR [eax+1064], dl
 $LN3@updateCpuF:
 
-; 104  :     }
-; 105  :   }
+; 108  :     }
+; 109  :   }
 
 	mov	esp, ebp
 	pop	ebp
@@ -26688,7 +27265,7 @@ _mode$ = 16						; size = 4
 ?updateCpuFlagC@Cpu@gb@emulation@@AAEXEEH@Z PROC	; emulation::gb::Cpu::updateCpuFlagC, COMDAT
 ; _this$ = ecx
 
-; 85   :   void updateCpuFlagC(uint8_t a,uint8_t b,int mode) {
+; 89   :   void updateCpuFlagC(uint8_t a,uint8_t b,int mode) {
 
 	push	ebp
 	mov	ebp, esp
@@ -26700,19 +27277,19 @@ _mode$ = 16						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 86   :     if (mode == 0) {
+; 90   :     if (mode == 0) {
 
 	cmp	DWORD PTR _mode$[ebp], 0
 	jne	SHORT $LN2@updateCpuF
 
-; 87   :       uint16_t r2 = (a) + (b);
+; 91   :       uint16_t r2 = (a) + (b);
 
 	movzx	eax, BYTE PTR _a$[ebp]
 	movzx	ecx, BYTE PTR _b$[ebp]
 	add	eax, ecx
 	mov	WORD PTR _r2$1[ebp], ax
 
-; 88   :       reg.F.C = r2>0xFF?1:0;
+; 92   :       reg.F.C = r2>0xFF?1:0;
 
 	movzx	edx, WORD PTR _r2$1[ebp]
 	cmp	edx, 255				; 000000ffH
@@ -26726,18 +27303,18 @@ $LN6@updateCpuF:
 	and	al, 1
 	shl	al, 4
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+1056]
+	mov	dl, BYTE PTR [ecx+1064]
 	and	dl, 239					; 000000efH
 	or	dl, al
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], dl
+	mov	BYTE PTR [eax+1064], dl
 
-; 89   :     } else {
+; 93   :     } else {
 
 	jmp	SHORT $LN3@updateCpuF
 $LN2@updateCpuF:
 
-; 90   :       reg.F.C = a < b ? 1 : 0;
+; 94   :       reg.F.C = a < b ? 1 : 0;
 
 	movzx	ecx, BYTE PTR _a$[ebp]
 	movzx	edx, BYTE PTR _b$[ebp]
@@ -26752,15 +27329,15 @@ $LN8@updateCpuF:
 	and	al, 1
 	shl	al, 4
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dl, BYTE PTR [ecx+1056]
+	mov	dl, BYTE PTR [ecx+1064]
 	and	dl, 239					; 000000efH
 	or	dl, al
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+1056], dl
+	mov	BYTE PTR [eax+1064], dl
 $LN3@updateCpuF:
 
-; 91   :     }
-; 92   :   }
+; 95   :     }
+; 96   :   }
 
 	mov	esp, ebp
 	pop	ebp
@@ -26770,19 +27347,70 @@ _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\cpu.cpp
 _TEXT	SEGMENT
-tv248 = -28						; size = 4
-tv230 = -24						; size = 4
-tv212 = -20						; size = 4
-tv194 = -16						; size = 4
-tv176 = -12						; size = 4
-tv88 = -8						; size = 2
+_this$ = -4						; size = 4
+?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ PROC	; emulation::gb::Cpu::simulateSpriteBug
+; _this$ = ecx
+
+; 1024 : void Cpu::simulateSpriteBug() {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 1025 :    
+; 1026 :   if (sprite_bug == 1) {
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+8]
+	cmp	ecx, 1
+	jne	SHORT $LN2@simulateSp
+
+; 1027 :     emu_->lcd_driver()->sprite_bug_counter = 80;//20cycles
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [edx+4]
+	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
+	mov	BYTE PTR [eax+8], 80			; 00000050H
+
+; 1028 :     //auto oam = emu_->memory()->oam();
+; 1029 :     //for (int i=8;i<0xA0;++i)
+; 1030 :     //  oam[i] = rand()&0xFF;
+; 1031 :     sprite_bug = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+8], 0
+$LN2@simulateSp:
+
+; 1032 :   }
+; 1033 :   
+; 1034 : }
+
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?simulateSpriteBug@Cpu@gb@emulation@@AAEXXZ ENDP	; emulation::gb::Cpu::simulateSpriteBug
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\cpu.cpp
+_TEXT	SEGMENT
+tv254 = -28						; size = 4
+tv236 = -24						; size = 4
+tv218 = -20						; size = 4
+tv200 = -16						; size = 4
+tv182 = -12						; size = 4
+tv94 = -8						; size = 2
 _test$1 = -5						; size = 1
 _this$ = -4						; size = 4
 _dt$ = 8						; size = 8
 ?Step@Cpu@gb@emulation@@QAEXN@Z PROC			; emulation::gb::Cpu::Step
 ; _this$ = ecx
 
-; 321  : void Cpu::Step(double dt) {
+; 323  : void Cpu::Step(double dt) {
 
 	push	ebp
 	mov	ebp, esp
@@ -26799,283 +27427,296 @@ _dt$ = 8						; size = 8
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 322  :   this->dt = dt;
+; 324  :   this->dt = dt;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	movsd	xmm0, QWORD PTR _dt$[ebp]
-	movsd	QWORD PTR [eax+24], xmm0
+	movsd	QWORD PTR [eax+32], xmm0
 
-; 323  : 	cycles = 0;
+; 325  : 	cycles = 0;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+8], 0
-	mov	DWORD PTR [ecx+12], 0
+	mov	DWORD PTR [ecx+16], 0
+	mov	DWORD PTR [ecx+20], 0
 
-; 324  :   //reg.F._unused = 0;//always 0 according to docs
-; 325  :   //StopAt(0xC47A);
-; 326  :   //StopAt(0x0100);
-; 327  :   //StopAt(0x0073);
-; 328  :   if (cpumode_ == CpuModeStop) {
+; 326  :   //reg.F._unused = 0;//always 0 according to docs
+; 327  :   //StopAt(0xC47A);
+; 328  :   //StopAt(0x0100);
+; 329  :   //StopAt(0x0073);
+; 330  :   if (cpumode_ == CpuModeStop) {
 
 	mov	edx, DWORD PTR _this$[ebp]
-	cmp	DWORD PTR [edx+16], 2
-	jne	SHORT $LN15@Step
+	cmp	DWORD PTR [edx+24], 2
+	jne	SHORT $LN16@Step
 
-; 329  :     cycles = 1;
+; 331  :     cycles = 1;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+8], 1
-	mov	DWORD PTR [eax+12], 0
+	mov	DWORD PTR [eax+16], 1
+	mov	DWORD PTR [eax+20], 0
 
-; 330  :     return;
+; 332  :     return;
 
-	jmp	$LN16@Step
-$LN15@Step:
+	jmp	$LN17@Step
+$LN16@Step:
 
-; 331  :   }
-; 332  :   if (cpumode_ == CpuModeNormal) {
+; 333  :   }
+; 334  :   if (cpumode_ == CpuModeNormal) {
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	cmp	DWORD PTR [ecx+16], 0
-	jne	SHORT $LN14@Step
+	cmp	DWORD PTR [ecx+24], 0
+	jne	$LN15@Step
 
-; 333  :     opcode = emu_->memory()->Read8(reg.PC++);
+; 335  :     if (sprite_bug!=0) --sprite_bug;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ax, WORD PTR [edx+1066]
-	mov	WORD PTR tv88[ebp], ax
+	movzx	eax, BYTE PTR [edx+8]
+	test	eax, eax
+	je	SHORT $LN14@Step
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	dx, WORD PTR [ecx+1066]
-	add	dx, 1
+	mov	dl, BYTE PTR [ecx+8]
+	sub	dl, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
-	movzx	ecx, WORD PTR tv88[ebp]
-	push	ecx
+	mov	BYTE PTR [eax+8], dl
+$LN14@Step:
+
+; 336  :     opcode = emu_->memory()->Read8(reg.PC++);
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dx, WORD PTR [ecx+1074]
+	mov	WORD PTR tv94[ebp], dx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cx, WORD PTR [eax+1074]
+	add	cx, 1
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+4]
+	mov	WORD PTR [edx+1074], cx
+	movzx	eax, WORD PTR tv94[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?Read8@Memory@gb@emulation@@QAEEG@Z	; emulation::gb::Memory::Read8
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1073], al
-
-; 334  :     (this->*(instructions[opcode]))();
-
 	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1073]
+	mov	BYTE PTR [edx+1081], al
+
+; 337  :     (this->*(instructions[opcode]))();
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [eax+1081]
 	mov	esi, esp
-	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+eax*4+32]
-	call	eax
+	mov	edx, DWORD PTR [eax+edx*4+40]
+	call	edx
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	jmp	SHORT $LN12@Step
-$LN14@Step:
+$LN15@Step:
 
-; 335  :   } else if (cpumode_ == CpuModeHalt) {
+; 338  :   } else if (cpumode_ == CpuModeHalt) {
 
-	mov	ecx, DWORD PTR _this$[ebp]
-	cmp	DWORD PTR [ecx+16], 1
+	mov	eax, DWORD PTR _this$[ebp]
+	cmp	DWORD PTR [eax+24], 1
 	jne	SHORT $LN12@Step
 
-; 336  :     Tick();
+; 339  :     Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Tick@Cpu@gb@emulation@@QAEXXZ		; emulation::gb::Cpu::Tick
 $LN12@Step:
 
-; 337  :   }
-; 338  : 
-; 339  :   if (ime) {
-
-	mov	edx, DWORD PTR _this$[ebp]
-	movzx	eax, BYTE PTR [edx+1072]
-	test	eax, eax
-	je	$LN1@Step
-
-; 340  :     uint8_t test = emu_->memory()->interrupt_enable() & emu_->memory()->interrupt_flag();
+; 340  :   }
+; 341  : 
+; 342  :   if (ime) {
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+4]
+	movzx	edx, BYTE PTR [ecx+1080]
+	test	edx, edx
+	je	$LN1@Step
+
+; 343  :     uint8_t test = emu_->memory()->interrupt_enable() & emu_->memory()->interrupt_flag();
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?interrupt_enable@Memory@gb@emulation@@QAEAAEXZ ; emulation::gb::Memory::interrupt_enable
 	movzx	ebx, BYTE PTR [eax]
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+4]
-	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
-	mov	ecx, eax
-	call	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ ; emulation::gb::Memory::interrupt_flag
-	movzx	eax, BYTE PTR [eax]
-	and	ebx, eax
-	mov	BYTE PTR _test$1[ebp], bl
-
-; 341  : 		if (test) {
-
-	movzx	ecx, BYTE PTR _test$1[ebp]
-	test	ecx, ecx
-	je	$LN1@Step
-
-; 342  : 			ime = false;
-
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+1072], 0
-
-; 343  :       cpumode_ = CpuModeNormal;
-
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+16], 0
-
-; 344  : 			pushPC();
-
-	mov	ecx, DWORD PTR _this$[ebp]
-	call	?pushPC@Cpu@gb@emulation@@AAEXXZ	; emulation::gb::Cpu::pushPC
-
-; 345  : 			if (test & 0x1) { //vblank
-
-	movzx	ecx, BYTE PTR _test$1[ebp]
-	and	ecx, 1
-	je	SHORT $LN9@Step
-
-; 346  : 				reg.PC = 0x0040;
-
-	mov	edx, 64					; 00000040H
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
-
-; 347  : 				emu_->memory()->interrupt_flag() &= ~0x1;
-
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ ; emulation::gb::Memory::interrupt_flag
-	mov	DWORD PTR tv176[ebp], eax
-	mov	edx, DWORD PTR tv176[ebp]
-	movzx	eax, BYTE PTR [edx]
-	and	eax, -2					; fffffffeH
-	mov	ecx, DWORD PTR tv176[ebp]
-	mov	BYTE PTR [ecx], al
-	jmp	$LN1@Step
-$LN9@Step:
+	movzx	edx, BYTE PTR [eax]
+	and	ebx, edx
+	mov	BYTE PTR _test$1[ebp], bl
 
-; 348  : 			} else if (test & 0x2) {
-
-	movzx	edx, BYTE PTR _test$1[ebp]
-	and	edx, 2
-	je	SHORT $LN7@Step
-
-; 349  : 				reg.PC = 0x0048; //lcdc status
-
-	mov	eax, 72					; 00000048H
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
-
-; 350  : 				emu_->memory()->interrupt_flag() &= ~0x2;
-
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [edx+4]
-	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
-	mov	ecx, eax
-	call	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ ; emulation::gb::Memory::interrupt_flag
-	mov	DWORD PTR tv194[ebp], eax
-	mov	eax, DWORD PTR tv194[ebp]
-	movzx	ecx, BYTE PTR [eax]
-	and	ecx, -3					; fffffffdH
-	mov	edx, DWORD PTR tv194[ebp]
-	mov	BYTE PTR [edx], cl
-	jmp	$LN1@Step
-$LN7@Step:
-
-; 351  : 			} else if (test & 0x4) {
+; 344  : 		if (test) {
 
 	movzx	eax, BYTE PTR _test$1[ebp]
-	and	eax, 4
-	je	SHORT $LN5@Step
+	test	eax, eax
+	je	$LN1@Step
 
-; 352  : 				reg.PC = 0x0050; //timer overflow
+; 345  : 			ime = false;
 
-	mov	ecx, 80					; 00000050H
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+1080], 0
+
+; 346  :       cpumode_ = CpuModeNormal;
+
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	DWORD PTR [edx+24], 0
 
-; 353  : 				emu_->memory()->interrupt_flag() &= ~0x4;
+; 347  : 			pushPC();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?pushPC@Cpu@gb@emulation@@AAEXXZ	; emulation::gb::Cpu::pushPC
+
+; 348  : 			if (test & 0x1) { //vblank
+
+	movzx	eax, BYTE PTR _test$1[ebp]
+	and	eax, 1
+	je	SHORT $LN9@Step
+
+; 349  : 				reg.PC = 0x0040;
+
+	mov	ecx, 64					; 00000040H
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	WORD PTR [edx+1074], cx
+
+; 350  : 				emu_->memory()->interrupt_flag() &= ~0x1;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ ; emulation::gb::Memory::interrupt_flag
-	mov	DWORD PTR tv212[ebp], eax
-	mov	ecx, DWORD PTR tv212[ebp]
+	mov	DWORD PTR tv182[ebp], eax
+	mov	ecx, DWORD PTR tv182[ebp]
 	movzx	edx, BYTE PTR [ecx]
-	and	edx, -5					; fffffffbH
-	mov	eax, DWORD PTR tv212[ebp]
+	and	edx, -2					; fffffffeH
+	mov	eax, DWORD PTR tv182[ebp]
 	mov	BYTE PTR [eax], dl
-	jmp	SHORT $LN1@Step
-$LN5@Step:
+	jmp	$LN1@Step
+$LN9@Step:
 
-; 354  : 			} else if (test & 0x8) {
+; 351  : 			} else if (test & 0x2) {
 
 	movzx	ecx, BYTE PTR _test$1[ebp]
-	and	ecx, 8
-	je	SHORT $LN3@Step
+	and	ecx, 2
+	je	SHORT $LN7@Step
 
-; 355  : 				reg.PC = 0x0058; //serial transfer
+; 352  : 				reg.PC = 0x0048; //lcdc status
 
-	mov	edx, 88					; 00000058H
+	mov	edx, 72					; 00000048H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	WORD PTR [eax+1066], dx
+	mov	WORD PTR [eax+1074], dx
 
-; 356  : 				emu_->memory()->interrupt_flag() &= ~0x8;
+; 353  : 				emu_->memory()->interrupt_flag() &= ~0x2;
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ ; emulation::gb::Memory::interrupt_flag
-	mov	DWORD PTR tv230[ebp], eax
-	mov	edx, DWORD PTR tv230[ebp]
+	mov	DWORD PTR tv200[ebp], eax
+	mov	edx, DWORD PTR tv200[ebp]
 	movzx	eax, BYTE PTR [edx]
-	and	eax, -9					; fffffff7H
-	mov	ecx, DWORD PTR tv230[ebp]
+	and	eax, -3					; fffffffdH
+	mov	ecx, DWORD PTR tv200[ebp]
 	mov	BYTE PTR [ecx], al
-	jmp	SHORT $LN1@Step
-$LN3@Step:
+	jmp	$LN1@Step
+$LN7@Step:
 
-; 357  : 			} else if (test & 0x10) {
+; 354  : 			} else if (test & 0x4) {
 
 	movzx	edx, BYTE PTR _test$1[ebp]
-	and	edx, 16					; 00000010H
-	je	SHORT $LN1@Step
+	and	edx, 4
+	je	SHORT $LN5@Step
 
-; 358  : 				reg.PC = 0x0060; //hi-lo p10-p13
+; 355  : 				reg.PC = 0x0050; //timer overflow
 
-	mov	eax, 96					; 00000060H
+	mov	eax, 80					; 00000050H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [ecx+1066], ax
+	mov	WORD PTR [ecx+1074], ax
 
-; 359  : 				emu_->memory()->interrupt_flag() &= ~0x10;
+; 356  : 				emu_->memory()->interrupt_flag() &= ~0x4;
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [edx+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ ; emulation::gb::Memory::interrupt_flag
-	mov	DWORD PTR tv248[ebp], eax
-	mov	eax, DWORD PTR tv248[ebp]
+	mov	DWORD PTR tv218[ebp], eax
+	mov	eax, DWORD PTR tv218[ebp]
 	movzx	ecx, BYTE PTR [eax]
-	and	ecx, -17				; ffffffefH
-	mov	edx, DWORD PTR tv248[ebp]
+	and	ecx, -5					; fffffffbH
+	mov	edx, DWORD PTR tv218[ebp]
 	mov	BYTE PTR [edx], cl
-$LN1@Step:
-$LN16@Step:
+	jmp	SHORT $LN1@Step
+$LN5@Step:
 
-; 360  : 			}
-; 361  : 		}
-; 362  :   }
-; 363  : }
+; 357  : 			} else if (test & 0x8) {
+
+	movzx	eax, BYTE PTR _test$1[ebp]
+	and	eax, 8
+	je	SHORT $LN3@Step
+
+; 358  : 				reg.PC = 0x0058; //serial transfer
+
+	mov	ecx, 88					; 00000058H
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	WORD PTR [edx+1074], cx
+
+; 359  : 				emu_->memory()->interrupt_flag() &= ~0x8;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+4]
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ ; emulation::gb::Memory::interrupt_flag
+	mov	DWORD PTR tv236[ebp], eax
+	mov	ecx, DWORD PTR tv236[ebp]
+	movzx	edx, BYTE PTR [ecx]
+	and	edx, -9					; fffffff7H
+	mov	eax, DWORD PTR tv236[ebp]
+	mov	BYTE PTR [eax], dl
+	jmp	SHORT $LN1@Step
+$LN3@Step:
+
+; 360  : 			} else if (test & 0x10) {
+
+	movzx	ecx, BYTE PTR _test$1[ebp]
+	and	ecx, 16					; 00000010H
+	je	SHORT $LN1@Step
+
+; 361  : 				reg.PC = 0x0060; //hi-lo p10-p13
+
+	mov	edx, 96					; 00000060H
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	WORD PTR [eax+1074], dx
+
+; 362  : 				emu_->memory()->interrupt_flag() &= ~0x10;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
+	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
+	mov	ecx, eax
+	call	?interrupt_flag@Memory@gb@emulation@@QAEAAEXZ ; emulation::gb::Memory::interrupt_flag
+	mov	DWORD PTR tv254[ebp], eax
+	mov	edx, DWORD PTR tv254[ebp]
+	movzx	eax, BYTE PTR [edx]
+	and	eax, -17				; ffffffefH
+	mov	ecx, DWORD PTR tv254[ebp]
+	mov	BYTE PTR [ecx], al
+$LN1@Step:
+$LN17@Step:
+
+; 363  : 			}
+; 364  : 		}
+; 365  :   }
+; 366  : }
 
 	pop	esi
 	pop	ebx
@@ -27090,30 +27731,33 @@ _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\cpu.cpp
 _TEXT	SEGMENT
+tv85 = -8						; size = 4
 _this$ = -4						; size = 4
 ?Tick@Cpu@gb@emulation@@QAEXXZ PROC			; emulation::gb::Cpu::Tick
 ; _this$ = ecx
 
-; 311  : void Cpu::Tick() {
+; 313  : void Cpu::Tick() {
 
 	push	ebp
 	mov	ebp, esp
-	push	ecx
+	sub	esp, 8
+	push	esi
+	mov	DWORD PTR [ebp-8], -858993460		; ccccccccH
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 312  :   ++cycles;
+; 314  :   ++cycles;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+8]
+	mov	ecx, DWORD PTR [eax+16]
 	add	ecx, 1
-	mov	edx, DWORD PTR [eax+12]
+	mov	edx, DWORD PTR [eax+20]
 	adc	edx, 0
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+8], ecx
-	mov	DWORD PTR [eax+12], edx
+	mov	DWORD PTR [eax+16], ecx
+	mov	DWORD PTR [eax+20], edx
 
-; 313  : 	emu_->timer()->Tick();
+; 315  : 	emu_->timer()->Tick();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+4]
@@ -27121,43 +27765,59 @@ _this$ = -4						; size = 4
 	mov	ecx, eax
 	call	?Tick@Timer@gb@emulation@@QAEXXZ	; emulation::gb::Timer::Tick
 
-; 314  : 	emu_->memory()->Tick();
+; 316  :   emu_->cartridge()->mbc->Tick();
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [edx+4]
+	call	?cartridge@Emu@gb@emulation@@QAEPAVCartridge@23@XZ ; emulation::gb::Emu::cartridge
+	mov	eax, DWORD PTR [eax+12]
+	mov	DWORD PTR tv85[ebp], eax
+	mov	ecx, DWORD PTR tv85[ebp]
+	mov	edx, DWORD PTR [ecx]
+	mov	esi, esp
+	mov	ecx, DWORD PTR tv85[ebp]
+	mov	eax, DWORD PTR [edx+16]
+	call	eax
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 317  : 	emu_->memory()->Tick();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	ecx, eax
 	call	?Tick@Memory@gb@emulation@@QAEXXZ	; emulation::gb::Memory::Tick
 
-; 315  :   emu_->lcd_driver()->Step(dt);
+; 318  :   emu_->lcd_driver()->Step(dt);
 
-	mov	eax, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
 	sub	esp, 8
-	movsd	xmm0, QWORD PTR [eax+24]
+	movsd	xmm0, QWORD PTR [edx+32]
 	movsd	QWORD PTR [esp], xmm0
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [ecx+4]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+4]
 	call	?lcd_driver@Emu@gb@emulation@@QAEPAVLCDDriver@23@XZ ; emulation::gb::Emu::lcd_driver
 	mov	ecx, eax
 	call	?Step@LCDDriver@gb@emulation@@QAEXN@Z	; emulation::gb::LCDDriver::Step
 
-; 316  : 	emu_->sc()->Step(dt);
+; 319  : 	emu_->sc()->Step(dt);
 
-	mov	edx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
 	sub	esp, 8
-	movsd	xmm0, QWORD PTR [edx+24]
+	movsd	xmm0, QWORD PTR [ecx+32]
 	movsd	QWORD PTR [esp], xmm0
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+4]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [edx+4]
 	call	?sc@Emu@gb@emulation@@QAEPAVSoundController@23@XZ ; emulation::gb::Emu::sc
 	mov	ecx, eax
 	call	?Step@SoundController@gb@emulation@@QAEXN@Z ; emulation::gb::SoundController::Step
 
-; 317  : 
-; 318  :    
-; 319  : }
+; 320  : 
+; 321  : }
 
-	add	esp, 4
+	pop	esi
+	add	esp, 8
 	cmp	ebp, esp
 	call	__RTC_CheckEsp
 	mov	esp, ebp
@@ -27172,7 +27832,7 @@ _this$ = -4						; size = 4
 ?Reset@Cpu@gb@emulation@@UAEXXZ PROC			; emulation::gb::Cpu::Reset
 ; _this$ = ecx
 
-; 303  : void Cpu::Reset() {
+; 304  : void Cpu::Reset() {
 
 	push	ebp
 	mov	ebp, esp
@@ -27180,39 +27840,44 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 304  : 	memset(&reg,0,sizeof(reg));
+; 305  : 	memset(&reg,0,sizeof(reg));
 
 	push	12					; 0000000cH
 	push	0
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1056				; 00000420H
+	add	eax, 1064				; 00000428H
 	push	eax
 	call	_memset
 	add	esp, 12					; 0000000cH
 
-; 305  :   reg.PC = 0;
+; 306  :   reg.PC = 0;
 
 	xor	ecx, ecx
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	WORD PTR [edx+1066], cx
+	mov	WORD PTR [edx+1074], cx
 
-; 306  :   cycles = 0;
+; 307  :   cycles = 0;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+8], 0
-	mov	DWORD PTR [eax+12], 0
+	mov	DWORD PTR [eax+16], 0
+	mov	DWORD PTR [eax+20], 0
 
-; 307  :   ime = false;
+; 308  :   ime = false;
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+1072], 0
+	mov	BYTE PTR [ecx+1080], 0
 
-; 308  :   cpumode_ = CpuModeNormal;
+; 309  :   cpumode_ = CpuModeNormal;
 
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+16], 0
+	mov	DWORD PTR [edx+24], 0
 
-; 309  : }
+; 310  :   sprite_bug = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+8], 0
+
+; 311  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -27229,7 +27894,7 @@ _this$ = -4						; size = 4
 ?Deinitialize@Cpu@gb@emulation@@UAEXXZ PROC		; emulation::gb::Cpu::Deinitialize
 ; _this$ = ecx
 
-; 299  : void Cpu::Deinitialize() {
+; 300  : void Cpu::Deinitialize() {
 
 	push	ebp
 	mov	ebp, esp
@@ -27237,8 +27902,8 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 300  : 
-; 301  : }
+; 301  : 
+; 302  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -27253,7 +27918,7 @@ _emu$ = 8						; size = 4
 ?Initialize@Cpu@gb@emulation@@UAEXPAVEmu@23@@Z PROC	; emulation::gb::Cpu::Initialize
 ; _this$ = ecx
 
-; 293  : void Cpu::Initialize(Emu* emu) {
+; 294  : void Cpu::Initialize(Emu* emu) {
 
 	push	ebp
 	mov	ebp, esp
@@ -27262,22 +27927,22 @@ _emu$ = 8						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 294  :   Component::Initialize(emu);
+; 295  :   Component::Initialize(emu);
 
 	mov	eax, DWORD PTR _emu$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
 
-; 295  :   mem_ = emu_->memory();
+; 296  :   mem_ = emu_->memory();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+4]
 	call	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ; emulation::gb::Emu::memory
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+1068], eax
+	mov	DWORD PTR [edx+1076], eax
 
-; 296  :   Reset();
+; 297  :   Reset();
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [eax]
@@ -27288,7 +27953,7 @@ _emu$ = 8						; size = 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 297  : }
+; 298  : }
 
 	pop	esi
 	add	esp, 4
@@ -27306,7 +27971,7 @@ _this$ = -4						; size = 4
 ??1Cpu@gb@emulation@@QAE@XZ PROC			; emulation::gb::Cpu::~Cpu
 ; _this$ = ecx
 
-; 289  : Cpu::~Cpu() {
+; 290  : Cpu::~Cpu() {
 
 	push	ebp
 	mov	ebp, esp
@@ -27316,8 +27981,8 @@ _this$ = -4						; size = 4
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax], OFFSET ??_7Cpu@gb@emulation@@6B@
 
-; 290  : 
-; 291  : }
+; 291  : 
+; 292  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -27331,7 +27996,7 @@ _this$ = -4						; size = 4
 ??0Cpu@gb@emulation@@QAE@XZ PROC			; emulation::gb::Cpu::Cpu
 ; _this$ = ecx
 
-; 14   : Cpu::Cpu() {
+; 15   : Cpu::Cpu() {
 
 	push	ebp
 	mov	ebp, esp
@@ -27343,1815 +28008,1815 @@ _this$ = -4						; size = 4
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax], OFFSET ??_7Cpu@gb@emulation@@6B@
 
-; 15   : 	instructions[0x00] = &Cpu::NOP;
+; 16   : 	instructions[0x00] = &Cpu::NOP;
 
 	mov	ecx, 4
 	imul	ecx, 0
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?NOP@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::NOP
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?NOP@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::NOP
 
-; 16   : 	instructions[0x01] = &Cpu::LDrd16<RegBC>;
+; 17   : 	instructions[0x01] = &Cpu::LDrd16<RegBC>;
 
 	mov	eax, 4
 	shl	eax, 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrd16@$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrd16<1>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrd16@$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrd16<1>
 
-; 17   : 	instructions[0x02] = &Cpu::LD$rr<RegBC,RegA>;
+; 18   : 	instructions[0x02] = &Cpu::LD$rr<RegBC,RegA>;
 
 	mov	edx, 4
 	shl	edx, 1
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LD$rr@$00$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<1,1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LD$rr@$00$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<1,1>
 
-; 18   : 	instructions[0x03] = &Cpu::INC_16bit<RegBC>;
+; 19   : 	instructions[0x03] = &Cpu::INC_16bit<RegBC>;
 
 	mov	ecx, 4
 	imul	ecx, 3
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$INC_16bit@$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_16bit<1>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$INC_16bit@$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_16bit<1>
 
-; 19   : 	instructions[0x04] = &Cpu::INC_8bit<RegB,0>;
+; 20   : 	instructions[0x04] = &Cpu::INC_8bit<RegB,0>;
 
 	mov	eax, 4
 	shl	eax, 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$INC_8bit@$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<3,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$INC_8bit@$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<3,0>
 
-; 20   : 	instructions[0x05] = &Cpu::DEC_8bit<RegB,0>;
+; 21   : 	instructions[0x05] = &Cpu::DEC_8bit<RegB,0>;
 
 	mov	edx, 4
 	imul	edx, 5
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$DEC_8bit@$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<3,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$DEC_8bit@$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<3,0>
 
-; 21   : 	instructions[0x06] = &Cpu::LD<RegB,0,10>;
+; 22   : 	instructions[0x06] = &Cpu::LD<RegB,0,10>;
 
 	mov	ecx, 4
 	imul	ecx, 6
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LD@$02$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<3,0,10>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LD@$02$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<3,0,10>
 
-; 22   : 	instructions[0x07] = &Cpu::RLCA;
+; 23   : 	instructions[0x07] = &Cpu::RLCA;
 
 	mov	eax, 4
 	imul	eax, 7
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?RLCA@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RLCA
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?RLCA@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RLCA
 
-; 23   : 	instructions[0x08] = &Cpu::LDa16SP;
+; 24   : 	instructions[0x08] = &Cpu::LDa16SP;
 
 	mov	edx, 4
 	shl	edx, 3
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ?LDa16SP@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDa16SP
+	mov	DWORD PTR [eax+edx+40], OFFSET ?LDa16SP@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDa16SP
 
-; 24   : 	instructions[0x09] = &Cpu::ADD_16bit<RegHL,RegBC>;
+; 25   : 	instructions[0x09] = &Cpu::ADD_16bit<RegHL,RegBC>;
 
 	mov	ecx, 4
 	imul	ecx, 9
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$ADD_16bit@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD_16bit<3,1>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$ADD_16bit@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD_16bit<3,1>
 
-; 25   : 	instructions[0x0A] = &Cpu::LDr$r<RegA,RegBC>;
+; 26   : 	instructions[0x0A] = &Cpu::LDr$r<RegA,RegBC>;
 
 	mov	eax, 4
 	imul	eax, 10					; 0000000aH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDr$r@$00$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<1,1>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDr$r@$00$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<1,1>
 
-; 26   : 	instructions[0x0B] = &Cpu::DEC_16bit<RegBC>;
+; 27   : 	instructions[0x0B] = &Cpu::DEC_16bit<RegBC>;
 
 	mov	edx, 4
 	imul	edx, 11					; 0000000bH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$DEC_16bit@$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_16bit<1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$DEC_16bit@$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_16bit<1>
 
-; 27   : 	instructions[0x0C] = &Cpu::INC_8bit<RegC,0>;
+; 28   : 	instructions[0x0C] = &Cpu::INC_8bit<RegC,0>;
 
 	mov	ecx, 4
 	imul	ecx, 12					; 0000000cH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$INC_8bit@$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<2,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$INC_8bit@$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<2,0>
 
-; 28   : 	instructions[0x0D] = &Cpu::DEC_8bit<RegC,0>;
+; 29   : 	instructions[0x0D] = &Cpu::DEC_8bit<RegC,0>;
 
 	mov	eax, 4
 	imul	eax, 13					; 0000000dH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$DEC_8bit@$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<2,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$DEC_8bit@$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<2,0>
 
-; 29   : 	instructions[0x0E] = &Cpu::LD<RegC,0,10>;
+; 30   : 	instructions[0x0E] = &Cpu::LD<RegC,0,10>;
 
 	mov	edx, 4
 	imul	edx, 14					; 0000000eH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LD@$01$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<2,0,10>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LD@$01$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<2,0,10>
 
-; 30   : 	instructions[0x0F] = &Cpu::RRCA;
+; 31   : 	instructions[0x0F] = &Cpu::RRCA;
 
 	mov	ecx, 4
 	imul	ecx, 15					; 0000000fH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?RRCA@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RRCA
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?RRCA@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RRCA
 
-; 31   : 
-; 32   : 	instructions[0x10] = &Cpu::STOP;
+; 32   : 
+; 33   : 	instructions[0x10] = &Cpu::STOP;
 
 	mov	eax, 4
 	shl	eax, 4
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?STOP@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::STOP
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?STOP@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::STOP
 
-; 33   : 	instructions[0x11] = &Cpu::LDrd16<RegDE>;
+; 34   : 	instructions[0x11] = &Cpu::LDrd16<RegDE>;
 
 	mov	edx, 4
 	imul	edx, 17					; 00000011H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrd16@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrd16<2>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrd16@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrd16<2>
 
-; 34   : 	instructions[0x12] = &Cpu::LD$rr<RegDE,RegA>;
+; 35   : 	instructions[0x12] = &Cpu::LD$rr<RegDE,RegA>;
 
 	mov	ecx, 4
 	imul	ecx, 18					; 00000012H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LD$rr@$01$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<2,1>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LD$rr@$01$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<2,1>
 
-; 35   : 	instructions[0x13] = &Cpu::INC_16bit<RegDE>;
+; 36   : 	instructions[0x13] = &Cpu::INC_16bit<RegDE>;
 
 	mov	eax, 4
 	imul	eax, 19					; 00000013H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$INC_16bit@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_16bit<2>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$INC_16bit@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_16bit<2>
 
-; 36   : 	instructions[0x14] = &Cpu::INC_8bit<RegD,0>;
+; 37   : 	instructions[0x14] = &Cpu::INC_8bit<RegD,0>;
 
 	mov	edx, 4
 	imul	edx, 20					; 00000014H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$INC_8bit@$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<5,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$INC_8bit@$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<5,0>
 
-; 37   : 	instructions[0x15] = &Cpu::DEC_8bit<RegD,0>;
+; 38   : 	instructions[0x15] = &Cpu::DEC_8bit<RegD,0>;
 
 	mov	ecx, 4
 	imul	ecx, 21					; 00000015H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$DEC_8bit@$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<5,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$DEC_8bit@$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<5,0>
 
-; 38   : 	instructions[0x16] = &Cpu::LD<RegD,0,10>;
+; 39   : 	instructions[0x16] = &Cpu::LD<RegD,0,10>;
 
 	mov	eax, 4
 	imul	eax, 22					; 00000016H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LD@$04$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<5,0,10>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LD@$04$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<5,0,10>
 
-; 39   : 	instructions[0x17] = &Cpu::RLA;
+; 40   : 	instructions[0x17] = &Cpu::RLA;
 
 	mov	edx, 4
 	imul	edx, 23					; 00000017H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ?RLA@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RLA
+	mov	DWORD PTR [eax+edx+40], OFFSET ?RLA@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RLA
 
-; 40   : 	instructions[0x18] = &Cpu::JR;
+; 41   : 	instructions[0x18] = &Cpu::JR;
 
 	mov	ecx, 4
 	imul	ecx, 24					; 00000018H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?JR@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JR
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?JR@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JR
 
-; 41   : 	instructions[0x19] = &Cpu::ADD_16bit<RegHL,RegDE>;
+; 42   : 	instructions[0x19] = &Cpu::ADD_16bit<RegHL,RegDE>;
 
 	mov	eax, 4
 	imul	eax, 25					; 00000019H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$ADD_16bit@$02$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD_16bit<3,2>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$ADD_16bit@$02$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD_16bit<3,2>
 
-; 42   : 	instructions[0x1A] = &Cpu::LDr$r<RegA,RegDE>;
+; 43   : 	instructions[0x1A] = &Cpu::LDr$r<RegA,RegDE>;
 
 	mov	edx, 4
 	imul	edx, 26					; 0000001aH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDr$r@$00$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<1,2>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDr$r@$00$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<1,2>
 
-; 43   : 	instructions[0x1B] = &Cpu::DEC_16bit<RegDE>;
+; 44   : 	instructions[0x1B] = &Cpu::DEC_16bit<RegDE>;
 
 	mov	ecx, 4
 	imul	ecx, 27					; 0000001bH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$DEC_16bit@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_16bit<2>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$DEC_16bit@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_16bit<2>
 
-; 44   : 	instructions[0x1C] = &Cpu::INC_8bit<RegE,0>;
+; 45   : 	instructions[0x1C] = &Cpu::INC_8bit<RegE,0>;
 
 	mov	eax, 4
 	imul	eax, 28					; 0000001cH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$INC_8bit@$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<4,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$INC_8bit@$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<4,0>
 
-; 45   : 	instructions[0x1D] = &Cpu::DEC_8bit<RegE,0>;
+; 46   : 	instructions[0x1D] = &Cpu::DEC_8bit<RegE,0>;
 
 	mov	edx, 4
 	imul	edx, 29					; 0000001dH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$DEC_8bit@$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<4,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$DEC_8bit@$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<4,0>
 
-; 46   : 	instructions[0x1E] = &Cpu::LD<RegE,0,10>;
+; 47   : 	instructions[0x1E] = &Cpu::LD<RegE,0,10>;
 
 	mov	ecx, 4
 	imul	ecx, 30					; 0000001eH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LD@$03$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<4,0,10>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LD@$03$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<4,0,10>
 
-; 47   : 	instructions[0x1F] = &Cpu::RRA;
+; 48   : 	instructions[0x1F] = &Cpu::RRA;
 
 	mov	eax, 4
 	imul	eax, 31					; 0000001fH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?RRA@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RRA
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?RRA@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RRA
 
-; 48   : 	
-; 49   : 	instructions[0x20] = &Cpu::JR_cc<CpuFlagsZ,1>;
+; 49   : 	
+; 50   : 	instructions[0x20] = &Cpu::JR_cc<CpuFlagsZ,1>;
 
 	mov	edx, 4
 	shl	edx, 5
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$JR_cc@$06$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JR_cc<7,1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$JR_cc@$06$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JR_cc<7,1>
 
-; 50   : 	instructions[0x21] = &Cpu::LDrd16<RegHL>;
+; 51   : 	instructions[0x21] = &Cpu::LDrd16<RegHL>;
 
 	mov	ecx, 4
 	imul	ecx, 33					; 00000021H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrd16@$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrd16<3>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrd16@$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrd16<3>
 
-; 51   : 	instructions[0x22] = &Cpu::LDI$regreg<RegHL,RegA>;
+; 52   : 	instructions[0x22] = &Cpu::LDI$regreg<RegHL,RegA>;
 
 	mov	eax, 4
 	imul	eax, 34					; 00000022H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDI$regreg@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDI$regreg<3,1>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDI$regreg@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDI$regreg<3,1>
 
-; 52   : 	instructions[0x23] = &Cpu::INC_16bit<RegHL>;
+; 53   : 	instructions[0x23] = &Cpu::INC_16bit<RegHL>;
 
 	mov	edx, 4
 	imul	edx, 35					; 00000023H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$INC_16bit@$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_16bit<3>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$INC_16bit@$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_16bit<3>
 
-; 53   : 	instructions[0x24] = &Cpu::INC_8bit<RegH,0>;
+; 54   : 	instructions[0x24] = &Cpu::INC_8bit<RegH,0>;
 
 	mov	ecx, 4
 	imul	ecx, 36					; 00000024H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$INC_8bit@$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<7,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$INC_8bit@$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<7,0>
 
-; 54   : 	instructions[0x25] = &Cpu::DEC_8bit<RegH,0>;
+; 55   : 	instructions[0x25] = &Cpu::DEC_8bit<RegH,0>;
 
 	mov	eax, 4
 	imul	eax, 37					; 00000025H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$DEC_8bit@$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<7,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$DEC_8bit@$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<7,0>
 
-; 55   : 	instructions[0x26] = &Cpu::LD<RegH,0,10>;
+; 56   : 	instructions[0x26] = &Cpu::LD<RegH,0,10>;
 
 	mov	edx, 4
 	imul	edx, 38					; 00000026H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LD@$06$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<7,0,10>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LD@$06$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<7,0,10>
 
-; 56   :   instructions[0x27] = &Cpu::DAA;
+; 57   :   instructions[0x27] = &Cpu::DAA;
 
 	mov	ecx, 4
 	imul	ecx, 39					; 00000027H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?DAA@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DAA
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?DAA@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DAA
 
-; 57   : 	instructions[0x28] = &Cpu::JR_cc<CpuFlagsZ,0>;
+; 58   : 	instructions[0x28] = &Cpu::JR_cc<CpuFlagsZ,0>;
 
 	mov	eax, 4
 	imul	eax, 40					; 00000028H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$JR_cc@$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JR_cc<7,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$JR_cc@$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JR_cc<7,0>
 
-; 58   : 	instructions[0x29] = &Cpu::ADD_16bit<RegHL,RegHL>;
+; 59   : 	instructions[0x29] = &Cpu::ADD_16bit<RegHL,RegHL>;
 
 	mov	edx, 4
 	imul	edx, 41					; 00000029H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$ADD_16bit@$02$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD_16bit<3,3>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$ADD_16bit@$02$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD_16bit<3,3>
 
-; 59   : 	instructions[0x2A] = &Cpu::LDIreg$reg<RegA,RegHL>;
+; 60   : 	instructions[0x2A] = &Cpu::LDIreg$reg<RegA,RegHL>;
 
 	mov	ecx, 4
 	imul	ecx, 42					; 0000002aH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDIreg$reg@$00$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDIreg$reg<1,3>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDIreg$reg@$00$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDIreg$reg<1,3>
 
-; 60   : 	instructions[0x2B] = &Cpu::DEC_16bit<RegHL>;
+; 61   : 	instructions[0x2B] = &Cpu::DEC_16bit<RegHL>;
 
 	mov	eax, 4
 	imul	eax, 43					; 0000002bH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$DEC_16bit@$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_16bit<3>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$DEC_16bit@$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_16bit<3>
 
-; 61   : 	instructions[0x2C] = &Cpu::INC_8bit<RegL,0>;
+; 62   : 	instructions[0x2C] = &Cpu::INC_8bit<RegL,0>;
 
 	mov	edx, 4
 	imul	edx, 44					; 0000002cH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$INC_8bit@$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<6,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$INC_8bit@$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<6,0>
 
-; 62   : 	instructions[0x2D] = &Cpu::DEC_8bit<RegL,0>;
+; 63   : 	instructions[0x2D] = &Cpu::DEC_8bit<RegL,0>;
 
 	mov	ecx, 4
 	imul	ecx, 45					; 0000002dH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$DEC_8bit@$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<6,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$DEC_8bit@$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<6,0>
 
-; 63   : 	instructions[0x2E] = &Cpu::LD<RegL,0,10>;
+; 64   : 	instructions[0x2E] = &Cpu::LD<RegL,0,10>;
 
 	mov	eax, 4
 	imul	eax, 46					; 0000002eH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LD@$05$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<6,0,10>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LD@$05$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<6,0,10>
 
-; 64   : 	instructions[0x2F] = &Cpu::CPL;
+; 65   : 	instructions[0x2F] = &Cpu::CPL;
 
 	mov	edx, 4
 	imul	edx, 47					; 0000002fH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ?CPL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CPL
+	mov	DWORD PTR [eax+edx+40], OFFSET ?CPL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CPL
 
-; 65   : 
-; 66   : 	instructions[0x30] = &Cpu::JR_cc<CpuFlagsC,1>;
+; 66   : 
+; 67   : 	instructions[0x30] = &Cpu::JR_cc<CpuFlagsC,1>;
 
 	mov	ecx, 4
 	imul	ecx, 48					; 00000030H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$JR_cc@$03$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JR_cc<4,1>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$JR_cc@$03$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JR_cc<4,1>
 
-; 67   : 	instructions[0x31] = &Cpu::LDrd16<RegSP>;
+; 68   : 	instructions[0x31] = &Cpu::LDrd16<RegSP>;
 
 	mov	eax, 4
 	imul	eax, 49					; 00000031H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrd16@$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrd16<4>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrd16@$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrd16<4>
 
-; 68   : 	instructions[0x32] = &Cpu::LDD$regreg<RegHL,RegA>;
+; 69   : 	instructions[0x32] = &Cpu::LDD$regreg<RegHL,RegA>;
 
 	mov	edx, 4
 	imul	edx, 50					; 00000032H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDD$regreg@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDD$regreg<3,1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDD$regreg@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDD$regreg<3,1>
 
-; 69   : 	instructions[0x33] = &Cpu::INC_16bit<RegSP>;
+; 70   : 	instructions[0x33] = &Cpu::INC_16bit<RegSP>;
 
 	mov	ecx, 4
 	imul	ecx, 51					; 00000033H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$INC_16bit@$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_16bit<4>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$INC_16bit@$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_16bit<4>
 
-; 70   : 	instructions[0x34] = &Cpu::INC_8bit<RegHL,1>;
+; 71   : 	instructions[0x34] = &Cpu::INC_8bit<RegHL,1>;
 
 	mov	eax, 4
 	imul	eax, 52					; 00000034H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$INC_8bit@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<3,1>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$INC_8bit@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<3,1>
 
-; 71   : 	instructions[0x35] = &Cpu::DEC_8bit<RegHL,1>;
+; 72   : 	instructions[0x35] = &Cpu::DEC_8bit<RegHL,1>;
 
 	mov	edx, 4
 	imul	edx, 53					; 00000035H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$DEC_8bit@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<3,1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$DEC_8bit@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<3,1>
 
-; 72   : 	instructions[0x36] = &Cpu::LD<RegHL,0,11>;
+; 73   : 	instructions[0x36] = &Cpu::LD<RegHL,0,11>;
 
 	mov	ecx, 4
 	imul	ecx, 54					; 00000036H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LD@$02$0A@$0L@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<3,0,11>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LD@$02$0A@$0L@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<3,0,11>
 
-; 73   : 	instructions[0x37] = &Cpu::SCF;
+; 74   : 	instructions[0x37] = &Cpu::SCF;
 
 	mov	eax, 4
 	imul	eax, 55					; 00000037H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?SCF@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SCF
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?SCF@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SCF
 
-; 74   : 	instructions[0x38] = &Cpu::JR_cc<CpuFlagsC,0>;
+; 75   : 	instructions[0x38] = &Cpu::JR_cc<CpuFlagsC,0>;
 
 	mov	edx, 4
 	imul	edx, 56					; 00000038H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$JR_cc@$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JR_cc<4,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$JR_cc@$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JR_cc<4,0>
 
-; 75   : 	instructions[0x39] = &Cpu::ADD_16bit<RegHL,RegSP>;
+; 76   : 	instructions[0x39] = &Cpu::ADD_16bit<RegHL,RegSP>;
 
 	mov	ecx, 4
 	imul	ecx, 57					; 00000039H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$ADD_16bit@$02$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD_16bit<3,4>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$ADD_16bit@$02$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD_16bit<3,4>
 
-; 76   : 	instructions[0x3A] = &Cpu::LDDreg$reg<RegA,RegHL>;
+; 77   : 	instructions[0x3A] = &Cpu::LDDreg$reg<RegA,RegHL>;
 
 	mov	eax, 4
 	imul	eax, 58					; 0000003aH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDDreg$reg@$00$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDDreg$reg<1,3>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDDreg$reg@$00$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDDreg$reg<1,3>
 
-; 77   : 	instructions[0x3B] = &Cpu::DEC_16bit<RegSP>;
+; 78   : 	instructions[0x3B] = &Cpu::DEC_16bit<RegSP>;
 
 	mov	edx, 4
 	imul	edx, 59					; 0000003bH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$DEC_16bit@$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_16bit<4>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$DEC_16bit@$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_16bit<4>
 
-; 78   : 	instructions[0x3C] = &Cpu::INC_8bit<RegA,0>;
+; 79   : 	instructions[0x3C] = &Cpu::INC_8bit<RegA,0>;
 
 	mov	ecx, 4
 	imul	ecx, 60					; 0000003cH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$INC_8bit@$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<1,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$INC_8bit@$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::INC_8bit<1,0>
 
-; 79   : 	instructions[0x3D] = &Cpu::DEC_8bit<RegA,0>;
+; 80   : 	instructions[0x3D] = &Cpu::DEC_8bit<RegA,0>;
 
 	mov	eax, 4
 	imul	eax, 61					; 0000003dH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$DEC_8bit@$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<1,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$DEC_8bit@$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DEC_8bit<1,0>
 
-; 80   : 	instructions[0x3E] = &Cpu::LD<RegA,0,10>;
+; 81   : 	instructions[0x3E] = &Cpu::LD<RegA,0,10>;
 
 	mov	edx, 4
 	imul	edx, 62					; 0000003eH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LD@$00$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<1,0,10>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LD@$00$0A@$09@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<1,0,10>
 
-; 81   :   instructions[0x3F] = &Cpu::CCF;
+; 82   :   instructions[0x3F] = &Cpu::CCF;
 
 	mov	ecx, 4
 	imul	ecx, 63					; 0000003fH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?CCF@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CCF
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?CCF@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CCF
 
-; 82   : 
-; 83   : 	instructions[0x40] = &Cpu::LDrr<RegB,RegB>;
+; 83   : 
+; 84   : 	instructions[0x40] = &Cpu::LDrr<RegB,RegB>;
 
 	mov	eax, 4
 	shl	eax, 6
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$02$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,3>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$02$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,3>
 
-; 84   : 	instructions[0x41] = &Cpu::LDrr<RegB,RegC>;
+; 85   : 	instructions[0x41] = &Cpu::LDrr<RegB,RegC>;
 
 	mov	edx, 4
 	imul	edx, 65					; 00000041H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$02$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,2>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$02$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,2>
 
-; 85   : 	instructions[0x42] = &Cpu::LDrr<RegB,RegD>;
+; 86   : 	instructions[0x42] = &Cpu::LDrr<RegB,RegD>;
 
 	mov	ecx, 4
 	imul	ecx, 66					; 00000042H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$02$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,5>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$02$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,5>
 
-; 86   : 	instructions[0x43] = &Cpu::LDrr<RegB,RegE>;
+; 87   : 	instructions[0x43] = &Cpu::LDrr<RegB,RegE>;
 
 	mov	eax, 4
 	imul	eax, 67					; 00000043H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$02$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,4>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$02$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,4>
 
-; 87   : 	instructions[0x44] = &Cpu::LDrr<RegB,RegH>;
+; 88   : 	instructions[0x44] = &Cpu::LDrr<RegB,RegH>;
 
 	mov	edx, 4
 	imul	edx, 68					; 00000044H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$02$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,7>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$02$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,7>
 
-; 88   : 	instructions[0x45] = &Cpu::LDrr<RegB,RegL>;
+; 89   : 	instructions[0x45] = &Cpu::LDrr<RegB,RegL>;
 
 	mov	ecx, 4
 	imul	ecx, 69					; 00000045H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$02$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,6>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$02$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,6>
 
-; 89   : 	instructions[0x46] = &Cpu::LDr$r<RegB,RegHL>;
+; 90   : 	instructions[0x46] = &Cpu::LDr$r<RegB,RegHL>;
 
 	mov	eax, 4
 	imul	eax, 70					; 00000046H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDr$r@$02$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<3,3>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDr$r@$02$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<3,3>
 
-; 90   : 	instructions[0x47] = &Cpu::LDrr<RegB,RegA>;
+; 91   : 	instructions[0x47] = &Cpu::LDrr<RegB,RegA>;
 
 	mov	edx, 4
 	imul	edx, 71					; 00000047H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<3,1>
 
-; 91   : 	instructions[0x48] = &Cpu::LDrr<RegC,RegB>;
+; 92   : 	instructions[0x48] = &Cpu::LDrr<RegC,RegB>;
 
 	mov	ecx, 4
 	imul	ecx, 72					; 00000048H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$01$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,3>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$01$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,3>
 
-; 92   : 	instructions[0x49] = &Cpu::LDrr<RegC,RegC>;
+; 93   : 	instructions[0x49] = &Cpu::LDrr<RegC,RegC>;
 
 	mov	eax, 4
 	imul	eax, 73					; 00000049H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$01$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,2>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$01$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,2>
 
-; 93   : 	instructions[0x4A] = &Cpu::LDrr<RegC,RegD>;
+; 94   : 	instructions[0x4A] = &Cpu::LDrr<RegC,RegD>;
 
 	mov	edx, 4
 	imul	edx, 74					; 0000004aH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$01$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,5>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$01$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,5>
 
-; 94   : 	instructions[0x4B] = &Cpu::LDrr<RegC,RegE>;
+; 95   : 	instructions[0x4B] = &Cpu::LDrr<RegC,RegE>;
 
 	mov	ecx, 4
 	imul	ecx, 75					; 0000004bH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$01$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,4>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$01$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,4>
 
-; 95   : 	instructions[0x4C] = &Cpu::LDrr<RegC,RegH>;
+; 96   : 	instructions[0x4C] = &Cpu::LDrr<RegC,RegH>;
 
 	mov	eax, 4
 	imul	eax, 76					; 0000004cH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$01$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,7>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$01$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,7>
 
-; 96   : 	instructions[0x4D] = &Cpu::LDrr<RegC,RegL>;
+; 97   : 	instructions[0x4D] = &Cpu::LDrr<RegC,RegL>;
 
 	mov	edx, 4
 	imul	edx, 77					; 0000004dH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$01$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,6>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$01$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,6>
 
-; 97   : 	instructions[0x4E] = &Cpu::LDr$r<RegC,RegHL>;
+; 98   : 	instructions[0x4E] = &Cpu::LDr$r<RegC,RegHL>;
 
 	mov	ecx, 4
 	imul	ecx, 78					; 0000004eH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDr$r@$01$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<2,3>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDr$r@$01$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<2,3>
 
-; 98   : 	instructions[0x4F] = &Cpu::LDrr<RegC,RegA>;
+; 99   : 	instructions[0x4F] = &Cpu::LDrr<RegC,RegA>;
 
 	mov	eax, 4
 	imul	eax, 79					; 0000004fH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$01$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,1>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$01$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<2,1>
 
-; 99   : 
-; 100  : 	instructions[0x50] = &Cpu::LDrr<RegD,RegB>;
+; 100  : 
+; 101  : 	instructions[0x50] = &Cpu::LDrr<RegD,RegB>;
 
 	mov	edx, 4
 	imul	edx, 80					; 00000050H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$04$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,3>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$04$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,3>
 
-; 101  : 	instructions[0x51] = &Cpu::LDrr<RegD,RegC>;
+; 102  : 	instructions[0x51] = &Cpu::LDrr<RegD,RegC>;
 
 	mov	ecx, 4
 	imul	ecx, 81					; 00000051H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$04$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,2>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$04$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,2>
 
-; 102  : 	instructions[0x52] = &Cpu::LDrr<RegD,RegD>;
+; 103  : 	instructions[0x52] = &Cpu::LDrr<RegD,RegD>;
 
 	mov	eax, 4
 	imul	eax, 82					; 00000052H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$04$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,5>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$04$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,5>
 
-; 103  : 	instructions[0x53] = &Cpu::LDrr<RegD,RegE>;
+; 104  : 	instructions[0x53] = &Cpu::LDrr<RegD,RegE>;
 
 	mov	edx, 4
 	imul	edx, 83					; 00000053H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$04$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,4>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$04$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,4>
 
-; 104  : 	instructions[0x54] = &Cpu::LDrr<RegD,RegH>;
+; 105  : 	instructions[0x54] = &Cpu::LDrr<RegD,RegH>;
 
 	mov	ecx, 4
 	imul	ecx, 84					; 00000054H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$04$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,7>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$04$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,7>
 
-; 105  : 	instructions[0x55] = &Cpu::LDrr<RegD,RegL>;
+; 106  : 	instructions[0x55] = &Cpu::LDrr<RegD,RegL>;
 
 	mov	eax, 4
 	imul	eax, 85					; 00000055H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$04$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,6>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$04$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,6>
 
-; 106  : 	instructions[0x56] = &Cpu::LDr$r<RegD,RegHL>;
+; 107  : 	instructions[0x56] = &Cpu::LDr$r<RegD,RegHL>;
 
 	mov	edx, 4
 	imul	edx, 86					; 00000056H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDr$r@$04$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<5,3>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDr$r@$04$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<5,3>
 
-; 107  : 	instructions[0x57] = &Cpu::LDrr<RegD,RegA>;
+; 108  : 	instructions[0x57] = &Cpu::LDrr<RegD,RegA>;
 
 	mov	ecx, 4
 	imul	ecx, 87					; 00000057H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$04$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,1>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$04$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<5,1>
 
-; 108  : 	instructions[0x58] = &Cpu::LDrr<RegE,RegB>;
+; 109  : 	instructions[0x58] = &Cpu::LDrr<RegE,RegB>;
 
 	mov	eax, 4
 	imul	eax, 88					; 00000058H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$03$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,3>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$03$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,3>
 
-; 109  : 	instructions[0x59] = &Cpu::LDrr<RegE,RegC>;
+; 110  : 	instructions[0x59] = &Cpu::LDrr<RegE,RegC>;
 
 	mov	edx, 4
 	imul	edx, 89					; 00000059H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$03$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,2>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$03$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,2>
 
-; 110  : 	instructions[0x5A] = &Cpu::LDrr<RegE,RegD>;
+; 111  : 	instructions[0x5A] = &Cpu::LDrr<RegE,RegD>;
 
 	mov	ecx, 4
 	imul	ecx, 90					; 0000005aH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$03$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,5>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$03$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,5>
 
-; 111  : 	instructions[0x5B] = &Cpu::LDrr<RegE,RegE>;
+; 112  : 	instructions[0x5B] = &Cpu::LDrr<RegE,RegE>;
 
 	mov	eax, 4
 	imul	eax, 91					; 0000005bH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$03$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,4>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$03$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,4>
 
-; 112  : 	instructions[0x5C] = &Cpu::LDrr<RegE,RegH>;
+; 113  : 	instructions[0x5C] = &Cpu::LDrr<RegE,RegH>;
 
 	mov	edx, 4
 	imul	edx, 92					; 0000005cH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$03$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,7>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$03$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,7>
 
-; 113  : 	instructions[0x5D] = &Cpu::LDrr<RegE,RegL>;
+; 114  : 	instructions[0x5D] = &Cpu::LDrr<RegE,RegL>;
 
 	mov	ecx, 4
 	imul	ecx, 93					; 0000005dH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$03$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,6>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$03$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,6>
 
-; 114  : 	instructions[0x5E] = &Cpu::LDr$r<RegE,RegHL>;
+; 115  : 	instructions[0x5E] = &Cpu::LDr$r<RegE,RegHL>;
 
 	mov	eax, 4
 	imul	eax, 94					; 0000005eH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDr$r@$03$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<4,3>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDr$r@$03$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<4,3>
 
-; 115  : 	instructions[0x5F] = &Cpu::LDrr<RegE,RegA>;
+; 116  : 	instructions[0x5F] = &Cpu::LDrr<RegE,RegA>;
 
 	mov	edx, 4
 	imul	edx, 95					; 0000005fH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$03$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$03$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<4,1>
 
-; 116  : 
-; 117  : 	instructions[0x60] = &Cpu::LDrr<RegH,RegB>;
+; 117  : 
+; 118  : 	instructions[0x60] = &Cpu::LDrr<RegH,RegB>;
 
 	mov	ecx, 4
 	imul	ecx, 96					; 00000060H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$06$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,3>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$06$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,3>
 
-; 118  : 	instructions[0x61] = &Cpu::LDrr<RegH,RegC>;
+; 119  : 	instructions[0x61] = &Cpu::LDrr<RegH,RegC>;
 
 	mov	eax, 4
 	imul	eax, 97					; 00000061H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$06$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,2>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$06$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,2>
 
-; 119  : 	instructions[0x62] = &Cpu::LDrr<RegH,RegD>;
+; 120  : 	instructions[0x62] = &Cpu::LDrr<RegH,RegD>;
 
 	mov	edx, 4
 	imul	edx, 98					; 00000062H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$06$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,5>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$06$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,5>
 
-; 120  : 	instructions[0x63] = &Cpu::LDrr<RegH,RegE>;
+; 121  : 	instructions[0x63] = &Cpu::LDrr<RegH,RegE>;
 
 	mov	ecx, 4
 	imul	ecx, 99					; 00000063H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$06$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,4>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$06$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,4>
 
-; 121  : 	instructions[0x64] = &Cpu::LDrr<RegH,RegH>;
+; 122  : 	instructions[0x64] = &Cpu::LDrr<RegH,RegH>;
 
 	mov	eax, 4
 	imul	eax, 100				; 00000064H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$06$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,7>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$06$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,7>
 
-; 122  : 	instructions[0x65] = &Cpu::LDrr<RegH,RegL>;
+; 123  : 	instructions[0x65] = &Cpu::LDrr<RegH,RegL>;
 
 	mov	edx, 4
 	imul	edx, 101				; 00000065H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$06$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,6>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$06$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,6>
 
-; 123  : 	instructions[0x66] = &Cpu::LDr$r<RegH,RegHL>;
+; 124  : 	instructions[0x66] = &Cpu::LDr$r<RegH,RegHL>;
 
 	mov	ecx, 4
 	imul	ecx, 102				; 00000066H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDr$r@$06$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<7,3>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDr$r@$06$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<7,3>
 
-; 124  : 	instructions[0x67] = &Cpu::LDrr<RegH,RegA>;
+; 125  : 	instructions[0x67] = &Cpu::LDrr<RegH,RegA>;
 
 	mov	eax, 4
 	imul	eax, 103				; 00000067H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$06$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,1>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$06$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<7,1>
 
-; 125  : 	instructions[0x68] = &Cpu::LDrr<RegL,RegB>;
+; 126  : 	instructions[0x68] = &Cpu::LDrr<RegL,RegB>;
 
 	mov	edx, 4
 	imul	edx, 104				; 00000068H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$05$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,3>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$05$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,3>
 
-; 126  : 	instructions[0x69] = &Cpu::LDrr<RegL,RegC>;
+; 127  : 	instructions[0x69] = &Cpu::LDrr<RegL,RegC>;
 
 	mov	ecx, 4
 	imul	ecx, 105				; 00000069H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$05$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,2>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$05$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,2>
 
-; 127  : 	instructions[0x6A] = &Cpu::LDrr<RegL,RegD>;
+; 128  : 	instructions[0x6A] = &Cpu::LDrr<RegL,RegD>;
 
 	mov	eax, 4
 	imul	eax, 106				; 0000006aH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$05$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,5>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$05$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,5>
 
-; 128  : 	instructions[0x6B] = &Cpu::LDrr<RegL,RegE>;
+; 129  : 	instructions[0x6B] = &Cpu::LDrr<RegL,RegE>;
 
 	mov	edx, 4
 	imul	edx, 107				; 0000006bH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$05$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,4>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$05$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,4>
 
-; 129  : 	instructions[0x6C] = &Cpu::LDrr<RegL,RegH>;
+; 130  : 	instructions[0x6C] = &Cpu::LDrr<RegL,RegH>;
 
 	mov	ecx, 4
 	imul	ecx, 108				; 0000006cH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$05$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,7>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$05$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,7>
 
-; 130  : 	instructions[0x6D] = &Cpu::LDrr<RegL,RegL>;
+; 131  : 	instructions[0x6D] = &Cpu::LDrr<RegL,RegL>;
 
 	mov	eax, 4
 	imul	eax, 109				; 0000006dH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$05$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,6>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$05$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,6>
 
-; 131  : 	instructions[0x6E] = &Cpu::LDr$r<RegL,RegHL>;
+; 132  : 	instructions[0x6E] = &Cpu::LDr$r<RegL,RegHL>;
 
 	mov	edx, 4
 	imul	edx, 110				; 0000006eH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDr$r@$05$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<6,3>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDr$r@$05$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<6,3>
 
-; 132  : 	instructions[0x6F] = &Cpu::LDrr<RegL,RegA>;
+; 133  : 	instructions[0x6F] = &Cpu::LDrr<RegL,RegA>;
 
 	mov	ecx, 4
 	imul	ecx, 111				; 0000006fH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$05$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,1>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$05$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<6,1>
 
-; 133  : 
-; 134  : 	instructions[0x70] = &Cpu::LD$rr<RegHL,RegB>;
+; 134  : 
+; 135  : 	instructions[0x70] = &Cpu::LD$rr<RegHL,RegB>;
 
 	mov	eax, 4
 	imul	eax, 112				; 00000070H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LD$rr@$02$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,3>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LD$rr@$02$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,3>
 
-; 135  : 	instructions[0x71] = &Cpu::LD$rr<RegHL,RegC>;
+; 136  : 	instructions[0x71] = &Cpu::LD$rr<RegHL,RegC>;
 
 	mov	edx, 4
 	imul	edx, 113				; 00000071H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LD$rr@$02$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,2>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LD$rr@$02$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,2>
 
-; 136  : 	instructions[0x72] = &Cpu::LD$rr<RegHL,RegD>;
+; 137  : 	instructions[0x72] = &Cpu::LD$rr<RegHL,RegD>;
 
 	mov	ecx, 4
 	imul	ecx, 114				; 00000072H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LD$rr@$02$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,5>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LD$rr@$02$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,5>
 
-; 137  : 	instructions[0x73] = &Cpu::LD$rr<RegHL,RegE>;
+; 138  : 	instructions[0x73] = &Cpu::LD$rr<RegHL,RegE>;
 
 	mov	eax, 4
 	imul	eax, 115				; 00000073H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LD$rr@$02$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,4>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LD$rr@$02$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,4>
 
-; 138  : 	instructions[0x74] = &Cpu::LD$rr<RegHL,RegH>;
+; 139  : 	instructions[0x74] = &Cpu::LD$rr<RegHL,RegH>;
 
 	mov	edx, 4
 	imul	edx, 116				; 00000074H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LD$rr@$02$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,7>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LD$rr@$02$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,7>
 
-; 139  : 	instructions[0x75] = &Cpu::LD$rr<RegHL,RegL>;
+; 140  : 	instructions[0x75] = &Cpu::LD$rr<RegHL,RegL>;
 
 	mov	ecx, 4
 	imul	ecx, 117				; 00000075H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LD$rr@$02$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,6>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LD$rr@$02$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,6>
 
-; 140  : 	instructions[0x76] = &Cpu::HALT;
+; 141  : 	instructions[0x76] = &Cpu::HALT;
 
 	mov	eax, 4
 	imul	eax, 118				; 00000076H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?HALT@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::HALT
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?HALT@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::HALT
 
-; 141  : 	instructions[0x77] = &Cpu::LD$rr<RegHL,RegA>;
+; 142  : 	instructions[0x77] = &Cpu::LD$rr<RegHL,RegA>;
 
 	mov	edx, 4
 	imul	edx, 119				; 00000077H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LD$rr@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LD$rr@$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$rr<3,1>
 
-; 142  : 	instructions[0x78] = &Cpu::LDrr<RegA,RegB>;
+; 143  : 	instructions[0x78] = &Cpu::LDrr<RegA,RegB>;
 
 	mov	ecx, 4
 	imul	ecx, 120				; 00000078H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$00$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,3>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$00$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,3>
 
-; 143  : 	instructions[0x79] = &Cpu::LDrr<RegA,RegC>;
+; 144  : 	instructions[0x79] = &Cpu::LDrr<RegA,RegC>;
 
 	mov	eax, 4
 	imul	eax, 121				; 00000079H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$00$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,2>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$00$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,2>
 
-; 144  : 	instructions[0x7A] = &Cpu::LDrr<RegA,RegD>;
+; 145  : 	instructions[0x7A] = &Cpu::LDrr<RegA,RegD>;
 
 	mov	edx, 4
 	imul	edx, 122				; 0000007aH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$00$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,5>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$00$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,5>
 
-; 145  : 	instructions[0x7B] = &Cpu::LDrr<RegA,RegE>;
+; 146  : 	instructions[0x7B] = &Cpu::LDrr<RegA,RegE>;
 
 	mov	ecx, 4
 	imul	ecx, 123				; 0000007bH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDrr@$00$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,4>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDrr@$00$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,4>
 
-; 146  : 	instructions[0x7C] = &Cpu::LDrr<RegA,RegH>;
+; 147  : 	instructions[0x7C] = &Cpu::LDrr<RegA,RegH>;
 
 	mov	eax, 4
 	imul	eax, 124				; 0000007cH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$00$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,7>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$00$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,7>
 
-; 147  : 	instructions[0x7D] = &Cpu::LDrr<RegA,RegL>;
+; 148  : 	instructions[0x7D] = &Cpu::LDrr<RegA,RegL>;
 
 	mov	edx, 4
 	imul	edx, 125				; 0000007dH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDrr@$00$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,6>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDrr@$00$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,6>
 
-; 148  : 	instructions[0x7E] = &Cpu::LDr$r<RegA,RegHL>;
+; 149  : 	instructions[0x7E] = &Cpu::LDr$r<RegA,RegHL>;
 
 	mov	ecx, 4
 	imul	ecx, 126				; 0000007eH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LDr$r@$00$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<1,3>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LDr$r@$00$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$r<1,3>
 
-; 149  : 	instructions[0x7F] = &Cpu::LDrr<RegA,RegA>;
+; 150  : 	instructions[0x7F] = &Cpu::LDrr<RegA,RegA>;
 
 	mov	eax, 4
 	imul	eax, 127				; 0000007fH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LDrr@$00$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,1>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LDrr@$00$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDrr<1,1>
 
-; 150  : 
-; 151  : 	instructions[0x80] = &Cpu::ADD<RegA,RegB,0>;
+; 151  : 
+; 152  : 	instructions[0x80] = &Cpu::ADD<RegA,RegB,0>;
 
 	mov	edx, 4
 	shl	edx, 7
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$ADD@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,3,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$ADD@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,3,0>
 
-; 152  : 	instructions[0x81] = &Cpu::ADD<RegA,RegC,0>;
+; 153  : 	instructions[0x81] = &Cpu::ADD<RegA,RegC,0>;
 
 	mov	ecx, 4
 	imul	ecx, 129				; 00000081H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$ADD@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,2,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$ADD@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,2,0>
 
-; 153  : 	instructions[0x82] = &Cpu::ADD<RegA,RegD,0>;
+; 154  : 	instructions[0x82] = &Cpu::ADD<RegA,RegD,0>;
 
 	mov	eax, 4
 	imul	eax, 130				; 00000082H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$ADD@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,5,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$ADD@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,5,0>
 
-; 154  : 	instructions[0x83] = &Cpu::ADD<RegA,RegE,0>;
+; 155  : 	instructions[0x83] = &Cpu::ADD<RegA,RegE,0>;
 
 	mov	edx, 4
 	imul	edx, 131				; 00000083H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$ADD@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,4,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$ADD@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,4,0>
 
-; 155  : 	instructions[0x84] = &Cpu::ADD<RegA,RegH,0>;
+; 156  : 	instructions[0x84] = &Cpu::ADD<RegA,RegH,0>;
 
 	mov	ecx, 4
 	imul	ecx, 132				; 00000084H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$ADD@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,7,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$ADD@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,7,0>
 
-; 156  : 	instructions[0x85] = &Cpu::ADD<RegA,RegL,0>;
+; 157  : 	instructions[0x85] = &Cpu::ADD<RegA,RegL,0>;
 
 	mov	eax, 4
 	imul	eax, 133				; 00000085H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$ADD@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,6,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$ADD@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,6,0>
 
-; 157  : 	instructions[0x86] = &Cpu::ADD<RegA,RegHL,1>;
+; 158  : 	instructions[0x86] = &Cpu::ADD<RegA,RegHL,1>;
 
 	mov	edx, 4
 	imul	edx, 134				; 00000086H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$ADD@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,3,1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$ADD@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,3,1>
 
-; 158  : 	instructions[0x87] = &Cpu::ADD<RegA,RegA,0>;
+; 159  : 	instructions[0x87] = &Cpu::ADD<RegA,RegA,0>;
 
 	mov	ecx, 4
 	imul	ecx, 135				; 00000087H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$ADD@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,1,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$ADD@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,1,0>
 
-; 159  : 	instructions[0x88] = &Cpu::ADC<RegA,RegB,0>;
+; 160  : 	instructions[0x88] = &Cpu::ADC<RegA,RegB,0>;
 
 	mov	eax, 4
 	imul	eax, 136				; 00000088H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$ADC@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,3,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$ADC@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,3,0>
 
-; 160  : 	instructions[0x89] = &Cpu::ADC<RegA,RegC,0>;
+; 161  : 	instructions[0x89] = &Cpu::ADC<RegA,RegC,0>;
 
 	mov	edx, 4
 	imul	edx, 137				; 00000089H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$ADC@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,2,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$ADC@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,2,0>
 
-; 161  : 	instructions[0x8A] = &Cpu::ADC<RegA,RegD,0>;
+; 162  : 	instructions[0x8A] = &Cpu::ADC<RegA,RegD,0>;
 
 	mov	ecx, 4
 	imul	ecx, 138				; 0000008aH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$ADC@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,5,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$ADC@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,5,0>
 
-; 162  : 	instructions[0x8B] = &Cpu::ADC<RegA,RegE,0>;
+; 163  : 	instructions[0x8B] = &Cpu::ADC<RegA,RegE,0>;
 
 	mov	eax, 4
 	imul	eax, 139				; 0000008bH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$ADC@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,4,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$ADC@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,4,0>
 
-; 163  : 	instructions[0x8C] = &Cpu::ADC<RegA,RegH,0>;
+; 164  : 	instructions[0x8C] = &Cpu::ADC<RegA,RegH,0>;
 
 	mov	edx, 4
 	imul	edx, 140				; 0000008cH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$ADC@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,7,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$ADC@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,7,0>
 
-; 164  : 	instructions[0x8D] = &Cpu::ADC<RegA,RegL,0>;
+; 165  : 	instructions[0x8D] = &Cpu::ADC<RegA,RegL,0>;
 
 	mov	ecx, 4
 	imul	ecx, 141				; 0000008dH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$ADC@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,6,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$ADC@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,6,0>
 
-; 165  : 	instructions[0x8E] = &Cpu::ADC<RegA,RegHL,1>;
+; 166  : 	instructions[0x8E] = &Cpu::ADC<RegA,RegHL,1>;
 
 	mov	eax, 4
 	imul	eax, 142				; 0000008eH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$ADC@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,3,1>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$ADC@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,3,1>
 
-; 166  : 	instructions[0x8F] = &Cpu::ADC<RegA,RegA,0>;
+; 167  : 	instructions[0x8F] = &Cpu::ADC<RegA,RegA,0>;
 
 	mov	edx, 4
 	imul	edx, 143				; 0000008fH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$ADC@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,1,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$ADC@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,1,0>
 
-; 167  : 
-; 168  : 	instructions[0x90] = &Cpu::SUB<RegA,RegB,0>;
+; 168  : 
+; 169  : 	instructions[0x90] = &Cpu::SUB<RegA,RegB,0>;
 
 	mov	ecx, 4
 	imul	ecx, 144				; 00000090H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$SUB@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,3,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$SUB@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,3,0>
 
-; 169  : 	instructions[0x91] = &Cpu::SUB<RegA,RegC,0>;
+; 170  : 	instructions[0x91] = &Cpu::SUB<RegA,RegC,0>;
 
 	mov	eax, 4
 	imul	eax, 145				; 00000091H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$SUB@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,2,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$SUB@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,2,0>
 
-; 170  : 	instructions[0x92] = &Cpu::SUB<RegA,RegD,0>;
+; 171  : 	instructions[0x92] = &Cpu::SUB<RegA,RegD,0>;
 
 	mov	edx, 4
 	imul	edx, 146				; 00000092H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$SUB@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,5,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$SUB@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,5,0>
 
-; 171  : 	instructions[0x93] = &Cpu::SUB<RegA,RegE,0>;
+; 172  : 	instructions[0x93] = &Cpu::SUB<RegA,RegE,0>;
 
 	mov	ecx, 4
 	imul	ecx, 147				; 00000093H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$SUB@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,4,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$SUB@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,4,0>
 
-; 172  : 	instructions[0x94] = &Cpu::SUB<RegA,RegH,0>;
+; 173  : 	instructions[0x94] = &Cpu::SUB<RegA,RegH,0>;
 
 	mov	eax, 4
 	imul	eax, 148				; 00000094H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$SUB@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,7,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$SUB@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,7,0>
 
-; 173  : 	instructions[0x95] = &Cpu::SUB<RegA,RegL,0>;
+; 174  : 	instructions[0x95] = &Cpu::SUB<RegA,RegL,0>;
 
 	mov	edx, 4
 	imul	edx, 149				; 00000095H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$SUB@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,6,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$SUB@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,6,0>
 
-; 174  : 	instructions[0x96] = &Cpu::SUB<RegA,RegHL,1>;
+; 175  : 	instructions[0x96] = &Cpu::SUB<RegA,RegHL,1>;
 
 	mov	ecx, 4
 	imul	ecx, 150				; 00000096H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$SUB@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,3,1>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$SUB@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,3,1>
 
-; 175  : 	instructions[0x97] = &Cpu::SUB<RegA,RegA,0>;
+; 176  : 	instructions[0x97] = &Cpu::SUB<RegA,RegA,0>;
 
 	mov	eax, 4
 	imul	eax, 151				; 00000097H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$SUB@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,1,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$SUB@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,1,0>
 
-; 176  : 	instructions[0x98] = &Cpu::SBC<RegA,RegB,0>;
+; 177  : 	instructions[0x98] = &Cpu::SBC<RegA,RegB,0>;
 
 	mov	edx, 4
 	imul	edx, 152				; 00000098H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$SBC@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,3,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$SBC@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,3,0>
 
-; 177  : 	instructions[0x99] = &Cpu::SBC<RegA,RegC,0>;
+; 178  : 	instructions[0x99] = &Cpu::SBC<RegA,RegC,0>;
 
 	mov	ecx, 4
 	imul	ecx, 153				; 00000099H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$SBC@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,2,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$SBC@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,2,0>
 
-; 178  : 	instructions[0x9A] = &Cpu::SBC<RegA,RegD,0>;
+; 179  : 	instructions[0x9A] = &Cpu::SBC<RegA,RegD,0>;
 
 	mov	eax, 4
 	imul	eax, 154				; 0000009aH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$SBC@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,5,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$SBC@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,5,0>
 
-; 179  : 	instructions[0x9B] = &Cpu::SBC<RegA,RegE,0>;
+; 180  : 	instructions[0x9B] = &Cpu::SBC<RegA,RegE,0>;
 
 	mov	edx, 4
 	imul	edx, 155				; 0000009bH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$SBC@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,4,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$SBC@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,4,0>
 
-; 180  : 	instructions[0x9C] = &Cpu::SBC<RegA,RegH,0>;
+; 181  : 	instructions[0x9C] = &Cpu::SBC<RegA,RegH,0>;
 
 	mov	ecx, 4
 	imul	ecx, 156				; 0000009cH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$SBC@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,7,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$SBC@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,7,0>
 
-; 181  : 	instructions[0x9D] = &Cpu::SBC<RegA,RegL,0>;
+; 182  : 	instructions[0x9D] = &Cpu::SBC<RegA,RegL,0>;
 
 	mov	eax, 4
 	imul	eax, 157				; 0000009dH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$SBC@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,6,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$SBC@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,6,0>
 
-; 182  : 	instructions[0x9E] = &Cpu::SBC<RegA,RegHL,1>;
+; 183  : 	instructions[0x9E] = &Cpu::SBC<RegA,RegHL,1>;
 
 	mov	edx, 4
 	imul	edx, 158				; 0000009eH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$SBC@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,3,1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$SBC@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,3,1>
 
-; 183  : 	instructions[0x9F] = &Cpu::SBC<RegA,RegA,0>;
+; 184  : 	instructions[0x9F] = &Cpu::SBC<RegA,RegA,0>;
 
 	mov	ecx, 4
 	imul	ecx, 159				; 0000009fH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$SBC@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,1,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$SBC@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,1,0>
 
-; 184  : 
-; 185  : 	instructions[0xA0] = &Cpu::AND<RegA,RegB,0>;
+; 185  : 
+; 186  : 	instructions[0xA0] = &Cpu::AND<RegA,RegB,0>;
 
 	mov	eax, 4
 	imul	eax, 160				; 000000a0H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$AND@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,3,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$AND@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,3,0>
 
-; 186  : 	instructions[0xA1] = &Cpu::AND<RegA,RegC,0>;
+; 187  : 	instructions[0xA1] = &Cpu::AND<RegA,RegC,0>;
 
 	mov	edx, 4
 	imul	edx, 161				; 000000a1H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$AND@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,2,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$AND@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,2,0>
 
-; 187  : 	instructions[0xA2] = &Cpu::AND<RegA,RegD,0>;
+; 188  : 	instructions[0xA2] = &Cpu::AND<RegA,RegD,0>;
 
 	mov	ecx, 4
 	imul	ecx, 162				; 000000a2H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$AND@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,5,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$AND@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,5,0>
 
-; 188  : 	instructions[0xA3] = &Cpu::AND<RegA,RegE,0>;
+; 189  : 	instructions[0xA3] = &Cpu::AND<RegA,RegE,0>;
 
 	mov	eax, 4
 	imul	eax, 163				; 000000a3H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$AND@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,4,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$AND@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,4,0>
 
-; 189  : 	instructions[0xA4] = &Cpu::AND<RegA,RegH,0>;
+; 190  : 	instructions[0xA4] = &Cpu::AND<RegA,RegH,0>;
 
 	mov	edx, 4
 	imul	edx, 164				; 000000a4H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$AND@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,7,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$AND@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,7,0>
 
-; 190  : 	instructions[0xA5] = &Cpu::AND<RegA,RegL,0>;
+; 191  : 	instructions[0xA5] = &Cpu::AND<RegA,RegL,0>;
 
 	mov	ecx, 4
 	imul	ecx, 165				; 000000a5H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$AND@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,6,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$AND@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,6,0>
 
-; 191  : 	instructions[0xA6] = &Cpu::AND<RegA,RegHL,1>;
+; 192  : 	instructions[0xA6] = &Cpu::AND<RegA,RegHL,1>;
 
 	mov	eax, 4
 	imul	eax, 166				; 000000a6H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$AND@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,3,1>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$AND@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,3,1>
 
-; 192  : 	instructions[0xA7] = &Cpu::AND<RegA,RegA,0>;
+; 193  : 	instructions[0xA7] = &Cpu::AND<RegA,RegA,0>;
 
 	mov	edx, 4
 	imul	edx, 167				; 000000a7H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$AND@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,1,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$AND@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,1,0>
 
-; 193  : 	instructions[0xA8] = &Cpu::XOR<RegA,RegB,0>;
+; 194  : 	instructions[0xA8] = &Cpu::XOR<RegA,RegB,0>;
 
 	mov	ecx, 4
 	imul	ecx, 168				; 000000a8H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$XOR@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,3,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$XOR@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,3,0>
 
-; 194  : 	instructions[0xA9] = &Cpu::XOR<RegA,RegC,0>;
+; 195  : 	instructions[0xA9] = &Cpu::XOR<RegA,RegC,0>;
 
 	mov	eax, 4
 	imul	eax, 169				; 000000a9H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$XOR@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,2,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$XOR@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,2,0>
 
-; 195  : 	instructions[0xAA] = &Cpu::XOR<RegA,RegD,0>;
+; 196  : 	instructions[0xAA] = &Cpu::XOR<RegA,RegD,0>;
 
 	mov	edx, 4
 	imul	edx, 170				; 000000aaH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$XOR@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,5,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$XOR@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,5,0>
 
-; 196  : 	instructions[0xAB] = &Cpu::XOR<RegA,RegE,0>;
+; 197  : 	instructions[0xAB] = &Cpu::XOR<RegA,RegE,0>;
 
 	mov	ecx, 4
 	imul	ecx, 171				; 000000abH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$XOR@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,4,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$XOR@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,4,0>
 
-; 197  : 	instructions[0xAC] = &Cpu::XOR<RegA,RegH,0>;
+; 198  : 	instructions[0xAC] = &Cpu::XOR<RegA,RegH,0>;
 
 	mov	eax, 4
 	imul	eax, 172				; 000000acH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$XOR@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,7,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$XOR@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,7,0>
 
-; 198  : 	instructions[0xAD] = &Cpu::XOR<RegA,RegL,0>;
+; 199  : 	instructions[0xAD] = &Cpu::XOR<RegA,RegL,0>;
 
 	mov	edx, 4
 	imul	edx, 173				; 000000adH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$XOR@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,6,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$XOR@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,6,0>
 
-; 199  : 	instructions[0xAE] = &Cpu::XOR<RegA,RegHL,1>;
+; 200  : 	instructions[0xAE] = &Cpu::XOR<RegA,RegHL,1>;
 
 	mov	ecx, 4
 	imul	ecx, 174				; 000000aeH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$XOR@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,3,1>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$XOR@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,3,1>
 
-; 200  : 	instructions[0xAF] = &Cpu::XOR<RegA,RegA,0>;
+; 201  : 	instructions[0xAF] = &Cpu::XOR<RegA,RegA,0>;
 
 	mov	eax, 4
 	imul	eax, 175				; 000000afH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$XOR@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,1,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$XOR@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,1,0>
 
-; 201  : 
-; 202  : 	instructions[0xB0] = &Cpu::OR<RegA,RegB,0>;
+; 202  : 
+; 203  : 	instructions[0xB0] = &Cpu::OR<RegA,RegB,0>;
 
 	mov	edx, 4
 	imul	edx, 176				; 000000b0H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$OR@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,3,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$OR@$00$02$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,3,0>
 
-; 203  : 	instructions[0xB1] = &Cpu::OR<RegA,RegC,0>;
+; 204  : 	instructions[0xB1] = &Cpu::OR<RegA,RegC,0>;
 
 	mov	ecx, 4
 	imul	ecx, 177				; 000000b1H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$OR@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,2,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$OR@$00$01$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,2,0>
 
-; 204  : 	instructions[0xB2] = &Cpu::OR<RegA,RegD,0>;
+; 205  : 	instructions[0xB2] = &Cpu::OR<RegA,RegD,0>;
 
 	mov	eax, 4
 	imul	eax, 178				; 000000b2H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$OR@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,5,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$OR@$00$04$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,5,0>
 
-; 205  : 	instructions[0xB3] = &Cpu::OR<RegA,RegE,0>;
+; 206  : 	instructions[0xB3] = &Cpu::OR<RegA,RegE,0>;
 
 	mov	edx, 4
 	imul	edx, 179				; 000000b3H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$OR@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,4,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$OR@$00$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,4,0>
 
-; 206  : 	instructions[0xB4] = &Cpu::OR<RegA,RegH,0>;
+; 207  : 	instructions[0xB4] = &Cpu::OR<RegA,RegH,0>;
 
 	mov	ecx, 4
 	imul	ecx, 180				; 000000b4H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$OR@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,7,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$OR@$00$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,7,0>
 
-; 207  : 	instructions[0xB5] = &Cpu::OR<RegA,RegL,0>;
+; 208  : 	instructions[0xB5] = &Cpu::OR<RegA,RegL,0>;
 
 	mov	eax, 4
 	imul	eax, 181				; 000000b5H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$OR@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,6,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$OR@$00$05$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,6,0>
 
-; 208  : 	instructions[0xB6] = &Cpu::OR<RegA,RegHL,1>;
+; 209  : 	instructions[0xB6] = &Cpu::OR<RegA,RegHL,1>;
 
 	mov	edx, 4
 	imul	edx, 182				; 000000b6H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$OR@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,3,1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$OR@$00$02$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,3,1>
 
-; 209  : 	instructions[0xB7] = &Cpu::OR<RegA,RegA,0>;
+; 210  : 	instructions[0xB7] = &Cpu::OR<RegA,RegA,0>;
 
 	mov	ecx, 4
 	imul	ecx, 183				; 000000b7H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$OR@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,1,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$OR@$00$00$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,1,0>
 
-; 210  :   instructions[0xB8] = &Cpu::CP_reg<RegB>;
+; 211  :   instructions[0xB8] = &Cpu::CP_reg<RegB>;
 
 	mov	eax, 4
 	imul	eax, 184				; 000000b8H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$CP_reg@$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<3>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$CP_reg@$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<3>
 
-; 211  :   instructions[0xB9] = &Cpu::CP_reg<RegC>;
+; 212  :   instructions[0xB9] = &Cpu::CP_reg<RegC>;
 
 	mov	edx, 4
 	imul	edx, 185				; 000000b9H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$CP_reg@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<2>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$CP_reg@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<2>
 
-; 212  :   instructions[0xBA] = &Cpu::CP_reg<RegD>;
+; 213  :   instructions[0xBA] = &Cpu::CP_reg<RegD>;
 
 	mov	ecx, 4
 	imul	ecx, 186				; 000000baH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$CP_reg@$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<5>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$CP_reg@$04@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<5>
 
-; 213  :   instructions[0xBB] = &Cpu::CP_reg<RegE>;
+; 214  :   instructions[0xBB] = &Cpu::CP_reg<RegE>;
 
 	mov	eax, 4
 	imul	eax, 187				; 000000bbH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$CP_reg@$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<4>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$CP_reg@$03@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<4>
 
-; 214  :   instructions[0xBC] = &Cpu::CP_reg<RegH>;
+; 215  :   instructions[0xBC] = &Cpu::CP_reg<RegH>;
 
 	mov	edx, 4
 	imul	edx, 188				; 000000bcH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$CP_reg@$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<7>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$CP_reg@$06@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<7>
 
-; 215  :   instructions[0xBD] = &Cpu::CP_reg<RegL>;
+; 216  :   instructions[0xBD] = &Cpu::CP_reg<RegL>;
 
 	mov	ecx, 4
 	imul	ecx, 189				; 000000bdH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$CP_reg@$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<6>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$CP_reg@$05@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<6>
 
-; 216  :   instructions[0xBE] = &Cpu::CP_HL;
+; 217  :   instructions[0xBE] = &Cpu::CP_HL;
 
 	mov	eax, 4
 	imul	eax, 190				; 000000beH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?CP_HL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_HL
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?CP_HL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_HL
 
-; 217  :   instructions[0xBF] = &Cpu::CP_reg<RegA>;
+; 218  :   instructions[0xBF] = &Cpu::CP_reg<RegA>;
 
 	mov	edx, 4
 	imul	edx, 191				; 000000bfH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$CP_reg@$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$CP_reg@$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_reg<1>
 
-; 218  : 	
-; 219  : 	instructions[0xC0] = &Cpu::RET_cc<CpuFlagsZ,1>;
+; 219  : 	
+; 220  : 	instructions[0xC0] = &Cpu::RET_cc<CpuFlagsZ,1>;
 
 	mov	ecx, 4
 	imul	ecx, 192				; 000000c0H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$RET_cc@$06$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RET_cc<7,1>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$RET_cc@$06$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RET_cc<7,1>
 
-; 220  : 	instructions[0xC1] = &Cpu::POP<RegBC>;
+; 221  : 	instructions[0xC1] = &Cpu::POP<RegBC>;
 
 	mov	eax, 4
 	imul	eax, 193				; 000000c1H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$POP@$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::POP<1>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$POP@$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::POP<1>
 
-; 221  : 	instructions[0xC2] = &Cpu::JP_cc<CpuFlagsZ,1>;
+; 222  : 	instructions[0xC2] = &Cpu::JP_cc<CpuFlagsZ,1>;
 
 	mov	edx, 4
 	imul	edx, 194				; 000000c2H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$JP_cc@$06$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JP_cc<7,1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$JP_cc@$06$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JP_cc<7,1>
 
-; 222  : 	instructions[0xC3] = &Cpu::JP;
+; 223  : 	instructions[0xC3] = &Cpu::JP;
 
 	mov	ecx, 4
 	imul	ecx, 195				; 000000c3H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?JP@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JP
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?JP@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JP
 
-; 223  : 	instructions[0xC4] = &Cpu::CALL_cc<CpuFlagsZ,1>;
+; 224  : 	instructions[0xC4] = &Cpu::CALL_cc<CpuFlagsZ,1>;
 
 	mov	eax, 4
 	imul	eax, 196				; 000000c4H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$CALL_cc@$06$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CALL_cc<7,1>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$CALL_cc@$06$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CALL_cc<7,1>
 
-; 224  : 	instructions[0xC5] = &Cpu::PUSH<RegBC>;
+; 225  : 	instructions[0xC5] = &Cpu::PUSH<RegBC>;
 
 	mov	edx, 4
 	imul	edx, 197				; 000000c5H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$PUSH@$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::PUSH<1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$PUSH@$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::PUSH<1>
 
-; 225  :   instructions[0xC6] = &Cpu::ADD<RegA,0,2>;
+; 226  :   instructions[0xC6] = &Cpu::ADD<RegA,0,2>;
 
 	mov	ecx, 4
 	imul	ecx, 198				; 000000c6H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$ADD@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,0,2>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$ADD@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD<1,0,2>
 
-; 226  : 	instructions[0xC7] = &Cpu::RST;
+; 227  : 	instructions[0xC7] = &Cpu::RST;
 
 	mov	eax, 4
 	imul	eax, 199				; 000000c7H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
 
-; 227  : 	instructions[0xC8] = &Cpu::RET_cc<CpuFlagsZ,0>;
+; 228  : 	instructions[0xC8] = &Cpu::RET_cc<CpuFlagsZ,0>;
 
 	mov	edx, 4
 	imul	edx, 200				; 000000c8H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$RET_cc@$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RET_cc<7,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$RET_cc@$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RET_cc<7,0>
 
-; 228  : 	instructions[0xC9] = &Cpu::RET;
+; 229  : 	instructions[0xC9] = &Cpu::RET;
 
 	mov	ecx, 4
 	imul	ecx, 201				; 000000c9H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?RET@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RET
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?RET@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RET
 
-; 229  : 	instructions[0xCA] = &Cpu::JP_cc<CpuFlagsZ,0>;
+; 230  : 	instructions[0xCA] = &Cpu::JP_cc<CpuFlagsZ,0>;
 
 	mov	eax, 4
 	imul	eax, 202				; 000000caH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$JP_cc@$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JP_cc<7,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$JP_cc@$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JP_cc<7,0>
 
-; 230  : 	instructions[0xCB] = &Cpu::PREFIX_CB;
+; 231  : 	instructions[0xCB] = &Cpu::PREFIX_CB;
 
 	mov	edx, 4
 	imul	edx, 203				; 000000cbH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ?PREFIX_CB@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::PREFIX_CB
+	mov	DWORD PTR [eax+edx+40], OFFSET ?PREFIX_CB@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::PREFIX_CB
 
-; 231  : 	instructions[0xCC] = &Cpu::CALL_cc<CpuFlagsZ,0>;
+; 232  : 	instructions[0xCC] = &Cpu::CALL_cc<CpuFlagsZ,0>;
 
 	mov	ecx, 4
 	imul	ecx, 204				; 000000ccH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$CALL_cc@$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CALL_cc<7,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$CALL_cc@$06$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CALL_cc<7,0>
 
-; 232  : 	instructions[0xCD] = &Cpu::CALL;
+; 233  : 	instructions[0xCD] = &Cpu::CALL;
 
 	mov	eax, 4
 	imul	eax, 205				; 000000cdH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?CALL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CALL
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?CALL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CALL
 
-; 233  : 	instructions[0xCE] = &Cpu::ADC<RegA,0,2>;
+; 234  : 	instructions[0xCE] = &Cpu::ADC<RegA,0,2>;
 
 	mov	edx, 4
 	imul	edx, 206				; 000000ceH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$ADC@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,0,2>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$ADC@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADC<1,0,2>
 
-; 234  : 	instructions[0xCF] = &Cpu::RST;
+; 235  : 	instructions[0xCF] = &Cpu::RST;
 
 	mov	ecx, 4
 	imul	ecx, 207				; 000000cfH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
 
-; 235  : 
-; 236  : 	instructions[0xD0] = &Cpu::RET_cc<CpuFlagsC,1>;
+; 236  : 
+; 237  : 	instructions[0xD0] = &Cpu::RET_cc<CpuFlagsC,1>;
 
 	mov	eax, 4
 	imul	eax, 208				; 000000d0H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$RET_cc@$03$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RET_cc<4,1>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$RET_cc@$03$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RET_cc<4,1>
 
-; 237  : 	instructions[0xD1] = &Cpu::POP<RegDE>;
+; 238  : 	instructions[0xD1] = &Cpu::POP<RegDE>;
 
 	mov	edx, 4
 	imul	edx, 209				; 000000d1H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$POP@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::POP<2>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$POP@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::POP<2>
 
-; 238  : 	instructions[0xD2] = &Cpu::JP_cc<CpuFlagsC,1>;
+; 239  : 	instructions[0xD2] = &Cpu::JP_cc<CpuFlagsC,1>;
 
 	mov	ecx, 4
 	imul	ecx, 210				; 000000d2H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$JP_cc@$03$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JP_cc<4,1>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$JP_cc@$03$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JP_cc<4,1>
 
-; 239  : 	instructions[0xD3] = &Cpu::ILLEGAL;
+; 240  : 	instructions[0xD3] = &Cpu::ILLEGAL;
 
 	mov	eax, 4
 	imul	eax, 211				; 000000d3H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
 
-; 240  : 	instructions[0xD4] = &Cpu::CALL_cc<CpuFlagsC,1>;
+; 241  : 	instructions[0xD4] = &Cpu::CALL_cc<CpuFlagsC,1>;
 
 	mov	edx, 4
 	imul	edx, 212				; 000000d4H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$CALL_cc@$03$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CALL_cc<4,1>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$CALL_cc@$03$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CALL_cc<4,1>
 
-; 241  : 	instructions[0xD5] = &Cpu::PUSH<RegDE>;
+; 242  : 	instructions[0xD5] = &Cpu::PUSH<RegDE>;
 
 	mov	ecx, 4
 	imul	ecx, 213				; 000000d5H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$PUSH@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::PUSH<2>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$PUSH@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::PUSH<2>
 
-; 242  :   instructions[0xD6] = &Cpu::SUB<RegA,0,2>;
+; 243  :   instructions[0xD6] = &Cpu::SUB<RegA,0,2>;
 
 	mov	eax, 4
 	imul	eax, 214				; 000000d6H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$SUB@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,0,2>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$SUB@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SUB<1,0,2>
 
-; 243  : 	instructions[0xD7] = &Cpu::RST;
+; 244  : 	instructions[0xD7] = &Cpu::RST;
 
 	mov	edx, 4
 	imul	edx, 215				; 000000d7H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
+	mov	DWORD PTR [eax+edx+40], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
 
-; 244  : 	instructions[0xD8] = &Cpu::RET_cc<CpuFlagsC,0>;
+; 245  : 	instructions[0xD8] = &Cpu::RET_cc<CpuFlagsC,0>;
 
 	mov	ecx, 4
 	imul	ecx, 216				; 000000d8H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$RET_cc@$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RET_cc<4,0>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$RET_cc@$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RET_cc<4,0>
 
-; 245  : 	instructions[0xD9] = &Cpu::RETI;
+; 246  : 	instructions[0xD9] = &Cpu::RETI;
 
 	mov	eax, 4
 	imul	eax, 217				; 000000d9H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?RETI@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RETI
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?RETI@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RETI
 
-; 246  : 	instructions[0xDA] = &Cpu::JP_cc<CpuFlagsC,0>;
+; 247  : 	instructions[0xDA] = &Cpu::JP_cc<CpuFlagsC,0>;
 
 	mov	edx, 4
 	imul	edx, 218				; 000000daH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$JP_cc@$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JP_cc<4,0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$JP_cc@$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JP_cc<4,0>
 
-; 247  : 	instructions[0xDB] = &Cpu::ILLEGAL;
+; 248  : 	instructions[0xDB] = &Cpu::ILLEGAL;
 
 	mov	ecx, 4
 	imul	ecx, 219				; 000000dbH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
 
-; 248  : 	instructions[0xDC] = &Cpu::CALL_cc<CpuFlagsC,0>;
+; 249  : 	instructions[0xDC] = &Cpu::CALL_cc<CpuFlagsC,0>;
 
 	mov	eax, 4
 	imul	eax, 220				; 000000dcH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$CALL_cc@$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CALL_cc<4,0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$CALL_cc@$03$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CALL_cc<4,0>
 
-; 249  : 	instructions[0xDD] = &Cpu::ILLEGAL;
+; 250  : 	instructions[0xDD] = &Cpu::ILLEGAL;
 
 	mov	edx, 4
 	imul	edx, 221				; 000000ddH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
+	mov	DWORD PTR [eax+edx+40], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
 
-; 250  : 	instructions[0xDE] = &Cpu::SBC<RegA,0,2>;
+; 251  : 	instructions[0xDE] = &Cpu::SBC<RegA,0,2>;
 
 	mov	ecx, 4
 	imul	ecx, 222				; 000000deH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$SBC@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,0,2>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$SBC@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::SBC<1,0,2>
 
-; 251  : 	instructions[0xDF] = &Cpu::RST;
+; 252  : 	instructions[0xDF] = &Cpu::RST;
 
 	mov	eax, 4
 	imul	eax, 223				; 000000dfH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
 
-; 252  : 	
-; 253  : 	instructions[0xE0] = &Cpu::LD<0,RegA,12>;
+; 253  : 	
+; 254  : 	instructions[0xE0] = &Cpu::LD<0,RegA,12>;
 
 	mov	edx, 4
 	imul	edx, 224				; 000000e0H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LD@$0A@$00$0M@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<0,1,12>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LD@$0A@$00$0M@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<0,1,12>
 
-; 254  : 	instructions[0xE1] = &Cpu::POP<RegHL>;
+; 255  : 	instructions[0xE1] = &Cpu::POP<RegHL>;
 
 	mov	ecx, 4
 	imul	ecx, 225				; 000000e1H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$POP@$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::POP<3>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$POP@$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::POP<3>
 
-; 255  : 	instructions[0xE2] = &Cpu::LD$FF00rr<RegC,RegA>;
+; 256  : 	instructions[0xE2] = &Cpu::LD$FF00rr<RegC,RegA>;
 
 	mov	eax, 4
 	imul	eax, 226				; 000000e2H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LD$FF00rr@$01$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$FF00rr<2,1>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LD$FF00rr@$01$00@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD$FF00rr<2,1>
 
-; 256  : 	instructions[0xE3] = &Cpu::ILLEGAL;
+; 257  : 	instructions[0xE3] = &Cpu::ILLEGAL;
 
 	mov	edx, 4
 	imul	edx, 227				; 000000e3H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
+	mov	DWORD PTR [eax+edx+40], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
 
-; 257  : 	instructions[0xE4] = &Cpu::ILLEGAL;
+; 258  : 	instructions[0xE4] = &Cpu::ILLEGAL;
 
 	mov	ecx, 4
 	imul	ecx, 228				; 000000e4H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
 
-; 258  : 	instructions[0xE5] = &Cpu::PUSH<RegHL>;
+; 259  : 	instructions[0xE5] = &Cpu::PUSH<RegHL>;
 
 	mov	eax, 4
 	imul	eax, 229				; 000000e5H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$PUSH@$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::PUSH<3>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$PUSH@$02@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::PUSH<3>
 
-; 259  :   instructions[0xE6] = &Cpu::AND<RegA,0,2>;
+; 260  :   instructions[0xE6] = &Cpu::AND<RegA,0,2>;
 
 	mov	edx, 4
 	imul	edx, 230				; 000000e6H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$AND@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,0,2>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$AND@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::AND<1,0,2>
 
-; 260  : 	instructions[0xE7] = &Cpu::RST;
+; 261  : 	instructions[0xE7] = &Cpu::RST;
 
 	mov	ecx, 4
 	imul	ecx, 231				; 000000e7H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
 
-; 261  : 	instructions[0xE8] = &Cpu::ADD_SPr8;
+; 262  : 	instructions[0xE8] = &Cpu::ADD_SPr8;
 
 	mov	eax, 4
 	imul	eax, 232				; 000000e8H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?ADD_SPr8@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD_SPr8
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?ADD_SPr8@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ADD_SPr8
 
-; 262  : 	instructions[0xE9] = &Cpu::JP_HL;
+; 263  : 	instructions[0xE9] = &Cpu::JP_HL;
 
 	mov	edx, 4
 	imul	edx, 233				; 000000e9H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ?JP_HL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JP_HL
+	mov	DWORD PTR [eax+edx+40], OFFSET ?JP_HL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::JP_HL
 
-; 263  : 	instructions[0xEA] = &Cpu::LD<0,RegA,14>;
+; 264  : 	instructions[0xEA] = &Cpu::LD<0,RegA,14>;
 
 	mov	ecx, 4
 	imul	ecx, 234				; 000000eaH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LD@$0A@$00$0O@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<0,1,14>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LD@$0A@$00$0O@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<0,1,14>
 
-; 264  : 	instructions[0xEB] = &Cpu::ILLEGAL;
+; 265  : 	instructions[0xEB] = &Cpu::ILLEGAL;
 
 	mov	eax, 4
 	imul	eax, 235				; 000000ebH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
 
-; 265  : 	instructions[0xEC] = &Cpu::ILLEGAL;
+; 266  : 	instructions[0xEC] = &Cpu::ILLEGAL;
 
 	mov	edx, 4
 	imul	edx, 236				; 000000ecH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
+	mov	DWORD PTR [eax+edx+40], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
 
-; 266  : 	instructions[0xED] = &Cpu::ILLEGAL;
+; 267  : 	instructions[0xED] = &Cpu::ILLEGAL;
 
 	mov	ecx, 4
 	imul	ecx, 237				; 000000edH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
 
-; 267  : 	instructions[0xEE] = &Cpu::XOR<RegA,0,2>;
+; 268  : 	instructions[0xEE] = &Cpu::XOR<RegA,0,2>;
 
 	mov	eax, 4
 	imul	eax, 238				; 000000eeH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$XOR@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,0,2>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$XOR@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::XOR<1,0,2>
 
-; 268  : 	instructions[0xEF] = &Cpu::RST;
+; 269  : 	instructions[0xEF] = &Cpu::RST;
 
 	mov	edx, 4
 	imul	edx, 239				; 000000efH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
+	mov	DWORD PTR [eax+edx+40], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
 
-; 269  : 
-; 270  : 	instructions[0xF0] = &Cpu::LD<RegA,0,13>;
+; 270  : 
+; 271  : 	instructions[0xF0] = &Cpu::LD<RegA,0,13>;
 
 	mov	ecx, 4
 	imul	ecx, 240				; 000000f0H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$LD@$00$0A@$0N@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<1,0,13>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$LD@$00$0A@$0N@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<1,0,13>
 
-; 271  : 	instructions[0xF1] = &Cpu::POP<RegAF>;
+; 272  : 	instructions[0xF1] = &Cpu::POP<RegAF>;
 
 	mov	eax, 4
 	imul	eax, 241				; 000000f1H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$POP@$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::POP<0>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$POP@$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::POP<0>
 
-; 272  : 	instructions[0xF2] = &Cpu::LDr$FF00r<RegA,RegC>;
+; 273  : 	instructions[0xF2] = &Cpu::LDr$FF00r<RegA,RegC>;
 
 	mov	edx, 4
 	imul	edx, 242				; 000000f2H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$LDr$FF00r@$00$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$FF00r<1,2>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$LDr$FF00r@$00$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDr$FF00r<1,2>
 
-; 273  : 	instructions[0xF3] = &Cpu::DI;
+; 274  : 	instructions[0xF3] = &Cpu::DI;
 
 	mov	ecx, 4
 	imul	ecx, 243				; 000000f3H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?DI@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DI
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?DI@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::DI
 
-; 274  : 	instructions[0xF4] = &Cpu::ILLEGAL;
+; 275  : 	instructions[0xF4] = &Cpu::ILLEGAL;
 
 	mov	eax, 4
 	imul	eax, 244				; 000000f4H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
 
-; 275  : 	instructions[0xF5] = &Cpu::PUSH<RegAF>;
+; 276  : 	instructions[0xF5] = &Cpu::PUSH<RegAF>;
 
 	mov	edx, 4
 	imul	edx, 245				; 000000f5H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ??$PUSH@$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::PUSH<0>
+	mov	DWORD PTR [eax+edx+40], OFFSET ??$PUSH@$0A@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::PUSH<0>
 
-; 276  :   instructions[0xF6] = &Cpu::OR<RegA,0,2>;
+; 277  :   instructions[0xF6] = &Cpu::OR<RegA,0,2>;
 
 	mov	ecx, 4
 	imul	ecx, 246				; 000000f6H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ??$OR@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,0,2>
+	mov	DWORD PTR [edx+ecx+40], OFFSET ??$OR@$00$0A@$01@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::OR<1,0,2>
 
-; 277  : 	instructions[0xF7] = &Cpu::RST;
+; 278  : 	instructions[0xF7] = &Cpu::RST;
 
 	mov	eax, 4
 	imul	eax, 247				; 000000f7H
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
 
-; 278  : 	instructions[0xF8] = &Cpu::LDHLSPr8;
+; 279  : 	instructions[0xF8] = &Cpu::LDHLSPr8;
 
 	mov	edx, 4
 	imul	edx, 248				; 000000f8H
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ?LDHLSPr8@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDHLSPr8
+	mov	DWORD PTR [eax+edx+40], OFFSET ?LDHLSPr8@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDHLSPr8
 
-; 279  : 	instructions[0xF9] = &Cpu::LDSPHL;
+; 280  : 	instructions[0xF9] = &Cpu::LDSPHL;
 
 	mov	ecx, 4
 	imul	ecx, 249				; 000000f9H
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?LDSPHL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDSPHL
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?LDSPHL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LDSPHL
 
-; 280  : 	instructions[0xFA] = &Cpu::LD<RegA,0,15>;
+; 281  : 	instructions[0xFA] = &Cpu::LD<RegA,0,15>;
 
 	mov	eax, 4
 	imul	eax, 250				; 000000faH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ??$LD@$00$0A@$0P@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<1,0,15>
+	mov	DWORD PTR [ecx+eax+40], OFFSET ??$LD@$00$0A@$0P@@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::LD<1,0,15>
 
-; 281  : 	instructions[0xFB] = &Cpu::EI;
+; 282  : 	instructions[0xFB] = &Cpu::EI;
 
 	mov	edx, 4
 	imul	edx, 251				; 000000fbH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ?EI@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::EI
+	mov	DWORD PTR [eax+edx+40], OFFSET ?EI@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::EI
 
-; 282  : 	instructions[0xFC] = &Cpu::ILLEGAL;
+; 283  : 	instructions[0xFC] = &Cpu::ILLEGAL;
 
 	mov	ecx, 4
 	imul	ecx, 252				; 000000fcH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
 
-; 283  : 	instructions[0xFD] = &Cpu::ILLEGAL;
+; 284  : 	instructions[0xFD] = &Cpu::ILLEGAL;
 
 	mov	eax, 4
 	imul	eax, 253				; 000000fdH
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [ecx+eax+32], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
+	mov	DWORD PTR [ecx+eax+40], OFFSET ?ILLEGAL@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::ILLEGAL
 
-; 284  : 	instructions[0xFE] = &Cpu::CP_d8;
+; 285  : 	instructions[0xFE] = &Cpu::CP_d8;
 
 	mov	edx, 4
 	imul	edx, 254				; 000000feH
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+edx+32], OFFSET ?CP_d8@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_d8
+	mov	DWORD PTR [eax+edx+40], OFFSET ?CP_d8@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::CP_d8
 
-; 285  :   instructions[0xFF] = &Cpu::RST;
+; 286  :   instructions[0xFF] = &Cpu::RST;
 
 	mov	ecx, 4
 	imul	ecx, 255				; 000000ffH
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+ecx+32], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
+	mov	DWORD PTR [edx+ecx+40], OFFSET ?RST@Cpu@gb@emulation@@AAEXXZ ; emulation::gb::Cpu::RST
 
-; 286  : 	//-checked above
-; 287  : }
+; 287  : 	//-checked above
+; 288  : }
 
 	mov	eax, DWORD PTR _this$[ebp]
 	add	esp, 4
@@ -29161,6 +29826,28 @@ _this$ = -4						; size = 4
 	pop	ebp
 	ret	0
 ??0Cpu@gb@emulation@@QAE@XZ ENDP			; emulation::gb::Cpu::Cpu
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\lcd_driver.h
+;	COMDAT ?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ PROC ; emulation::gb::LCDDriver::lcdc, COMDAT
+; _this$ = ecx
+
+; 52   : 	const LCDControlRegister& lcdc() { return lcdc_; }
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 20					; 00000014H
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?lcdc@LCDDriver@gb@emulation@@QAEABTLCDControlRegister@23@XZ ENDP ; emulation::gb::LCDDriver::lcdc
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\memory.h

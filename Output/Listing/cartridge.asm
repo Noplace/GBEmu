@@ -58,24 +58,24 @@ PUBLIC	?is_steady@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_
 PUBLIC	?is_signed@?$numeric_limits@J@std@@2_NB		; std::numeric_limits<long>::is_signed
 PUBLIC	?digits@?$numeric_limits@J@std@@2HB		; std::numeric_limits<long>::digits
 PUBLIC	?digits10@?$numeric_limits@J@std@@2HB		; std::numeric_limits<long>::digits10
-PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?is_signed@?$numeric_limits@K@std@@2_NB		; std::numeric_limits<unsigned long>::is_signed
 PUBLIC	?digits@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits
-PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
 PUBLIC	?digits10@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits10
-PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
-PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
-PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
-PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?is_signed@?$numeric_limits@_J@std@@2_NB	; std::numeric_limits<__int64>::is_signed
 PUBLIC	?digits@?$numeric_limits@_J@std@@2HB		; std::numeric_limits<__int64>::digits
 PUBLIC	?digits10@?$numeric_limits@_J@std@@2HB		; std::numeric_limits<__int64>::digits10
 PUBLIC	?value@?$integral_constant@H$0A@@std@@2HB	; std::integral_constant<int,0>::value
+PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?is_signed@?$numeric_limits@_K@std@@2_NB	; std::numeric_limits<unsigned __int64>::is_signed
 PUBLIC	?digits@?$numeric_limits@_K@std@@2HB		; std::numeric_limits<unsigned __int64>::digits
 PUBLIC	?digits10@?$numeric_limits@_K@std@@2HB		; std::numeric_limits<unsigned __int64>::digits10
+PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
+PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
+PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?digits@?$numeric_limits@M@std@@2HB		; std::numeric_limits<float>::digits
+PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
 PUBLIC	?digits10@?$numeric_limits@M@std@@2HB		; std::numeric_limits<float>::digits10
+PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?max_digits10@?$numeric_limits@M@std@@2HB	; std::numeric_limits<float>::max_digits10
 PUBLIC	?_S_cancelBitsMask@_TaskCollectionBase@details@Concurrency@@1IB ; Concurrency::details::_TaskCollectionBase::_S_cancelBitsMask
 PUBLIC	?max_exponent@?$numeric_limits@M@std@@2HB	; std::numeric_limits<float>::max_exponent
@@ -721,13 +721,33 @@ CONST	ENDS
 CONST	SEGMENT
 ?max_digits10@?$numeric_limits@M@std@@2HB DD 09H	; std::numeric_limits<float>::max_digits10
 CONST	ENDS
+;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
+CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@M@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@M@std@@2HB DD 06H		; std::numeric_limits<float>::digits10
 CONST	ENDS
+;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
+CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@M@std@@2HB
 CONST	SEGMENT
 ?digits@?$numeric_limits@M@std@@2HB DD 018H		; std::numeric_limits<float>::digits
+CONST	ENDS
+;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@_K@std@@2HB
 CONST	SEGMENT
@@ -740,6 +760,10 @@ CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@_K@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@_K@std@@2_NB DB 00H		; std::numeric_limits<unsigned __int64>::is_signed
+CONST	ENDS
+;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
+CONST	SEGMENT
+?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?value@?$integral_constant@H$0A@@std@@2HB
 CONST	SEGMENT
@@ -757,29 +781,9 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@_J@std@@2_NB DB 01H		; std::numeric_limits<__int64>::is_signed
 CONST	ENDS
-;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
-CONST	ENDS
-;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
-CONST	ENDS
-;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
-CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@K@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@K@std@@2HB DD 09H		; std::numeric_limits<unsigned long>::digits10
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@K@std@@2HB
 CONST	SEGMENT
@@ -788,10 +792,6 @@ CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@K@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@K@std@@2_NB DB 00H		; std::numeric_limits<unsigned long>::is_signed
-CONST	ENDS
-;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
-CONST	SEGMENT
-?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@J@std@@2HB
 CONST	SEGMENT
@@ -865,6 +865,50 @@ CONST	ENDS
 CONST	SEGMENT
 ?_G1@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB DQ 0000000000000064H ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G1
 CONST	ENDS
+CONST	SEGMENT
+$SG153812 DB	'Code\emulation\gb\cartridge.cpp', 00H
+$SG153821 DB	'Code\emulation\gb\cartridge.cpp', 00H
+$SG153825 DB	'Code\emulation\gb\cartridge.cpp', 00H
+$SG153829 DB	'Code\emulation\gb\cartridge.cpp', 00H
+$SG153845 DB	'%s.ram', 00H
+	ORG $+1
+$SG153851 DB	'%s.ram', 00H
+	ORG $+1
+$SG153853 DB	'wb', 00H
+	ORG $+1
+_dutycycletable DB 00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@G@std@@2HB
 CONST	SEGMENT
 ?digits@?$numeric_limits@G@std@@2HB DD 010H		; std::numeric_limits<unsigned short>::digits
@@ -908,11 +952,6 @@ CONST	ENDS
 ;	COMDAT ?value@?$_GcdX@$0GE@$0A@@std@@2_JB
 CONST	SEGMENT
 ?value@?$_GcdX@$0GE@$0A@@std@@2_JB DQ 0000000000000064H	; std::_GcdX<100,0>::value
-CONST	ENDS
-CONST	SEGMENT
-$SG130226 DB	'Code\emulation\gb\cartridge.cpp', 00H
-$SG130231 DB	'Code\emulation\gb\cartridge.cpp', 00H
-$SG130236 DB	'Code\emulation\gb\cartridge.cpp', 00H
 CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@F@std@@2HB
 CONST	SEGMENT
@@ -997,14 +1036,19 @@ CONST	ENDS
 PUBLIC	??0_Ignore@std@@QAE@XZ				; std::_Ignore::_Ignore
 PUBLIC	?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
 PUBLIC	?rom_size_bytes@CartridgeHeader@gb@emulation@@QAEIXZ ; emulation::gb::CartridgeHeader::rom_size_bytes
+PUBLIC	?ram_size_bytes@CartridgeHeader@gb@emulation@@QAEIXZ ; emulation::gb::CartridgeHeader::ram_size_bytes
 PUBLIC	?Initialize@Cartridge@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Cartridge::Initialize
 PUBLIC	?Deinitialize@Cartridge@gb@emulation@@UAEXXZ	; emulation::gb::Cartridge::Deinitialize
 PUBLIC	?LoadFile@Cartridge@gb@emulation@@QAEXPBDPAUCartridgeHeader@23@@Z ; emulation::gb::Cartridge::LoadFile
+PUBLIC	?LoadRam@Cartridge@gb@emulation@@QAEXXZ		; emulation::gb::Cartridge::LoadRam
+PUBLIC	?SaveRam@Cartridge@gb@emulation@@QAEXXZ		; emulation::gb::Cartridge::SaveRam
 PUBLIC	?rom@Cartridge@gb@emulation@@QAEPBEXZ		; emulation::gb::Cartridge::rom
 PUBLIC	?Read@Cartridge@gb@emulation@@QAEEG@Z		; emulation::gb::Cartridge::Read
 PUBLIC	?Write@Cartridge@gb@emulation@@QAEXGE@Z		; emulation::gb::Cartridge::Write
 PUBLIC	?Initialize@MemoryBankController@gb@emulation@@UAEXPAVCartridge@23@@Z ; emulation::gb::MemoryBankController::Initialize
 PUBLIC	?Deinitialize@MemoryBankController@gb@emulation@@UAEXXZ ; emulation::gb::MemoryBankController::Deinitialize
+PUBLIC	?Tick@MemoryBankController@gb@emulation@@UAEXXZ	; emulation::gb::MemoryBankController::Tick
+PUBLIC	?eram@MemoryBankController@gb@emulation@@QAEPAEXZ ; emulation::gb::MemoryBankController::eram
 PUBLIC	??0MemoryBankController@gb@emulation@@QAE@XZ	; emulation::gb::MemoryBankController::MemoryBankController
 PUBLIC	??$SafeDeleteArray@E@@YAXPAPAE@Z		; SafeDeleteArray<unsigned char>
 PUBLIC	?Deinitialize@MBCNone@gb@emulation@@UAEXXZ	; emulation::gb::MBCNone::Deinitialize
@@ -1016,11 +1060,18 @@ PUBLIC	?Deinitialize@MBC1@gb@emulation@@UAEXXZ		; emulation::gb::MBC1::Deinitial
 PUBLIC	?Read@MBC1@gb@emulation@@UAEEG@Z		; emulation::gb::MBC1::Read
 PUBLIC	?Write@MBC1@gb@emulation@@UAEXGE@Z		; emulation::gb::MBC1::Write
 PUBLIC	??0MBC1@gb@emulation@@QAE@XZ			; emulation::gb::MBC1::MBC1
+PUBLIC	?Initialize@MBC3@gb@emulation@@UAEXPAVCartridge@23@@Z ; emulation::gb::MBC3::Initialize
+PUBLIC	?Deinitialize@MBC3@gb@emulation@@UAEXXZ		; emulation::gb::MBC3::Deinitialize
+PUBLIC	?Read@MBC3@gb@emulation@@UAEEG@Z		; emulation::gb::MBC3::Read
+PUBLIC	?Write@MBC3@gb@emulation@@UAEXGE@Z		; emulation::gb::MBC3::Write
+PUBLIC	?Tick@MBC3@gb@emulation@@UAEXXZ			; emulation::gb::MBC3::Tick
+PUBLIC	??0MBC3@gb@emulation@@QAE@XZ			; emulation::gb::MBC3::MBC3
 PUBLIC	??$SafeDelete@VMemoryBankController@gb@emulation@@@@YAXPAPAVMemoryBankController@gb@emulation@@@Z ; SafeDelete<emulation::gb::MemoryBankController>
 PUBLIC	??_7MemoryBankController@gb@emulation@@6B@	; emulation::gb::MemoryBankController::`vftable'
 PUBLIC	??_C@_0EO@OHMNHGO@c?3?2users?2khalid?2documents?2github@ ; `string'
 PUBLIC	??_7MBCNone@gb@emulation@@6B@			; emulation::gb::MBCNone::`vftable'
 PUBLIC	??_7MBC1@gb@emulation@@6B@			; emulation::gb::MBC1::`vftable'
+PUBLIC	??_7MBC3@gb@emulation@@6B@			; emulation::gb::MBC3::`vftable'
 PUBLIC	??_R4MemoryBankController@gb@emulation@@6B@	; emulation::gb::MemoryBankController::`RTTI Complete Object Locator'
 PUBLIC	??_R0?AVMemoryBankController@gb@emulation@@@8	; emulation::gb::MemoryBankController `RTTI Type Descriptor'
 PUBLIC	??_R3MemoryBankController@gb@emulation@@8	; emulation::gb::MemoryBankController::`RTTI Class Hierarchy Descriptor'
@@ -1036,20 +1087,32 @@ PUBLIC	??_R0?AVMBC1@gb@emulation@@@8			; emulation::gb::MBC1 `RTTI Type Descript
 PUBLIC	??_R3MBC1@gb@emulation@@8			; emulation::gb::MBC1::`RTTI Class Hierarchy Descriptor'
 PUBLIC	??_R2MBC1@gb@emulation@@8			; emulation::gb::MBC1::`RTTI Base Class Array'
 PUBLIC	??_R1A@?0A@EA@MBC1@gb@emulation@@8		; emulation::gb::MBC1::`RTTI Base Class Descriptor at (0,-1,0,64)'
+PUBLIC	??_R4MBC3@gb@emulation@@6B@			; emulation::gb::MBC3::`RTTI Complete Object Locator'
+PUBLIC	??_R0?AVMBC3@gb@emulation@@@8			; emulation::gb::MBC3 `RTTI Type Descriptor'
+PUBLIC	??_R3MBC3@gb@emulation@@8			; emulation::gb::MBC3::`RTTI Class Hierarchy Descriptor'
+PUBLIC	??_R2MBC3@gb@emulation@@8			; emulation::gb::MBC3::`RTTI Base Class Array'
+PUBLIC	??_R1A@?0A@EA@MBC3@gb@emulation@@8		; emulation::gb::MBC3::`RTTI Base Class Descriptor at (0,-1,0,64)'
 EXTRN	__purecall:PROC
 EXTRN	??3@YAXPAX@Z:PROC				; operator delete
 EXTRN	_memcpy:PROC
+EXTRN	_memset:PROC
 EXTRN	__imp__DebugBreak@0:PROC
 EXTRN	??_V@YAXPAX@Z:PROC				; operator delete[]
+EXTRN	__imp__fclose:PROC
+EXTRN	__imp__fopen:PROC
+EXTRN	__imp__fwrite:PROC
+EXTRN	__imp__sprintf:PROC
 EXTRN	??2@YAPAXIHPBDH@Z:PROC				; operator new
 EXTRN	??_U@YAPAXIHPBDH@Z:PROC				; operator new[]
 EXTRN	?ReadWholeFileBinary@io@core@@YAXPBDPAPAEAAI@Z:PROC ; core::io::ReadWholeFileBinary
 EXTRN	?DestroyFileBuffer@io@core@@YAXPAPAE@Z:PROC	; core::io::DestroyFileBuffer
 EXTRN	@_RTC_CheckStackVars@8:PROC
+EXTRN	@__security_check_cookie@4:PROC
 EXTRN	__RTC_CheckEsp:PROC
 EXTRN	__RTC_InitBase:PROC
 EXTRN	__RTC_Shutdown:PROC
 EXTRN	??_7type_info@@6B@:QWORD			; type_info::`vftable'
+EXTRN	___security_cookie:DWORD
 _BSS	SEGMENT
 _piecewise_construct DB 01H DUP (?)
 _allocator_arg DB 01H DUP (?)
@@ -1067,6 +1130,42 @@ rtc$TMZ	ENDS
 rtc$IMZ	SEGMENT
 __RTC_InitBase.rtc$IMZ DD FLAT:__RTC_InitBase
 rtc$IMZ	ENDS
+;	COMDAT ??_R1A@?0A@EA@MBC3@gb@emulation@@8
+rdata$r	SEGMENT
+??_R1A@?0A@EA@MBC3@gb@emulation@@8 DD FLAT:??_R0?AVMBC3@gb@emulation@@@8 ; emulation::gb::MBC3::`RTTI Base Class Descriptor at (0,-1,0,64)'
+	DD	01H
+	DD	00H
+	DD	0ffffffffH
+	DD	00H
+	DD	040H
+	DD	FLAT:??_R3MBC3@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R2MBC3@gb@emulation@@8
+rdata$r	SEGMENT
+??_R2MBC3@gb@emulation@@8 DD FLAT:??_R1A@?0A@EA@MBC3@gb@emulation@@8 ; emulation::gb::MBC3::`RTTI Base Class Array'
+	DD	FLAT:??_R1A@?0A@EA@MemoryBankController@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R3MBC3@gb@emulation@@8
+rdata$r	SEGMENT
+??_R3MBC3@gb@emulation@@8 DD 00H			; emulation::gb::MBC3::`RTTI Class Hierarchy Descriptor'
+	DD	00H
+	DD	02H
+	DD	FLAT:??_R2MBC3@gb@emulation@@8
+rdata$r	ENDS
+;	COMDAT ??_R0?AVMBC3@gb@emulation@@@8
+_DATA	SEGMENT
+??_R0?AVMBC3@gb@emulation@@@8 DD FLAT:??_7type_info@@6B@ ; emulation::gb::MBC3 `RTTI Type Descriptor'
+	DD	00H
+	DB	'.?AVMBC3@gb@emulation@@', 00H
+_DATA	ENDS
+;	COMDAT ??_R4MBC3@gb@emulation@@6B@
+rdata$r	SEGMENT
+??_R4MBC3@gb@emulation@@6B@ DD 00H			; emulation::gb::MBC3::`RTTI Complete Object Locator'
+	DD	00H
+	DD	00H
+	DD	FLAT:??_R0?AVMBC3@gb@emulation@@@8
+	DD	FLAT:??_R3MBC3@gb@emulation@@8
+rdata$r	ENDS
 ;	COMDAT ??_R1A@?0A@EA@MBC1@gb@emulation@@8
 rdata$r	SEGMENT
 ??_R1A@?0A@EA@MBC1@gb@emulation@@8 DD FLAT:??_R0?AVMBC1@gb@emulation@@@8 ; emulation::gb::MBC1::`RTTI Base Class Descriptor at (0,-1,0,64)'
@@ -1174,6 +1273,15 @@ rdata$r	SEGMENT
 	DD	FLAT:??_R0?AVMemoryBankController@gb@emulation@@@8
 	DD	FLAT:??_R3MemoryBankController@gb@emulation@@8
 rdata$r	ENDS
+;	COMDAT ??_7MBC3@gb@emulation@@6B@
+CONST	SEGMENT
+??_7MBC3@gb@emulation@@6B@ DD FLAT:??_R4MBC3@gb@emulation@@6B@ ; emulation::gb::MBC3::`vftable'
+	DD	FLAT:?Initialize@MBC3@gb@emulation@@UAEXPAVCartridge@23@@Z
+	DD	FLAT:?Deinitialize@MBC3@gb@emulation@@UAEXXZ
+	DD	FLAT:?Read@MBC3@gb@emulation@@UAEEG@Z
+	DD	FLAT:?Write@MBC3@gb@emulation@@UAEXGE@Z
+	DD	FLAT:?Tick@MBC3@gb@emulation@@UAEXXZ
+CONST	ENDS
 ;	COMDAT ??_7MBC1@gb@emulation@@6B@
 CONST	SEGMENT
 ??_7MBC1@gb@emulation@@6B@ DD FLAT:??_R4MBC1@gb@emulation@@6B@ ; emulation::gb::MBC1::`vftable'
@@ -1181,6 +1289,7 @@ CONST	SEGMENT
 	DD	FLAT:?Deinitialize@MBC1@gb@emulation@@UAEXXZ
 	DD	FLAT:?Read@MBC1@gb@emulation@@UAEEG@Z
 	DD	FLAT:?Write@MBC1@gb@emulation@@UAEXGE@Z
+	DD	FLAT:?Tick@MemoryBankController@gb@emulation@@UAEXXZ
 CONST	ENDS
 ;	COMDAT ??_7MBCNone@gb@emulation@@6B@
 CONST	SEGMENT
@@ -1189,6 +1298,7 @@ CONST	SEGMENT
 	DD	FLAT:?Deinitialize@MBCNone@gb@emulation@@UAEXXZ
 	DD	FLAT:?Read@MBCNone@gb@emulation@@UAEEG@Z
 	DD	FLAT:?Write@MBCNone@gb@emulation@@UAEXGE@Z
+	DD	FLAT:?Tick@MemoryBankController@gb@emulation@@UAEXXZ
 CONST	ENDS
 ;	COMDAT ??_C@_0EO@OHMNHGO@c?3?2users?2khalid?2documents?2github@
 CONST	SEGMENT
@@ -1203,6 +1313,7 @@ CONST	SEGMENT
 	DD	FLAT:?Deinitialize@MemoryBankController@gb@emulation@@UAEXXZ
 	DD	FLAT:__purecall
 	DD	FLAT:__purecall
+	DD	FLAT:?Tick@MemoryBankController@gb@emulation@@UAEXXZ
 CONST	ENDS
 CRT$XCU	SEGMENT
 _allocator_arg$initializer$ DD FLAT:??__Eallocator_arg@std@@YAXXZ
@@ -1260,6 +1371,728 @@ $LN2@SafeDelete:
 	pop	ebp
 	ret	0
 ??$SafeDelete@VMemoryBankController@gb@emulation@@@@YAXPAPAVMemoryBankController@gb@emulation@@@Z ENDP ; SafeDelete<emulation::gb::MemoryBankController>
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+;	COMDAT ??0MBC3@gb@emulation@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+??0MBC3@gb@emulation@@QAE@XZ PROC			; emulation::gb::MBC3::MBC3, COMDAT
+; _this$ = ecx
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??0MemoryBankController@gb@emulation@@QAE@XZ
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax], OFFSET ??_7MBC3@gb@emulation@@6B@
+	mov	eax, DWORD PTR _this$[ebp]
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??0MBC3@gb@emulation@@QAE@XZ ENDP			; emulation::gb::MBC3::MBC3
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\mbc.h
+;	COMDAT ?Tick@MBC3@gb@emulation@@UAEXXZ
+_TEXT	SEGMENT
+tv145 = -12						; size = 1
+tv136 = -11						; size = 1
+tv95 = -10						; size = 1
+tv86 = -9						; size = 1
+tv71 = -8						; size = 2
+tv66 = -5						; size = 1
+_this$ = -4						; size = 4
+?Tick@MBC3@gb@emulation@@UAEXXZ PROC			; emulation::gb::MBC3::Tick, COMDAT
+; _this$ = ecx
+
+; 143  :   void Tick() {
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 12					; 0000000cH
+	mov	DWORD PTR [ebp-12], -858993460		; ccccccccH
+	mov	DWORD PTR [ebp-8], -858993460		; ccccccccH
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 144  :     if (++counter1 == 128) { //32768Hz, for original gameboy
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+26]
+	add	cl, 1
+	mov	BYTE PTR tv66[ebp], cl
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR tv66[ebp]
+	mov	BYTE PTR [edx+26], al
+	movzx	ecx, BYTE PTR tv66[ebp]
+	cmp	ecx, 128				; 00000080H
+	jne	$LN10@Tick
+
+; 145  :       if (++counter2 == 32768) {
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	ax, WORD PTR [edx+28]
+	add	ax, 1
+	mov	WORD PTR tv71[ebp], ax
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dx, WORD PTR tv71[ebp]
+	mov	WORD PTR [ecx+28], dx
+	movzx	eax, WORD PTR tv71[ebp]
+	cmp	eax, 32768				; 00008000H
+	jne	$LN8@Tick
+
+; 146  :         if (rtc[4]&0x40) return;//halt
+
+	mov	ecx, 1
+	shl	ecx, 2
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+ecx+19]
+	and	eax, 64					; 00000040H
+	je	SHORT $LN7@Tick
+	jmp	$LN10@Tick
+$LN7@Tick:
+
+; 147  :         if (++rtc[0] == 60) { //sec
+
+	mov	ecx, 1
+	imul	ecx, 0
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+ecx+19]
+	add	al, 1
+	mov	BYTE PTR tv86[ebp], al
+	mov	ecx, 1
+	imul	ecx, 0
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR tv86[ebp]
+	mov	BYTE PTR [edx+ecx+19], al
+	movzx	ecx, BYTE PTR tv86[ebp]
+	cmp	ecx, 60					; 0000003cH
+	jne	$LN6@Tick
+
+; 148  :           if (++rtc[1] == 60) { //min
+
+	mov	edx, 1
+	shl	edx, 0
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+edx+19]
+	add	cl, 1
+	mov	BYTE PTR tv95[ebp], cl
+	mov	edx, 1
+	shl	edx, 0
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR tv95[ebp]
+	mov	BYTE PTR [eax+edx+19], cl
+	movzx	edx, BYTE PTR tv95[ebp]
+	cmp	edx, 60					; 0000003cH
+	jne	$LN5@Tick
+
+; 149  :             if (++rtc[2] == 24) { //hour
+
+	mov	eax, 1
+	shl	eax, 1
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [ecx+eax+19]
+	add	dl, 1
+	mov	BYTE PTR tv136[ebp], dl
+	mov	eax, 1
+	shl	eax, 1
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR tv136[ebp]
+	mov	BYTE PTR [ecx+eax+19], dl
+	movzx	eax, BYTE PTR tv136[ebp]
+	cmp	eax, 24					; 00000018H
+	jne	$LN4@Tick
+
+; 150  :               if (++rtc[3] == 0xFF) { //day
+
+	mov	ecx, 1
+	imul	ecx, 3
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+ecx+19]
+	add	al, 1
+	mov	BYTE PTR tv145[ebp], al
+	mov	ecx, 1
+	imul	ecx, 3
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR tv145[ebp]
+	mov	BYTE PTR [edx+ecx+19], al
+	movzx	ecx, BYTE PTR tv145[ebp]
+	cmp	ecx, 255				; 000000ffH
+	jne	SHORT $LN3@Tick
+
+; 151  :                 if (rtc[4]&1)
+
+	mov	edx, 1
+	shl	edx, 2
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+edx+19]
+	and	ecx, 1
+	je	SHORT $LN2@Tick
+
+; 152  :                   rtc[4] |= 0x80;
+
+	mov	edx, 1
+	shl	edx, 2
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+edx+19]
+	or	ecx, 128				; 00000080H
+	mov	edx, 1
+	shl	edx, 2
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+edx+19], cl
+
+; 153  :                 else
+
+	jmp	SHORT $LN1@Tick
+$LN2@Tick:
+
+; 154  :                   rtc[4] |= 1;
+
+	mov	ecx, 1
+	shl	ecx, 2
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+ecx+19]
+	or	eax, 1
+	mov	ecx, 1
+	shl	ecx, 2
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+ecx+19], al
+$LN1@Tick:
+
+; 155  :                 rtc[3] = 0;
+
+	mov	eax, 1
+	imul	eax, 3
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+eax+19], 0
+$LN3@Tick:
+
+; 156  :               }
+; 157  :               rtc[2] = 0;
+
+	mov	edx, 1
+	shl	edx, 1
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+edx+19], 0
+$LN4@Tick:
+
+; 158  :             }
+; 159  :             rtc[1] = 0;
+
+	mov	ecx, 1
+	shl	ecx, 0
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+ecx+19], 0
+$LN5@Tick:
+
+; 160  :           }
+; 161  :           rtc[0] = 0;
+
+	mov	eax, 1
+	imul	eax, 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+eax+19], 0
+$LN6@Tick:
+
+; 162  :         }
+; 163  :         counter2 =0 ;
+
+	xor	edx, edx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	WORD PTR [eax+28], dx
+$LN8@Tick:
+
+; 164  :       }
+; 165  :       counter1 = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+26], 0
+$LN10@Tick:
+
+; 166  :     }
+; 167  :   }
+
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?Tick@MBC3@gb@emulation@@UAEXXZ ENDP			; emulation::gb::MBC3::Tick
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\mbc.h
+;	COMDAT ?Write@MBC3@gb@emulation@@UAEXGE@Z
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+_address$ = 8						; size = 2
+_data$ = 12						; size = 1
+?Write@MBC3@gb@emulation@@UAEXGE@Z PROC			; emulation::gb::MBC3::Write, COMDAT
+; _this$ = ecx
+
+; 116  :   void Write(uint16_t address, uint8_t data) {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 117  :    if (address >= 0x0000 && address <= 0x1FFF) {
+
+	movzx	eax, WORD PTR _address$[ebp]
+	test	eax, eax
+	jl	SHORT $LN15@Write
+	movzx	ecx, WORD PTR _address$[ebp]
+	cmp	ecx, 8191				; 00001fffH
+	jg	SHORT $LN15@Write
+
+; 118  : 	    eram_enable = data;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [edx+12], al
+
+; 119  :       rtc_enable = data;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [ecx+24], dl
+	jmp	$LN16@Write
+$LN15@Write:
+
+; 120  : 	  } else if (address >= 0x2000 && address <= 0x3FFF) {
+
+	movzx	eax, WORD PTR _address$[ebp]
+	cmp	eax, 8192				; 00002000H
+	jl	SHORT $LN13@Write
+	movzx	ecx, WORD PTR _address$[ebp]
+	cmp	ecx, 16383				; 00003fffH
+	jg	SHORT $LN13@Write
+
+; 121  :       rom_bank_number = data&0x7F;
+
+	movzx	edx, BYTE PTR _data$[ebp]
+	and	edx, 127				; 0000007fH
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+16], dl
+
+; 122  :       if (rom_bank_number == 0)
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+16]
+	test	edx, edx
+	jne	SHORT $LN12@Write
+
+; 123  :         rom_bank_number = 1;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+16], 1
+$LN12@Write:
+
+; 124  :     } else if (address >= 0x4000 && address <= 0x5FFF) {
+
+	jmp	$LN16@Write
+$LN13@Write:
+	movzx	ecx, WORD PTR _address$[ebp]
+	cmp	ecx, 16384				; 00004000H
+	jl	SHORT $LN10@Write
+	movzx	edx, WORD PTR _address$[ebp]
+	cmp	edx, 24575				; 00005fffH
+	jg	SHORT $LN10@Write
+
+; 125  :       if (data>=0&&data<=3) {
+
+	movzx	eax, BYTE PTR _data$[ebp]
+	test	eax, eax
+	jl	SHORT $LN9@Write
+	movzx	ecx, BYTE PTR _data$[ebp]
+	cmp	ecx, 3
+	jg	SHORT $LN9@Write
+
+; 126  :         mode = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+17], 0
+
+; 127  :         ram_bank_number = data;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [eax+18], cl
+	jmp	SHORT $LN8@Write
+$LN9@Write:
+
+; 128  :       } else if (data>=0x08&&data<=0x0C) {
+
+	movzx	edx, BYTE PTR _data$[ebp]
+	cmp	edx, 8
+	jl	SHORT $LN8@Write
+	movzx	eax, BYTE PTR _data$[ebp]
+	cmp	eax, 12					; 0000000cH
+	jg	SHORT $LN8@Write
+
+; 129  :         mode = 1;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+17], 1
+
+; 130  :         rtc_select = data-0x08;
+
+	movzx	edx, BYTE PTR _data$[ebp]
+	sub	edx, 8
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+25], dl
+$LN8@Write:
+
+; 131  :       }
+
+	jmp	$LN16@Write
+$LN10@Write:
+
+; 132  :     } else if (address >= 0x6000 && address <= 0x7FFF) {
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	cmp	ecx, 24576				; 00006000H
+	jl	SHORT $LN5@Write
+	movzx	edx, WORD PTR _address$[ebp]
+	cmp	edx, 32767				; 00007fffH
+	jg	SHORT $LN5@Write
+	jmp	SHORT $LN16@Write
+$LN5@Write:
+
+; 133  :       
+; 134  : 
+; 135  :     } else if (address >= 0xA000 && address <= 0xBFFF) {
+
+	movzx	eax, WORD PTR _address$[ebp]
+	cmp	eax, 40960				; 0000a000H
+	jl	SHORT $LN16@Write
+	movzx	ecx, WORD PTR _address$[ebp]
+	cmp	ecx, 49151				; 0000bfffH
+	jg	SHORT $LN16@Write
+
+; 136  :       if ((eram_enable&0x0A)==0x0A&&mode==0)
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+12]
+	and	eax, 10					; 0000000aH
+	cmp	eax, 10					; 0000000aH
+	jne	SHORT $LN2@Write
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+17]
+	test	edx, edx
+	jne	SHORT $LN2@Write
+
+; 137  :         eram_[address&0x1FFF] = data;
+
+	movzx	eax, WORD PTR _address$[ebp]
+	and	eax, 8191				; 00001fffH
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+8]
+	mov	cl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [edx+eax], cl
+$LN2@Write:
+
+; 138  :       
+; 139  :       if ((rtc_enable&0x0A)==0x0A&&mode==1)
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+24]
+	and	eax, 10					; 0000000aH
+	cmp	eax, 10					; 0000000aH
+	jne	SHORT $LN16@Write
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+17]
+	cmp	edx, 1
+	jne	SHORT $LN16@Write
+
+; 140  :         rtc[rtc_select] = data;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+25]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [edx+ecx+19], al
+$LN16@Write:
+
+; 141  : 	  }
+; 142  :   }
+
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+?Write@MBC3@gb@emulation@@UAEXGE@Z ENDP			; emulation::gb::MBC3::Write
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\mbc.h
+;	COMDAT ?Read@MBC3@gb@emulation@@UAEEG@Z
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+_address$ = 8						; size = 2
+?Read@MBC3@gb@emulation@@UAEEG@Z PROC			; emulation::gb::MBC3::Read, COMDAT
+; _this$ = ecx
+
+; 98   :   uint8_t Read(uint16_t address) {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 99   :     if (address >= 0x0000 && address <= 0x3FFF) {
+
+	movzx	eax, WORD PTR _address$[ebp]
+	test	eax, eax
+	jl	SHORT $LN7@Read
+	movzx	ecx, WORD PTR _address$[ebp]
+	cmp	ecx, 16383				; 00003fffH
+	jg	SHORT $LN7@Read
+
+; 100  : 	    return cartridge->rom()[address];
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [edx+4]
+	call	?rom@Cartridge@gb@emulation@@QAEPBEXZ	; emulation::gb::Cartridge::rom
+	movzx	ecx, WORD PTR _address$[ebp]
+	mov	al, BYTE PTR [eax+ecx]
+	jmp	$LN8@Read
+	jmp	$LN6@Read
+$LN7@Read:
+
+; 101  : 	  } else if (address >= 0x4000 && address <= 0x7FFF) {
+
+	movzx	edx, WORD PTR _address$[ebp]
+	cmp	edx, 16384				; 00004000H
+	jl	SHORT $LN5@Read
+	movzx	eax, WORD PTR _address$[ebp]
+	cmp	eax, 32767				; 00007fffH
+	jg	SHORT $LN5@Read
+
+; 102  :       return cartridge->rom()[address+0x4000*(rom_bank_number-1)];
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+4]
+	call	?rom@Cartridge@gb@emulation@@QAEPBEXZ	; emulation::gb::Cartridge::rom
+	movzx	edx, WORD PTR _address$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [ecx+16]
+	sub	ecx, 1
+	shl	ecx, 14					; 0000000eH
+	add	edx, ecx
+	mov	al, BYTE PTR [eax+edx]
+	jmp	$LN8@Read
+	jmp	$LN6@Read
+$LN5@Read:
+
+; 103  :     } else if (address >= 0xA000 && address <= 0xBFFF) {
+
+	movzx	edx, WORD PTR _address$[ebp]
+	cmp	edx, 40960				; 0000a000H
+	jl	SHORT $LN6@Read
+	movzx	eax, WORD PTR _address$[ebp]
+	cmp	eax, 49151				; 0000bfffH
+	jg	SHORT $LN6@Read
+
+; 104  : 
+; 105  : 
+; 106  :       if ((eram_enable&0x0A)==0x0A&&mode==0)
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+12]
+	and	edx, 10					; 0000000aH
+	cmp	edx, 10					; 0000000aH
+	jne	SHORT $LN2@Read
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+17]
+	test	ecx, ecx
+	jne	SHORT $LN2@Read
+
+; 107  :         return eram_[(address&0x1FFF)+(0x2000*ram_bank_number*mode)];
+
+	movzx	edx, WORD PTR _address$[ebp]
+	and	edx, 8191				; 00001fffH
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+18]
+	shl	ecx, 13					; 0000000dH
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [eax+17]
+	imul	ecx, eax
+	add	edx, ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [ecx+8]
+	mov	al, BYTE PTR [eax+edx]
+	jmp	SHORT $LN8@Read
+$LN2@Read:
+
+; 108  :       
+; 109  :       if ((rtc_enable&0x0A)==0x0A&&mode==1)
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+24]
+	and	edx, 10					; 0000000aH
+	cmp	edx, 10					; 0000000aH
+	jne	SHORT $LN1@Read
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+17]
+	cmp	ecx, 1
+	jne	SHORT $LN1@Read
+
+; 110  :         return rtc[rtc_select];
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+25]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [ecx+eax+19]
+	jmp	SHORT $LN8@Read
+$LN1@Read:
+
+; 111  : 
+; 112  :       return 0;
+
+	xor	al, al
+	jmp	SHORT $LN8@Read
+$LN6@Read:
+
+; 113  :     }
+; 114  :     return 0;
+
+	xor	al, al
+$LN8@Read:
+
+; 115  :   }
+
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+?Read@MBC3@gb@emulation@@UAEEG@Z ENDP			; emulation::gb::MBC3::Read
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\mbc.h
+;	COMDAT ?Deinitialize@MBC3@gb@emulation@@UAEXXZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?Deinitialize@MBC3@gb@emulation@@UAEXXZ PROC		; emulation::gb::MBC3::Deinitialize, COMDAT
+; _this$ = ecx
+
+; 95   :   void Deinitialize() {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 96   :     MemoryBankController::Deinitialize();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Deinitialize@MemoryBankController@gb@emulation@@UAEXXZ ; emulation::gb::MemoryBankController::Deinitialize
+
+; 97   :   }
+
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?Deinitialize@MBC3@gb@emulation@@UAEXXZ ENDP		; emulation::gb::MBC3::Deinitialize
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\mbc.h
+;	COMDAT ?Initialize@MBC3@gb@emulation@@UAEXPAVCartridge@23@@Z
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+_cartridge$ = 8						; size = 4
+?Initialize@MBC3@gb@emulation@@UAEXPAVCartridge@23@@Z PROC ; emulation::gb::MBC3::Initialize, COMDAT
+; _this$ = ecx
+
+; 82   :   void Initialize(Cartridge* cartridge) {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 83   :     MemoryBankController::Initialize(cartridge);
+
+	mov	eax, DWORD PTR _cartridge$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?Initialize@MemoryBankController@gb@emulation@@UAEXPAVCartridge@23@@Z ; emulation::gb::MemoryBankController::Initialize
+
+; 84   :     eram_enable = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+12], 0
+
+; 85   :     eram_enable = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+12], 0
+
+; 86   :     rom_bank_number = 1;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+16], 1
+
+; 87   :     ram_bank_number = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+18], 0
+
+; 88   :     mode = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+17], 0
+
+; 89   :     rtc_enable = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+24], 0
+
+; 90   :     rtc_select = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+25], 0
+
+; 91   :     counter1 = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+26], 0
+
+; 92   :     counter2 = 0;
+
+	xor	eax, eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	WORD PTR [ecx+28], ax
+
+; 93   :     memset(rtc,0,sizeof(rtc));
+
+	push	5
+	push	0
+	mov	edx, DWORD PTR _this$[ebp]
+	add	edx, 19					; 00000013H
+	push	edx
+	call	_memset
+	add	esp, 12					; 0000000cH
+
+; 94   :   }
+
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+?Initialize@MBC3@gb@emulation@@UAEXPAVCartridge@23@@Z ENDP ; emulation::gb::MBC3::Initialize
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ;	COMDAT ??0MBC1@gb@emulation@@QAE@XZ
@@ -1907,13 +2740,55 @@ _this$ = -4						; size = 4
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\cartridge.h
+;	COMDAT ?eram@MemoryBankController@gb@emulation@@QAEPAEXZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?eram@MemoryBankController@gb@emulation@@QAEPAEXZ PROC	; emulation::gb::MemoryBankController::eram, COMDAT
+; _this$ = ecx
+
+; 118  :   uint8_t* eram() { return eram_; }
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [eax+8]
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?eram@MemoryBankController@gb@emulation@@QAEPAEXZ ENDP	; emulation::gb::MemoryBankController::eram
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\cartridge.h
+;	COMDAT ?Tick@MemoryBankController@gb@emulation@@UAEXXZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?Tick@MemoryBankController@gb@emulation@@UAEXXZ PROC	; emulation::gb::MemoryBankController::Tick, COMDAT
+; _this$ = ecx
+
+; 117  :   virtual void Tick() { }
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?Tick@MemoryBankController@gb@emulation@@UAEXXZ ENDP	; emulation::gb::MemoryBankController::Tick
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\cartridge.h
 ;	COMDAT ?Deinitialize@MemoryBankController@gb@emulation@@UAEXXZ
 _TEXT	SEGMENT
 _this$ = -4						; size = 4
 ?Deinitialize@MemoryBankController@gb@emulation@@UAEXXZ PROC ; emulation::gb::MemoryBankController::Deinitialize, COMDAT
 ; _this$ = ecx
 
-; 108  :   virtual void Deinitialize() {
+; 112  :   virtual void Deinitialize() {
 
 	push	ebp
 	mov	ebp, esp
@@ -1921,7 +2796,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 109  :      SafeDeleteArray(&eram_); 
+; 113  :      SafeDeleteArray(&eram_); 
 
 	mov	eax, DWORD PTR _this$[ebp]
 	add	eax, 8
@@ -1929,7 +2804,7 @@ _this$ = -4						; size = 4
 	call	??$SafeDeleteArray@E@@YAXPAPAE@Z	; SafeDeleteArray<unsigned char>
 	add	esp, 4
 
-; 110  :   };
+; 114  :   };
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -1952,7 +2827,7 @@ _cartridge$ = 8						; size = 4
 ?Initialize@MemoryBankController@gb@emulation@@UAEXPAVCartridge@23@@Z PROC ; emulation::gb::MemoryBankController::Initialize, COMDAT
 ; _this$ = ecx
 
-; 99   :   virtual void Initialize(Cartridge* cartridge) {
+; 103  :   virtual void Initialize(Cartridge* cartridge) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1965,13 +2840,13 @@ _cartridge$ = 8						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 100  :     this->cartridge = cartridge;
+; 104  :     this->cartridge = cartridge;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _cartridge$[ebp]
 	mov	DWORD PTR [eax+4], ecx
 
-; 101  :     switch (cartridge->header->ram_size) {
+; 105  :     switch (cartridge->header->ram_size) {
 
 	mov	edx, DWORD PTR _cartridge$[ebp]
 	mov	eax, DWORD PTR [edx+8]
@@ -1983,16 +2858,16 @@ _cartridge$ = 8						; size = 4
 	jmp	DWORD PTR $LN9@Initialize[edx*4]
 $LN4@Initialize:
 
-; 102  :       case 0 : eram_ = nullptr; break;
+; 106  :       case 0 : eram_ = nullptr; break;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax+8], 0
 	jmp	SHORT $LN7@Initialize
 $LN3@Initialize:
 
-; 103  :       case 1 : eram_ = new uint8_t[2048]; break;
+; 107  :       case 1 : eram_ = new uint8_t[2048]; break;
 
-	push	103					; 00000067H
+	push	107					; 0000006bH
 	push	OFFSET ??_C@_0EO@OHMNHGO@c?3?2users?2khalid?2documents?2github@
 	push	1
 	push	2048					; 00000800H
@@ -2005,9 +2880,9 @@ $LN3@Initialize:
 	jmp	SHORT $LN7@Initialize
 $LN2@Initialize:
 
-; 104  :       case 2 : eram_ = new uint8_t[0x2000]; break;
+; 108  :       case 2 : eram_ = new uint8_t[0x2000]; break;
 
-	push	104					; 00000068H
+	push	108					; 0000006cH
 	push	OFFSET ??_C@_0EO@OHMNHGO@c?3?2users?2khalid?2documents?2github@
 	push	1
 	push	8192					; 00002000H
@@ -2020,9 +2895,9 @@ $LN2@Initialize:
 	jmp	SHORT $LN7@Initialize
 $LN1@Initialize:
 
-; 105  :       case 3 : eram_ = new uint8_t[0x8000]; break;
+; 109  :       case 3 : eram_ = new uint8_t[0x8000]; break;
 
-	push	105					; 00000069H
+	push	109					; 0000006dH
 	push	OFFSET ??_C@_0EO@OHMNHGO@c?3?2users?2khalid?2documents?2github@
 	push	1
 	push	32768					; 00008000H
@@ -2034,8 +2909,8 @@ $LN1@Initialize:
 	mov	DWORD PTR [edx+8], eax
 $LN7@Initialize:
 
-; 106  :     }
-; 107  :   }
+; 110  :     }
+; 111  :   }
 
 	add	esp, 20					; 00000014H
 	cmp	ebp, esp
@@ -2060,7 +2935,7 @@ _data$ = 12						; size = 1
 ?Write@Cartridge@gb@emulation@@QAEXGE@Z PROC		; emulation::gb::Cartridge::Write
 ; _this$ = ecx
 
-; 54   : void Cartridge::Write(uint16_t address, uint8_t data) {
+; 89   : void Cartridge::Write(uint16_t address, uint8_t data) {
 
 	push	ebp
 	mov	ebp, esp
@@ -2069,7 +2944,7 @@ _data$ = 12						; size = 1
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 55   :   mbc->Write(address,data);
+; 90   :   mbc->Write(address,data);
 
 	mov	esi, esp
 	movzx	eax, BYTE PTR _data$[ebp]
@@ -2086,7 +2961,7 @@ _data$ = 12						; size = 1
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 56   : }
+; 91   : }
 
 	pop	esi
 	add	esp, 4
@@ -2105,7 +2980,7 @@ _address$ = 8						; size = 2
 ?Read@Cartridge@gb@emulation@@QAEEG@Z PROC		; emulation::gb::Cartridge::Read
 ; _this$ = ecx
 
-; 50   : uint8_t Cartridge::Read(uint16_t address) {
+; 85   : uint8_t Cartridge::Read(uint16_t address) {
 
 	push	ebp
 	mov	ebp, esp
@@ -2114,7 +2989,7 @@ _address$ = 8						; size = 2
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 51   :   return mbc->Read(address);
+; 86   :   return mbc->Read(address);
 
 	mov	esi, esp
 	movzx	eax, WORD PTR _address$[ebp]
@@ -2129,7 +3004,7 @@ _address$ = 8						; size = 2
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 52   : }
+; 87   : }
 
 	pop	esi
 	add	esp, 4
@@ -2148,7 +3023,7 @@ _this$ = -4						; size = 4
 ?rom@Cartridge@gb@emulation@@QAEPBEXZ PROC		; emulation::gb::Cartridge::rom, COMDAT
 ; _this$ = ecx
 
-; 83   :   const uint8_t* rom() { return rom_; }
+; 86   :   const uint8_t* rom() { return rom_; }
 
 	push	ebp
 	mov	ebp, esp
@@ -2165,12 +3040,280 @@ _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\cartridge.cpp
 _TEXT	SEGMENT
-tv169 = -52						; size = 4
-tv152 = -48						; size = 4
-$T1 = -44						; size = 4
-$T2 = -40						; size = 4
-$T3 = -36						; size = 4
-$T4 = -32						; size = 4
+_fp$ = -276						; size = 4
+_filename$ = -268					; size = 256
+_this$ = -8						; size = 4
+__$ArrayPad$ = -4					; size = 4
+?SaveRam@Cartridge@gb@emulation@@QAEXXZ PROC		; emulation::gb::Cartridge::SaveRam
+; _this$ = ecx
+
+; 77   : void Cartridge::SaveRam() {
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 276				; 00000114H
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-276]
+	mov	ecx, 69					; 00000045H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	mov	DWORD PTR __$ArrayPad$[ebp], eax
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 78   :   char filename[256];
+; 79   :   sprintf(filename,"%s.ram",header->title);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	add	ecx, 52					; 00000034H
+	mov	esi, esp
+	push	ecx
+	push	OFFSET $SG153851
+	lea	edx, DWORD PTR _filename$[ebp]
+	push	edx
+	call	DWORD PTR __imp__sprintf
+	add	esp, 12					; 0000000cH
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 80   :   FILE* fp = fopen(filename,"wb");
+
+	mov	esi, esp
+	push	OFFSET $SG153853
+	lea	eax, DWORD PTR _filename$[ebp]
+	push	eax
+	call	DWORD PTR __imp__fopen
+	add	esp, 8
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+	mov	DWORD PTR _fp$[ebp], eax
+
+; 81   :   fwrite(mbc->eram(),1,header->ram_size_bytes(),fp);
+
+	mov	esi, esp
+	mov	ecx, DWORD PTR _fp$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [edx+8]
+	call	?ram_size_bytes@CartridgeHeader@gb@emulation@@QAEIXZ ; emulation::gb::CartridgeHeader::ram_size_bytes
+	push	eax
+	push	1
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+12]
+	call	?eram@MemoryBankController@gb@emulation@@QAEPAEXZ ; emulation::gb::MemoryBankController::eram
+	push	eax
+	call	DWORD PTR __imp__fwrite
+	add	esp, 16					; 00000010H
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 82   :   fclose(fp);
+
+	mov	esi, esp
+	mov	ecx, DWORD PTR _fp$[ebp]
+	push	ecx
+	call	DWORD PTR __imp__fclose
+	add	esp, 4
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 83   : }
+
+	push	edx
+	mov	ecx, ebp
+	push	eax
+	lea	edx, DWORD PTR $LN5@SaveRam
+	call	@_RTC_CheckStackVars@8
+	pop	eax
+	pop	edx
+	pop	edi
+	pop	esi
+	mov	ecx, DWORD PTR __$ArrayPad$[ebp]
+	xor	ecx, ebp
+	call	@__security_check_cookie@4
+	add	esp, 276				; 00000114H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+	npad	2
+$LN5@SaveRam:
+	DD	1
+	DD	$LN4@SaveRam
+$LN4@SaveRam:
+	DD	-268					; fffffef4H
+	DD	256					; 00000100H
+	DD	$LN3@SaveRam
+$LN3@SaveRam:
+	DB	102					; 00000066H
+	DB	105					; 00000069H
+	DB	108					; 0000006cH
+	DB	101					; 00000065H
+	DB	110					; 0000006eH
+	DB	97					; 00000061H
+	DB	109					; 0000006dH
+	DB	101					; 00000065H
+	DB	0
+?SaveRam@Cartridge@gb@emulation@@QAEXXZ ENDP		; emulation::gb::Cartridge::SaveRam
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\cartridge.cpp
+_TEXT	SEGMENT
+_filename$ = -292					; size = 256
+_length$ = -28						; size = 4
+_data$ = -16						; size = 4
+_this$ = -8						; size = 4
+__$ArrayPad$ = -4					; size = 4
+?LoadRam@Cartridge@gb@emulation@@QAEXXZ PROC		; emulation::gb::Cartridge::LoadRam
+; _this$ = ecx
+
+; 67   : void Cartridge::LoadRam() {
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 296				; 00000128H
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-296]
+	mov	ecx, 74					; 0000004aH
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	mov	DWORD PTR __$ArrayPad$[ebp], eax
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 68   :   uint8_t* data=nullptr;
+
+	mov	DWORD PTR _data$[ebp], 0
+
+; 69   :   size_t length;
+; 70   :   char filename[256];
+; 71   :   sprintf(filename,"%s.ram",header->title);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	add	ecx, 52					; 00000034H
+	mov	esi, esp
+	push	ecx
+	push	OFFSET $SG153845
+	lea	edx, DWORD PTR _filename$[ebp]
+	push	edx
+	call	DWORD PTR __imp__sprintf
+	add	esp, 12					; 0000000cH
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 72   :   core::io::ReadWholeFileBinary(filename,&data,length);
+
+	lea	eax, DWORD PTR _length$[ebp]
+	push	eax
+	lea	ecx, DWORD PTR _data$[ebp]
+	push	ecx
+	lea	edx, DWORD PTR _filename$[ebp]
+	push	edx
+	call	?ReadWholeFileBinary@io@core@@YAXPBDPAPAEAAI@Z ; core::io::ReadWholeFileBinary
+	add	esp, 12					; 0000000cH
+
+; 73   :   if (data)
+
+	cmp	DWORD PTR _data$[ebp], 0
+	je	SHORT $LN2@LoadRam
+
+; 74   :     memcpy(mbc->eram(),data,length);
+
+	mov	eax, DWORD PTR _length$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _data$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [edx+12]
+	call	?eram@MemoryBankController@gb@emulation@@QAEPAEXZ ; emulation::gb::MemoryBankController::eram
+	push	eax
+	call	_memcpy
+	add	esp, 12					; 0000000cH
+$LN2@LoadRam:
+
+; 75   : }
+
+	push	edx
+	mov	ecx, ebp
+	push	eax
+	lea	edx, DWORD PTR $LN8@LoadRam
+	call	@_RTC_CheckStackVars@8
+	pop	eax
+	pop	edx
+	pop	edi
+	pop	esi
+	mov	ecx, DWORD PTR __$ArrayPad$[ebp]
+	xor	ecx, ebp
+	call	@__security_check_cookie@4
+	add	esp, 296				; 00000128H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+	npad	2
+$LN8@LoadRam:
+	DD	3
+	DD	$LN7@LoadRam
+$LN7@LoadRam:
+	DD	-16					; fffffff0H
+	DD	4
+	DD	$LN4@LoadRam
+	DD	-28					; ffffffe4H
+	DD	4
+	DD	$LN5@LoadRam
+	DD	-292					; fffffedcH
+	DD	256					; 00000100H
+	DD	$LN6@LoadRam
+$LN6@LoadRam:
+	DB	102					; 00000066H
+	DB	105					; 00000069H
+	DB	108					; 0000006cH
+	DB	101					; 00000065H
+	DB	110					; 0000006eH
+	DB	97					; 00000061H
+	DB	109					; 0000006dH
+	DB	101					; 00000065H
+	DB	0
+$LN5@LoadRam:
+	DB	108					; 0000006cH
+	DB	101					; 00000065H
+	DB	110					; 0000006eH
+	DB	103					; 00000067H
+	DB	116					; 00000074H
+	DB	104					; 00000068H
+	DB	0
+$LN4@LoadRam:
+	DB	100					; 00000064H
+	DB	97					; 00000061H
+	DB	116					; 00000074H
+	DB	97					; 00000061H
+	DB	0
+?LoadRam@Cartridge@gb@emulation@@QAEXXZ ENDP		; emulation::gb::Cartridge::LoadRam
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\cartridge.cpp
+_TEXT	SEGMENT
+tv180 = -64						; size = 4
+tv166 = -60						; size = 4
+tv152 = -56						; size = 4
+tv139 = -52						; size = 4
+$T1 = -48						; size = 4
+$T2 = -44						; size = 4
+$T3 = -40						; size = 4
+$T4 = -36						; size = 4
+$T5 = -32						; size = 4
 _length$ = -24						; size = 4
 _data$ = -12						; size = 4
 _this$ = -4						; size = 4
@@ -2179,22 +3322,22 @@ _header$ = 12						; size = 4
 ?LoadFile@Cartridge@gb@emulation@@QAEXPBDPAUCartridgeHeader@23@@Z PROC ; emulation::gb::Cartridge::LoadFile
 ; _this$ = ecx
 
-; 20   : void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
+; 22   : void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
 
 	push	ebp
 	mov	ebp, esp
-	sub	esp, 52					; 00000034H
+	sub	esp, 64					; 00000040H
 	push	esi
 	push	edi
 	push	ecx
-	lea	edi, DWORD PTR [ebp-52]
-	mov	ecx, 13					; 0000000dH
+	lea	edi, DWORD PTR [ebp-64]
+	mov	ecx, 16					; 00000010H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 21   : 	SafeDeleteArray(&rom_);
+; 23   : 	SafeDeleteArray(&rom_);
 
 	mov	eax, DWORD PTR _this$[ebp]
 	add	eax, 16					; 00000010H
@@ -2202,13 +3345,13 @@ _header$ = 12						; size = 4
 	call	??$SafeDeleteArray@E@@YAXPAPAE@Z	; SafeDeleteArray<unsigned char>
 	add	esp, 4
 
-; 22   :   if (mbc) {
+; 24   :   if (mbc) {
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [ecx+12], 0
-	je	SHORT $LN6@LoadFile
+	je	SHORT $LN8@LoadFile
 
-; 23   :     mbc->Deinitialize();
+; 25   :     mbc->Deinitialize();
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR [edx+12]
@@ -2221,21 +3364,21 @@ _header$ = 12						; size = 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 24   : 		delete mbc;
+; 26   : 		delete mbc;
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx+12]
-	mov	DWORD PTR $T4[ebp], edx
-	mov	eax, DWORD PTR $T4[ebp]
+	mov	DWORD PTR $T5[ebp], edx
+	mov	eax, DWORD PTR $T5[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	add	esp, 4
-$LN6@LoadFile:
+$LN8@LoadFile:
 
-; 25   : 	}
-; 26   :   uint8_t* data;
-; 27   :   size_t length;
-; 28   :   core::io::ReadWholeFileBinary(filename,&data,length);
+; 27   : 	}
+; 28   :   uint8_t* data;
+; 29   :   size_t length;
+; 30   :   core::io::ReadWholeFileBinary(filename,&data,length);
 
 	lea	ecx, DWORD PTR _length$[ebp]
 	push	ecx
@@ -2246,7 +3389,7 @@ $LN6@LoadFile:
 	call	?ReadWholeFileBinary@io@core@@YAXPBDPAPAEAAI@Z ; core::io::ReadWholeFileBinary
 	add	esp, 12					; 0000000cH
 
-; 29   :   memcpy(header,data+0x100,0x50);
+; 31   :   memcpy(header,data+0x100,0x50);
 
 	push	80					; 00000050H
 	mov	ecx, DWORD PTR _data$[ebp]
@@ -2257,36 +3400,36 @@ $LN6@LoadFile:
 	call	_memcpy
 	add	esp, 12					; 0000000cH
 
-; 30   :   if (header->rom_size_bytes() == 0) {
+; 32   :   if (header->rom_size_bytes() == 0) {
 
 	mov	ecx, DWORD PTR _header$[ebp]
 	call	?rom_size_bytes@CartridgeHeader@gb@emulation@@QAEIXZ ; emulation::gb::CartridgeHeader::rom_size_bytes
 	test	eax, eax
-	jne	SHORT $LN5@LoadFile
+	jne	SHORT $LN7@LoadFile
 
-; 31   :     //report error
-; 32   :     return;
+; 33   :     //report error
+; 34   :     return;
 
-	jmp	$LN7@LoadFile
-$LN5@LoadFile:
+	jmp	$LN9@LoadFile
+$LN7@LoadFile:
 
-; 33   :   }
-; 34   :   rom_ = new uint8_t[header->rom_size_bytes()];
+; 35   :   }
+; 36   :   rom_ = new uint8_t[header->rom_size_bytes()];
 
-	push	34					; 00000022H
-	push	OFFSET $SG130226
+	push	36					; 00000024H
+	push	OFFSET $SG153812
 	push	1
 	mov	ecx, DWORD PTR _header$[ebp]
 	call	?rom_size_bytes@CartridgeHeader@gb@emulation@@QAEIXZ ; emulation::gb::CartridgeHeader::rom_size_bytes
 	push	eax
 	call	??_U@YAPAXIHPBDH@Z			; operator new[]
 	add	esp, 16					; 00000010H
-	mov	DWORD PTR $T3[ebp], eax
+	mov	DWORD PTR $T4[ebp], eax
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR $T3[ebp]
+	mov	ecx, DWORD PTR $T4[ebp]
 	mov	DWORD PTR [eax+16], ecx
 
-; 35   :   memcpy(rom_,data,header->rom_size_bytes());
+; 37   :   memcpy(rom_,data,header->rom_size_bytes());
 
 	mov	ecx, DWORD PTR _header$[ebp]
 	call	?rom_size_bytes@CartridgeHeader@gb@emulation@@QAEIXZ ; emulation::gb::CartridgeHeader::rom_size_bytes
@@ -2299,7 +3442,7 @@ $LN5@LoadFile:
 	call	_memcpy
 	add	esp, 12					; 0000000cH
 
-; 36   :   this->header = (CartridgeHeader*)&rom_[0x100];
+; 38   :   this->header = (CartridgeHeader*)&rom_[0x100];
 
 	mov	edx, 1
 	shl	edx, 8
@@ -2308,134 +3451,179 @@ $LN5@LoadFile:
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [ecx+8], edx
 
-; 37   :   if (header->cartridge_type == 0) {
+; 39   : 
+; 40   :   switch (header->cartridge_type) {
 
 	mov	edx, DWORD PTR _header$[ebp]
 	movzx	eax, BYTE PTR [edx+71]
-	test	eax, eax
-	jne	SHORT $LN4@LoadFile
+	mov	DWORD PTR tv139[ebp], eax
+	cmp	DWORD PTR tv139[ebp], 19		; 00000013H
+	ja	$LN1@LoadFile
+	mov	ecx, DWORD PTR tv139[ebp]
+	movzx	edx, BYTE PTR $LN17@LoadFile[ecx]
+	jmp	DWORD PTR $LN22@LoadFile[edx*4]
+$LN4@LoadFile:
 
-; 38   :     mbc = new MBCNone();
+; 41   :     case 0:
+; 42   :       mbc = new MBCNone();
 
-	push	38					; 00000026H
-	push	OFFSET $SG130231
+	push	42					; 0000002aH
+	push	OFFSET $SG153821
 	push	1
 	push	16					; 00000010H
 	call	??2@YAPAXIHPBDH@Z			; operator new
 	add	esp, 16					; 00000010H
-	mov	DWORD PTR $T2[ebp], eax
-	cmp	DWORD PTR $T2[ebp], 0
-	je	SHORT $LN9@LoadFile
-	mov	ecx, DWORD PTR $T2[ebp]
+	mov	DWORD PTR $T3[ebp], eax
+	cmp	DWORD PTR $T3[ebp], 0
+	je	SHORT $LN11@LoadFile
+	mov	ecx, DWORD PTR $T3[ebp]
 	call	??0MBCNone@gb@emulation@@QAE@XZ
 	mov	DWORD PTR tv152[ebp], eax
-	jmp	SHORT $LN10@LoadFile
-$LN9@LoadFile:
+	jmp	SHORT $LN12@LoadFile
+$LN11@LoadFile:
 	mov	DWORD PTR tv152[ebp], 0
-$LN10@LoadFile:
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR tv152[ebp]
-	mov	DWORD PTR [ecx+12], edx
-	jmp	SHORT $LN3@LoadFile
-$LN4@LoadFile:
+$LN12@LoadFile:
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR tv152[ebp]
+	mov	DWORD PTR [eax+12], ecx
 
-; 39   :   } else if (header->cartridge_type == 1) {
+; 43   :       break;
 
-	mov	eax, DWORD PTR _header$[ebp]
-	movzx	ecx, BYTE PTR [eax+71]
-	cmp	ecx, 1
-	jne	SHORT $LN2@LoadFile
+	jmp	$LN5@LoadFile
+$LN3@LoadFile:
 
-; 40   :     mbc = new MBC1();
+; 44   :     case 1:
+; 45   :     case 2:
+; 46   :     case 3:
+; 47   :       mbc = new MBC1();
 
-	push	40					; 00000028H
-	push	OFFSET $SG130236
+	push	47					; 0000002fH
+	push	OFFSET $SG153825
 	push	1
 	push	20					; 00000014H
 	call	??2@YAPAXIHPBDH@Z			; operator new
 	add	esp, 16					; 00000010H
-	mov	DWORD PTR $T1[ebp], eax
-	cmp	DWORD PTR $T1[ebp], 0
-	je	SHORT $LN11@LoadFile
-	mov	ecx, DWORD PTR $T1[ebp]
+	mov	DWORD PTR $T2[ebp], eax
+	cmp	DWORD PTR $T2[ebp], 0
+	je	SHORT $LN13@LoadFile
+	mov	ecx, DWORD PTR $T2[ebp]
 	call	??0MBC1@gb@emulation@@QAE@XZ
-	mov	DWORD PTR tv169[ebp], eax
-	jmp	SHORT $LN12@LoadFile
-$LN11@LoadFile:
-	mov	DWORD PTR tv169[ebp], 0
-$LN12@LoadFile:
+	mov	DWORD PTR tv166[ebp], eax
+	jmp	SHORT $LN14@LoadFile
+$LN13@LoadFile:
+	mov	DWORD PTR tv166[ebp], 0
+$LN14@LoadFile:
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR tv169[ebp]
+	mov	eax, DWORD PTR tv166[ebp]
 	mov	DWORD PTR [edx+12], eax
 
-; 41   :   } else {
+; 48   :       break;
 
-	jmp	SHORT $LN3@LoadFile
+	jmp	SHORT $LN5@LoadFile
 $LN2@LoadFile:
 
-; 42   : 		DebugBreak();
+; 49   :     case 0x0F:
+; 50   :     case 0x10:
+; 51   :     case 0x11:
+; 52   :     case 0x12:
+; 53   :     case 0x13:
+; 54   :       mbc = new MBC3();
+
+	push	54					; 00000036H
+	push	OFFSET $SG153829
+	push	1
+	push	32					; 00000020H
+	call	??2@YAPAXIHPBDH@Z			; operator new
+	add	esp, 16					; 00000010H
+	mov	DWORD PTR $T1[ebp], eax
+	cmp	DWORD PTR $T1[ebp], 0
+	je	SHORT $LN15@LoadFile
+	mov	ecx, DWORD PTR $T1[ebp]
+	call	??0MBC3@gb@emulation@@QAE@XZ
+	mov	DWORD PTR tv180[ebp], eax
+	jmp	SHORT $LN16@LoadFile
+$LN15@LoadFile:
+	mov	DWORD PTR tv180[ebp], 0
+$LN16@LoadFile:
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR tv180[ebp]
+	mov	DWORD PTR [ecx+12], edx
+
+; 55   :       break;
+
+	jmp	SHORT $LN5@LoadFile
+$LN1@LoadFile:
+
+; 56   :     default:
+; 57   :       DebugBreak();
 
 	mov	esi, esp
 	call	DWORD PTR __imp__DebugBreak@0
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-$LN3@LoadFile:
+$LN5@LoadFile:
 
-; 43   : 	}
-; 44   :   mbc->Initialize(this);
+; 58   :   }
+; 59   : 
+; 60   :   mbc->Initialize(this);
 
 	mov	esi, esp
+	mov	eax, DWORD PTR _this$[ebp]
+	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	push	ecx
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+12]
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [eax]
-	mov	ecx, DWORD PTR [ecx+12]
+	mov	edx, DWORD PTR [ecx+12]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [edx]
+	mov	ecx, DWORD PTR [eax+12]
 	mov	eax, DWORD PTR [edx]
 	call	eax
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 45   :   core::io::DestroyFileBuffer(&data);
+; 61   :   LoadRam();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?LoadRam@Cartridge@gb@emulation@@QAEXXZ	; emulation::gb::Cartridge::LoadRam
+
+; 62   :   core::io::DestroyFileBuffer(&data);
 
 	lea	ecx, DWORD PTR _data$[ebp]
 	push	ecx
 	call	?DestroyFileBuffer@io@core@@YAXPAPAE@Z	; core::io::DestroyFileBuffer
 	add	esp, 4
-$LN7@LoadFile:
+$LN9@LoadFile:
 
-; 46   : 
-; 47   :   
-; 48   : }
+; 63   : 
+; 64   :   
+; 65   : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN16@LoadFile
+	lea	edx, DWORD PTR $LN21@LoadFile
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
 	pop	edi
 	pop	esi
-	add	esp, 52					; 00000034H
+	add	esp, 64					; 00000040H
 	cmp	ebp, esp
 	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	8
 	npad	2
-$LN16@LoadFile:
+$LN21@LoadFile:
 	DD	2
-	DD	$LN15@LoadFile
-$LN15@LoadFile:
+	DD	$LN20@LoadFile
+$LN20@LoadFile:
 	DD	-12					; fffffff4H
 	DD	4
-	DD	$LN13@LoadFile
+	DD	$LN18@LoadFile
 	DD	-24					; ffffffe8H
 	DD	4
-	DD	$LN14@LoadFile
-$LN14@LoadFile:
+	DD	$LN19@LoadFile
+$LN19@LoadFile:
 	DB	108					; 0000006cH
 	DB	101					; 00000065H
 	DB	110					; 0000006eH
@@ -2443,12 +3631,38 @@ $LN14@LoadFile:
 	DB	116					; 00000074H
 	DB	104					; 00000068H
 	DB	0
-$LN13@LoadFile:
+$LN18@LoadFile:
 	DB	100					; 00000064H
 	DB	97					; 00000061H
 	DB	116					; 00000074H
 	DB	97					; 00000061H
 	DB	0
+$LN22@LoadFile:
+	DD	$LN4@LoadFile
+	DD	$LN3@LoadFile
+	DD	$LN2@LoadFile
+	DD	$LN1@LoadFile
+$LN17@LoadFile:
+	DB	0
+	DB	1
+	DB	1
+	DB	1
+	DB	3
+	DB	3
+	DB	3
+	DB	3
+	DB	3
+	DB	3
+	DB	3
+	DB	3
+	DB	3
+	DB	3
+	DB	3
+	DB	2
+	DB	2
+	DB	2
+	DB	2
+	DB	2
 ?LoadFile@Cartridge@gb@emulation@@QAEXPBDPAUCartridgeHeader@23@@Z ENDP ; emulation::gb::Cartridge::LoadFile
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
@@ -2467,35 +3681,33 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 14   :   core::io::DestroyFileBuffer(&rom_);
+; 14   :   if (mbc) {
 
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 16					; 00000010H
-	push	eax
-	call	?DestroyFileBuffer@io@core@@YAXPAPAE@Z	; core::io::DestroyFileBuffer
-	add	esp, 4
+	cmp	DWORD PTR [eax+12], 0
+	je	SHORT $LN1@Deinitiali
 
-; 15   :   if (mbc)
+; 15   :     SaveRam();
 
 	mov	ecx, DWORD PTR _this$[ebp]
-	cmp	DWORD PTR [ecx+12], 0
-	je	SHORT $LN1@Deinitiali
+	call	?SaveRam@Cartridge@gb@emulation@@QAEXXZ	; emulation::gb::Cartridge::SaveRam
 
 ; 16   :     mbc->Deinitialize();
 
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [edx+12]
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR [eax]
+	mov	edx, DWORD PTR [ecx+12]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [edx]
 	mov	esi, esp
-	mov	ecx, DWORD PTR [ecx+12]
+	mov	ecx, DWORD PTR [eax+12]
 	mov	eax, DWORD PTR [edx+4]
 	call	eax
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 $LN1@Deinitiali:
 
-; 17   :   SafeDelete(&mbc);
+; 17   :   }
+; 18   :   SafeDelete(&mbc);
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 12					; 0000000cH
@@ -2503,7 +3715,15 @@ $LN1@Deinitiali:
 	call	??$SafeDelete@VMemoryBankController@gb@emulation@@@@YAXPAPAVMemoryBankController@gb@emulation@@@Z ; SafeDelete<emulation::gb::MemoryBankController>
 	add	esp, 4
 
-; 18   : }
+; 19   :   core::io::DestroyFileBuffer(&rom_);
+
+	mov	edx, DWORD PTR _this$[ebp]
+	add	edx, 16					; 00000010H
+	push	edx
+	call	?DestroyFileBuffer@io@core@@YAXPAPAE@Z	; core::io::DestroyFileBuffer
+	add	esp, 4
+
+; 20   : }
 
 	pop	esi
 	add	esp, 4
@@ -2556,6 +3776,91 @@ _emu$ = 8						; size = 4
 	pop	ebp
 	ret	4
 ?Initialize@Cartridge@gb@emulation@@UAEXPAVEmu@23@@Z ENDP ; emulation::gb::Cartridge::Initialize
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\cartridge.h
+;	COMDAT ?ram_size_bytes@CartridgeHeader@gb@emulation@@QAEIXZ
+_TEXT	SEGMENT
+tv66 = -8						; size = 4
+_this$ = -4						; size = 4
+?ram_size_bytes@CartridgeHeader@gb@emulation@@QAEIXZ PROC ; emulation::gb::CartridgeHeader::ram_size_bytes, COMDAT
+; _this$ = ecx
+
+; 64   :   uint32_t ram_size_bytes() {
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 8
+	mov	DWORD PTR [ebp-8], -858993460		; ccccccccH
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 65   :     switch (ram_size) {
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+73]
+	mov	DWORD PTR tv66[ebp], ecx
+	cmp	DWORD PTR tv66[ebp], 3
+	ja	SHORT $LN8@ram_size_b
+	mov	edx, DWORD PTR tv66[ebp]
+	jmp	DWORD PTR $LN12@ram_size_b[edx*4]
+$LN7@ram_size_b:
+
+; 66   :       case 0: if (cartridge_type==5 || cartridge_type==6) return 256; else return 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+71]
+	cmp	ecx, 5
+	je	SHORT $LN5@ram_size_b
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+71]
+	cmp	eax, 6
+	jne	SHORT $LN6@ram_size_b
+$LN5@ram_size_b:
+	mov	eax, 256				; 00000100H
+	jmp	SHORT $LN10@ram_size_b
+	jmp	SHORT $LN3@ram_size_b
+$LN6@ram_size_b:
+	xor	eax, eax
+	jmp	SHORT $LN10@ram_size_b
+$LN3@ram_size_b:
+
+; 67   :       case 1:return 2*1024;
+
+	mov	eax, 2048				; 00000800H
+	jmp	SHORT $LN10@ram_size_b
+$LN2@ram_size_b:
+
+; 68   :       case 2:return 8*1024;
+
+	mov	eax, 8192				; 00002000H
+	jmp	SHORT $LN10@ram_size_b
+$LN1@ram_size_b:
+
+; 69   :       case 3:return 32*1024;
+
+	mov	eax, 32768				; 00008000H
+	jmp	SHORT $LN10@ram_size_b
+$LN8@ram_size_b:
+
+; 70   :     }
+; 71   :     return 0;
+
+	xor	eax, eax
+$LN10@ram_size_b:
+
+; 72   :   }
+
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+	npad	3
+$LN12@ram_size_b:
+	DD	$LN7@ram_size_b
+	DD	$LN3@ram_size_b
+	DD	$LN2@ram_size_b
+	DD	$LN1@ram_size_b
+?ram_size_bytes@CartridgeHeader@gb@emulation@@QAEIXZ ENDP ; emulation::gb::CartridgeHeader::ram_size_bytes
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\cartridge.h

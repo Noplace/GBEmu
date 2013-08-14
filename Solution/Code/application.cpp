@@ -2,12 +2,15 @@
 
 namespace app {
 
+Application* Application::current_app_ = nullptr;
+
 Application::Application(HINSTANCE instance , LPSTR command_line, int show_command) {
   //OleInitialize(NULL);
+  current_app_ = this;
 }
 
 Application::~Application() {
- 
+ current_app_ = nullptr;
 }
 
 int Application::Run() {

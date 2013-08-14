@@ -31,11 +31,16 @@ class Application : core::windows::Application {
     DisplayWindow& display_window() {
       return display_window_;
     }
+    static Application* Current() {
+      return current_app_;
+    }
   protected:
-    
+    static Application* current_app_;
   private:
     DisplayWindow display_window_;
 };
+
+
 
 }
 

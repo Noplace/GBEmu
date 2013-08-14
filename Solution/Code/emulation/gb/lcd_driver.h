@@ -35,6 +35,7 @@ union LCDStatusRegister {
 
 class LCDDriver : public Component {
  public:
+  uint8_t sprite_bug_counter;
   uint32_t* frame_buffer;
   LCDDriver(){}
   ~LCDDriver() {}

@@ -62,6 +62,7 @@ struct CpuRegisters {
 
 class Cpu : public Component {
  public:
+  uint8_t sprite_bug;
 	uint64_t cycles;
   Cpu();
   ~Cpu();
@@ -82,6 +83,9 @@ class Cpu : public Component {
   Memory* mem_;
   bool ime;
   uint8_t opcode;
+  
+
+  void simulateSpriteBug();
   void updateCpuFlagC(uint8_t a,uint8_t b,int mode) {
     if (mode == 0) {
       uint16_t r2 = (a) + (b);

@@ -46,19 +46,13 @@ PUBLIC	?value@?$_Abs@$00@std@@2_JB			; std::_Abs<1>::value
 PUBLIC	?value@?$_GcdX@$00$0A@@std@@2_JB		; std::_GcdX<1,0>::value
 PUBLIC	?value@?$_GcdX@$00$00@std@@2_JB			; std::_GcdX<1,1>::value
 PUBLIC	?is_signed@?$numeric_limits@H@std@@2_NB		; std::numeric_limits<int>::is_signed
-PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?digits@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits
 PUBLIC	?value@?$_Gcd@$00$00@std@@2_JB			; std::_Gcd<1,1>::value
 PUBLIC	?digits10@?$numeric_limits@H@std@@2HB		; std::numeric_limits<int>::digits10
 PUBLIC	?_G2@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB ; std::_Ratio_multiply2<std::ratio<100,1>,std::ratio<1,1000000000> >::_G2
-PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
-PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
-PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?is_signed@?$numeric_limits@I@std@@2_NB		; std::numeric_limits<unsigned int>::is_signed
 PUBLIC	?digits@?$numeric_limits@I@std@@2HB		; std::numeric_limits<unsigned int>::digits
 PUBLIC	?digits10@?$numeric_limits@I@std@@2HB		; std::numeric_limits<unsigned int>::digits10
-PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
-PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?is_monotonic@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_monotonic
 PUBLIC	?is_steady@system_clock@chrono@std@@2_NB	; std::chrono::system_clock::is_steady
 PUBLIC	?is_signed@?$numeric_limits@J@std@@2_NB		; std::numeric_limits<long>::is_signed
@@ -69,11 +63,17 @@ PUBLIC	?digits@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>
 PUBLIC	?digits10@?$numeric_limits@K@std@@2HB		; std::numeric_limits<unsigned long>::digits10
 PUBLIC	?is_signed@?$numeric_limits@_J@std@@2_NB	; std::numeric_limits<__int64>::is_signed
 PUBLIC	?digits@?$numeric_limits@_J@std@@2HB		; std::numeric_limits<__int64>::digits
+PUBLIC	?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 PUBLIC	?digits10@?$numeric_limits@_J@std@@2HB		; std::numeric_limits<__int64>::digits10
 PUBLIC	?value@?$integral_constant@H$0A@@std@@2HB	; std::integral_constant<int,0>::value
+PUBLIC	?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB		; std::_GcdX<10000000,1>::value
+PUBLIC	?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB		; std::_GcdX<1,10000000>::value
 PUBLIC	?is_signed@?$numeric_limits@_K@std@@2_NB	; std::numeric_limits<unsigned __int64>::is_signed
 PUBLIC	?digits@?$numeric_limits@_K@std@@2HB		; std::numeric_limits<unsigned __int64>::digits
+PUBLIC	?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB		; std::_Gcd<1,10000000>::value
 PUBLIC	?digits10@?$numeric_limits@_K@std@@2HB		; std::numeric_limits<unsigned __int64>::digits10
+PUBLIC	?num@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::num
+PUBLIC	?den@?$ratio@$00$0JIJGIA@@std@@2_JB		; std::ratio<1,10000000>::den
 PUBLIC	?digits@?$numeric_limits@M@std@@2HB		; std::numeric_limits<float>::digits
 PUBLIC	?digits10@?$numeric_limits@M@std@@2HB		; std::numeric_limits<float>::digits10
 PUBLIC	?max_digits10@?$numeric_limits@M@std@@2HB	; std::numeric_limits<float>::max_digits10
@@ -729,9 +729,21 @@ CONST	ENDS
 CONST	SEGMENT
 ?digits@?$numeric_limits@M@std@@2HB DD 018H		; std::numeric_limits<float>::digits
 CONST	ENDS
+;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
+CONST	ENDS
+;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
+CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@_K@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@_K@std@@2HB DD 013H		; std::numeric_limits<unsigned __int64>::digits10
+CONST	ENDS
+;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
 CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@_K@std@@2HB
 CONST	SEGMENT
@@ -741,6 +753,14 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@_K@std@@2_NB DB 00H		; std::numeric_limits<unsigned __int64>::is_signed
 CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
+CONST	ENDS
+;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
+CONST	SEGMENT
+?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
+CONST	ENDS
 ;	COMDAT ?value@?$integral_constant@H$0A@@std@@2HB
 CONST	SEGMENT
 ?value@?$integral_constant@H$0A@@std@@2HB DD 00H	; std::integral_constant<int,0>::value
@@ -748,6 +768,10 @@ CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@_J@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@_J@std@@2HB DD 012H		; std::numeric_limits<__int64>::digits10
+CONST	ENDS
+;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
+CONST	SEGMENT
+?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@_J@std@@2HB
 CONST	SEGMENT
@@ -789,14 +813,6 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_monotonic@system_clock@chrono@std@@2_NB DB 00H	; std::chrono::system_clock::is_monotonic
 CONST	ENDS
-;	COMDAT ?den@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?den@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000989680H ; std::ratio<1,10000000>::den
-CONST	ENDS
-;	COMDAT ?num@?$ratio@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?num@?$ratio@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::ratio<1,10000000>::num
-CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@I@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@I@std@@2HB DD 09H		; std::numeric_limits<unsigned int>::digits10
@@ -808,18 +824,6 @@ CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@I@std@@2_NB
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@I@std@@2_NB DB 00H		; std::numeric_limits<unsigned int>::is_signed
-CONST	ENDS
-;	COMDAT ?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_Gcd@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_Gcd<1,10000000>::value
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$00$0JIJGIA@@std@@2_JB DQ 0000000000000001H ; std::_GcdX<1,10000000>::value
-CONST	ENDS
-;	COMDAT ?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB
-CONST	SEGMENT
-?value@?$_GcdX@$0JIJGIA@$00@std@@2_JB DQ 0000000000000001H ; std::_GcdX<10000000,1>::value
 CONST	ENDS
 ;	COMDAT ?_G2@?$_Ratio_multiply2@U?$ratio@$0GE@$00@std@@U?$ratio@$00$0DLJKMKAA@@2@@std@@2_JB
 CONST	SEGMENT
@@ -836,10 +840,6 @@ CONST	ENDS
 ;	COMDAT ?digits@?$numeric_limits@H@std@@2HB
 CONST	SEGMENT
 ?digits@?$numeric_limits@H@std@@2HB DD 01fH		; std::numeric_limits<int>::digits
-CONST	ENDS
-;	COMDAT ?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB
-CONST	SEGMENT
-?value@?$_Is_ratio@U?$ratio@$00$0JIJGIA@@std@@@chrono@std@@2_NB DB 01H ; std::chrono::_Is_ratio<std::ratio<1,10000000> >::value
 CONST	ENDS
 ;	COMDAT ?is_signed@?$numeric_limits@H@std@@2_NB
 CONST	SEGMENT
@@ -977,6 +977,45 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_modulo@?$numeric_limits@_N@std@@2_NB DB 00H		; std::numeric_limits<bool>::is_modulo
 CONST	ENDS
+CONST	SEGMENT
+$SG153656 DB	'Code\emulation\gb\sound_controller.cpp', 00H
+	ORG $+1
+$SG153657 DB	'Code\emulation\gb\sound_controller.cpp', 00H
+	ORG $+1
+_clockspeed DQ	04150000000000000r		; 4.1943e+006
+_dutycycletable DB 00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	00H
+	DB	00H
+	DB	01H
+	DB	01H
+CONST	ENDS
 ;	COMDAT ?digits10@?$numeric_limits@_W@std@@2HB
 CONST	SEGMENT
 ?digits10@?$numeric_limits@_W@std@@2HB DD 04H		; std::numeric_limits<wchar_t>::digits10
@@ -989,27 +1028,151 @@ CONST	ENDS
 CONST	SEGMENT
 ?is_signed@?$numeric_limits@_W@std@@2_NB DB 00H		; std::numeric_limits<wchar_t>::is_signed
 CONST	ENDS
+PUBLIC	_powf
 PUBLIC	??0_Ignore@std@@QAE@XZ				; std::_Ignore::_Ignore
 PUBLIC	?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
 PUBLIC	?ioports@Memory@gb@emulation@@QAEPAEXZ		; emulation::gb::Memory::ioports
+PUBLIC	?set_sample_rate@Component@synth@audio@@QAEXI@Z	; audio::synth::Component::set_sample_rate
+PUBLIC	?soundlength_ms@SoundLengthWaveDutyRegister@gb@emulation@@QAEMXZ ; emulation::gb::SoundLengthWaveDutyRegister::soundlength_ms
 PUBLIC	?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::SoundController::Initialize
 PUBLIC	?Deinitialize@SoundController@gb@emulation@@UAEXXZ ; emulation::gb::SoundController::Deinitialize
+PUBLIC	?Reset@SoundController@gb@emulation@@UAEXXZ	; emulation::gb::SoundController::Reset
 PUBLIC	?Step@SoundController@gb@emulation@@QAEXN@Z	; emulation::gb::SoundController::Step
 PUBLIC	?Read@SoundController@gb@emulation@@QAEEG@Z	; emulation::gb::SoundController::Read
 PUBLIC	?Write@SoundController@gb@emulation@@QAEXGE@Z	; emulation::gb::SoundController::Write
+PUBLIC	?Initialize@<unnamed-type-channel1>@SoundController@gb@emulation@@QAEXPAV234@@Z ; emulation::gb::SoundController::<unnamed-type-channel1>::Initialize
+PUBLIC	?Sample@<unnamed-type-channel1>@SoundController@gb@emulation@@QAEEXZ ; emulation::gb::SoundController::<unnamed-type-channel1>::Sample
+PUBLIC	?Initialize@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEXPAV234@@Z ; emulation::gb::SoundController::<unnamed-type-channel3>::Initialize
+PUBLIC	?Tick@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEXM@Z ; emulation::gb::SoundController::<unnamed-type-channel3>::Tick
+PUBLIC	?Sample@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEMXZ ; emulation::gb::SoundController::<unnamed-type-channel3>::Sample
 PUBLIC	?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ	; emulation::gb::Emu::memory
+PUBLIC	??$SafeDelete@VInterface@output@audio@@@@YAXPAPAVInterface@output@audio@@@Z ; SafeDelete<audio::output::Interface>
+PUBLIC	__real@00000000
+PUBLIC	__real@3b800000
+PUBLIC	__real@3e800000
+PUBLIC	__real@3f000000
+PUBLIC	__real@3f800000
+PUBLIC	__real@40000000
+PUBLIC	__real@40e00000
+PUBLIC	__real@40e5888000000000
+PUBLIC	__real@40f9999a
+PUBLIC	__real@41700000
+PUBLIC	__real@42800000
+PUBLIC	__real@43800000
+PUBLIC	__real@447a0000
+PUBLIC	__real@46fffe00
+PUBLIC	__real@48000000
+PUBLIC	__real@49000000
+PUBLIC	__real@bf800000
+PUBLIC	__xmm@41f00000000000000000000000000000
+EXTRN	??3@YAXPAX@Z:PROC				; operator delete
+EXTRN	_memset:PROC
+EXTRN	_pow:PROC
+EXTRN	__imp__rand:PROC
+EXTRN	__imp__srand:PROC
+EXTRN	??2@YAPAXIHPBDH@Z:PROC				; operator new
+EXTRN	??3@YAXPAXHPBDH@Z:PROC				; operator delete
+EXTRN	__imp___time64:PROC
+EXTRN	??0DirectSound@output@audio@@QAE@XZ:PROC	; audio::output::DirectSound::DirectSound
+EXTRN	@_RTC_CheckStackVars@8:PROC
+EXTRN	@__security_check_cookie@4:PROC
 EXTRN	__RTC_CheckEsp:PROC
 EXTRN	__RTC_InitBase:PROC
 EXTRN	__RTC_Shutdown:PROC
+EXTRN	___CxxFrameHandler3:PROC
+EXTRN	?noiseseed@synth@audio@@3IA:DWORD		; audio::synth::noiseseed
+EXTRN	___security_cookie:DWORD
+EXTRN	__fltused:DWORD
 _BSS	SEGMENT
 _piecewise_construct DB 01H DUP (?)
 _allocator_arg DB 01H DUP (?)
 _ignore	DB	01H DUP (?)
 __Tuple_alloc DB 01H DUP (?)
 _BSS	ENDS
+;	COMDAT ?sbuf@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4PAFA
+_BSS	SEGMENT
+?sbuf@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4PAFA DW 02274H DUP (?) ; `emulation::gb::SoundController::Step'::`52'::sbuf
+_BSS	ENDS
+;	COMDAT ?sindex@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4HA
+_BSS	SEGMENT
+?sindex@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4HA DD 01H DUP (?) ; `emulation::gb::SoundController::Step'::`52'::sindex
+_BSS	ENDS
 CRT$XCU	SEGMENT
 _piecewise_construct$initializer$ DD FLAT:??__Epiecewise_construct@std@@YAXXZ
 CRT$XCU	ENDS
+;	COMDAT __xmm@41f00000000000000000000000000000
+CONST	SEGMENT
+__xmm@41f00000000000000000000000000000 DB 00H, 00H, 00H, 00H, 00H, 00H, 00H
+	DB	00H, 00H, 00H, 00H, 00H, 00H, 00H, 0f0H, 'A'
+CONST	ENDS
+;	COMDAT __real@bf800000
+CONST	SEGMENT
+__real@bf800000 DD 0bf800000r			; -1
+CONST	ENDS
+;	COMDAT __real@49000000
+CONST	SEGMENT
+__real@49000000 DD 049000000r			; 524288
+CONST	ENDS
+;	COMDAT __real@48000000
+CONST	SEGMENT
+__real@48000000 DD 048000000r			; 131072
+CONST	ENDS
+;	COMDAT __real@46fffe00
+CONST	SEGMENT
+__real@46fffe00 DD 046fffe00r			; 32767
+CONST	ENDS
+;	COMDAT __real@447a0000
+CONST	SEGMENT
+__real@447a0000 DD 0447a0000r			; 1000
+CONST	ENDS
+;	COMDAT __real@43800000
+CONST	SEGMENT
+__real@43800000 DD 043800000r			; 256
+CONST	ENDS
+;	COMDAT __real@42800000
+CONST	SEGMENT
+__real@42800000 DD 042800000r			; 64
+CONST	ENDS
+;	COMDAT __real@41700000
+CONST	SEGMENT
+__real@41700000 DD 041700000r			; 15
+CONST	ENDS
+;	COMDAT __real@40f9999a
+CONST	SEGMENT
+__real@40f9999a DD 040f9999ar			; 7.8
+CONST	ENDS
+;	COMDAT __real@40e5888000000000
+CONST	SEGMENT
+__real@40e5888000000000 DQ 040e5888000000000r	; 44100
+CONST	ENDS
+;	COMDAT __real@40e00000
+CONST	SEGMENT
+__real@40e00000 DD 040e00000r			; 7
+CONST	ENDS
+;	COMDAT __real@40000000
+CONST	SEGMENT
+__real@40000000 DD 040000000r			; 2
+CONST	ENDS
+;	COMDAT __real@3f800000
+CONST	SEGMENT
+__real@3f800000 DD 03f800000r			; 1
+CONST	ENDS
+;	COMDAT __real@3f000000
+CONST	SEGMENT
+__real@3f000000 DD 03f000000r			; 0.5
+CONST	ENDS
+;	COMDAT __real@3e800000
+CONST	SEGMENT
+__real@3e800000 DD 03e800000r			; 0.25
+CONST	ENDS
+;	COMDAT __real@3b800000
+CONST	SEGMENT
+__real@3b800000 DD 03b800000r			; 0.00390625
+CONST	ENDS
+;	COMDAT __real@00000000
+CONST	SEGMENT
+__real@00000000 DD 000000000r			; 0
+CONST	ENDS
 ;	COMDAT rtc$TMZ
 rtc$TMZ	SEGMENT
 __RTC_Shutdown.rtc$TMZ DD FLAT:__RTC_Shutdown
@@ -1018,6 +1181,17 @@ rtc$TMZ	ENDS
 rtc$IMZ	SEGMENT
 __RTC_InitBase.rtc$IMZ DD FLAT:__RTC_InitBase
 rtc$IMZ	ENDS
+xdata$x	SEGMENT
+__unwindtable$?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z DD 0ffffffffH
+	DD	FLAT:__unwindfunclet$?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z$0
+__ehfuncinfo$?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z DD 019930522H
+	DD	01H
+	DD	FLAT:__unwindtable$?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z
+	DD	2 DUP(00H)
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
+xdata$x	ENDS
 CRT$XCU	SEGMENT
 _allocator_arg$initializer$ DD FLAT:??__Eallocator_arg@std@@YAXXZ
 CRT$XCU	ENDS
@@ -1027,6 +1201,318 @@ CRT$XCU	ENDS
 CRT$XCU	SEGMENT
 __Tuple_alloc$initializer$ DD FLAT:??__E_Tuple_alloc@std@@YAXXZ
 CRT$XCU	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+??B<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEP6IXAATVolumeEnvelope@gb@emulation@@AAM@ZXZ PROC ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator void (__fastcall*)(emulation::gb::VolumeEnvelope &,float &)
+; _this$ = ecx
+
+; 93   :   };
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, OFFSET ?<helper_func_fastcall>@<lambda_41a3813a41e43ee16132fa6899cc2399>@@CIXAATVolumeEnvelope@gb@emulation@@AAM@Z ; <lambda_41a3813a41e43ee16132fa6899cc2399>::<helper_func_fastcall>
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??B<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEP6IXAATVolumeEnvelope@gb@emulation@@AAM@ZXZ ENDP ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator void (__fastcall*)(emulation::gb::VolumeEnvelope &,float &)
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+_TEXT	SEGMENT
+_counter$ = -8						; size = 4
+_envreg$ = -4						; size = 4
+?<helper_func_fastcall>@<lambda_41a3813a41e43ee16132fa6899cc2399>@@CIXAATVolumeEnvelope@gb@emulation@@AAM@Z PROC ; <lambda_41a3813a41e43ee16132fa6899cc2399>::<helper_func_fastcall>
+; _envreg$ = ecx
+; _counter$ = edx
+
+; 93   :   };
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 8
+	mov	DWORD PTR [ebp-8], -858993460		; ccccccccH
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _counter$[ebp], edx
+	mov	DWORD PTR _envreg$[ebp], ecx
+	mov	eax, DWORD PTR _counter$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _envreg$[ebp]
+	push	ecx
+	xor	ecx, ecx
+	call	??R<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEXAATVolumeEnvelope@gb@emulation@@AAM@Z ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator()
+	add	esp, 8
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?<helper_func_fastcall>@<lambda_41a3813a41e43ee16132fa6899cc2399>@@CIXAATVolumeEnvelope@gb@emulation@@AAM@Z ENDP ; <lambda_41a3813a41e43ee16132fa6899cc2399>::<helper_func_fastcall>
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+??B<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEP6GXAATVolumeEnvelope@gb@emulation@@AAM@ZXZ PROC ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator void (__stdcall*)(emulation::gb::VolumeEnvelope &,float &)
+; _this$ = ecx
+
+; 93   :   };
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, OFFSET ?<helper_func_stdcall>@<lambda_41a3813a41e43ee16132fa6899cc2399>@@CGXAATVolumeEnvelope@gb@emulation@@AAM@Z ; <lambda_41a3813a41e43ee16132fa6899cc2399>::<helper_func_stdcall>
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??B<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEP6GXAATVolumeEnvelope@gb@emulation@@AAM@ZXZ ENDP ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator void (__stdcall*)(emulation::gb::VolumeEnvelope &,float &)
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+_TEXT	SEGMENT
+_envreg$ = 8						; size = 4
+_counter$ = 12						; size = 4
+?<helper_func_stdcall>@<lambda_41a3813a41e43ee16132fa6899cc2399>@@CGXAATVolumeEnvelope@gb@emulation@@AAM@Z PROC ; <lambda_41a3813a41e43ee16132fa6899cc2399>::<helper_func_stdcall>
+
+; 93   :   };
+
+	push	ebp
+	mov	ebp, esp
+	mov	eax, DWORD PTR _counter$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _envreg$[ebp]
+	push	ecx
+	xor	ecx, ecx
+	call	??R<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEXAATVolumeEnvelope@gb@emulation@@AAM@Z ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator()
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	pop	ebp
+	ret	8
+?<helper_func_stdcall>@<lambda_41a3813a41e43ee16132fa6899cc2399>@@CGXAATVolumeEnvelope@gb@emulation@@AAM@Z ENDP ; <lambda_41a3813a41e43ee16132fa6899cc2399>::<helper_func_stdcall>
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+??B<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEP6AXAATVolumeEnvelope@gb@emulation@@AAM@ZXZ PROC ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator void (__cdecl*)(emulation::gb::VolumeEnvelope &,float &)
+; _this$ = ecx
+
+; 93   :   };
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, OFFSET ?<helper_func_cdecl>@<lambda_41a3813a41e43ee16132fa6899cc2399>@@CAXAATVolumeEnvelope@gb@emulation@@AAM@Z ; <lambda_41a3813a41e43ee16132fa6899cc2399>::<helper_func_cdecl>
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??B<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEP6AXAATVolumeEnvelope@gb@emulation@@AAM@ZXZ ENDP ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator void (__cdecl*)(emulation::gb::VolumeEnvelope &,float &)
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+_TEXT	SEGMENT
+_envreg$ = 8						; size = 4
+_counter$ = 12						; size = 4
+?<helper_func_cdecl>@<lambda_41a3813a41e43ee16132fa6899cc2399>@@CAXAATVolumeEnvelope@gb@emulation@@AAM@Z PROC ; <lambda_41a3813a41e43ee16132fa6899cc2399>::<helper_func_cdecl>
+
+; 93   :   };
+
+	push	ebp
+	mov	ebp, esp
+	mov	eax, DWORD PTR _counter$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _envreg$[ebp]
+	push	ecx
+	xor	ecx, ecx
+	call	??R<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEXAATVolumeEnvelope@gb@emulation@@AAM@Z ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator()
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	pop	ebp
+	ret	0
+?<helper_func_cdecl>@<lambda_41a3813a41e43ee16132fa6899cc2399>@@CAXAATVolumeEnvelope@gb@emulation@@AAM@Z ENDP ; <lambda_41a3813a41e43ee16132fa6899cc2399>::<helper_func_cdecl>
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+_TEXT	SEGMENT
+_env_step_ms$ = -8					; size = 4
+_this$ = -4						; size = 4
+_envreg$ = 8						; size = 4
+_counter$ = 12						; size = 4
+??R<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEXAATVolumeEnvelope@gb@emulation@@AAM@Z PROC ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator()
+; _this$ = ecx
+
+; 83   :   auto envelopeTick = [](VolumeEnvelope& envreg,real_t& counter){
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 8
+	mov	DWORD PTR [ebp-8], -858993460		; ccccccccH
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 84   :     float env_step_ms = envreg.env_sweep/64.0f*1000.0f;
+
+	mov	eax, DWORD PTR _envreg$[ebp]
+	mov	cl, BYTE PTR [eax]
+	and	cl, 7
+	movzx	edx, cl
+	cvtsi2ss xmm0, edx
+	divss	xmm0, DWORD PTR __real@42800000
+	mulss	xmm0, DWORD PTR __real@447a0000
+	movss	DWORD PTR _env_step_ms$[ebp], xmm0
+
+; 85   : 
+; 86   :     if (env_step_ms != 0 && counter >= env_step_ms) {
+
+	movss	xmm0, DWORD PTR _env_step_ms$[ebp]
+	ucomiss	xmm0, DWORD PTR __real@00000000
+	lahf
+	test	ah, 68					; 00000044H
+	jnp	$LN3@operator
+	mov	eax, DWORD PTR _counter$[ebp]
+	movss	xmm0, DWORD PTR [eax]
+	comiss	xmm0, DWORD PTR _env_step_ms$[ebp]
+	jb	$LN3@operator
+
+; 87   :         if (envreg.direction && envreg.vol<0xF)
+
+	mov	ecx, DWORD PTR _envreg$[ebp]
+	mov	dl, BYTE PTR [ecx]
+	shr	dl, 3
+	and	dl, 1
+	movzx	eax, dl
+	test	eax, eax
+	je	SHORT $LN2@operator
+	mov	ecx, DWORD PTR _envreg$[ebp]
+	mov	dl, BYTE PTR [ecx]
+	shr	dl, 4
+	and	dl, 15					; 0000000fH
+	movzx	eax, dl
+	cmp	eax, 15					; 0000000fH
+	jge	SHORT $LN2@operator
+
+; 88   :           ++envreg.vol;
+
+	mov	ecx, DWORD PTR _envreg$[ebp]
+	mov	dl, BYTE PTR [ecx]
+	shr	dl, 4
+	and	dl, 15					; 0000000fH
+	add	dl, 1
+	and	dl, 15					; 0000000fH
+	shl	dl, 4
+	mov	eax, DWORD PTR _envreg$[ebp]
+	mov	cl, BYTE PTR [eax]
+	and	cl, 15					; 0000000fH
+	or	cl, dl
+	mov	edx, DWORD PTR _envreg$[ebp]
+	mov	BYTE PTR [edx], cl
+$LN2@operator:
+
+; 89   :         if (!envreg.direction && envreg.vol>0)
+
+	mov	eax, DWORD PTR _envreg$[ebp]
+	mov	cl, BYTE PTR [eax]
+	shr	cl, 3
+	and	cl, 1
+	movzx	edx, cl
+	test	edx, edx
+	jne	SHORT $LN1@operator
+	mov	eax, DWORD PTR _envreg$[ebp]
+	mov	cl, BYTE PTR [eax]
+	shr	cl, 4
+	and	cl, 15					; 0000000fH
+	movzx	edx, cl
+	test	edx, edx
+	jle	SHORT $LN1@operator
+
+; 90   :           --envreg.vol;
+
+	mov	eax, DWORD PTR _envreg$[ebp]
+	mov	cl, BYTE PTR [eax]
+	shr	cl, 4
+	and	cl, 15					; 0000000fH
+	sub	cl, 1
+	and	cl, 15					; 0000000fH
+	shl	cl, 4
+	mov	edx, DWORD PTR _envreg$[ebp]
+	mov	al, BYTE PTR [edx]
+	and	al, 15					; 0000000fH
+	or	al, cl
+	mov	ecx, DWORD PTR _envreg$[ebp]
+	mov	BYTE PTR [ecx], al
+$LN1@operator:
+
+; 91   :       counter = 0;
+
+	mov	edx, DWORD PTR _counter$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [edx], xmm0
+$LN3@operator:
+
+; 92   :     }
+; 93   :   };
+
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+??R<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEXAATVolumeEnvelope@gb@emulation@@AAM@Z ENDP ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator()
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\wincore\types.h
+;	COMDAT ??$SafeDelete@VInterface@output@audio@@@@YAXPAPAVInterface@output@audio@@@Z
+_TEXT	SEGMENT
+$T1 = -4						; size = 4
+_ppInterfaceToDelete$ = 8				; size = 4
+??$SafeDelete@VInterface@output@audio@@@@YAXPAPAVInterface@output@audio@@@Z PROC ; SafeDelete<audio::output::Interface>, COMDAT
+
+; 35   : inline void SafeDelete(Interface **ppInterfaceToDelete) {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+
+; 36   :     if (*ppInterfaceToDelete != NULL) {
+
+	mov	eax, DWORD PTR _ppInterfaceToDelete$[ebp]
+	cmp	DWORD PTR [eax], 0
+	je	SHORT $LN2@SafeDelete
+
+; 37   :         delete (*ppInterfaceToDelete);
+
+	mov	ecx, DWORD PTR _ppInterfaceToDelete$[ebp]
+	mov	edx, DWORD PTR [ecx]
+	mov	DWORD PTR $T1[ebp], edx
+	mov	eax, DWORD PTR $T1[ebp]
+	push	eax
+	call	??3@YAXPAX@Z				; operator delete
+	add	esp, 4
+
+; 38   :         (*ppInterfaceToDelete) = NULL;
+
+	mov	ecx, DWORD PTR _ppInterfaceToDelete$[ebp]
+	mov	DWORD PTR [ecx], 0
+$LN2@SafeDelete:
+
+; 39   :     }
+; 40   : }
+
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$SafeDelete@VInterface@output@audio@@@@YAXPAPAVInterface@output@audio@@@Z ENDP ; SafeDelete<audio::output::Interface>
+_TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\emu.h
 ;	COMDAT ?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ
@@ -1043,23 +1529,22 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 1152				; 00000480H
+	add	eax, 1160				; 00000488H
 	mov	esp, ebp
 	pop	ebp
 	ret	0
 ?memory@Emu@gb@emulation@@QAEPAVMemory@23@XZ ENDP	; emulation::gb::Emu::memory
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
-; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.h
+;	COMDAT ?Sample@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEMXZ
 _TEXT	SEGMENT
-tv65 = -8						; size = 4
+_result$ = -8						; size = 4
 _this$ = -4						; size = 4
-_address$ = 8						; size = 2
-_data$ = 12						; size = 1
-?Write@SoundController@gb@emulation@@QAEXGE@Z PROC	; emulation::gb::SoundController::Write
+?Sample@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEMXZ PROC ; emulation::gb::SoundController::<unnamed-type-channel3>::Sample, COMDAT
 ; _this$ = ecx
 
-; 30   : void SoundController::Write(uint16_t address, uint8_t data) {
+; 189  :     real_t Sample() {
 
 	push	ebp
 	mov	ebp, esp
@@ -1068,33 +1553,78 @@ _data$ = 12						; size = 1
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 31   :   switch (address) {
+; 190  :       if (!enabled) return 0;
 
-	movzx	eax, WORD PTR _address$[ebp]
-	mov	DWORD PTR tv65[ebp], eax
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+36]
+	test	ecx, ecx
+	jne	SHORT $LN1@Sample
+	fldz
+	jmp	SHORT $LN2@Sample
+$LN1@Sample:
 
-; 32   :     case 0xFF10:
-; 33   :      
-; 34   :       break;
-; 35   :  
-; 36   :   }
-; 37   : }
+; 191  :       //wavsample = (float(sc_->wavram[playback_counter])) / 15.0f;
+; 192  :       wavsample = (wavsample*2.0f) - 1;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [edx+24]
+	mulss	xmm0, DWORD PTR __real@40000000
+	subss	xmm0, DWORD PTR __real@3f800000
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [eax+24], xmm0
+
+; 193  :       wavsample /= samplecount;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [ecx+24]
+	divss	xmm0, DWORD PTR [edx+28]
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [eax+24], xmm0
+
+; 194  :       samplecount = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [ecx+28], xmm0
+
+; 195  :       auto result = (wavsample) * vol;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [edx+24]
+	mov	eax, DWORD PTR _this$[ebp]
+	mulss	xmm0, DWORD PTR [eax+16]
+	movss	DWORD PTR _result$[ebp], xmm0
+
+; 196  :       wavsample = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [ecx+24], xmm0
+
+; 197  :       return result;
+
+	fld	DWORD PTR _result$[ebp]
+$LN2@Sample:
+
+; 198  :     }
 
 	mov	esp, ebp
 	pop	ebp
-	ret	8
-?Write@SoundController@gb@emulation@@QAEXGE@Z ENDP	; emulation::gb::SoundController::Write
+	ret	0
+?Sample@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEMXZ ENDP ; emulation::gb::SoundController::<unnamed-type-channel3>::Sample
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
-; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.h
+;	COMDAT ?Tick@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEXM@Z
 _TEXT	SEGMENT
-tv65 = -8						; size = 4
+_timems$ = -8						; size = 4
 _this$ = -4						; size = 4
-_address$ = 8						; size = 2
-?Read@SoundController@gb@emulation@@QAEEG@Z PROC	; emulation::gb::SoundController::Read
+_dt$ = 8						; size = 4
+?Tick@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEXM@Z PROC ; emulation::gb::SoundController::<unnamed-type-channel3>::Tick, COMDAT
 ; _this$ = ecx
 
-; 20   : uint8_t SoundController::Read(uint16_t address) {
+; 169  :     void Tick(float dt) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1103,46 +1633,133 @@ _address$ = 8						; size = 2
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 21   : 
-; 22   :   switch (address) {
+; 170  :       if (!enabled) return;
 
-	movzx	eax, WORD PTR _address$[ebp]
-	mov	DWORD PTR tv65[ebp], eax
-	cmp	DWORD PTR tv65[ebp], 65344		; 0000ff40H
-	je	SHORT $LN1@Read
-	jmp	SHORT $LN2@Read
-$LN1@Read:
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+36]
+	test	ecx, ecx
+	jne	SHORT $LN4@Tick
+	jmp	$LN5@Tick
+$LN4@Tick:
 
-; 23   :     case 0xFF40:
-; 24   :       return 0;
+; 171  :       freqcounter += dt;      
 
-	xor	al, al
-	jmp	SHORT $LN4@Read
-$LN2@Read:
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [edx+12]
+	addss	xmm0, DWORD PTR _dt$[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [eax+12], xmm0
 
-; 25   :  
-; 26   :   }
-; 27   : 	return 0;
+; 172  :     
+; 173  :       real_t timems = 1000.0f/freq;
 
-	xor	al, al
-$LN4@Read:
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@447a0000
+	divss	xmm0, DWORD PTR [ecx+4]
+	movss	DWORD PTR _timems$[ebp], xmm0
 
-; 28   : }
+; 174  :       if (freqcounter >= timems) {
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [edx+12]
+	comiss	xmm0, DWORD PTR _timems$[ebp]
+	jb	SHORT $LN3@Tick
+
+; 175  :         wavsample += (float(sc_->wavram[playback_counter])) / 15.0f;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax]
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+20]
+	movzx	ecx, BYTE PTR [ecx+eax+146]
+	cvtsi2ss xmm0, ecx
+	divss	xmm0, DWORD PTR __real@41700000
+	mov	edx, DWORD PTR _this$[ebp]
+	addss	xmm0, DWORD PTR [edx+24]
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [eax+24], xmm0
+
+; 176  :         ++samplecount;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [ecx+28]
+	addss	xmm0, DWORD PTR __real@3f800000
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [edx+28], xmm0
+
+; 177  :         playback_counter = (playback_counter + 1) & 0x1F;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+20]
+	add	ecx, 1
+	and	ecx, 31					; 0000001fH
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+20], cl
+
+; 178  :         freqcounter = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [eax+12], xmm0
+$LN3@Tick:
+
+; 179  :       }
+; 180  :       
+; 181  :       if (sc_->nr34_ & 0x40) {
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx]
+	movzx	eax, BYTE PTR [edx+145]
+	and	eax, 64					; 00000040H
+	je	SHORT $LN1@Tick
+
+; 182  :         soundlengthcounter += float(dt);
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [ecx+8]
+	addss	xmm0, DWORD PTR _dt$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [edx+8], xmm0
+
+; 183  :         if (soundlengthcounter >= soundlength_ms) {
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [eax+8]
+	comiss	xmm0, DWORD PTR [ecx+32]
+	jb	SHORT $LN1@Tick
+
+; 184  :           sc_->nr34_ &= ~0x80;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx]
+	movzx	ecx, BYTE PTR [eax+145]
+	and	ecx, -129				; ffffff7fH
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx]
+	mov	BYTE PTR [eax+145], cl
+$LN1@Tick:
+$LN5@Tick:
+
+; 185  :         }
+; 186  :       }
+; 187  :     }
 
 	mov	esp, ebp
 	pop	ebp
 	ret	4
-?Read@SoundController@gb@emulation@@QAEEG@Z ENDP	; emulation::gb::SoundController::Read
+?Tick@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEXM@Z ENDP ; emulation::gb::SoundController::<unnamed-type-channel3>::Tick
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
-; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.h
+;	COMDAT ?Initialize@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEXPAV234@@Z
 _TEXT	SEGMENT
 _this$ = -4						; size = 4
-_dt$ = 8						; size = 8
-?Step@SoundController@gb@emulation@@QAEXN@Z PROC	; emulation::gb::SoundController::Step
+_sc$ = 8						; size = 4
+?Initialize@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEXPAV234@@Z PROC ; emulation::gb::SoundController::<unnamed-type-channel3>::Initialize, COMDAT
 ; _this$ = ecx
 
-; 16   : void SoundController::Step(double dt) {
+; 159  :     void Initialize(SoundController* sc) {
 
 	push	ebp
 	mov	ebp, esp
@@ -1150,13 +1767,2303 @@ _dt$ = 8						; size = 8
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 17   : 
-; 18   : }
+; 160  :       playback_counter = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+20], 0
+
+; 161  :       freq=soundlengthcounter=freqcounter=vol=0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [ecx+16], xmm0
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [edx+12], xmm0
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [eax+8], xmm0
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [ecx+4], xmm0
+
+; 162  :       sc_ = sc;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR _sc$[ebp]
+	mov	DWORD PTR [edx], eax
+
+; 163  :       samplecount = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [ecx+28], xmm0
+
+; 164  :       wavsample = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [edx+24], xmm0
+
+; 165  :       soundlength_ms = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [eax+32], xmm0
+
+; 166  :       enabled = false;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+36], 0
+
+; 167  :     }
 
 	mov	esp, ebp
 	pop	ebp
+	ret	4
+?Initialize@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEXPAV234@@Z ENDP ; emulation::gb::SoundController::<unnamed-type-channel3>::Initialize
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.h
+;	COMDAT ?Sample@<unnamed-type-channel1>@SoundController@gb@emulation@@QAEEXZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?Sample@<unnamed-type-channel1>@SoundController@gb@emulation@@QAEEXZ PROC ; emulation::gb::SoundController::<unnamed-type-channel1>::Sample, COMDAT
+; _this$ = ecx
+
+; 145  :     uint8_t Sample() {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 146  :       sample = dutycycletable[wavepatternduty|wavepatterncounter];
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax]
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+1]
+	or	ecx, eax
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR _dutycycletable[ecx]
+	mov	BYTE PTR [edx+14], al
+
+; 147  :       wavepatterncounter = (wavepatterncounter +1 ) % 8;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+1]
+	add	edx, 1
+	and	edx, -2147483641			; 80000007H
+	jns	SHORT $LN3@Sample
+	dec	edx
+	or	edx, -8					; fffffff8H
+	inc	edx
+$LN3@Sample:
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+1], dl
+
+; 148  :       return sample;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [ecx+14]
+
+; 149  :     }
+
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?Sample@<unnamed-type-channel1>@SoundController@gb@emulation@@QAEEXZ ENDP ; emulation::gb::SoundController::<unnamed-type-channel1>::Sample
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.h
+;	COMDAT ?Initialize@<unnamed-type-channel1>@SoundController@gb@emulation@@QAEXPAV234@@Z
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+_sc$ = 8						; size = 4
+?Initialize@<unnamed-type-channel1>@SoundController@gb@emulation@@QAEXPAV234@@Z PROC ; emulation::gb::SoundController::<unnamed-type-channel1>::Initialize, COMDAT
+; _this$ = ecx
+
+; 137  :     void Initialize(SoundController* sc) {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 138  :       sc_ = sc;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _sc$[ebp]
+	mov	DWORD PTR [eax+4], ecx
+
+; 139  :       wavepatterncounter = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+1], 0
+
+; 140  :       wavepatternduty = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax], 0
+
+; 141  :       freqcounter = 0;
+
+	xor	ecx, ecx
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	WORD PTR [edx+10], cx
+
+; 142  :       sample = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+14], 0
+
+; 143  :     }
+
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+?Initialize@<unnamed-type-channel1>@SoundController@gb@emulation@@QAEXPAV234@@Z ENDP ; emulation::gb::SoundController::<unnamed-type-channel1>::Initialize
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+_TEXT	SEGMENT
+tv572 = -92						; size = 4
+tv599 = -88						; size = 4
+tv529 = -84						; size = 8
+tv526 = -76						; size = 4
+tv256 = -72						; size = 4
+tv248 = -68						; size = 4
+tv483 = -64						; size = 8
+tv480 = -56						; size = 4
+tv444 = -52						; size = 8
+tv441 = -44						; size = 4
+tv415 = -40						; size = 4
+tv90 = -36						; size = 4
+_s$1 = -32						; size = 4
+_r$2 = -28						; size = 4
+_x$3 = -24						; size = 4
+_x$4 = -20						; size = 4
+_x$5 = -16						; size = 4
+_x$6 = -12						; size = 4
+_index$7 = -8						; size = 4
+_this$ = -4						; size = 4
+_address$ = 8						; size = 2
+_data$ = 12						; size = 1
+?Write@SoundController@gb@emulation@@QAEXGE@Z PROC	; emulation::gb::SoundController::Write
+; _this$ = ecx
+
+; 265  : void SoundController::Write(uint16_t address, uint8_t data) {
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 92					; 0000005cH
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-92]
+	mov	ecx, 23					; 00000017H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 266  :   ioports[address-0xFF10] = data;
+
+	movzx	eax, WORD PTR _address$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+8]
+	mov	cl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [edx+eax-65296], cl
+
+; 267  :   if (address>=0xFF30 && address<=0xFF3F) {
+
+	movzx	edx, WORD PTR _address$[ebp]
+	cmp	edx, 65328				; 0000ff30H
+	jl	SHORT $LN39@Write
+	movzx	eax, WORD PTR _address$[ebp]
+	cmp	eax, 65343				; 0000ff3fH
+	jg	SHORT $LN39@Write
+
+; 268  :      int index = (address & 0x0F)<<1;
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	and	ecx, 15					; 0000000fH
+	shl	ecx, 1
+	mov	DWORD PTR _index$7[ebp], ecx
+
+; 269  :      wavram[index] = data>>4;
+
+	movzx	edx, BYTE PTR _data$[ebp]
+	sar	edx, 4
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, DWORD PTR _index$7[ebp]
+	mov	BYTE PTR [eax+146], dl
+
+; 270  :      wavram[index+1] = data&0xF;
+
+	movzx	ecx, BYTE PTR _data$[ebp]
+	and	ecx, 15					; 0000000fH
+	mov	edx, DWORD PTR _this$[ebp]
+	add	edx, DWORD PTR _index$7[ebp]
+	mov	BYTE PTR [edx+147], cl
+$LN39@Write:
+
+; 271  :   }
+; 272  : 
+; 273  :   switch (address) {
+
+	movzx	eax, WORD PTR _address$[ebp]
+	mov	DWORD PTR tv90[ebp], eax
+	mov	ecx, DWORD PTR tv90[ebp]
+	sub	ecx, 65296				; 0000ff10H
+	mov	DWORD PTR tv90[ebp], ecx
+	cmp	DWORD PTR tv90[ebp], 22			; 00000016H
+	ja	$LN37@Write
+	mov	edx, DWORD PTR tv90[ebp]
+	jmp	DWORD PTR $LN44@Write[edx*4]
+$LN36@Write:
+
+; 274  :     case 0xFF10:
+; 275  :       nr10_.raw = data;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [eax+132], cl
+
+; 276  :       if (nr10_.sweep_shift == 0)
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+132]
+	and	al, 7
+	movzx	ecx, al
+	test	ecx, ecx
+	jne	SHORT $LN35@Write
+
+; 277  :         channel1freqsweep = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [edx+252], xmm0
+
+; 278  :       else
+
+	jmp	SHORT $LN34@Write
+$LN35@Write:
+
+; 279  :         channel1freqsweep = channel1freq/(powf(2,float(nr10_.sweep_shift)));
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+132]
+	and	cl, 7
+	movzx	edx, cl
+	cvtsi2ss xmm0, edx
+	push	ecx
+	movss	DWORD PTR [esp], xmm0
+	push	ecx
+	movss	xmm0, DWORD PTR __real@40000000
+	movss	DWORD PTR [esp], xmm0
+	call	_powf
+	add	esp, 8
+	fstp	DWORD PTR tv415[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [eax+244]
+	divss	xmm0, DWORD PTR tv415[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [ecx+252], xmm0
+$LN34@Write:
+
+; 280  :       if (nr10_.incdec)
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+132]
+	shr	al, 3
+	and	al, 1
+	movzx	ecx, al
+	test	ecx, ecx
+	je	SHORT $LN33@Write
+
+; 281  :         channel1freqsweep *= -1;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [edx+252]
+	mulss	xmm0, DWORD PTR __real@bf800000
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [eax+252], xmm0
+$LN33@Write:
+
+; 282  :       break;
+
+	jmp	$LN37@Write
+$LN32@Write:
+
+; 283  :     case 0xFF11:
+; 284  :       nr11_.raw = data;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [ecx+133], dl
+
+; 285  :       channel1.wavepatternduty = (data&0xC0)>>3;
+
+	movzx	eax, BYTE PTR _data$[ebp]
+	and	eax, 192				; 000000c0H
+	sar	eax, 3
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+184], al
+
+; 286  :       channel1.lengthcounterload = 64 - (data&0x3F);
+
+	movzx	edx, BYTE PTR _data$[ebp]
+	and	edx, 63					; 0000003fH
+	mov	eax, 64					; 00000040H
+	sub	eax, edx
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+196], al
+
+; 287  :       break;
+
+	jmp	$LN37@Write
+$LN31@Write:
+
+; 288  :     case 0xFF12:
+; 289  :       nr12_.raw = data;    
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [edx+134], al
+
+; 290  :       break;
+
+	jmp	$LN37@Write
+$LN30@Write:
+
+; 291  :     case 0xFF13:
+; 292  :       nr13_ = data;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [ecx+135], dl
+
+; 293  :       break;
+
+	jmp	$LN37@Write
+$LN29@Write:
+
+; 294  :     case 0xFF14: {
+; 295  :       nr14_ = data;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [eax+136], cl
+
+; 296  :       uint32_t x = nr13_;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+135]
+	mov	DWORD PTR _x$6[ebp], eax
+
+; 297  :       x |= (nr14_&0x7)<<8;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+136]
+	and	edx, 7
+	shl	edx, 8
+	or	edx, DWORD PTR _x$6[ebp]
+	mov	DWORD PTR _x$6[ebp], edx
+
+; 298  :       channel1.freqcounterload = 2048-x;
+
+	mov	eax, 2048				; 00000800H
+	sub	eax, DWORD PTR _x$6[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	WORD PTR [ecx+192], ax
+
+; 299  : 
+; 300  :       channel1freq = 131072.0f/(2048-x);
+
+	mov	edx, 2048				; 00000800H
+	sub	edx, DWORD PTR _x$6[ebp]
+	mov	DWORD PTR tv441[ebp], edx
+	cvtsi2sd xmm0, DWORD PTR tv441[ebp]
+	mov	eax, DWORD PTR tv441[ebp]
+	shr	eax, 31					; 0000001fH
+	addsd	xmm0, QWORD PTR __xmm@41f00000000000000000000000000000[eax*8]
+	movsd	QWORD PTR tv444[ebp], xmm0
+	cvtsd2ss xmm0, QWORD PTR tv444[ebp]
+	movss	xmm1, DWORD PTR __real@48000000
+	divss	xmm1, xmm0
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [ecx+244], xmm1
+
+; 301  :       if (nr14_ & 0x80) {
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+136]
+	and	eax, 128				; 00000080H
+	je	$LN28@Write
+
+; 302  :         nr52_ |= 0x01;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+294]
+	or	edx, 1
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+294], dl
+
+; 303  :         channel1envcounterms = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [ecx+256], xmm0
+
+; 304  :         channel1sweepcounterms = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [edx+248], xmm0
+
+; 305  :         channel1soundlengthcounter = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [eax+260], xmm0
+
+; 306  :         channel1env.raw = nr12_.raw;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+134]
+	mov	BYTE PTR [ecx+240], al
+
+; 307  :         channel1.freqcounter = channel1.freqcounterload;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	ax, WORD PTR [edx+192]
+	mov	WORD PTR [ecx+194], ax
+
+; 308  :         channel1.lengthcounter = channel1.lengthcounterload;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+196]
+	mov	BYTE PTR [ecx+197], al
+$LN28@Write:
+
+; 309  :       }
+; 310  :       break;
+
+	jmp	$LN37@Write
+$LN27@Write:
+
+; 311  :     }
+; 312  : 
+; 313  : 
+; 314  :     case 0xFF16:
+; 315  :       nr21_.raw = data;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [ecx+137], dl
+
+; 316  :       break;
+
+	jmp	$LN37@Write
+$LN26@Write:
+
+; 317  :     case 0xFF17:
+; 318  :       nr22_.raw = data;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [eax+138], cl
+
+; 319  :       break;
+
+	jmp	$LN37@Write
+$LN25@Write:
+
+; 320  :     case 0xFF18:
+; 321  :       nr23_ = data;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [edx+139], al
+
+; 322  :       break;
+
+	jmp	$LN37@Write
+$LN24@Write:
+
+; 323  :     case 0xFF19: {
+; 324  :       nr24_ = data;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [ecx+140], dl
+
+; 325  :       uint32_t x = nr23_;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+139]
+	mov	DWORD PTR _x$5[ebp], ecx
+
+; 326  :       x |= (nr24_&0x7)<<8;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+140]
+	and	eax, 7
+	shl	eax, 8
+	or	eax, DWORD PTR _x$5[ebp]
+	mov	DWORD PTR _x$5[ebp], eax
+
+; 327  :       channel2freq = 131072.0f/(2048-x);
+
+	mov	ecx, 2048				; 00000800H
+	sub	ecx, DWORD PTR _x$5[ebp]
+	mov	DWORD PTR tv480[ebp], ecx
+	cvtsi2sd xmm0, DWORD PTR tv480[ebp]
+	mov	edx, DWORD PTR tv480[ebp]
+	shr	edx, 31					; 0000001fH
+	addsd	xmm0, QWORD PTR __xmm@41f00000000000000000000000000000[edx*8]
+	movsd	QWORD PTR tv483[ebp], xmm0
+	cvtsd2ss xmm0, QWORD PTR tv483[ebp]
+	movss	xmm1, DWORD PTR __real@48000000
+	divss	xmm1, xmm0
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [eax+264], xmm1
+
+; 328  :       if (nr24_ & 0x80) {
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+140]
+	and	edx, 128				; 00000080H
+	je	SHORT $LN23@Write
+
+; 329  :         nr52_ |= 0x01;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+294]
+	or	ecx, 1
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+294], cl
+
+; 330  :         channel2envcounterms = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [eax+268], xmm0
+
+; 331  :         channel2soundlengthcounter = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [ecx+272], xmm0
+
+; 332  :         channel2env.raw = nr22_.raw;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+138]
+	mov	BYTE PTR [edx+241], cl
+$LN23@Write:
+
+; 333  :       }
+; 334  :       break;
+
+	jmp	$LN37@Write
+$LN22@Write:
+
+; 335  :     }
+; 336  : 
+; 337  :     case 0xFF1A:
+; 338  :       nr30_ = data;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [edx+141], al
+
+; 339  :       channel3.enabled = (nr30_&0x80)==0x80;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+141]
+	and	edx, 128				; 00000080H
+	je	SHORT $LN42@Write
+	mov	DWORD PTR tv248[ebp], 1
+	jmp	SHORT $LN43@Write
+$LN42@Write:
+	mov	DWORD PTR tv248[ebp], 0
+$LN43@Write:
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR tv248[ebp]
+	mov	BYTE PTR [eax+236], cl
+
+; 340  :       break;
+
+	jmp	$LN37@Write
+$LN21@Write:
+
+; 341  :     case 0xFF1B:
+; 342  :       nr31_ = data;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [edx+142], al
+
+; 343  :       break;
+
+	jmp	$LN37@Write
+$LN20@Write:
+
+; 344  :     case 0xFF1C:
+; 345  :       nr32_ = data;  
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [ecx+143], dl
+
+; 346  :       switch ((nr32_ & 0x60)>>5) {
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+143]
+	and	ecx, 96					; 00000060H
+	sar	ecx, 5
+	mov	DWORD PTR tv256[ebp], ecx
+	cmp	DWORD PTR tv256[ebp], 3
+	ja	SHORT $LN18@Write
+	mov	edx, DWORD PTR tv256[ebp]
+	jmp	DWORD PTR $LN45@Write[edx*4]
+$LN17@Write:
+
+; 347  :         case 0x0:channel3.vol = 0; break;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [eax+216], xmm0
+	jmp	SHORT $LN18@Write
+$LN16@Write:
+
+; 348  :         case 0x1:channel3.vol = 1.0f; break;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@3f800000
+	movss	DWORD PTR [ecx+216], xmm0
+	jmp	SHORT $LN18@Write
+$LN15@Write:
+
+; 349  :         case 0x2:channel3.vol = 0.5f; break;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@3f000000
+	movss	DWORD PTR [edx+216], xmm0
+	jmp	SHORT $LN18@Write
+$LN14@Write:
+
+; 350  :         case 0x3:channel3.vol = 0.25f; break;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@3e800000
+	movss	DWORD PTR [eax+216], xmm0
+$LN18@Write:
+
+; 351  :       }
+; 352  :       break;
+
+	jmp	$LN37@Write
+$LN13@Write:
+
+; 353  :     case 0xFF1D:
+; 354  :       nr33_ = data;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [ecx+144], dl
+
+; 355  :       break;
+
+	jmp	$LN37@Write
+$LN12@Write:
+
+; 356  :     case 0xFF1E: {
+; 357  :       nr34_ = data;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [eax+145], cl
+
+; 358  :       uint32_t x = nr33_;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+144]
+	mov	DWORD PTR _x$4[ebp], eax
+
+; 359  :       x |= (nr34_&0x7)<<8;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+145]
+	and	edx, 7
+	shl	edx, 8
+	or	edx, DWORD PTR _x$4[ebp]
+	mov	DWORD PTR _x$4[ebp], edx
+
+; 360  :       channel3.freq = 131072.0f/(2048-x);
+
+	mov	eax, 2048				; 00000800H
+	sub	eax, DWORD PTR _x$4[ebp]
+	mov	DWORD PTR tv526[ebp], eax
+	cvtsi2sd xmm0, DWORD PTR tv526[ebp]
+	mov	ecx, DWORD PTR tv526[ebp]
+	shr	ecx, 31					; 0000001fH
+	addsd	xmm0, QWORD PTR __xmm@41f00000000000000000000000000000[ecx*8]
+	movsd	QWORD PTR tv529[ebp], xmm0
+	cvtsd2ss xmm0, QWORD PTR tv529[ebp]
+	movss	xmm1, DWORD PTR __real@48000000
+	divss	xmm1, xmm0
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [edx+204], xmm1
+
+; 361  :       if (nr34_&0x40)
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+145]
+	and	ecx, 64					; 00000040H
+	je	SHORT $LN11@Write
+
+; 362  :         channel3.soundlength_ms = 1000.0f * (256.0f-nr31_)*(1/256.0f);
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+142]
+	cvtsi2ss xmm0, eax
+	movss	xmm1, DWORD PTR __real@43800000
+	subss	xmm1, xmm0
+	mulss	xmm1, DWORD PTR __real@447a0000
+	mulss	xmm1, DWORD PTR __real@3b800000
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [ecx+232], xmm1
+$LN11@Write:
+
+; 363  :       if ((nr34_&0x80)&&(nr30_&0x80)) {
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+145]
+	and	eax, 128				; 00000080H
+	je	SHORT $LN10@Write
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+141]
+	and	edx, 128				; 00000080H
+	je	SHORT $LN10@Write
+
+; 364  :         nr52_ |= 0x04;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+294]
+	or	ecx, 4
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+294], cl
+
+; 365  :         channel3.soundlengthcounter = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [eax+208], xmm0
+
+; 366  :         channel3.freqcounter = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [ecx+212], xmm0
+
+; 367  :         channel3.playback_counter = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+220], 0
+
+; 368  :         channel3.enabled = true;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+236], 1
+
+; 369  :         memset(&ioports[0x30],0,16);
+
+	push	16					; 00000010H
+	push	0
+	mov	ecx, 1
+	imul	ecx, 48					; 00000030H
+	mov	edx, DWORD PTR _this$[ebp]
+	add	ecx, DWORD PTR [edx+8]
+	push	ecx
+	call	_memset
+	add	esp, 12					; 0000000cH
+$LN10@Write:
+
+; 370  :       }
+; 371  :       break;
+
+	jmp	$LN37@Write
+$LN9@Write:
+
+; 372  :     }
+; 373  : 
+; 374  :     case 0xFF20:
+; 375  :       nr41_.raw = data;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [eax+178], cl
+
+; 376  :       break;
+
+	jmp	$LN37@Write
+$LN8@Write:
+
+; 377  :     case 0xFF21:
+; 378  :       nr42_.raw = data;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [edx+179], al
+
+; 379  :       break;
+
+	jmp	$LN37@Write
+$LN7@Write:
+
+; 380  :     case 0xFF22:
+; 381  :       nr43_ = data;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [ecx+180], dl
+
+; 382  :       break;
+
+	jmp	$LN37@Write
+$LN6@Write:
+
+; 383  :     case 0xFF23: {
+; 384  :       nr44_ = data;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [eax+181], cl
+
+; 385  :       uint32_t x = nr43_;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+180]
+	mov	DWORD PTR _x$3[ebp], eax
+
+; 386  :       x |= (nr44_&0x7)<<8;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+181]
+	and	edx, 7
+	shl	edx, 8
+	or	edx, DWORD PTR _x$3[ebp]
+	mov	DWORD PTR _x$3[ebp], edx
+
+; 387  :       float r = float(nr43_&0x7);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+180]
+	and	ecx, 7
+	cvtsi2ss xmm0, ecx
+	movss	DWORD PTR _r$2[ebp], xmm0
+
+; 388  :       float s = float((nr43_&0xF0)>>4);
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+180]
+	and	eax, 240				; 000000f0H
+	sar	eax, 4
+	cvtsi2ss xmm0, eax
+	movss	DWORD PTR _s$1[ebp], xmm0
+
+; 389  :       channel4freq = 524288.0f/r/powf(2.0,s+1);
+
+	movss	xmm0, DWORD PTR __real@49000000
+	divss	xmm0, DWORD PTR _r$2[ebp]
+	movss	xmm1, DWORD PTR _s$1[ebp]
+	addss	xmm1, DWORD PTR __real@3f800000
+	push	ecx
+	movss	DWORD PTR [esp], xmm1
+	push	ecx
+	movss	xmm1, DWORD PTR __real@40000000
+	movss	DWORD PTR [esp], xmm1
+	movss	DWORD PTR tv599[ebp], xmm0
+	call	_powf
+	add	esp, 8
+	fstp	DWORD PTR tv572[ebp]
+	movss	xmm0, DWORD PTR tv599[ebp]
+	divss	xmm0, DWORD PTR tv572[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [ecx+276], xmm0
+
+; 390  :       if (nr24_ & 0x80) {
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+140]
+	and	eax, 128				; 00000080H
+	je	SHORT $LN5@Write
+
+; 391  :         nr52_ |= 0x08;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+294]
+	or	edx, 8
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+294], dl
+
+; 392  :         channel4envcounterms = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [ecx+280], xmm0
+
+; 393  :         channel4polycounterms = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [edx+284], xmm0
+
+; 394  :         channel4soundlengthcounter = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [eax+288], xmm0
+
+; 395  :         channel4env.raw = nr42_.raw;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+179]
+	mov	BYTE PTR [ecx+242], al
+$LN5@Write:
+
+; 396  :       }
+; 397  :       break;
+
+	jmp	SHORT $LN37@Write
+$LN4@Write:
+
+; 398  :     }
+; 399  : 
+; 400  :     case 0xFF24:
+; 401  :       nr50_.raw = data;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [ecx+292], dl
+
+; 402  :       break;
+
+	jmp	SHORT $LN37@Write
+$LN3@Write:
+
+; 403  :     case 0xFF25:
+; 404  :       nr51_.raw = data;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR _data$[ebp]
+	mov	BYTE PTR [eax+293], cl
+
+; 405  :       break;
+
+	jmp	SHORT $LN37@Write
+$LN2@Write:
+
+; 406  :     case 0xFF26:
+; 407  :       nr52_ = (data&0xF0) | (nr52_&0x0F);
+
+	movzx	edx, BYTE PTR _data$[ebp]
+	and	edx, 240				; 000000f0H
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+294]
+	and	ecx, 15					; 0000000fH
+	or	edx, ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+294], dl
+
+; 408  :       if ((nr52_&0x80)==0)
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+294]
+	and	edx, 128				; 00000080H
+	jne	SHORT $LN1@Write
+
+; 409  :         Reset();
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [eax]
+	mov	esi, esp
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	call	eax
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+$LN1@Write:
+$LN37@Write:
+
+; 410  :       break;
+; 411  :  
+; 412  :   }
+; 413  : }
+
+	pop	edi
+	pop	esi
+	add	esp, 92					; 0000005cH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
 	ret	8
+	npad	1
+$LN44@Write:
+	DD	$LN36@Write
+	DD	$LN32@Write
+	DD	$LN31@Write
+	DD	$LN30@Write
+	DD	$LN29@Write
+	DD	$LN37@Write
+	DD	$LN27@Write
+	DD	$LN26@Write
+	DD	$LN25@Write
+	DD	$LN24@Write
+	DD	$LN22@Write
+	DD	$LN21@Write
+	DD	$LN20@Write
+	DD	$LN13@Write
+	DD	$LN12@Write
+	DD	$LN37@Write
+	DD	$LN9@Write
+	DD	$LN8@Write
+	DD	$LN7@Write
+	DD	$LN6@Write
+	DD	$LN4@Write
+	DD	$LN3@Write
+	DD	$LN2@Write
+$LN45@Write:
+	DD	$LN17@Write
+	DD	$LN16@Write
+	DD	$LN15@Write
+	DD	$LN14@Write
+?Write@SoundController@gb@emulation@@QAEXGE@Z ENDP	; emulation::gb::SoundController::Write
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+_TEXT	SEGMENT
+tv74 = -8						; size = 4
+_this$ = -4						; size = 4
+_address$ = 8						; size = 2
+?Read@SoundController@gb@emulation@@QAEEG@Z PROC	; emulation::gb::SoundController::Read
+; _this$ = ecx
+
+; 210  : uint8_t SoundController::Read(uint16_t address) {
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 8
+	mov	DWORD PTR [ebp-8], -858993460		; ccccccccH
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 211  : 
+; 212  :   if (address>=0xFF30 && address<=0xFF3F)
+
+	movzx	eax, WORD PTR _address$[ebp]
+	cmp	eax, 65328				; 0000ff30H
+	jl	SHORT $LN24@Read
+	movzx	ecx, WORD PTR _address$[ebp]
+	cmp	ecx, 65343				; 0000ff3fH
+	jg	SHORT $LN24@Read
+
+; 213  :     return ioports[address-0xFF10];
+
+	movzx	edx, WORD PTR _address$[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	mov	al, BYTE PTR [ecx+edx-65296]
+	jmp	$LN25@Read
+$LN24@Read:
+
+; 214  : 
+; 215  :   switch (address) {
+
+	movzx	edx, WORD PTR _address$[ebp]
+	mov	DWORD PTR tv74[ebp], edx
+	mov	eax, DWORD PTR tv74[ebp]
+	sub	eax, 65296				; 0000ff10H
+	mov	DWORD PTR tv74[ebp], eax
+	cmp	DWORD PTR tv74[ebp], 22			; 00000016H
+	ja	$LN22@Read
+	mov	ecx, DWORD PTR tv74[ebp]
+	jmp	DWORD PTR $LN27@Read[ecx*4]
+$LN21@Read:
+
+; 216  :     case 0xFF10:
+; 217  :       ioports[address-0xFF10] = nr10_.raw;
+
+	movzx	edx, WORD PTR _address$[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [eax+132]
+	mov	BYTE PTR [ecx+edx-65296], al
+$LN20@Read:
+
+; 218  :     case 0xFF11:
+; 219  :       ioports[address-0xFF10] = nr11_.raw;
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [edx+133]
+	mov	BYTE PTR [eax+ecx-65296], dl
+$LN19@Read:
+
+; 220  :     case 0xFF12:
+; 221  :       ioports[address-0xFF10] = nr12_.raw;
+
+	movzx	eax, WORD PTR _address$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+8]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [ecx+134]
+	mov	BYTE PTR [edx+eax-65296], cl
+$LN18@Read:
+
+; 222  :     case 0xFF13:
+; 223  :       ioports[address-0xFF10] = nr13_;
+
+	movzx	edx, WORD PTR _address$[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [eax+135]
+	mov	BYTE PTR [ecx+edx-65296], al
+$LN17@Read:
+
+; 224  :     case 0xFF14:
+; 225  :       ioports[address-0xFF10] = nr14_;
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [edx+136]
+	mov	BYTE PTR [eax+ecx-65296], dl
+$LN16@Read:
+
+; 226  :     case 0xFF16:
+; 227  :       ioports[address-0xFF10] = nr21_.raw;
+
+	movzx	eax, WORD PTR _address$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+8]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [ecx+137]
+	mov	BYTE PTR [edx+eax-65296], cl
+$LN15@Read:
+
+; 228  :     case 0xFF17:
+; 229  :       ioports[address-0xFF10] = nr22_.raw;
+
+	movzx	edx, WORD PTR _address$[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [eax+138]
+	mov	BYTE PTR [ecx+edx-65296], al
+$LN14@Read:
+
+; 230  :     case 0xFF18:
+; 231  :       ioports[address-0xFF10] = nr23_;
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [edx+139]
+	mov	BYTE PTR [eax+ecx-65296], dl
+$LN13@Read:
+
+; 232  :     case 0xFF19:
+; 233  :       ioports[address-0xFF10] = nr24_;
+
+	movzx	eax, WORD PTR _address$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+8]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [ecx+140]
+	mov	BYTE PTR [edx+eax-65296], cl
+$LN12@Read:
+
+; 234  : 
+; 235  :     case 0xFF1A:
+; 236  :       ioports[address-0xFF10] = nr30_;
+
+	movzx	edx, WORD PTR _address$[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [eax+141]
+	mov	BYTE PTR [ecx+edx-65296], al
+$LN11@Read:
+
+; 237  :     case 0xFF1B:
+; 238  :       ioports[address-0xFF10] = nr31_;
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [edx+142]
+	mov	BYTE PTR [eax+ecx-65296], dl
+$LN10@Read:
+
+; 239  :     case 0xFF1C:
+; 240  :       ioports[address-0xFF10] = nr32_;
+
+	movzx	eax, WORD PTR _address$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+8]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [ecx+143]
+	mov	BYTE PTR [edx+eax-65296], cl
+$LN9@Read:
+
+; 241  :     case 0xFF1D:
+; 242  :       ioports[address-0xFF10] = nr33_;
+
+	movzx	edx, WORD PTR _address$[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [eax+144]
+	mov	BYTE PTR [ecx+edx-65296], al
+$LN8@Read:
+
+; 243  :     case 0xFF1E:
+; 244  :       ioports[address-0xFF10] = nr34_;
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [edx+145]
+	mov	BYTE PTR [eax+ecx-65296], dl
+$LN7@Read:
+
+; 245  : 
+; 246  :     case 0xFF20:
+; 247  :       ioports[address-0xFF10] = nr41_.raw;
+
+	movzx	eax, WORD PTR _address$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+8]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [ecx+178]
+	mov	BYTE PTR [edx+eax-65296], cl
+$LN6@Read:
+
+; 248  :     case 0xFF21:
+; 249  :       ioports[address-0xFF10] = nr42_.raw;
+
+	movzx	edx, WORD PTR _address$[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [eax+179]
+	mov	BYTE PTR [ecx+edx-65296], al
+$LN5@Read:
+
+; 250  :     case 0xFF22:
+; 251  :       ioports[address-0xFF10] = nr43_;
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [edx+180]
+	mov	BYTE PTR [eax+ecx-65296], dl
+$LN4@Read:
+
+; 252  :     case 0xFF23:
+; 253  :       ioports[address-0xFF10] = nr44_;
+
+	movzx	eax, WORD PTR _address$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+8]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [ecx+181]
+	mov	BYTE PTR [edx+eax-65296], cl
+$LN3@Read:
+
+; 254  : 
+; 255  :     case 0xFF24:
+; 256  :       ioports[address-0xFF10] = nr50_.raw;
+
+	movzx	edx, WORD PTR _address$[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [eax+292]
+	mov	BYTE PTR [ecx+edx-65296], al
+$LN2@Read:
+
+; 257  :     case 0xFF25:
+; 258  :       ioports[address-0xFF10] = nr51_.raw; 
+
+	movzx	ecx, WORD PTR _address$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [edx+293]
+	mov	BYTE PTR [eax+ecx-65296], dl
+$LN1@Read:
+
+; 259  :     case 0xFF26:
+; 260  :       ioports[address-0xFF10] = nr52_; 
+
+	movzx	eax, WORD PTR _address$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+8]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [ecx+294]
+	mov	BYTE PTR [edx+eax-65296], cl
+$LN22@Read:
+
+; 261  :   }
+; 262  : 	return ioports[address-0xFF10];
+
+	movzx	edx, WORD PTR _address$[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	mov	al, BYTE PTR [ecx+edx-65296]
+$LN25@Read:
+
+; 263  : }
+
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+	npad	1
+$LN27@Read:
+	DD	$LN21@Read
+	DD	$LN20@Read
+	DD	$LN19@Read
+	DD	$LN18@Read
+	DD	$LN17@Read
+	DD	$LN22@Read
+	DD	$LN16@Read
+	DD	$LN15@Read
+	DD	$LN14@Read
+	DD	$LN13@Read
+	DD	$LN12@Read
+	DD	$LN11@Read
+	DD	$LN10@Read
+	DD	$LN9@Read
+	DD	$LN8@Read
+	DD	$LN22@Read
+	DD	$LN7@Read
+	DD	$LN6@Read
+	DD	$LN5@Read
+	DD	$LN4@Read
+	DD	$LN3@Read
+	DD	$LN2@Read
+	DD	$LN1@Read
+?Read@SoundController@gb@emulation@@QAEEG@Z ENDP	; emulation::gb::SoundController::Read
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+_TEXT	SEGMENT
+tv464 = -84						; size = 4
+tv444 = -80						; size = 4
+tv426 = -76						; size = 4
+tv157 = -72						; size = 4
+tv156 = -68						; size = 4
+tv141 = -64						; size = 4
+tv140 = -60						; size = 4
+tv88 = -56						; size = 4
+tv87 = -52						; size = 4
+$T1 = -45						; size = 1
+_sample_right$2 = -44					; size = 4
+_sample_left$3 = -40					; size = 4
+_channel4_sample$4 = -36				; size = 4
+_channel3_sample$5 = -32				; size = 4
+_channel2_sample$6 = -28				; size = 4
+_channel1_sample$7 = -24				; size = 4
+_sweep_time_ms$8 = -20					; size = 4
+_envelopeTick$ = -9					; size = 1
+_this$ = -4						; size = 4
+_dt$ = 8						; size = 8
+?Step@SoundController@gb@emulation@@QAEXN@Z PROC	; emulation::gb::SoundController::Step
+; _this$ = ecx
+
+; 78   : void SoundController::Step(double dt) {
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 84					; 00000054H
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-84]
+	mov	ecx, 21					; 00000015H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 79   :   if ((nr52_&0x80)==0)
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+294]
+	and	ecx, 128				; 00000080H
+	jne	SHORT $LN14@Step
+
+; 80   :     return;
+
+	jmp	$LN15@Step
+$LN14@Step:
+
+; 81   : 
+; 82   : 
+; 83   :   auto envelopeTick = [](VolumeEnvelope& envreg,real_t& counter){
+; 84   :     float env_step_ms = envreg.env_sweep/64.0f*1000.0f;
+; 85   : 
+; 86   :     if (env_step_ms != 0 && counter >= env_step_ms) {
+; 87   :         if (envreg.direction && envreg.vol<0xF)
+; 88   :           ++envreg.vol;
+; 89   :         if (!envreg.direction && envreg.vol>0)
+; 90   :           --envreg.vol;
+; 91   :       counter = 0;
+; 92   :     }
+; 93   :   };
+
+	xor	edx, edx
+	mov	BYTE PTR $T1[ebp], dl
+
+; 94   : 
+; 95   :   if (maincounter == 31) {
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+182]
+	cmp	ecx, 31					; 0000001fH
+	jne	SHORT $LN12@Step
+
+; 96   :     if ((nr14_ & 0x80)&&channel1.freqcounter-- == 0) {
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+136]
+	and	eax, 128				; 00000080H
+	je	SHORT $LN12@Step
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, WORD PTR [ecx+194]
+	mov	DWORD PTR tv87[ebp], edx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cx, WORD PTR [eax+194]
+	sub	cx, 1
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	WORD PTR [edx+194], cx
+	cmp	DWORD PTR tv87[ebp], 0
+	jne	SHORT $LN17@Step
+	mov	DWORD PTR tv88[ebp], 1
+	jmp	SHORT $LN18@Step
+$LN17@Step:
+	mov	DWORD PTR tv88[ebp], 0
+$LN18@Step:
+	cmp	DWORD PTR tv88[ebp], 0
+	je	SHORT $LN12@Step
+
+; 97   :       channel1.Sample();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 184				; 000000b8H
+	call	?Sample@<unnamed-type-channel1>@SoundController@gb@emulation@@QAEEXZ ; emulation::gb::SoundController::<unnamed-type-channel1>::Sample
+
+; 98   :       channel1.freqcounter = channel1.freqcounterload;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dx, WORD PTR [ecx+192]
+	mov	WORD PTR [eax+194], dx
+$LN12@Step:
+
+; 99   :     }
+; 100  :   }
+; 101  :   maincounter = (maincounter + 1) & 0x1F;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+182]
+	add	ecx, 1
+	and	ecx, 31					; 0000001fH
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+182], cl
+
+; 102  : 
+; 103  :   if (div256++ == 255) {
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movzx	ecx, BYTE PTR [eax+183]
+	mov	DWORD PTR tv140[ebp], ecx
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+183]
+	add	al, 1
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+183], al
+	cmp	DWORD PTR tv140[ebp], 255		; 000000ffH
+	jne	SHORT $LN19@Step
+	mov	DWORD PTR tv141[ebp], 1
+	jmp	SHORT $LN20@Step
+$LN19@Step:
+	mov	DWORD PTR tv141[ebp], 0
+$LN20@Step:
+	cmp	DWORD PTR tv141[ebp], 0
+	je	SHORT $LN10@Step
+
+; 104  :     if ((nr14_ & 0x40) && channel1.lengthcounter-- == 0) {
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movzx	eax, BYTE PTR [edx+136]
+	and	eax, 64					; 00000040H
+	je	SHORT $LN10@Step
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+197]
+	mov	DWORD PTR tv156[ebp], edx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+197]
+	sub	cl, 1
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+197], cl
+	cmp	DWORD PTR tv156[ebp], 0
+	jne	SHORT $LN21@Step
+	mov	DWORD PTR tv157[ebp], 1
+	jmp	SHORT $LN22@Step
+$LN21@Step:
+	mov	DWORD PTR tv157[ebp], 0
+$LN22@Step:
+$LN10@Step:
+
+; 105  :       //nr14_ &= ~0x80;
+; 106  :     }
+; 107  :   }
+; 108  : 
+; 109  :   //channel1
+; 110  :   //if (nr14_ & 0x80)
+; 111  :   {
+; 112  :     channel1sweepcounterms += float(dt);
+
+	cvtsd2ss xmm0, QWORD PTR _dt$[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	addss	xmm0, DWORD PTR [eax+248]
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [ecx+248], xmm0
+
+; 113  :     real_t sweep_time_ms = nr10_.sweep_time *7.8f;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+132]
+	shr	al, 4
+	and	al, 7
+	movzx	ecx, al
+	cvtsi2ss xmm0, ecx
+	mulss	xmm0, DWORD PTR __real@40f9999a
+	movss	DWORD PTR _sweep_time_ms$8[ebp], xmm0
+
+; 114  :     if (channel1sweepcounterms >= sweep_time_ms) {
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [edx+248]
+	comiss	xmm0, DWORD PTR _sweep_time_ms$8[ebp]
+	jb	SHORT $LN9@Step
+
+; 115  :       channel1freq = channel1freq + channel1freqsweep;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [eax+244]
+	addss	xmm0, DWORD PTR [ecx+252]
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [edx+244], xmm0
+
+; 116  :       channel1sweepcounterms = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [eax+248], xmm0
+$LN9@Step:
+
+; 117  :     }
+; 118  :     //X(t) = X(t-1) +/- X(t-1)/2^n
+; 119  : 
+; 120  :     channel1envcounterms += float(dt);
+
+	cvtsd2ss xmm0, QWORD PTR _dt$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	addss	xmm0, DWORD PTR [ecx+256]
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [edx+256], xmm0
+
+; 121  :     envelopeTick(channel1env,channel1envcounterms);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 256				; 00000100H
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 240				; 000000f0H
+	push	ecx
+	lea	ecx, DWORD PTR _envelopeTick$[ebp]
+	call	??R<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEXAATVolumeEnvelope@gb@emulation@@AAM@Z ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator()
+
+; 122  : 
+; 123  :     channel1soundlengthcounter += float(dt);
+
+	cvtsd2ss xmm0, QWORD PTR _dt$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	addss	xmm0, DWORD PTR [edx+260]
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [eax+260], xmm0
+
+; 124  :     if (nr14_ & 0x40) {
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+136]
+	and	edx, 64					; 00000040H
+	je	SHORT $LN7@Step
+
+; 125  :       if (channel1soundlengthcounter >= nr11_.soundlength_ms()) {
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 133				; 00000085H
+	call	?soundlength_ms@SoundLengthWaveDutyRegister@gb@emulation@@QAEMXZ ; emulation::gb::SoundLengthWaveDutyRegister::soundlength_ms
+	fstp	DWORD PTR tv426[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [eax+260]
+	comiss	xmm0, DWORD PTR tv426[ebp]
+	jb	SHORT $LN7@Step
+
+; 126  :         nr14_ &= ~0x80;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+136]
+	and	edx, -129				; ffffff7fH
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+136], dl
+$LN7@Step:
+
+; 127  :       }
+; 128  :     }
+; 129  :   }
+; 130  : 
+; 131  :   //channel2
+; 132  :   //if (nr24_ & 0x80)
+; 133  :   {
+; 134  :     channel2envcounterms += float(dt);
+
+	cvtsd2ss xmm0, QWORD PTR _dt$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	addss	xmm0, DWORD PTR [ecx+268]
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [edx+268], xmm0
+
+; 135  :     envelopeTick(channel2env,channel2envcounterms);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 268				; 0000010cH
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 241				; 000000f1H
+	push	ecx
+	lea	ecx, DWORD PTR _envelopeTick$[ebp]
+	call	??R<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEXAATVolumeEnvelope@gb@emulation@@AAM@Z ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator()
+
+; 136  : 
+; 137  :     channel2soundlengthcounter += float(dt);
+
+	cvtsd2ss xmm0, QWORD PTR _dt$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	addss	xmm0, DWORD PTR [edx+272]
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [eax+272], xmm0
+
+; 138  :     if (nr24_ & 0x40) {
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+140]
+	and	edx, 64					; 00000040H
+	je	SHORT $LN5@Step
+
+; 139  :       if (channel2soundlengthcounter >= nr21_.soundlength_ms()) {
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 137				; 00000089H
+	call	?soundlength_ms@SoundLengthWaveDutyRegister@gb@emulation@@QAEMXZ ; emulation::gb::SoundLengthWaveDutyRegister::soundlength_ms
+	fstp	DWORD PTR tv444[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [eax+272]
+	comiss	xmm0, DWORD PTR tv444[ebp]
+	jb	SHORT $LN5@Step
+
+; 140  :         nr24_ &= ~0x80;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+140]
+	and	edx, -129				; ffffff7fH
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+140], dl
+$LN5@Step:
+
+; 141  :       }
+; 142  :     }
+; 143  :   }
+; 144  :   
+; 145  :   //channel3
+; 146  :   //real_t wavsample = 0;
+; 147  :  // static int wavindex = 0;
+; 148  :   {
+; 149  :     //static real_t wavsamplecount = 0;
+; 150  :     channel3.Tick(float(dt));
+
+	cvtsd2ss xmm0, QWORD PTR _dt$[ebp]
+	push	ecx
+	movss	DWORD PTR [esp], xmm0
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 200				; 000000c8H
+	call	?Tick@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEXM@Z ; emulation::gb::SoundController::<unnamed-type-channel3>::Tick
+
+; 151  : 
+; 152  :   }
+; 153  : 
+; 154  :   //channel4
+; 155  :  // real_t noisesample = 0;
+; 156  :   //if (nr44_ & 0x80)
+; 157  :   {
+; 158  : 
+; 159  :     //channel4polycounterms += float(dt);
+; 160  :     //static bool alt = false;
+; 161  :     //real_t noisetimems = 1000.0f/channel4freq;
+; 162  :     //if (channel4polycounterms >= noisetimems) {
+; 163  :       //noisesample = (alt*(rand()%255))/255.0f;
+; 164  :    //   alt = !alt;
+; 165  :    //   channel4polycounterms = 0;
+; 166  :    // }
+; 167  :     channel4envcounterms += float(dt);
+
+	cvtsd2ss xmm0, QWORD PTR _dt$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	addss	xmm0, DWORD PTR [ecx+280]
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [edx+280], xmm0
+
+; 168  :     envelopeTick(channel4env,channel4envcounterms);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 280				; 00000118H
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 242				; 000000f2H
+	push	ecx
+	lea	ecx, DWORD PTR _envelopeTick$[ebp]
+	call	??R<lambda_41a3813a41e43ee16132fa6899cc2399>@@QBEXAATVolumeEnvelope@gb@emulation@@AAM@Z ; <lambda_41a3813a41e43ee16132fa6899cc2399>::operator()
+
+; 169  : 
+; 170  :     channel4soundlengthcounter += float(dt);
+
+	cvtsd2ss xmm0, QWORD PTR _dt$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	addss	xmm0, DWORD PTR [edx+288]
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [eax+288], xmm0
+
+; 171  :     if (nr44_ & 0x40) {
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+181]
+	and	edx, 64					; 00000040H
+	je	SHORT $LN3@Step
+
+; 172  :       if (channel4soundlengthcounter >= nr41_.soundlength_ms()) {
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 178				; 000000b2H
+	call	?soundlength_ms@SoundLengthWaveDutyRegister@gb@emulation@@QAEMXZ ; emulation::gb::SoundLengthWaveDutyRegister::soundlength_ms
+	fstp	DWORD PTR tv464[ebp]
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR [eax+288]
+	comiss	xmm0, DWORD PTR tv464[ebp]
+	jb	SHORT $LN3@Step
+
+; 173  :         nr44_ &= ~0x80;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movzx	edx, BYTE PTR [ecx+181]
+	and	edx, -129				; ffffff7fH
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+181], dl
+$LN3@Step:
+
+; 174  :       }
+; 175  :     }
+; 176  :   }
+; 177  : 
+; 178  :   ++sample_counter;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+16]
+	add	edx, 1
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+16], edx
+
+; 179  :   if (sample_counter >= sample_ratio)
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [ecx+16]
+	cmp	eax, DWORD PTR [edx+20]
+	jb	$LN1@Step
+
+; 180  :   {
+; 181  : 
+; 182  :     //
+; 183  :     auto channel1_sample = 0;//osc1.Tick(osc1.get_increment(channel1freq))* (channel1env.vol / 15.0f);//((2.0f*channel1.sample-1.0f) * (channel1env.vol / 15.0f));
+
+	mov	DWORD PTR _channel1_sample$7[ebp], 0
+
+; 184  :     auto channel2_sample = 0;//osc2.Tick(osc2.get_increment(channel2freq)) * (channel2env.vol / 15.0f);
+
+	mov	DWORD PTR _channel2_sample$6[ebp], 0
+
+; 185  : 
+; 186  :     auto channel3_sample = channel3.Sample(); 
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 200				; 000000c8H
+	call	?Sample@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEMXZ ; emulation::gb::SoundController::<unnamed-type-channel3>::Sample
+	fstp	DWORD PTR _channel3_sample$5[ebp]
+
+; 187  :     auto channel4_sample = 0;//noise.Tick(osc2.get_increment(channel4freq)) * (channel4env.vol / 15.0f);
+
+	mov	DWORD PTR _channel4_sample$4[ebp], 0
+
+; 188  :     //wavsamplecount = 0;
+; 189  :     auto sample_left = ((nr51_.ch1so1 * channel1_sample)+(nr51_.ch2so1 * channel2_sample)+(nr51_.ch3so1 * channel3_sample)+(nr51_.ch4so1 * channel4_sample)) * 32767.0f;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [ecx+293]
+	and	dl, 1
+	movzx	eax, dl
+	imul	eax, DWORD PTR _channel1_sample$7[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	dl, BYTE PTR [ecx+293]
+	shr	dl, 1
+	and	dl, 1
+	movzx	ecx, dl
+	imul	ecx, DWORD PTR _channel2_sample$6[ebp]
+	add	eax, ecx
+	cvtsi2ss xmm0, eax
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+293]
+	shr	al, 2
+	and	al, 1
+	movzx	ecx, al
+	cvtsi2ss xmm1, ecx
+	mulss	xmm1, DWORD PTR _channel3_sample$5[ebp]
+	addss	xmm0, xmm1
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+293]
+	shr	al, 3
+	and	al, 1
+	movzx	ecx, al
+	imul	ecx, DWORD PTR _channel4_sample$4[ebp]
+	cvtsi2ss xmm1, ecx
+	addss	xmm0, xmm1
+	mulss	xmm0, DWORD PTR __real@46fffe00
+	movss	DWORD PTR _sample_left$3[ebp], xmm0
+
+; 190  :     auto sample_right = ((nr51_.ch1so2 * channel1_sample)+(nr51_.ch2so2 * channel2_sample)+(nr51_.ch3so2 * channel3_sample)+(nr51_.ch4so2 * channel4_sample)) * 32767.0f;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+293]
+	shr	al, 4
+	and	al, 1
+	movzx	ecx, al
+	imul	ecx, DWORD PTR _channel1_sample$7[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	al, BYTE PTR [edx+293]
+	shr	al, 5
+	and	al, 1
+	movzx	edx, al
+	imul	edx, DWORD PTR _channel2_sample$6[ebp]
+	add	ecx, edx
+	cvtsi2ss xmm0, ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+293]
+	shr	cl, 6
+	and	cl, 1
+	movzx	edx, cl
+	cvtsi2ss xmm1, edx
+	mulss	xmm1, DWORD PTR _channel3_sample$5[ebp]
+	addss	xmm0, xmm1
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+293]
+	shr	cl, 7
+	and	cl, 1
+	movzx	edx, cl
+	imul	edx, DWORD PTR _channel4_sample$4[ebp]
+	cvtsi2ss xmm1, edx
+	addss	xmm0, xmm1
+	mulss	xmm0, DWORD PTR __real@46fffe00
+	movss	DWORD PTR _sample_right$2[ebp], xmm0
+
+; 191  : 
+; 192  :     sample_left *= nr50_.so1vol / 7.0f;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+292]
+	and	cl, 7
+	movzx	edx, cl
+	cvtsi2ss xmm0, edx
+	divss	xmm0, DWORD PTR __real@40e00000
+	mulss	xmm0, DWORD PTR _sample_left$3[ebp]
+	movss	DWORD PTR _sample_left$3[ebp], xmm0
+
+; 193  :     sample_right *= nr50_.so2vol / 7.0f;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax+292]
+	shr	cl, 4
+	and	cl, 7
+	movzx	edx, cl
+	cvtsi2ss xmm0, edx
+	divss	xmm0, DWORD PTR __real@40e00000
+	mulss	xmm0, DWORD PTR _sample_right$2[ebp]
+	movss	DWORD PTR _sample_right$2[ebp], xmm0
+
+; 194  : 
+; 195  :     static short sbuf[8820]= {0,0};
+; 196  :     static int sindex = 0;
+; 197  :     sbuf[sindex++] = short(sample_left);
+
+	cvttss2si eax, DWORD PTR _sample_left$3[ebp]
+	mov	ecx, DWORD PTR ?sindex@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4HA
+	mov	WORD PTR ?sbuf@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4PAFA[ecx*2], ax
+	mov	edx, DWORD PTR ?sindex@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4HA
+	add	edx, 1
+	mov	DWORD PTR ?sindex@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4HA, edx
+
+; 198  :     sbuf[sindex++] = short(sample_right); 
+
+	cvttss2si eax, DWORD PTR _sample_right$2[ebp]
+	mov	ecx, DWORD PTR ?sindex@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4HA
+	mov	WORD PTR ?sbuf@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4PAFA[ecx*2], ax
+	mov	edx, DWORD PTR ?sindex@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4HA
+	add	edx, 1
+	mov	DWORD PTR ?sindex@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4HA, edx
+
+; 199  :     sample_counter -= sample_ratio;   
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [eax+16]
+	sub	edx, DWORD PTR [ecx+20]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+16], edx
+
+; 200  : 
+; 201  :     if (sindex == 8820) {
+
+	cmp	DWORD PTR ?sindex@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4HA, 8820 ; 00002274H
+	jne	SHORT $LN1@Step
+
+; 202  :       output->Write(sbuf,8820<<1);
+
+	mov	esi, esp
+	push	17640					; 000044e8H
+	push	OFFSET ?sbuf@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4PAFA
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx+12]
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [edx]
+	mov	ecx, DWORD PTR [eax+12]
+	mov	eax, DWORD PTR [edx+24]
+	call	eax
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 203  :       sindex = 0;
+
+	mov	DWORD PTR ?sindex@?DE@??Step@SoundController@gb@emulation@@QAEXN@Z@4HA, 0
+$LN1@Step:
+$LN15@Step:
+
+; 204  :     }
+; 205  :   }
+; 206  : 
+; 207  :   
+; 208  : }
+
+	push	edx
+	mov	ecx, ebp
+	push	eax
+	lea	edx, DWORD PTR $LN25@Step
+	call	@_RTC_CheckStackVars@8
+	pop	eax
+	pop	edx
+	pop	edi
+	pop	esi
+	add	esp, 84					; 00000054H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+$LN25@Step:
+	DD	1
+	DD	$LN24@Step
+$LN24@Step:
+	DD	-9					; fffffff7H
+	DD	1
+	DD	$LN23@Step
+$LN23@Step:
+	DB	101					; 00000065H
+	DB	110					; 0000006eH
+	DB	118					; 00000076H
+	DB	101					; 00000065H
+	DB	108					; 0000006cH
+	DB	111					; 0000006fH
+	DB	112					; 00000070H
+	DB	101					; 00000065H
+	DB	84					; 00000054H
+	DB	105					; 00000069H
+	DB	99					; 00000063H
+	DB	107					; 0000006bH
+	DB	0
 ?Step@SoundController@gb@emulation@@QAEXN@Z ENDP	; emulation::gb::SoundController::Step
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?Reset@SoundController@gb@emulation@@UAEXXZ PROC	; emulation::gb::SoundController::Reset
+; _this$ = ecx
+
+; 34   : void SoundController::Reset() {
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 35   :  channel1freq = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [eax+244], xmm0
+
+; 36   :   channel1sweepcounterms = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [ecx+248], xmm0
+
+; 37   :   channel1freqsweep = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [edx+252], xmm0
+
+; 38   :   channel1envcounterms = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [eax+256], xmm0
+
+; 39   :   channel1soundlengthcounter = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [ecx+260], xmm0
+
+; 40   :   channel2freq = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [edx+264], xmm0
+
+; 41   :   channel2envcounterms = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [eax+268], xmm0
+
+; 42   :   channel2soundlengthcounter = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [ecx+272], xmm0
+
+; 43   :   
+; 44   :   channel4freq = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [edx+276], xmm0
+
+; 45   :   channel4envcounterms = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [eax+280], xmm0
+
+; 46   :   channel4polycounterms = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [ecx+284], xmm0
+
+; 47   :   channel4soundlengthcounter = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	xmm0, DWORD PTR __real@00000000
+	movss	DWORD PTR [edx+288], xmm0
+
+; 48   :   channel1env.raw = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+240], 0
+
+; 49   :   channel2env.raw = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+241], 0
+
+; 50   :   channel4env.raw = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+242], 0
+
+; 51   :  
+; 52   :   channel1.Initialize(this);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 184				; 000000b8H
+	call	?Initialize@<unnamed-type-channel1>@SoundController@gb@emulation@@QAEXPAV234@@Z ; emulation::gb::SoundController::<unnamed-type-channel1>::Initialize
+
+; 53   :   channel3.Initialize(this);
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	push	ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 200				; 000000c8H
+	call	?Initialize@<unnamed-type-channel3>@SoundController@gb@emulation@@QAEXPAV234@@Z ; emulation::gb::SoundController::<unnamed-type-channel3>::Initialize
+
+; 54   :   
+; 55   :   nr10_.raw = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+132], 0
+
+; 56   :   nr11_.raw = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+133], 0
+
+; 57   :   nr12_.raw = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+134], 0
+
+; 58   :   nr13_ = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+135], 0
+
+; 59   :   nr14_ = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+136], 0
+
+; 60   :   nr21_.raw = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+137], 0
+
+; 61   :   nr22_.raw = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+138], 0
+
+; 62   :   nr23_ = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+139], 0
+
+; 63   :   nr24_ = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+140], 0
+
+; 64   :   nr30_ = nr31_ = nr32_ = nr33_ = nr34_ = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+145], 0
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+144], 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+143], 0
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+142], 0
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+141], 0
+
+; 65   :   memset(wavram,0,sizeof(wavram));
+
+	push	32					; 00000020H
+	push	0
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 146				; 00000092H
+	push	ecx
+	call	_memset
+	add	esp, 12					; 0000000cH
+
+; 66   : 
+; 67   :   nr41_.raw = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+178], 0
+
+; 68   :   nr42_.raw = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+179], 0
+
+; 69   :   nr43_ = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+180], 0
+
+; 70   :   nr44_ = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+181], 0
+
+; 71   : }
+
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?Reset@SoundController@gb@emulation@@UAEXXZ ENDP	; emulation::gb::SoundController::Reset
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
@@ -1165,17 +4072,42 @@ _this$ = -4						; size = 4
 ?Deinitialize@SoundController@gb@emulation@@UAEXXZ PROC	; emulation::gb::SoundController::Deinitialize
 ; _this$ = ecx
 
-; 12   : void SoundController::Deinitialize() {
+; 73   : void SoundController::Deinitialize() {
 
 	push	ebp
 	mov	ebp, esp
 	push	ecx
+	push	esi
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 13   :  
-; 14   : }
+; 74   :   output->Deinitialize(); 
 
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+12]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [ecx]
+	mov	esi, esp
+	mov	ecx, DWORD PTR [edx+12]
+	mov	edx, DWORD PTR [eax+4]
+	call	edx
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 75   :   SafeDelete(&output);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 12					; 0000000cH
+	push	eax
+	call	??$SafeDelete@VInterface@output@audio@@@@YAXPAPAVInterface@output@audio@@@Z ; SafeDelete<audio::output::Interface>
+	add	esp, 4
+
+; 76   : }
+
+	pop	esi
+	add	esp, 4
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1184,27 +4116,52 @@ _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.cpp
 _TEXT	SEGMENT
-_this$ = -4						; size = 4
+tv215 = -68						; size = 8
+tv213 = -60						; size = 4
+tv210 = -54						; size = 2
+tv208 = -52						; size = 8
+tv129 = -44						; size = 4
+$T2 = -40						; size = 4
+$T3 = -36						; size = 4
+_t$ = -28						; size = 8
+_this$ = -16						; size = 4
+__$EHRec$ = -12						; size = 12
 _emu$ = 8						; size = 4
 ?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z PROC ; emulation::gb::SoundController::Initialize
 ; _this$ = ecx
 
-; 7    : void SoundController::Initialize(Emu* emu) {
+; 11   : void SoundController::Initialize(Emu* emu) {
 
 	push	ebp
 	mov	ebp, esp
+	push	-1
+	push	__ehhandler$?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z
+	mov	eax, DWORD PTR fs:0
+	push	eax
+	sub	esp, 56					; 00000038H
+	push	esi
+	push	edi
 	push	ecx
-	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	lea	edi, DWORD PTR [ebp-68]
+	mov	ecx, 14					; 0000000eH
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	push	eax
+	lea	eax, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 8    :   Component::Initialize(emu);
+; 12   :   Component::Initialize(emu);
 
 	mov	eax, DWORD PTR _emu$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ; emulation::gb::Component::Initialize
 
-; 9    : 	ioports = emu_->memory()->ioports();
+; 13   : 	ioports = emu_->memory()->ioports();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+4]
@@ -1214,15 +4171,296 @@ _emu$ = 8						; size = 4
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [edx+8], eax
 
-; 10   : }
+; 14   :   output = new audio::output::DirectSound();
 
+	push	14					; 0000000eH
+	push	OFFSET $SG153656
+	push	1
+	push	68					; 00000044H
+	call	??2@YAPAXIHPBDH@Z			; operator new
+	add	esp, 16					; 00000010H
+	mov	DWORD PTR $T2[ebp], eax
+	mov	DWORD PTR __$EHRec$[ebp+8], 0
+	cmp	DWORD PTR $T2[ebp], 0
+	je	SHORT $LN3@Initialize
+	mov	ecx, DWORD PTR $T2[ebp]
+	call	??0DirectSound@output@audio@@QAE@XZ	; audio::output::DirectSound::DirectSound
+	mov	DWORD PTR tv129[ebp], eax
+	jmp	SHORT $LN4@Initialize
+$LN3@Initialize:
+	mov	DWORD PTR tv129[ebp], 0
+$LN4@Initialize:
+	mov	eax, DWORD PTR tv129[ebp]
+	mov	DWORD PTR $T3[ebp], eax
+	mov	DWORD PTR __$EHRec$[ebp+8], -1
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR $T3[ebp]
+	mov	DWORD PTR [ecx+12], edx
+
+; 15   :   output->Initialize(44100,2,16);
+
+	mov	esi, esp
+	push	16					; 00000010H
+	push	2
+	push	44100					; 0000ac44H
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+12]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [ecx]
+	mov	ecx, DWORD PTR [edx+12]
+	mov	edx, DWORD PTR [eax]
+	call	edx
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 16   :   sample_counter = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+16], 0
+
+; 17   :   sample_ratio = uint32_t(clockspeed / 44100);
+
+	movsd	xmm0, QWORD PTR _clockspeed
+	divsd	xmm0, QWORD PTR __real@40e5888000000000
+	movsd	QWORD PTR tv208[ebp], xmm0
+	fld	QWORD PTR tv208[ebp]
+	fnstcw	WORD PTR tv210[ebp]
+	movzx	eax, WORD PTR tv210[ebp]
+	or	eax, 3072				; 00000c00H
+	mov	DWORD PTR tv213[ebp], eax
+	fldcw	WORD PTR tv213[ebp]
+	fistp	QWORD PTR tv215[ebp]
+	fldcw	WORD PTR tv210[ebp]
+	mov	ecx, DWORD PTR tv215[ebp]
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [edx+20], ecx
+
+; 18   :   osc1.set_sample_rate(44100);
+
+	push	44100					; 0000ac44H
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 24					; 00000018H
+	call	?set_sample_rate@Component@synth@audio@@QAEXI@Z ; audio::synth::Component::set_sample_rate
+
+; 19   :   osc2.set_sample_rate(44100);
+
+	push	44100					; 0000ac44H
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 60					; 0000003cH
+	call	?set_sample_rate@Component@synth@audio@@QAEXI@Z ; audio::synth::Component::set_sample_rate
+
+; 20   :   noise.set_sample_rate(44100);
+
+	push	44100					; 0000ac44H
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 96					; 00000060H
+	call	?set_sample_rate@Component@synth@audio@@QAEXI@Z ; audio::synth::Component::set_sample_rate
+
+; 21   :   nr50_.raw = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+292], 0
+
+; 22   :   nr51_.raw = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+293], 0
+
+; 23   :   nr52_ = 0;
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+294], 0
+
+; 24   :   maincounter = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [eax+182], 0
+
+; 25   :   div256 = 0;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+183], 0
+
+; 26   :   time_t t;
+; 27   :   time(&t);
+
+	lea	edx, DWORD PTR _t$[ebp]
+	push	edx
+	call	_time
 	add	esp, 4
+
+; 28   :   srand((int)t);
+
+	mov	eax, DWORD PTR _t$[ebp]
+	mov	esi, esp
+	push	eax
+	call	DWORD PTR __imp__srand
+	add	esp, 4
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 29   : 
+; 30   :   audio::synth::noiseseed = rand();
+
+	mov	esi, esp
+	call	DWORD PTR __imp__rand
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+	mov	DWORD PTR ?noiseseed@synth@audio@@3IA, eax ; audio::synth::noiseseed
+
+; 31   :   Reset();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [ecx]
+	mov	esi, esp
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	call	eax
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 32   : }
+
+	push	edx
+	mov	ecx, ebp
+	push	eax
+	lea	edx, DWORD PTR $LN9@Initialize
+	call	@_RTC_CheckStackVars@8
+	pop	eax
+	pop	edx
+	mov	ecx, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, ecx
+	pop	ecx
+	pop	edi
+	pop	esi
+	add	esp, 68					; 00000044H
 	cmp	ebp, esp
 	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	4
+	npad	1
+$LN9@Initialize:
+	DD	1
+	DD	$LN8@Initialize
+$LN8@Initialize:
+	DD	-28					; ffffffe4H
+	DD	8
+	DD	$LN6@Initialize
+$LN6@Initialize:
+	DB	116					; 00000074H
+	DB	0
+_TEXT	ENDS
+text$x	SEGMENT
+__unwindfunclet$?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z$0:
+	push	14					; 0000000eH
+	push	OFFSET $SG153657
+	push	1
+	mov	eax, DWORD PTR $T2[ebp]
+	push	eax
+	call	??3@YAXPAXHPBDH@Z			; operator delete
+	add	esp, 16					; 00000010H
+	ret	0
+__ehhandler$?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z:
+	mov	edx, DWORD PTR [esp+8]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-68]
+	xor	ecx, eax
+	call	@__security_check_cookie@4
+	mov	eax, OFFSET __ehfuncinfo$?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z
+	jmp	___CxxFrameHandler3
+text$x	ENDS
 ?Initialize@SoundController@gb@emulation@@UAEXPAVEmu@23@@Z ENDP ; emulation::gb::SoundController::Initialize
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\sound_controller.h
+;	COMDAT ?soundlength_ms@SoundLengthWaveDutyRegister@gb@emulation@@QAEMXZ
+_TEXT	SEGMENT
+tv76 = -8						; size = 4
+_this$ = -4						; size = 4
+?soundlength_ms@SoundLengthWaveDutyRegister@gb@emulation@@QAEMXZ PROC ; emulation::gb::SoundLengthWaveDutyRegister::soundlength_ms, COMDAT
+; _this$ = ecx
+
+; 34   :  real_t soundlength_ms() {
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 8
+	mov	DWORD PTR [ebp-8], -858993460		; ccccccccH
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 35   :    return 1000.0f*(64-soundlength)*(1.0f/256.0f) ;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	cl, BYTE PTR [eax]
+	and	cl, 63					; 0000003fH
+	movzx	edx, cl
+	mov	eax, 64					; 00000040H
+	sub	eax, edx
+	cvtsi2ss xmm0, eax
+	mulss	xmm0, DWORD PTR __real@447a0000
+	mulss	xmm0, DWORD PTR __real@3b800000
+	movss	DWORD PTR tv76[ebp], xmm0
+	fld	DWORD PTR tv76[ebp]
+
+; 36   :  }
+
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?soundlength_ms@SoundLengthWaveDutyRegister@gb@emulation@@QAEMXZ ENDP ; emulation::gb::SoundLengthWaveDutyRegister::soundlength_ms
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\users\khalid\documents\github\gbemu\solution\code\audio\synth\quadrangular_wave.h
+;	COMDAT ?set_sample_rate@Component@synth@audio@@QAEXI@Z
+_TEXT	SEGMENT
+tv77 = -16						; size = 8
+tv73 = -8						; size = 4
+_this$ = -4						; size = 4
+_sample_rate$ = 8					; size = 4
+?set_sample_rate@Component@synth@audio@@QAEXI@Z PROC	; audio::synth::Component::set_sample_rate, COMDAT
+; _this$ = ecx
+
+; 73   :   void set_sample_rate(uint32_t sample_rate) { 
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 16					; 00000010H
+	mov	eax, -858993460				; ccccccccH
+	mov	DWORD PTR [ebp-16], eax
+	mov	DWORD PTR [ebp-12], eax
+	mov	DWORD PTR [ebp-8], eax
+	mov	DWORD PTR [ebp-4], eax
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 74   :     sample_rate_ = sample_rate; 
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _sample_rate$[ebp]
+	mov	DWORD PTR [eax+8], ecx
+
+; 75   :     sample_time_ms_ = (1000.0f/sample_rate_);
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	mov	DWORD PTR tv73[ebp], eax
+	cvtsi2sd xmm0, DWORD PTR tv73[ebp]
+	mov	ecx, DWORD PTR tv73[ebp]
+	shr	ecx, 31					; 0000001fH
+	addsd	xmm0, QWORD PTR __xmm@41f00000000000000000000000000000[ecx*8]
+	movsd	QWORD PTR tv77[ebp], xmm0
+	cvtsd2ss xmm0, QWORD PTR tv77[ebp]
+	movss	xmm1, DWORD PTR __real@447a0000
+	divss	xmm1, xmm0
+	mov	edx, DWORD PTR _this$[ebp]
+	movss	DWORD PTR [edx+4], xmm1
+
+; 76   :   }
+
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+?set_sample_rate@Component@synth@audio@@QAEXI@Z ENDP	; audio::synth::Component::set_sample_rate
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\users\khalid\documents\github\gbemu\solution\code\emulation\gb\memory.h
@@ -1275,6 +4513,37 @@ _emu$ = 8						; size = 4
 	pop	ebp
 	ret	4
 ?Initialize@Component@gb@emulation@@UAEXPAVEmu@23@@Z ENDP ; emulation::gb::Component::Initialize
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\program files (x86)\microsoft visual studio 11.0\vc\include\time.inl
+_TEXT	SEGMENT
+__Time$ = 8						; size = 4
+_time	PROC
+
+; 132  : {
+
+	push	ebp
+	mov	ebp, esp
+	push	esi
+
+; 133  :     return _time64(_Time);
+
+	mov	esi, esp
+	mov	eax, DWORD PTR __Time$[ebp]
+	push	eax
+	call	DWORD PTR __imp___time64
+	add	esp, 4
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 134  : }
+
+	pop	esi
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	pop	ebp
+	ret	0
+_time	ENDP
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File c:\program files (x86)\microsoft visual studio 11.0\vc\include\tuple
@@ -1379,4 +4648,43 @@ $T1 = -1						; size = 1
 	ret	0
 ??__Epiecewise_construct@std@@YAXXZ ENDP		; std::`dynamic initializer for 'piecewise_construct''
 text$yc	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File c:\program files (x86)\microsoft visual studio 11.0\vc\include\math.h
+;	COMDAT _powf
+_TEXT	SEGMENT
+tv79 = -12						; size = 4
+tv77 = -8						; size = 8
+__X$ = 8						; size = 4
+__Y$ = 12						; size = 4
+_powf	PROC						; COMDAT
+
+; 428  :         {return ((float)pow((double)_X, (double)_Y)); }
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 12					; 0000000cH
+	mov	DWORD PTR [ebp-12], -858993460		; ccccccccH
+	mov	DWORD PTR [ebp-8], -858993460		; ccccccccH
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	cvtss2sd xmm0, DWORD PTR __Y$[ebp]
+	sub	esp, 8
+	movsd	QWORD PTR [esp], xmm0
+	cvtss2sd xmm0, DWORD PTR __X$[ebp]
+	sub	esp, 8
+	movsd	QWORD PTR [esp], xmm0
+	call	_pow
+	add	esp, 16					; 00000010H
+	fstp	QWORD PTR tv77[ebp]
+	movsd	xmm0, QWORD PTR tv77[ebp]
+	cvtsd2ss xmm0, xmm0
+	movss	DWORD PTR tv79[ebp], xmm0
+	fld	DWORD PTR tv79[ebp]
+	add	esp, 12					; 0000000cH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+_powf	ENDP
+_TEXT	ENDS
 END
