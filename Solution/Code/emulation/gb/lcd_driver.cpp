@@ -71,8 +71,6 @@ void LCDDriver::Step(double dt) {
 	
   if (counter2 == 456) {
 		if (ly++ == 153 && counter2 == 456) {
-      for (int i=0;i<256*256;++i)
-        frame_buffer[i] = pal32[colormap[i]];
       //if (lcdc_.lcd_enable)
 			emu_->on_render();
 			stat_.mode = 2;
@@ -189,9 +187,9 @@ void LCDDriver::RenderAllBGTiles() {
 	auto y = (ly) & 7;
 	auto x = 0;
 	auto readTile = [&](){
-		  uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
+			uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
 			auto tileindex = bgtilemap[(mapoffset<<5)];
-			if(lcdc_.tile_data == 0) {
+			if(lcdc_.tile_data == 1) {
 				int8_t d = tileindex;
 				d+=128;
 				tileindex = d;
@@ -219,7 +217,7 @@ void LCDDriver::RenderAllBGTiles() {
 	}
 }
 
-void LCDDriver::RenderBGLine() {
+void LCDDriver::RenderBGLine(uint8_t* cmline) {
 	auto mapoffset = ((ly+scroll_y)&0xFF) >> 3;
 	auto lineoffset = ((scroll_x>>3))&0x1F;
 	auto y = (ly + scroll_y) & 7;
@@ -245,7 +243,7 @@ void LCDDriver::RenderBGLine() {
 
 	if (lcdc_.bgdisplay == 0) {
 		for (int i=0;i<256;++i) {
-			colormap[((ly)<<8)+(i)] = 0;
+			cmline[i] = 0;
 		}
 	} else {
 		uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
@@ -254,21 +252,20 @@ void LCDDriver::RenderBGLine() {
 			uint8_t* tile = &tiledata[(tileindex<<4)];
       uint8_t bgcolor = pixel((7-x));
       incx();
-      colormap[((ly)<<8)+i] = bg_pal[bgcolor];
+      cmline[i] = bg_pal[bgcolor];
 		}
 	}
 }
 
-void LCDDriver::RenderWindowLine() {
+void LCDDriver::RenderWindowLine(uint8_t* cmline) {
 	if (lcdc_.window_enable == 1) {
-    ;
-    auto mapoffset = ((ly+0)&0xFF) >> 3;
-	  auto lineoffset = ((0>>3))&0x1F;
-	  auto y = (ly + 0) & 7;
-	  auto x = 0 & 7;
+    auto mapoffset = ((ly-wy)&0xFF) >> 3;
+	  auto lineoffset = 0;
+	  auto y = (ly-wy) & 7;
+	  auto x = 0;
 	  auto readTile = [&](){
-        uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.window_tile_map ==0?0x1800:0x1C00];
-			  auto tileindex = bgtilemap[(mapoffset<<5) + lineoffset];
+        uint8_t* tilemap = &emu_->memory()->vram()[lcdc_.window_tile_map ==0?0x1800:0x1C00];
+			  auto tileindex = tilemap[(mapoffset<<5) + lineoffset];
 			  if(lcdc_.tile_data == 0) {
 				  int8_t d = tileindex;
 				  d+=128;
@@ -292,13 +289,13 @@ void LCDDriver::RenderWindowLine() {
 			  uint8_t* tile = &tiledata[(tileindex<<4)];
         uint8_t bgcolor = pixel((7-x));
         incx();
-        colormap[((ly)<<8)+i] = bg_pal[bgcolor];
+        cmline[i] = bg_pal[bgcolor];
 		  }
     }
 	}
 }
 
-void LCDDriver::RenderSpriteLine() {
+void LCDDriver::RenderSpriteLine(uint8_t* cmline) {
   uint8_t sprite_count = 10;
   struct Sprite{
     uint8_t y,x,tileindex;
@@ -328,8 +325,8 @@ void LCDDriver::RenderSpriteLine() {
     Sprite* sprites = (Sprite*)emu_->memory()->oam();
 
     for (int j=0;j<40;++j) {
-       uint8_t spritey = sprites[j].y-16;
-       uint8_t spritex = sprites[j].x-8;
+       int16_t spritey = sprites[j].y-16;
+       int16_t spritex = sprites[j].x-8;
        if ( ly >= (spritey) && ly < (spritey+(8<<lcdc_.sprite_size))) { //same line
          if (lcdc_.sprite_size)
            sprites[j].tileindex &= ~0x01;
@@ -347,8 +344,9 @@ void LCDDriver::RenderSpriteLine() {
               p = pixel((7-x));
             }
             
-            if ((p!=0)&&((sprites[j].attr.priority==0)||(colormap[((ly)<<8)+x+spritex] == bg_pal[0])))
-              colormap[((ly)<<8)+x+spritex] = pal[p];
+            if (((p!=0)&&((sprites[j].attr.priority==0)||(cmline[x+spritex] == bg_pal[0])))&&
+							(x+spritex)>=0)
+              cmline[x+spritex] = pal[p];
           }
 
 			  --sprite_count;
@@ -359,10 +357,16 @@ void LCDDriver::RenderSpriteLine() {
 }
 
 void LCDDriver::RenderLine() {
-  //RenderAllBGTiles();
-	RenderBGLine();
-	RenderWindowLine();
-	RenderSpriteLine();
+	auto cmline = &colormap[ly<<8];
+
+	//RenderAllBGTiles();
+	RenderBGLine(cmline);
+	RenderWindowLine(cmline);
+	RenderSpriteLine(cmline);
+
+	auto fbline = &frame_buffer[ly<<8];
+  for (int i=0;i<256;++i) //256px per line
+   *fbline++ = pal32[*cmline++];
 }
 
 }

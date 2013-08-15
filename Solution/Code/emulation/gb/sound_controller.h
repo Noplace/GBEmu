@@ -45,17 +45,6 @@ union VolumeEnvelope {
  uint8_t raw;
 };	
 
-
-union Channel1Fre {
- struct {
-   uint8_t sweep_shift:3;
-   uint8_t incdec:1;
-   uint8_t sweep_time:3;
-   uint8_t unused:1;
- };
- uint8_t raw;
-};	
-
 union SoundChannelControlVolumeRegister {
  struct {
    uint8_t so1vol:3;
@@ -110,9 +99,7 @@ class SoundController : public Component {
   audio::output::Interface* output;
   uint32_t sample_counter;
   uint32_t sample_ratio;
-  audio::synth::SquareOscillator osc1,osc2;
   audio::synth::NoiseSynth noise;
-  //WaveramSynth wave;
   SweepRegister nr10_;
   SoundLengthWaveDutyRegister nr11_;
   VolumeEnvelope nr12_;
@@ -127,9 +114,56 @@ class SoundController : public Component {
   SoundLengthWaveDutyRegister nr41_;
   VolumeEnvelope nr42_;
   uint8_t nr43_,nr44_;
-  uint8_t maincounter,div256;
+  uint8_t maincounter,ulencounterclock;
 
   struct {
+    SoundController* sc_;
+    uint16_t freqcounterload,freqcounter,sweepfreqcounter;
+		VolumeEnvelope envelope;
+    uint8_t wavepatternduty,wavepatterncounter;
+    uint8_t lengthcounterload,lengthcounter;
+		uint8_t sweepcounter;
+    void Initialize(SoundController* sc) {
+      sc_ = sc;
+      wavepatterncounter = 0;
+      wavepatternduty = 0;
+      freqcounter = 0;
+      sample = 0;
+			envelope.raw = 0;
+			sweepcounter = 0;
+    }
+
+		void SweepTick() {
+			if (sc_->nr10_.sweep_time != 0 && sweepcounter-- == 0) {
+				sweepfreqcounter >>= sc_->nr10_.sweep_shift;
+			  sweepcounter = sc_->nr10_.sweep_time;
+				if (sc_->nr10_.incdec)
+					freqcounter += sweepfreqcounter;
+				else
+					freqcounter -= sweepfreqcounter;
+			}
+		}
+
+		void LengthTick() {
+			if ((sc_->nr14_ & 0x40) && lengthcounter-- == 0) {
+				sc_->nr14_ &= ~0x80;
+			}
+		}
+
+    uint8_t sample;
+    uint8_t SampleTick() {
+			if ((sc_->nr14_ & 0x80)&&freqcounter-- == 0) {
+				sample = dutycycletable[wavepatternduty|wavepatterncounter];
+				wavepatterncounter = (wavepatterncounter +1 ) % 8;
+				freqcounter = freqcounterload;
+			}
+      return sample;
+
+    }
+  }channel1;
+
+	struct {
+		VolumeEnvelope envelope;
     uint8_t wavepatternduty,wavepatterncounter;
     SoundController* sc_;
     uint16_t freqcounterload,freqcounter;
@@ -140,52 +174,69 @@ class SoundController : public Component {
       wavepatternduty = 0;
       freqcounter = 0;
       sample = 0;
+			envelope.raw = 0;
     }
+
+		void LengthTick() {
+			if ((sc_->nr24_ & 0x40) && lengthcounter-- == 0) {
+				sc_->nr24_ &= ~0x80;
+			}
+		}
+
     uint8_t sample;
-    uint8_t Sample() {
-      sample = dutycycletable[wavepatternduty|wavepatterncounter];
-      wavepatterncounter = (wavepatterncounter +1 ) % 8;
+    uint8_t SampleTick() {
+			if ((sc_->nr24_ & 0x80)&&freqcounter-- == 0) {
+				sample = dutycycletable[wavepatternduty|wavepatterncounter];
+				wavepatterncounter = (wavepatterncounter +1 ) % 8;
+				freqcounter = freqcounterload;
+			}
       return sample;
     }
-  }channel1;
+  }channel2;
 
   struct {
+		VolumeEnvelope envelope;
     SoundController* sc_;
-    real_t freq,soundlengthcounter,freqcounter,vol;
+    real_t vol;
     uint8_t playback_counter;
-    real_t wavsample,samplecount;
-    real_t soundlength_ms;
+    real_t wavsample;
+
+    uint16_t freqcounter,freqcounterload;
+    uint8_t lengthcounterload,lengthcounter;
+		uint8_t sample;
     bool enabled;
     void Initialize(SoundController* sc) {
       playback_counter = 0;
-      freq=soundlengthcounter=freqcounter=vol=0;
+      freqcounter=0;
+			freqcounterload =0;
+			vol=0;
+			lengthcounter=0;
       sc_ = sc;
-      samplecount = 0;
       wavsample = 0;
-      soundlength_ms = 0;
       enabled = false;
+      freqcounter = 0;
+      sample = 0;
+			envelope.raw = 0;
     }
 
-    void Tick(float dt) {
-      if (!enabled) return;
-      freqcounter += dt;      
-    
-      real_t timems = 1000.0f/freq;
-      if (freqcounter >= timems) {
-        //wavsample += (float(sc_->wavram[playback_counter])) / 15.0f;
-        //++samplecount;
-        playback_counter = (playback_counter + 1) & 0x1F;
-        freqcounter = 0;
-      }
-      
-      if (sc_->nr34_ & 0x40) {
-        soundlengthcounter += float(dt);
-        if (soundlengthcounter >= soundlength_ms) {
-          sc_->nr34_ &= ~0x80;
-        }
-      }
+		void LengthTick() {
+			if ((sc_->nr34_ & 0x40) && lengthcounter-- == 0) {
+				sc_->nr34_ &= ~0x80;
+				enabled = false;
+			}
+		}
+
+    uint8_t SampleTick() {
+			if (!enabled) return 0;
+			if ((sc_->nr24_ & 0x80)&&freqcounter-- == 0) {
+				sample = sc_->wavram[playback_counter];
+				playback_counter = (playback_counter + 1) & 0x1F;
+				freqcounter = freqcounterload;
+			}
+      return sample;
     }
-    
+
+        /*
     real_t Sample() {
       if (!enabled) return 0;
       wavsample = (float(sc_->wavram[playback_counter])) / 15.0f;
@@ -196,12 +247,20 @@ class SoundController : public Component {
       wavsample = 0;
       return result;
     }
-    void Test();
+    void Test();*/
   } channel3;
 
-  VolumeEnvelope channel1env,channel2env,channel4env;
-  real_t channel1freq,channel1sweepcounterms,channel1freqsweep,channel1envcounterms,channel1soundlengthcounter;
-  real_t channel2freq,channel2envcounterms,channel2soundlengthcounter;
+	struct {
+		SoundController* sc_;
+		VolumeEnvelope envelope;
+    void Initialize(SoundController* sc) {
+      sc_ = sc;
+			envelope.raw = 0;
+    }
+	} channel4;
+  
+  real_t channel1envcounterms;
+  real_t channel2envcounterms;
   
   real_t channel4freq,channel4envcounterms,channel4polycounterms,channel4soundlengthcounter;
   SoundChannelControlVolumeRegister nr50_;

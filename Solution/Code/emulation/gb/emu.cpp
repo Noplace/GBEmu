@@ -13,9 +13,10 @@ void Emu::Initialize() {
   //cartridge_.LoadFile("D:\\Personal\\Projects\\GBEmu\\test\\cpu_instrs\\individual\\01-special.gb",&header);
 	//cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\cpu_instrs\\cpu_instrs.gb",&header);
 	//cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\PUZZLE.gb",&header);
-	//cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\opus5.gb",&header);
-  cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\Super Mario Land (World).gb",&header);
-  //cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
+	//cartridge_.LoadFile("..\\test\\opus5.gb",&header);
+	cartridge_.LoadFile("..\\test\\Super Mario Land (World).gb",&header);
+  //cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\Super Mario Land (World).gb",&header);
+  //cartridge_.LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
 	timer_.Initialize(this);
   lcd_driver_.Initialize(this);
   memory_.Initialize(this);

@@ -15,8 +15,8 @@ Application::~Application() {
 
 int Application::Run() {
   //CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
-  unsigned old_fp_state;
-  _controlfp_s(&old_fp_state, _PC_53, _MCW_PC);
+  //unsigned old_fp_state;
+  //_controlfp_s(&old_fp_state, _PC_53, _MCW_PC);
 
   display_window_.Init();
   
