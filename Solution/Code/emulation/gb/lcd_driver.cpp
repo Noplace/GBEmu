@@ -1,3 +1,21 @@
+/*****************************************************************************************************************
+* Copyright (c) 2013 Khalid Ali Al-Kooheji                                                                       *
+*                                                                                                                *
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and              *
+* associated documentation files (the "Software"), to deal in the Software without restriction, including        *
+* without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell        *
+* copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the       *
+* following conditions:                                                                                          *
+*                                                                                                                *
+* The above copyright notice and this permission notice shall be included in all copies or substantial           *
+* portions of the Software.                                                                                      *
+*                                                                                                                *
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT          *
+* LIMITED TO THE WARRANTIES OF MERCHANTABILITY, * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.          *
+* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, * DAMAGES OR OTHER LIABILITY,      *
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE            *
+* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
+*****************************************************************************************************************/
 #include "gb.h"
 
 
@@ -9,6 +27,17 @@ const uint32_t pal32[4] = {0xffffffff,0xffAAAAAA,0xff545454,0xff000000};
 void LCDDriver::Initialize(Emu* emu) {
   Component::Initialize(emu);
   frame_buffer = new uint32_t[256*256];
+  colormap = new uint8_t[256*256];
+  Reset();
+}
+
+void LCDDriver::Deinitialize() {
+  auto ioports = emu_->memory()->ioports();
+  delete [] colormap;
+  delete [] frame_buffer;  
+}
+
+void LCDDriver::Reset() {
   lcdc_.raw = 0;
   stat_.raw = 2;
   ly = 0;
@@ -19,24 +48,18 @@ void LCDDriver::Initialize(Emu* emu) {
   vsync = 0;
   hsync = 0;
   sprite_bug_counter = 0;
-  colormap = new uint8_t[256*256];
-}
-
-void LCDDriver::Deinitialize() {
-  auto ioports = emu_->memory()->ioports();
-  delete [] colormap;
-  delete [] frame_buffer;  
 }
 
 void LCDDriver::Step(double dt) {
   ++counter2; //line clock
   ++counter1;//screen clock
 
+  stat_.coincidence = lyc == ly;
+  if (stat_.coincidence_inr && stat_.coincidence)
+    emu_->memory()->interrupt_flag() |= 2;
 
 	switch (stat_.mode) {
 		case 2:
-      if (stat_.oam_int)
-        emu_->memory()->interrupt_flag() |= 2;
 			if (counter2==80)
 				stat_.mode = 3;
 			break;
@@ -44,7 +67,8 @@ void LCDDriver::Step(double dt) {
 		  if (counter2 == 282) {
 	  		RenderLine();
 				stat_.mode = 0;
-
+        if (stat_.hblank_int)
+          emu_->memory()->interrupt_flag() |= 2;
 			}
 			break;
 		case 0:
@@ -52,19 +76,24 @@ void LCDDriver::Step(double dt) {
         emu_->memory()->oam()[8+(rand()%152)] = rand()&0xFF; 
         --sprite_bug_counter;
       }
-      if (stat_.hblank_int)
-        emu_->memory()->interrupt_flag() |= 2;
+
 
 			if (counter2==456) {
-				stat_.mode = 2;
-        if (ly == 143) 
+				
+        if (ly == 143) {
 					stat_.mode = 1;//vblank period
+          emu_->memory()->interrupt_flag() |= 1;
+        } else {
+          stat_.mode = 2;
+          if (stat_.oam_int)
+            emu_->memory()->interrupt_flag() |= 2;
+        }
       }
 			break;
 		case 1:
         if (stat_.vblank_int)
           emu_->memory()->interrupt_flag() |= 2;
-				emu_->memory()->interrupt_flag() |= 1;
+				
 			break;
 	}
 
@@ -72,7 +101,7 @@ void LCDDriver::Step(double dt) {
   if (counter2 == 456) {
 		if (ly++ == 153 && counter2 == 456) {
       //if (lcdc_.lcd_enable)
-			emu_->on_render();
+			emu_->Render();
 			stat_.mode = 2;
 			ly = 0;
 			counter1 = 0;
@@ -81,9 +110,7 @@ void LCDDriver::Step(double dt) {
 		counter2 = 0;
 	}
 
-  stat_.coincidence = lyc == ly;
-  if (stat_.coincidence_inr && stat_.coincidence)
-    emu_->memory()->interrupt_flag() |= 2;
+
 
 }
 

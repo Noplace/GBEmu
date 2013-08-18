@@ -1,3 +1,21 @@
+/*****************************************************************************************************************
+* Copyright (c) 2013 Khalid Ali Al-Kooheji                                                                       *
+*                                                                                                                *
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and              *
+* associated documentation files (the "Software"), to deal in the Software without restriction, including        *
+* without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell        *
+* copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the       *
+* following conditions:                                                                                          *
+*                                                                                                                *
+* The above copyright notice and this permission notice shall be included in all copies or substantial           *
+* portions of the Software.                                                                                      *
+*                                                                                                                *
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT          *
+* LIMITED TO THE WARRANTIES OF MERCHANTABILITY, * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.          *
+* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, * DAMAGES OR OTHER LIABILITY,      *
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE            *
+* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
+*****************************************************************************************************************/
 #include "gb.h"
 #include "mbc.h"
 
@@ -20,6 +38,8 @@ void Cartridge::Deinitialize() {
 }
 
 void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
+  emu_->Stop();
+  emu_->Reset();
 	SafeDeleteArray(&rom_);
   if (mbc) {
     mbc->Deinitialize();
@@ -53,30 +73,40 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
     case 0x13:
       mbc = new MBC3();
       break;
+    case 0x1A:
+      mbc = new MBC5();
+      break;
     default:
       DebugBreak();
   }
 
   mbc->Initialize(this);
+
+  const char* a = strrchr(filename,'\\');
+  memset(cartridge_path,0,sizeof(cartridge_path));
+  strncpy(cartridge_path,filename,a-filename+1);
+  cartridge_path[a-filename+1] = '\0';
+  strcpy(cartridge_filename,a+1);
+
   LoadRam();
   core::io::DestroyFileBuffer(&data);
-
+  emu_->memory()->rom_ = emu_->cartridge()->rom();
   
 }
 
 void Cartridge::LoadRam() {
   uint8_t* data=nullptr;
   size_t length;
-  char filename[256];
-  sprintf(filename,"%s.ram",header->title);
+  char filename[256*5];
+  sprintf(filename,"%s%s.ram",cartridge_path,cartridge_filename);
   core::io::ReadWholeFileBinary(filename,&data,length);
   if (data)
     memcpy(mbc->eram(),data,length);
 }
 
 void Cartridge::SaveRam() {
-  char filename[256];
-  sprintf(filename,"%s.ram",header->title);
+  char filename[256*5];
+  sprintf(filename,"%s%s.ram",cartridge_path,cartridge_filename);
   FILE* fp = fopen(filename,"wb");
   fwrite(mbc->eram(),1,header->ram_size_bytes(),fp);
   fclose(fp);

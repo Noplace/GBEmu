@@ -1,3 +1,21 @@
+/*****************************************************************************************************************
+* Copyright (c) 2013 Khalid Ali Al-Kooheji                                                                       *
+*                                                                                                                *
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and              *
+* associated documentation files (the "Software"), to deal in the Software without restriction, including        *
+* without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell        *
+* copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the       *
+* following conditions:                                                                                          *
+*                                                                                                                *
+* The above copyright notice and this permission notice shall be included in all copies or substantial           *
+* portions of the Software.                                                                                      *
+*                                                                                                                *
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT          *
+* LIMITED TO THE WARRANTIES OF MERCHANTABILITY, * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.          *
+* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, * DAMAGES OR OTHER LIABILITY,      *
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE            *
+* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
+*****************************************************************************************************************/
 #include "application.h"
 #include "graphics/eagle.h"
 
@@ -40,8 +58,8 @@ void DisplayWindow::Init() {
   
   emu.set_on_render([this]() {
     //InvalidateRect(handle(),nullptr,true);
-    //PostMessage(handle(),WM_PAINT,0,0);
-		Render();
+    SendMessage(handle(),WM_PAINT,0,0);
+		//Render();
   });
 
   emu.set_on_vertical_blank([this]() {
@@ -73,14 +91,26 @@ void DisplayWindow::Init() {
   Center();
   ShowWindow(handle(), SW_SHOW); 
   UpdateWindow(handle()); 
-  
-  
   OnCommand(ID_MODE_NTSC,0);
 
   //emu_th = new std::thread(&app::DisplayWindow::Step,this);
   //emu_th->join();
 
   emu.Initialize();
+  emulation::gb::CartridgeHeader header;
+  //cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\oam_bug\\oam_bug\\rom_singles\\2-causes.gb",&header);
+  //emu.cartridge()->LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
+  //emu.cartridge()->LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\mem_timing-2\\mem_timing-2\\mem_timing.gb",&header);
+  //cartridge_.LoadFile("D:\\Personal\\Projects\\GBEmu\\test\\cpu_instrs\\individual\\01-special.gb",&header);
+	//cartridge_.ReadFile("D:\\Personal\\Projects\\GBEmu\\test\\cpu_instrs\\cpu_instrs.gb",&header);
+	//cartridge_.LoadFile("C:\\Users\\Khalid\\Documents\\GitHub\\GBEmu\\test\\PUZZLE.gb",&header);
+	//cartridge_.LoadFile("..\\test\\opus5.gb",&header);
+
+	//emu.cartridge()->LoadFile("..\\test\\Super Mario Land (World).gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);
+  emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
+  //
+  emu.Run();
 }
 
 void DisplayWindow::ResetTiming() {
@@ -104,7 +134,7 @@ void DisplayWindow::Step() {
 
     timing.span_accumulator += time_span;
     while (timing.span_accumulator >= dt) {
-      timing.span_accumulator -= emu.Step(dt);
+      timing.span_accumulator -= emu.Step();
     }
 
     timing.total_cycles += timing.current_cycles-timing.prev_cycles;
@@ -136,7 +166,7 @@ int DisplayWindow::OnCreate(WPARAM wParam,LPARAM lParam) {
 int DisplayWindow::OnDestroy(WPARAM wParam,LPARAM lParam) {
   exit_signal_ = true;
   PostQuitMessage(0);
-  //emu_th->
+  emu.Stop();
   emu.Deinitialize();
   glDeleteTextures(1,&texture);
   gfx.Deinitialize();
@@ -182,8 +212,13 @@ int DisplayWindow::OnCommand(WPARAM wParam,LPARAM lParam) {
     }
 
     if (LOWORD(wParam)==ID_MACHINE_RESET) {
-
+      emu.Reset();
       ResetTiming();
+      emu.Run();
+    }
+
+    if (LOWORD(wParam)==ID_MACHINE_PAUSE) {
+      emu.Pause();
     }
      
     if (LOWORD(wParam)==ID_EDIT_OPTIONS) {
@@ -261,6 +296,11 @@ int DisplayWindow::OnDropFiles(WPARAM wParam,LPARAM lParam) {
 }
 
 int DisplayWindow::Render() {
+  return 0;
+}
+
+int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
+  if (emu.state == 0) return 0;
   switch(display_mode) {
     case ID_VIDEO_STD320X288:
       //glDrawPixels(256,240,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
@@ -298,6 +338,12 @@ int DisplayWindow::Render() {
   gfx.Render();
   timing.render_time_span = 0;
   ++timing.fps_counter;
+    char caption[256];
+    //sprintf(caption,"Freq : %0.2f MHz",nes.frequency_mhz());
+    //sprintf(caption,"CPS: %llu ",nes.cycles_per_second());
+    
+    sprintf(caption,"GBEmu - FPS: %02.2f\0",emu.fps());
+    SetWindowText(handle(),caption);
   return 0;
 }
 

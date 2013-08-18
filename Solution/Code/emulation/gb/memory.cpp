@@ -1,3 +1,22 @@
+/*****************************************************************************************************************
+* Copyright (c) 2013 Khalid Ali Al-Kooheji                                                                       *
+*                                                                                                                *
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and              *
+* associated documentation files (the "Software"), to deal in the Software without restriction, including        *
+* without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell        *
+* copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the       *
+* following conditions:                                                                                          *
+*                                                                                                                *
+* The above copyright notice and this permission notice shall be included in all copies or substantial           *
+* portions of the Software.                                                                                      *
+*                                                                                                                *
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT          *
+* LIMITED TO THE WARRANTIES OF MERCHANTABILITY, * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.          *
+* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, * DAMAGES OR OTHER LIABILITY,      *
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE            *
+* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
+*****************************************************************************************************************/
+
 /*
 General Memory Map
   0000-3FFF   16KB ROM Bank 00     (in cartridge, fixed at bank 00)
@@ -17,7 +36,6 @@ General Memory Map
 #include "gb.h"
 
 
-
 namespace emulation {
 namespace gb {
 	
@@ -31,15 +49,10 @@ const uint8_t dmgrom[0x100] = {
 
 void Memory::Initialize(Emu* emu) {
   Component::Initialize(emu);
-  rom_ = emu_->cartridge()->rom();
   vram_ = new uint8_t[0x2000];
 	wram1_ = new uint8_t[0x1000];
 	wram2_ = new uint8_t[0x1000];
-	ZeroMemory(ioports_,sizeof(ioports_));
-	memset(joypadflags,0,sizeof(joypadflags));
-	ioports_[0] = 0x0F;
-  last_address = 0;
-  //Reset();
+  Reset();
 }
 
 void Memory::Deinitialize() {
@@ -49,6 +62,10 @@ void Memory::Deinitialize() {
 }
 
 void Memory::Reset() {
+	ZeroMemory(ioports_,sizeof(ioports_));
+	memset(joypadflags,0,sizeof(joypadflags));
+	ioports_[0] = 0x0F;
+  last_address = 0;
    /*ioports_[0x05] = 0x00; // TIMA
    ioports_[0x06] = 0x00; // TMA
    ioports_[0x07] = 0x00; // TAC
@@ -120,7 +137,7 @@ uint8_t Memory::Read8(uint16_t address) {
 		int a = 1;
 	} else if (address >= 0xFF00 && address <= 0xFF7F) {
 		if (address >= 0xFF10 && address <= 0xFF3F) {
-      ioports_[address&0xFF] = emu_->sc()->Read(address);
+      ioports_[address&0xFF] = emu_->apu()->Read(address);
 		} else if (address >= 0xFF40 && address <= 0xFF4B) {
 			ioports_[address&0xFF] = emu_->lcd_driver()->Read(address);
 		} else if (address >= 0xFF04 && address <= 0xFF07) {
@@ -177,7 +194,7 @@ void Memory::Write8(uint16_t address, uint8_t data) {
 		} else if (address >= 0xFF04 && address <= 0xFF07) {
       emu_->timer()->Write(address,data);
 		} else if (address >= 0xFF10 && address <= 0xFF3F) {
-      emu_->sc()->Write(address,data);
+      emu_->apu()->Write(address,data);
     } else if (address >= 0xFF40 && address <= 0xFF4B) {
       emu_->lcd_driver()->Write(address,data);
     }

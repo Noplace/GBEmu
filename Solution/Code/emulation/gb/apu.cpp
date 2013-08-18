@@ -1,24 +1,38 @@
+/*****************************************************************************************************************
+* Copyright (c) 2013 Khalid Ali Al-Kooheji                                                                       *
+*                                                                                                                *
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and              *
+* associated documentation files (the "Software"), to deal in the Software without restriction, including        *
+* without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell        *
+* copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the       *
+* following conditions:                                                                                          *
+*                                                                                                                *
+* The above copyright notice and this permission notice shall be included in all copies or substantial           *
+* portions of the Software.                                                                                      *
+*                                                                                                                *
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT          *
+* LIMITED TO THE WARRANTIES OF MERCHANTABILITY, * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.          *
+* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, * DAMAGES OR OTHER LIABILITY,      *
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE            *
+* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
+*****************************************************************************************************************/
 #include "gb.h"
-
-
-
 
 namespace emulation {
 namespace gb {
 
 
 
-void SoundController::Initialize(Emu* emu) {
+void Apu::Initialize(Emu* emu) {
   Component::Initialize(emu);
 	ioports = emu_->memory()->ioports();
   output = new audio::output::DirectSound();
   output->Initialize(44100,2,16);
+  //WASAPI_Initialize(44100,2,16);
+
   sample_counter = 0;
   sample_ratio = uint32_t(clockspeed / 44100);
   noise.set_sample_rate(44100);
-  nr50_.raw = 0;
-  nr51_.raw = 0;
-  nr52_ = 0;
   maincounter = 0;
   ulencounterclock = 0;
   time_t t;
@@ -29,15 +43,10 @@ void SoundController::Initialize(Emu* emu) {
   Reset();
 }
 
-void SoundController::Reset() {
-  channel1envcounterms = 0;
-  channel2envcounterms = 0;
-
+void Apu::Reset() {
   
   channel4freq = 0;
-  channel4envcounterms = 0;
   channel4polycounterms = 0;
-  channel4soundlengthcounter = 0;
  
   channel1.Initialize(this);
 	channel2.Initialize(this);
@@ -60,31 +69,60 @@ void SoundController::Reset() {
   nr42_.raw = 0;
   nr43_ = 0;
   nr44_ = 0;
+  nr50_.raw = 0;
+  nr51_.raw = 0;
+  nr52_ = 0;
+  nr52_ = 0x10;
+  
+  Write(0xFF10,0x80);
+  Write(0xFF11,0x3F);
+  Write(0xFF12,0x00);
+  Write(0xFF13,0xFF);
+  Write(0xFF14,0xBF);
+  Write(0xFF15,0xFF);
+  Write(0xFF16,0x3F);
+  Write(0xFF17,0x00);
+  Write(0xFF18,0xFF);
+  Write(0xFF19,0xBF);
+  Write(0xFF1A,0x7F);
+  Write(0xFF1B,0xFF);
+  Write(0xFF1C,0x9F);
+  Write(0xFF1D,0xFF);
+  Write(0xFF1E,0xBF);
+  Write(0xFF1F,0xFF);
+  Write(0xFF20,0xFF);
+  Write(0xFF21,0x00);
+  Write(0xFF22,0x00);
+  Write(0xFF23,0xBF);
+  Write(0xFF24,0x00);
+  Write(0xFF25,0x00);
+  //Write(0xFF26,nr52_&0x80?0xF0:0x70);
+  Write(0xFF27,0xFF);
+  Write(0xFF28,0xFF);
+  Write(0xFF29,0xFF);
+  Write(0xFF2A,0xFF);
+  Write(0xFF2B,0xFF);
+  Write(0xFF2C,0xFF);
+  Write(0xFF2D,0xFF);
+  Write(0xFF2E,0xFF);
+  Write(0xFF2F,0xFF);
+
+  {
+    const uint8_t wavraminitial[16]={0x84,0x40,0x43,0xAA,0x2D,0x78,0x92,0x3C,0x60,0x59,0x59,0xB0,0x34,0xB8,0x2E,0xDA};
+    for (int i=0;i<16;++i)
+      Write(0xFF30+i,wavraminitial[i]);
+  }
 }
 
-void SoundController::Deinitialize() {
+void Apu::Deinitialize() {
   output->Deinitialize(); 
   SafeDelete(&output);
+  //WASAPI_Deinitialize();
 }
 
-void SoundController::Step(double dt) {
+void Apu::Step(double dt) {
   if ((nr52_&0x80)==0)
     return;
-
-
-  auto envelopeTick = [](VolumeEnvelope& envreg,real_t& counter){
-    float env_step_ms = envreg.env_sweep/64.0f*1000.0f;
-
-    if (env_step_ms != 0 && counter >= env_step_ms) {
-        if (envreg.direction && envreg.vol<0xF)
-          ++envreg.vol;
-        if (!envreg.direction && envreg.vol>0)
-          --envreg.vol;
-      counter = 0;
-    }
-  };
-
-
 
   if ((maincounter & 0x3) == 0) {// its like every 32/8 because 8 samples in duty cycle
       channel1.SampleTick();
@@ -94,6 +132,8 @@ void SoundController::Step(double dt) {
 	if ((maincounter & 0x1) == 0) {
       channel3.SampleTick();
   }
+  channel4polycounterms += float(dt);
+  channel4.SampleTick();
 
 	maincounter = (maincounter+1) & 0x1F;
 
@@ -101,6 +141,7 @@ void SoundController::Step(double dt) {
 		channel1.LengthTick();
 		channel2.LengthTick();
 		channel3.LengthTick();
+    channel4.LengthTick();
 		static bool sweep_tick = false;
 		if (sweep_tick) { //128hz
 			channel1.SweepTick();
@@ -109,52 +150,10 @@ void SoundController::Step(double dt) {
 		ulencounterclock = 0;
   }
 
-  //channel1
-  //if (nr14_ & 0x80)
-  {
-    channel1envcounterms += float(dt);
-    envelopeTick(channel1.envelope,channel1envcounterms);
-  }
+  channel1.EnvelopeTick();
+  channel2.EnvelopeTick();
+  channel4.EnvelopeTick();
 
-  //channel2
-  //if (nr24_ & 0x80)
-  {
-    channel2envcounterms += float(dt);
-    envelopeTick(channel2.envelope,channel2envcounterms);
-  }
-  
-  //channel3
-  //real_t wavsample = 0;
- // static int wavindex = 0;
-  {
-    //static real_t wavsamplecount = 0;
-    //channel3.Tick(float(dt));
-
-  }
-
-  //channel4
- // real_t noisesample = 0;
-  //if (nr44_ & 0x80)
-  {
-
-    //channel4polycounterms += float(dt);
-    //static bool alt = false;
-    //real_t noisetimems = 1000.0f/channel4freq;
-    //if (channel4polycounterms >= noisetimems) {
-      //noisesample = (alt*(rand()%255))/255.0f;
-   //   alt = !alt;
-   //   channel4polycounterms = 0;
-   // }
-    channel4envcounterms += float(dt);
-    envelopeTick(channel4.envelope,channel4envcounterms);
-
-    channel4soundlengthcounter += float(dt);
-    if (nr44_ & 0x40) {
-      if (channel4soundlengthcounter >= nr41_.soundlength_ms()) {
-        nr44_ &= ~0x80;
-      }
-    }
-  }
 
   ++sample_counter;
   if (sample_counter >= sample_ratio)
@@ -164,16 +163,15 @@ void SoundController::Step(double dt) {
     auto channel1_sample = ((channel1.sample) * (channel1.envelope.vol / 15.0f));
     auto channel2_sample = ((channel2.sample) * (channel2.envelope.vol / 15.0f));//osc2.Tick(osc2.get_increment(channel2freq)) * (channel2env.vol / 15.0f);
 
-    auto channel3_sample = channel3.sample / 15.0f; 
-		channel3_sample = (channel3_sample)*channel3.vol;
+    auto channel3_sample = (channel3.sample / 15.0f)*channel3.vol;
 
-    auto channel4_sample = 0;//noise.Tick(osc2.get_increment(channel4freq)) * (channel4env.vol / 15.0f);
-    //wavsamplecount = 0;
+    auto channel4_sample = float(channel4.sample) * (channel4.envelope.vol / 15.0f);
+   
     auto sample_left = ((nr51_.ch1so1 * channel1_sample)+(nr51_.ch2so1 * channel2_sample)+(nr51_.ch3so1 * channel3_sample)+(nr51_.ch4so1 * channel4_sample));
     auto sample_right = ((nr51_.ch1so2 * channel1_sample)+(nr51_.ch2so2 * channel2_sample)+(nr51_.ch3so2 * channel3_sample)+(nr51_.ch4so2 * channel4_sample));
 		
-		sample_left = ((sample_left*2.0f)-1) * 0.25f * 32767.0f;
-		sample_right = ((sample_right*2.0f)-1) * 0.25f * 32767.0f;
+		sample_left = ((sample_left*2.0f)-1) * 0.25f * 32767.0f * 0.5f;
+		sample_right = ((sample_right*2.0f)-1) * 0.25f * 32767.0f * 0.5f;
     sample_left *= nr50_.so1vol / 7.0f;
     sample_right *= nr50_.so2vol / 7.0f;
 
@@ -185,6 +183,7 @@ void SoundController::Step(double dt) {
 
     if (sindex == 8820) {
       output->Write(sbuf,8820<<1);
+      //WASAPI_WriteData(sbuf,8820);
       sindex = 0;
     }
   }
@@ -192,7 +191,7 @@ void SoundController::Step(double dt) {
   
 }
 
-uint8_t SoundController::Read(uint16_t address) {
+uint8_t Apu::Read(uint16_t address) {
 
   if (address>=0xFF30 && address<=0xFF3F)
     return ioports[address-0xFF10];
@@ -247,7 +246,7 @@ uint8_t SoundController::Read(uint16_t address) {
 	return ioports[address-0xFF10];
 }
 
-void SoundController::Write(uint16_t address, uint8_t data) {
+void Apu::Write(uint16_t address, uint8_t data) {
   ioports[address-0xFF10] = data;
   if (address>=0xFF30 && address<=0xFF3F) {
      int index = (address & 0x0F)<<1;
@@ -275,14 +274,14 @@ void SoundController::Write(uint16_t address, uint8_t data) {
       nr14_ = data;
       uint32_t x = nr13_;
       x |= (nr14_&0x7)<<8;
-      channel1.freqcounterload = 2048-x;
+      channel1.freqcounterload = (2048-x);
 
       //channel1freq = 131072.0f/(2048-x);
       if (nr14_ & 0x80) {
         nr52_ |= 0x01;
-        channel1envcounterms = 0;
-
         channel1.envelope.raw = nr12_.raw;
+        channel1.envcounterload = (channel1.envelope.env_sweep*4194304/64);
+        channel1.envcounter = channel1.envcounterload;
 				channel1.sweepcounter = nr10_.sweep_time;
 				channel1.sweepfreqcounter = channel1.freqcounterload;
         channel1.freqcounter = channel1.freqcounterload;
@@ -310,10 +309,10 @@ void SoundController::Write(uint16_t address, uint8_t data) {
 			channel2.freqcounterload = 2048-x;
       //channel2freq = 131072.0f/(2048-x);
       if (nr24_ & 0x80) {
-        nr52_ |= 0x01;
-        channel2envcounterms = 0;
+        nr52_ |= 0x02;
         channel2.envelope.raw = nr22_.raw;
-
+        channel2.envcounterload = (channel2.envelope.env_sweep*4194304/64);
+        channel2.envcounter = channel2.envcounterload;
         channel2.freqcounter = channel2.freqcounterload;
         channel2.lengthcounter = channel2.lengthcounterload;
       }
@@ -360,6 +359,7 @@ void SoundController::Write(uint16_t address, uint8_t data) {
 
     case 0xFF20:
       nr41_.raw = data;
+      channel4.lengthcounterload = 64 - (data&0x3F);
       break;
     case 0xFF21:
       nr42_.raw = data;
@@ -376,10 +376,12 @@ void SoundController::Write(uint16_t address, uint8_t data) {
       channel4freq = 524288.0f/r/powf(2.0,s+1);
       if (nr24_ & 0x80) {
         nr52_ |= 0x08;
-        channel4envcounterms = 0;
         channel4polycounterms = 0;
-        channel4soundlengthcounter = 0;
+        channel4.lengthcounter = channel4.lengthcounterload;
         channel4.envelope.raw = nr42_.raw;
+        channel4.envcounterload = (channel4.envelope.env_sweep*4194304/64);
+        channel4.envcounter = channel4.envcounterload;
+        channel4.shiftreg = 0xFF;
       }
       break;
     }
@@ -391,7 +393,7 @@ void SoundController::Write(uint16_t address, uint8_t data) {
       nr51_.raw = data;
       break;
     case 0xFF26:
-      nr52_ = (data&0xF0) | (nr52_&0x0F);
+      nr52_ = (data&0x80) | (nr52_&0x7F);
       if ((nr52_&0x80)==0)
         Reset();
       break;
