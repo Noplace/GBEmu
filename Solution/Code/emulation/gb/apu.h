@@ -113,9 +113,12 @@ class Apu : public Component {
   void Step(double dt);
   uint8_t Read(uint16_t address);
   void  Write(uint16_t address, uint8_t data);
+	audio::output::Interface* output() {
+		return output_;
+	}
  private:
 	uint8_t* ioports;
-  audio::output::Interface* output;
+  audio::output::Interface* output_;
   uint32_t sample_counter;
   uint32_t sample_ratio;
   audio::synth::NoiseSynth noise;
@@ -157,7 +160,7 @@ class Apu : public Component {
     }
 
     void EnvelopeTick() {
-      if (envelope.env_sweep != 0 && envcounter-- == 0) {
+      if (envelope.env_sweep != 0 && --envcounter == 0) {
         if (envelope.direction && envelope.vol<0xF)
           ++envelope.vol;
         if (!envelope.direction && envelope.vol>0)
@@ -167,25 +170,25 @@ class Apu : public Component {
     }
 
 		void SweepTick() {
-			if (apu_->nr10_.sweep_time != 0 && sweepcounter-- == 0) {
-				sweepfreqcounter >>= apu_->nr10_.sweep_shift;
+			if (apu_->nr10_.sweep_time != 0 && --sweepcounter == 0) {
 			  sweepcounter = apu_->nr10_.sweep_time;
-				if (apu_->nr10_.incdec)
-					freqcounter += sweepfreqcounter;
+				if (apu_->nr10_.incdec) //could be reversed but doubt it
+					freqcounterload += sweepfreqcounter;
 				else
-					freqcounter -= sweepfreqcounter;
+					freqcounterload -= sweepfreqcounter;
 			}
 		}
 
 		void LengthTick() {
-			if ((apu_->nr14_ & 0x40) && lengthcounter-- == 0) {
-				apu_->nr14_ &= ~0x80;
-			}
+			if (lengthcounter!=0)
+				if ((apu_->nr14_ & 0x40) && --lengthcounter == 0) {
+					//apu_->nr14_ &= ~0x80;
+				}
 		}
 
     uint8_t sample;
     uint8_t SampleTick() {
-			if ((apu_->nr14_ & 0x80)&&freqcounter-- == 0) {
+			if ((apu_->nr14_ & 0x80)&&--freqcounter == 0) {
 				sample = dutycycletable[wavepatternduty|wavepatterncounter];
 				wavepatterncounter = (wavepatterncounter +1 ) % 8;
 				freqcounter = freqcounterload;
@@ -213,7 +216,7 @@ class Apu : public Component {
     }
 
     void EnvelopeTick() {
-      if (envelope.env_sweep != 0 && envcounter-- == 0) {
+      if (envelope.env_sweep != 0 && --envcounter == 0) {
         if (envelope.direction && envelope.vol<0xF)
           ++envelope.vol;
         if (!envelope.direction && envelope.vol>0)
@@ -223,14 +226,15 @@ class Apu : public Component {
     }
 
 		void LengthTick() {
-			if ((apu_->nr24_ & 0x40) && lengthcounter-- == 0) {
-				apu_->nr24_ &= ~0x80;
-			}
+			if (lengthcounter!=0)
+				if ((apu_->nr24_ & 0x40) && --lengthcounter == 0) {
+					//apu_->nr24_ &= ~0x80;
+				}
 		}
 
     uint8_t sample;
     uint8_t SampleTick() {
-			if ((apu_->nr24_ & 0x80)&&freqcounter-- == 0) {
+			if ((apu_->nr24_ & 0x80)&&--freqcounter == 0) {
 				sample = dutycycletable[wavepatternduty|wavepatterncounter];
 				wavepatterncounter = (wavepatterncounter +1 ) % 8;
 				freqcounter = freqcounterload;
@@ -264,15 +268,16 @@ class Apu : public Component {
     }
 
 		void LengthTick() {
-			if ((apu_->nr34_ & 0x40) && lengthcounter-- == 0) {
-				apu_->nr34_ &= ~0x80;
-				enabled = false;
-			}
+			if (lengthcounter!=0)
+				if ((apu_->nr34_ & 0x40) && --lengthcounter == 0) {
+					//apu_->nr34_ &= ~0x80;
+					enabled = false;
+				}
 		}
 
     uint8_t SampleTick() {
 			if (!enabled) return 0;
-			if ((apu_->nr24_ & 0x80)&&freqcounter-- == 0) {
+			if ((apu_->nr24_ & 0x80)&&--freqcounter == 0) {
 				sample = apu_->wavram[playback_counter];
 				playback_counter = (playback_counter + 1) & 0x1F;
 				freqcounter = freqcounterload;
@@ -298,7 +303,7 @@ class Apu : public Component {
     }
 
     void EnvelopeTick() {
-      if (envelope.env_sweep != 0 && envcounter-- == 0) {
+      if (envelope.env_sweep != 0 && --envcounter == 0) {
         if (envelope.direction && envelope.vol<0xF)
           ++envelope.vol;
         if (!envelope.direction && envelope.vol>0)
@@ -308,9 +313,10 @@ class Apu : public Component {
     }
     
     void LengthTick() {
-			if ((apu_->nr44_ & 0x40) && lengthcounter-- == 0) {
-				apu_->nr44_ &= ~0x80;
-			}
+			if (lengthcounter!=0)
+				if ((apu_->nr44_ & 0x40) && --lengthcounter == 0) {
+					//apu_->nr44_ &= ~0x80;
+				}
 		}
 
     uint8_t SampleTick() {

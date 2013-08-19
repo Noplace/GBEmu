@@ -38,7 +38,6 @@ void Cartridge::Deinitialize() {
 }
 
 void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
-  emu_->Stop();
   emu_->Reset();
 	SafeDeleteArray(&rom_);
   if (mbc) {

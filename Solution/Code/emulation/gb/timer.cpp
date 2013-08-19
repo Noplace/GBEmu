@@ -34,7 +34,8 @@ void Timer::Deinitialize() {
 }
 
 void Timer::Reset() {
-  div = tima = tma = tac = 0;
+  div = tma = tac = 0;
+	tima = 0;
   counter1 = 0;
   counter2 = 0;
   tima_max = 0;
@@ -48,18 +49,21 @@ void Timer::Tick() {
   }
   if ((tac&0x4)==0)return;
   if (++counter2 == tima_max) {
-    if (tima++ == 0xFF) {
+    if (++tima > 0xFF) {
       emu_->memory()->interrupt_flag() |= 0x4;
       emu_->cpu()->Wake();
       tima = tma;
     }
-  
+
     counter2 = 0;
   }
+}
 
+void Timer::Check() {
 
 
 }
+
 
 uint8_t Timer::Read(uint16_t address) {
 
@@ -67,7 +71,7 @@ uint8_t Timer::Read(uint16_t address) {
     case 0xFF04:
       return div;
     case 0xFF05:
-      return tima;
+      return tima&0xFF;
     case 0xFF06:
       return tma;
     case 0xFF07:

@@ -331,11 +331,9 @@ void Cpu::Reset() {
 void Cpu::Tick() {
   ++cycles;
 	emu_->timer()->Tick();
-  emu_->cartridge()->mbc->Tick();
 	emu_->memory()->Tick();
   emu_->lcd_driver()->Step(dt);
 	emu_->apu()->Step(dt);
-
 }
 
 void Cpu::Step(double dt) {
@@ -356,6 +354,7 @@ void Cpu::Step(double dt) {
   } else if (cpumode_ == CpuModeHalt) {
     Tick();
   }
+	emu_->timer()->Check();
 
   if (ime) {
     uint8_t test = emu_->memory()->interrupt_enable() & emu_->memory()->interrupt_flag();

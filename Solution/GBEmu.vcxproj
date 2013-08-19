@@ -187,6 +187,7 @@
     <ClCompile Include="Code\application.cpp" />
     <ClCompile Include="Code\audio\output\directsound.cpp" />
     <ClCompile Include="Code\audio\output\wasapi.cpp" />
+    <ClCompile Include="Code\audio\output\xaudio.cpp" />
     <ClCompile Include="Code\audio\synth\quadrangular_wave.cpp" />
     <ClCompile Include="Code\console.cpp" />
     <ClCompile Include="Code\dialogs\options.cpp" />
@@ -196,9 +197,14 @@
     <ClCompile Include="Code\emulation\gb\emu.cpp" />
     <ClCompile Include="Code\emulation\gb\lcd_driver.cpp" />
     <ClCompile Include="Code\emulation\gb\memory.cpp" />
+    <Text Include="README">
+      <FileType>Text</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </Text>
     <ClInclude Include="Code\audio\output\directsound.h" />
     <ClInclude Include="Code\audio\output\interface.h" />
     <ClInclude Include="Code\audio\output\wasapi.h" />
+    <ClInclude Include="Code\audio\output\xaudio.h" />
     <ClInclude Include="Code\audio\synth\quadrangular_wave.h" />
     <ClInclude Include="Code\dialogs\options.h" />
     <ClInclude Include="Code\emulation\gb\cartridge.h" />

@@ -43,6 +43,8 @@ local.properties
 
 # Build results
 
+Listing/
+Output/Listing/
 [Oo]utput/
 [Dd]ebug/
 [Rr]elease/

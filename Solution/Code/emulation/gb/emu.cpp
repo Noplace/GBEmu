@@ -51,6 +51,7 @@ double Emu::Step() {
 
   timing.span_accumulator += time_span;
   while (timing.span_accumulator >= dt) {
+		//emu_->cartridge()->mbc->Tick();
     cpu_.Step(dt);
     timing.span_accumulator -= dt*cpu_.cycles;
   }
@@ -69,6 +70,7 @@ void Emu::Run() {
 
 void Emu::Stop() {
   if (thread==nullptr && state == 0) return;
+	apu_.output()->Stop();
   state = 0;
   thread->join();
   OutputDebugString("killed thread\n");

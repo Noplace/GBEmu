@@ -17,7 +17,8 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
 #include "gb.h"
-
+#include "../../application.h"
+#include "../../audio/output/wasapi.h"
 namespace emulation {
 namespace gb {
 
@@ -26,8 +27,9 @@ namespace gb {
 void Apu::Initialize(Emu* emu) {
   Component::Initialize(emu);
 	ioports = emu_->memory()->ioports();
-  output = new audio::output::DirectSound();
-  output->Initialize(44100,2,16);
+	output_ = new audio::output::DirectSound();
+	output_->set_window_handle(app::Application::Current()->display_window().handle());
+  output_->Initialize(44100,2,16);
   //WASAPI_Initialize(44100,2,16);
 
   sample_counter = 0;
@@ -115,8 +117,8 @@ void Apu::Reset() {
 }
 
 void Apu::Deinitialize() {
-  output->Deinitialize(); 
-  SafeDelete(&output);
+  output_->Deinitialize(); 
+  SafeDelete(&output_);
   //WASAPI_Deinitialize();
 }
 
@@ -137,7 +139,7 @@ void Apu::Step(double dt) {
 
 	maincounter = (maincounter+1) & 0x1F;
 
-  if (ulencounterclock++ == 16384) { //256hz from original cpu speed
+  if (++ulencounterclock == 16384) { //256hz from original cpu speed
 		channel1.LengthTick();
 		channel2.LengthTick();
 		channel3.LengthTick();
@@ -159,30 +161,27 @@ void Apu::Step(double dt) {
   if (sample_counter >= sample_ratio)
   {
 
-    //osc1.Tick(osc1.get_increment(channel1freq))* (channel1env.vol / 15.0f);//
     auto channel1_sample = ((channel1.sample) * (channel1.envelope.vol / 15.0f));
-    auto channel2_sample = ((channel2.sample) * (channel2.envelope.vol / 15.0f));//osc2.Tick(osc2.get_increment(channel2freq)) * (channel2env.vol / 15.0f);
-
-    auto channel3_sample = (channel3.sample / 15.0f)*channel3.vol;
-
-    auto channel4_sample = float(channel4.sample) * (channel4.envelope.vol / 15.0f);
+    auto channel2_sample = 0;//((channel2.sample) * (channel2.envelope.vol / 15.0f));
+    auto channel3_sample = 0;//(channel3.sample / 15.0f)*channel3.vol;
+    auto channel4_sample = 0;//float(channel4.sample) * (channel4.envelope.vol / 15.0f);
    
     auto sample_left = ((nr51_.ch1so1 * channel1_sample)+(nr51_.ch2so1 * channel2_sample)+(nr51_.ch3so1 * channel3_sample)+(nr51_.ch4so1 * channel4_sample));
     auto sample_right = ((nr51_.ch1so2 * channel1_sample)+(nr51_.ch2so2 * channel2_sample)+(nr51_.ch3so2 * channel3_sample)+(nr51_.ch4so2 * channel4_sample));
 		
-		sample_left = ((sample_left*2.0f)-1) * 0.25f * 32767.0f * 0.5f;
-		sample_right = ((sample_right*2.0f)-1) * 0.25f * 32767.0f * 0.5f;
+		sample_left = ((sample_left*2.0f)-1) * 0.25f * 32767.0f;
+		sample_right = ((sample_right*2.0f)-1) * 0.25f * 32767.0f;
     sample_left *= nr50_.so1vol / 7.0f;
     sample_right *= nr50_.so2vol / 7.0f;
 
     static short sbuf[8820]= {0,0};
     static int sindex = 0;
-    sbuf[sindex++] = short(sample_left);
-    sbuf[sindex++] = short(sample_right); 
+    sbuf[sindex++] = short(sample_left*0.7f);
+    sbuf[sindex++] = short(sample_right*0.7f); 
     sample_counter -= sample_ratio;   
 
     if (sindex == 8820) {
-      output->Write(sbuf,8820<<1);
+      output_->Write(sbuf,8820<<1);
       //WASAPI_WriteData(sbuf,8820);
       sindex = 0;
     }
@@ -199,60 +198,88 @@ uint8_t Apu::Read(uint16_t address) {
   switch (address) {
     case 0xFF10:
       ioports[address-0xFF10] = nr10_.raw;
+			break;
     case 0xFF11:
       ioports[address-0xFF10] = nr11_.raw;
+			break;
     case 0xFF12:
       ioports[address-0xFF10] = nr12_.raw;
+			break;
     case 0xFF13:
       ioports[address-0xFF10] = nr13_;
+			break;
     case 0xFF14:
       ioports[address-0xFF10] = nr14_;
+			break;
     case 0xFF16:
       ioports[address-0xFF10] = nr21_.raw;
+			break;
     case 0xFF17:
       ioports[address-0xFF10] = nr22_.raw;
+			break;
     case 0xFF18:
       ioports[address-0xFF10] = nr23_;
+			break;
     case 0xFF19:
       ioports[address-0xFF10] = nr24_;
+			break;
 
     case 0xFF1A:
       ioports[address-0xFF10] = nr30_;
+			break;
     case 0xFF1B:
       ioports[address-0xFF10] = nr31_;
+			break;
     case 0xFF1C:
       ioports[address-0xFF10] = nr32_;
+			break;
     case 0xFF1D:
       ioports[address-0xFF10] = nr33_;
+			break;
     case 0xFF1E:
       ioports[address-0xFF10] = nr34_;
+			break;
 
     case 0xFF20:
       ioports[address-0xFF10] = nr41_.raw;
+			break;
     case 0xFF21:
       ioports[address-0xFF10] = nr42_.raw;
+			break;
     case 0xFF22:
       ioports[address-0xFF10] = nr43_;
+			break;
     case 0xFF23:
       ioports[address-0xFF10] = nr44_;
+			break;
 
     case 0xFF24:
       ioports[address-0xFF10] = nr50_.raw;
+			break;
     case 0xFF25:
       ioports[address-0xFF10] = nr51_.raw; 
+			break;
     case 0xFF26:
       ioports[address-0xFF10] = nr52_; 
+			break;
   }
 	return ioports[address-0xFF10];
 }
 
 void Apu::Write(uint16_t address, uint8_t data) {
-  ioports[address-0xFF10] = data;
+
   if (address>=0xFF30 && address<=0xFF3F) {
      int index = (address & 0x0F)<<1;
      wavram[index] = data>>4;
      wavram[index+1] = data&0xF;
+		 ioports[address-0xFF10] = data;
+		 return;
   }
+
+	if ((nr52_&0x80)==0 && address != 0xFF26)
+		return;
+
+	ioports[address-0xFF10] = data;
 
   switch (address) {
     case 0xFF10:
@@ -283,7 +310,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
         channel1.envcounterload = (channel1.envelope.env_sweep*4194304/64);
         channel1.envcounter = channel1.envcounterload;
 				channel1.sweepcounter = nr10_.sweep_time;
-				channel1.sweepfreqcounter = channel1.freqcounterload;
+				channel1.sweepfreqcounter = (x>>nr10_.sweep_shift);
         channel1.freqcounter = channel1.freqcounterload;
         channel1.lengthcounter = channel1.lengthcounterload;
       }
@@ -394,8 +421,34 @@ void Apu::Write(uint16_t address, uint8_t data) {
       break;
     case 0xFF26:
       nr52_ = (data&0x80) | (nr52_&0x7F);
-      if ((nr52_&0x80)==0)
-        Reset();
+      if ((nr52_&0x80)==0) {
+				nr10_.raw = ioports[0xFF10-0xFF10] = 0;
+				nr11_.raw = ioports[0xFF11-0xFF10] = 0;
+				nr12_.raw = ioports[0xFF12-0xFF10] = 0;
+				nr13_ = ioports[0xFF13-0xFF10] = 0;
+				nr14_ = ioports[0xFF14-0xFF10] = 0;
+				ioports[0xFF15-0xFF10] = 0;
+				nr21_.raw = ioports[0xFF16-0xFF10] = 0;
+				nr22_.raw = ioports[0xFF17-0xFF10] = 0;
+				nr23_ = ioports[0xFF18-0xFF10] = 0;
+				nr24_ = ioports[0xFF19-0xFF10] = 0;
+				nr30_ = ioports[0xFF1A-0xFF10] = 0;
+				nr31_ = ioports[0xFF1B-0xFF10] = 0;
+				nr32_ = ioports[0xFF1C-0xFF10] = 0;
+				nr33_ = ioports[0xFF1D-0xFF10] = 0;
+				nr34_ = ioports[0xFF1E-0xFF10] = 0;
+				ioports[0xFF1F-0xFF10] = 0;
+				nr41_.raw = ioports[0xFF20-0xFF10] = 0;
+				nr42_.raw = ioports[0xFF21-0xFF10] = 0;
+				nr43_ = ioports[0xFF22-0xFF10] = 0;
+				nr44_ = ioports[0xFF23-0xFF10] = 0;
+				nr50_.raw = ioports[0xFF24-0xFF10] = 0;
+				nr51_.raw = ioports[0xFF25-0xFF10] = 0;
+				nr52_ = ioports[0xFF26-0xFF10] &= ~0x7F;
+				output_->Stop();
+			} else {
+				output_->Play();
+			}
       break;
  
   }
