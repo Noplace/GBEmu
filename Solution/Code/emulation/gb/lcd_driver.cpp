@@ -32,7 +32,6 @@ void LCDDriver::Initialize(Emu* emu) {
 }
 
 void LCDDriver::Deinitialize() {
-  auto ioports = emu_->memory()->ioports();
   delete [] colormap;
   delete [] frame_buffer;  
 }

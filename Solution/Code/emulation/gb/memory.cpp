@@ -137,13 +137,14 @@ uint8_t Memory::Read8(uint16_t address) {
     int a = 1;
   } else if (address >= 0xFF00 && address <= 0xFF7F) {
     if (address >= 0xFF10 && address <= 0xFF3F) {
-      ioports_[address&0xFF] = emu_->apu()->Read(address);
+      result = emu_->apu()->Read(address);
     } else if (address >= 0xFF40 && address <= 0xFF4B) {
-      ioports_[address&0xFF] = emu_->lcd_driver()->Read(address);
+      result = ioports_[address&0xFF] = emu_->lcd_driver()->Read(address);
     } else if (address >= 0xFF04 && address <= 0xFF07) {
-      ioports_[address&0xFF] = emu_->timer()->Read(address);
+      result = emu_->timer()->Read(address);
+    } else {
+      result = ioports_[address&0xFF];
     }
-    result = ioports_[address&0xFF];
   } else if (address >= 0xFF80 && address <= 0xFFFE) {
     result = hram_[address-0xFF80];
   } else if (address == 0xFFFF) {
@@ -184,7 +185,7 @@ void Memory::Write8(uint16_t address, uint8_t data) {
     //int a = 1;
      int a = 1;
   } else if (address >= 0xFF00 && address <= 0xFF7F) {
-    ioports_[address&0xFF]=data;
+    
     if (address == 0xFF00) {
       ioports_[0]=data & ~0x0F;
     } else if (address == 0xFF01) {
@@ -196,7 +197,10 @@ void Memory::Write8(uint16_t address, uint8_t data) {
     } else if (address >= 0xFF10 && address <= 0xFF3F) {
       emu_->apu()->Write(address,data);
     } else if (address >= 0xFF40 && address <= 0xFF4B) {
+      ioports_[address&0xFF]=data;
       emu_->lcd_driver()->Write(address,data);
+    } else {
+      ioports_[address&0xFF]=data;
     }
   } else if (address >= 0xFF80 && address <= 0xFFFE) {
     hram_[address-0xFF80] = data;

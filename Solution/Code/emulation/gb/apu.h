@@ -105,7 +105,7 @@ class WaveramSynth : public audio::synth::Wavetable<5> {
 class Apu : public Component {
  public:
 
-  Apu():ioports(nullptr) {}
+  Apu() {}
   ~Apu() {}
   void Initialize(Emu* emu);
   void Deinitialize();
@@ -117,25 +117,35 @@ class Apu : public Component {
     return output_;
   }
  private:
-  uint8_t* ioports;
   audio::output::Interface* output_;
   uint32_t sample_counter;
   uint32_t sample_ratio;
-  audio::synth::NoiseSynth noise;
+
   SweepRegister nr10_;
   SoundLengthWaveDutyRegister nr11_;
   VolumeEnvelope nr12_;
   uint8_t nr13_,nr14_;
-
+  uint8_t io_0xff15_;
   SoundLengthWaveDutyRegister nr21_;
   VolumeEnvelope nr22_;
   uint8_t nr23_,nr24_;
 
   uint8_t nr30_,nr31_,nr32_,nr33_,nr34_;
-  uint8_t wavram[32];
+  uint8_t io_0xff1f_;
   SoundLengthWaveDutyRegister nr41_;
   VolumeEnvelope nr42_;
   uint8_t nr43_,nr44_;
+  uint8_t io_0xff27_;
+  uint8_t io_0xff28_;
+  uint8_t io_0xff29_;
+  uint8_t io_0xff2a_;
+  uint8_t io_0xff2b_;
+  uint8_t io_0xff2c_;
+  uint8_t io_0xff2d_;
+  uint8_t io_0xff2e_;
+  uint8_t io_0xff2f_;
+  uint8_t waveram[16];
+
   uint32_t maincounter;
   uint32_t ulencounterclock;
 
@@ -209,10 +219,11 @@ class Apu : public Component {
       apu_ = sc;
       wavepatterncounter = 0;
       wavepatternduty = 0;
-      freqcounter = 0;
+      freqcounter = freqcounterload = 0;
       sample = 0;
       envelope.raw = 0;
       envcounter = envcounterload = 0;
+      lengthcounterload = lengthcounter = 0;
     }
 
     void EnvelopeTick() {
@@ -248,7 +259,7 @@ class Apu : public Component {
     real_t vol;
     uint8_t playback_counter;
     real_t wavsample;
-
+    uint8_t wavedata[32];
     uint16_t freqcounter,freqcounterload;
     uint8_t lengthcounterload,lengthcounter;
     uint8_t sample;
@@ -278,7 +289,7 @@ class Apu : public Component {
     uint8_t SampleTick() {
       if (!enabled) return 0;
       if ((apu_->nr24_ & 0x80)&&--freqcounter == 0) {
-        sample = apu_->wavram[playback_counter];
+        sample = wavedata[playback_counter];
         playback_counter = (playback_counter + 1) & 0x1F;
         freqcounter = freqcounterload;
       }

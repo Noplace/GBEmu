@@ -25,7 +25,6 @@ namespace gb {
 
 void Timer::Initialize(Emu* emu) {
   Component::Initialize(emu);
-  ioports = emu_->memory()->ioports();
   Reset();
 }
 
