@@ -193,77 +193,122 @@ void Apu::Step(double dt) {
 uint8_t Apu::Read(uint16_t address) {
 
   if (address>=0xFF30 && address<=0xFF3F)
-    return ioports[address-0xFF10];
+    return ioports[address&0xFF];
+
+  const uint8_t masks[32] = {
+     0x80,0x3F,0x00,0xFF,0xBF,
+     0xFF,0x3F,0x00,0xFF,0xBF,
+     0x7F,0xFF,0x9F,0xFF,0xBF,
+     0xFF,0xFF,0x00,0x00,0xBF,
+     0x00,0x00,0x70,
+     0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF
+  };
 
   switch (address) {
     case 0xFF10:
-      ioports[address-0xFF10] = nr10_.raw;
+      ioports[address&0xFF] = nr10_.raw | masks[0];
 			break;
     case 0xFF11:
-      ioports[address-0xFF10] = nr11_.raw;
+      ioports[address&0xFF] = nr11_.raw | masks[1];
 			break;
     case 0xFF12:
-      ioports[address-0xFF10] = nr12_.raw;
+      ioports[address&0xFF] = nr12_.raw | masks[2];
 			break;
     case 0xFF13:
-      ioports[address-0xFF10] = nr13_;
+      ioports[address&0xFF] = nr13_ | masks[3];
 			break;
     case 0xFF14:
-      ioports[address-0xFF10] = nr14_;
+      ioports[address&0xFF] = nr14_ | masks[4];
+			break;
+
+    case 0xFF15:
+      ioports[address&0xFF] |= masks[5];
 			break;
     case 0xFF16:
-      ioports[address-0xFF10] = nr21_.raw;
+      ioports[address&0xFF] = nr21_.raw| masks[6];
 			break;
     case 0xFF17:
-      ioports[address-0xFF10] = nr22_.raw;
+      ioports[address&0xFF] = nr22_.raw| masks[7];
 			break;
     case 0xFF18:
-      ioports[address-0xFF10] = nr23_;
+      ioports[address&0xFF] = nr23_| masks[8];
 			break;
     case 0xFF19:
-      ioports[address-0xFF10] = nr24_;
+      ioports[address&0xFF] = nr24_| masks[9];
 			break;
 
     case 0xFF1A:
-      ioports[address-0xFF10] = nr30_;
+      ioports[address&0xFF] = nr30_| masks[10];
 			break;
     case 0xFF1B:
-      ioports[address-0xFF10] = nr31_;
+      ioports[address&0xFF] = nr31_| masks[11];
 			break;
     case 0xFF1C:
-      ioports[address-0xFF10] = nr32_;
+      ioports[address&0xFF] = nr32_| masks[12];
 			break;
     case 0xFF1D:
-      ioports[address-0xFF10] = nr33_;
+      ioports[address&0xFF] = nr33_| masks[13];
 			break;
     case 0xFF1E:
-      ioports[address-0xFF10] = nr34_;
+      ioports[address&0xFF] = nr34_| masks[14];
+			break;
+
+    case 0xFF1F:
+      ioports[address&0xFF] = nr34_| masks[15];
 			break;
 
     case 0xFF20:
-      ioports[address-0xFF10] = nr41_.raw;
+      ioports[address&0xFF] = nr41_.raw| masks[16];
 			break;
     case 0xFF21:
-      ioports[address-0xFF10] = nr42_.raw;
+      ioports[address&0xFF] = nr42_.raw| masks[17];
 			break;
     case 0xFF22:
-      ioports[address-0xFF10] = nr43_;
+      ioports[address&0xFF] = nr43_| masks[18];
 			break;
     case 0xFF23:
-      ioports[address-0xFF10] = nr44_;
+      ioports[address&0xFF] = nr44_| masks[19];
 			break;
 
     case 0xFF24:
-      ioports[address-0xFF10] = nr50_.raw;
+      ioports[address&0xFF] = nr50_.raw| masks[20];
 			break;
     case 0xFF25:
-      ioports[address-0xFF10] = nr51_.raw; 
+      ioports[address&0xFF] = nr51_.raw| masks[21]; 
 			break;
     case 0xFF26:
-      ioports[address-0xFF10] = nr52_; 
+      ioports[address&0xFF] = nr52_| masks[22]; 
+			break;
+
+    case 0xFF27:
+      ioports[address&0xFF] |= masks[23]; 
+			break;
+    case 0xFF28:
+      ioports[address&0xFF] |= masks[24]; 
+			break;
+    case 0xFF29:
+      ioports[address&0xFF] |= masks[25]; 
+			break;
+    case 0xFF2A:
+      ioports[address&0xFF] |= masks[26]; 
+			break;
+    case 0xFF2B:
+      ioports[address&0xFF] |= masks[27]; 
+			break;
+    case 0xFF2C:
+      ioports[address&0xFF] |= masks[28]; 
+			break;
+    case 0xFF2D:
+      ioports[address&0xFF] |= masks[29]; 
+			break;
+    case 0xFF2E:
+      ioports[address&0xFF] |= masks[30]; 
+			break;
+    case 0xFF2F:
+      ioports[address&0xFF] |= masks[31]; 
 			break;
   }
-	return ioports[address-0xFF10];
+	return ioports[address&0xFF];
 }
 
 void Apu::Write(uint16_t address, uint8_t data) {
@@ -272,14 +317,14 @@ void Apu::Write(uint16_t address, uint8_t data) {
      int index = (address & 0x0F)<<1;
      wavram[index] = data>>4;
      wavram[index+1] = data&0xF;
-		 ioports[address-0xFF10] = data;
+		 ioports[address&0xFF] = data;
 		 return;
   }
 
 	if ((nr52_&0x80)==0 && address != 0xFF26)
 		return;
 
-	ioports[address-0xFF10] = data;
+	ioports[address&0xFF] = data;
 
   switch (address) {
     case 0xFF10:
@@ -422,29 +467,29 @@ void Apu::Write(uint16_t address, uint8_t data) {
     case 0xFF26:
       nr52_ = (data&0x80) | (nr52_&0x7F);
       if ((nr52_&0x80)==0) {
-				nr10_.raw = ioports[0xFF10-0xFF10] = 0;
-				nr11_.raw = ioports[0xFF11-0xFF10] = 0;
-				nr12_.raw = ioports[0xFF12-0xFF10] = 0;
-				nr13_ = ioports[0xFF13-0xFF10] = 0;
-				nr14_ = ioports[0xFF14-0xFF10] = 0;
-				ioports[0xFF15-0xFF10] = 0;
-				nr21_.raw = ioports[0xFF16-0xFF10] = 0;
-				nr22_.raw = ioports[0xFF17-0xFF10] = 0;
-				nr23_ = ioports[0xFF18-0xFF10] = 0;
-				nr24_ = ioports[0xFF19-0xFF10] = 0;
-				nr30_ = ioports[0xFF1A-0xFF10] = 0;
-				nr31_ = ioports[0xFF1B-0xFF10] = 0;
-				nr32_ = ioports[0xFF1C-0xFF10] = 0;
-				nr33_ = ioports[0xFF1D-0xFF10] = 0;
-				nr34_ = ioports[0xFF1E-0xFF10] = 0;
-				ioports[0xFF1F-0xFF10] = 0;
-				nr41_.raw = ioports[0xFF20-0xFF10] = 0;
-				nr42_.raw = ioports[0xFF21-0xFF10] = 0;
-				nr43_ = ioports[0xFF22-0xFF10] = 0;
-				nr44_ = ioports[0xFF23-0xFF10] = 0;
-				nr50_.raw = ioports[0xFF24-0xFF10] = 0;
-				nr51_.raw = ioports[0xFF25-0xFF10] = 0;
-				nr52_ = ioports[0xFF26-0xFF10] &= ~0x7F;
+				nr10_.raw = ioports[0xFF10&0xFF] = 0;
+				nr11_.raw = ioports[0xFF11&0xFF] = 0;
+				nr12_.raw = ioports[0xFF12&0xFF] = 0;
+				nr13_ = ioports[0xFF13&0xFF] = 0;
+				nr14_ = ioports[0xFF14&0xFF] = 0;
+				ioports[0xFF15&0xFF] = 0;
+				nr21_.raw = ioports[0xFF16&0xFF] = 0;
+				nr22_.raw = ioports[0xFF17&0xFF] = 0;
+				nr23_ = ioports[0xFF18&0xFF] = 0;
+				nr24_ = ioports[0xFF19&0xFF] = 0;
+				nr30_ = ioports[0xFF1A&0xFF] = 0;
+				nr31_ = ioports[0xFF1B&0xFF] = 0;
+				nr32_ = ioports[0xFF1C&0xFF] = 0;
+				nr33_ = ioports[0xFF1D&0xFF] = 0;
+				nr34_ = ioports[0xFF1E&0xFF] = 0;
+				ioports[0xFF1F&0xFF] = 0;
+				nr41_.raw = ioports[0xFF20&0xFF] = 0;
+				nr42_.raw = ioports[0xFF21&0xFF] = 0;
+				nr43_ = ioports[0xFF22&0xFF] = 0;
+				nr44_ = ioports[0xFF23&0xFF] = 0;
+				nr50_.raw = ioports[0xFF24&0xFF] = 0;
+				nr51_.raw = ioports[0xFF25&0xFF] = 0;
+				nr52_ = ioports[0xFF26&0xFF] &= ~0x7F;
 				output_->Stop();
 			} else {
 				output_->Play();
