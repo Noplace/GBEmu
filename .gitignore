@@ -44,7 +44,7 @@ local.properties
 # Build results
 
 Listing/
-Output/Listing/
+Output/Listing/*.asm
 [Oo]utput/
 [Dd]ebug/
 [Rr]elease/
