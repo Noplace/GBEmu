@@ -23,14 +23,14 @@ namespace gb {
 
 //#pragma pack(1)
 union CpuFlagRegister {
-	struct {
-		uint8_t _unused:4;
-		uint8_t  C:1;
-		uint8_t  H:1;
-		uint8_t  N:1;
-		uint8_t  Z:1;
-	};
-	uint8_t raw;
+  struct {
+    uint8_t _unused:4;
+    uint8_t  C:1;
+    uint8_t  H:1;
+    uint8_t  N:1;
+    uint8_t  Z:1;
+  };
+  uint8_t raw;
 };
 
 enum CpuRegisterNames8 { RegF,RegA,RegC,RegB,RegE,RegD,RegL,RegH,RegSPl,RegSPh,RegPCl,RegPCh };
@@ -39,49 +39,49 @@ enum CpuFlags { CpuFlagsUnused0 = 0, CpuFlagsC = 4,CpuFlagsH=5,CpuFlagsN=6,CpuFl
 enum CpuMode { CpuModeNormal,CpuModeHalt,CpuModeStop };
 //#pragma pack(1)
 struct CpuRegisters {
-	union {
-		struct {
-			union {
-				uint16_t AF;
-				struct {
-					CpuFlagRegister F;
-					uint8_t A;
-				};
-			};
-			union {
-				uint16_t BC;
-				struct {
-					uint8_t C;
-					uint8_t B;
-				};
-			};
-			union {
-				uint16_t DE;
-				struct {
-					uint8_t E;
-					uint8_t D;
-				};
-			};
-			union {
-				uint16_t HL;
-				struct {
-					uint8_t L;
-					uint8_t H;
-				};
-			};
-			uint16_t SP;
-			uint16_t PC;
-		};
-		uint8_t raw8[12];
-		uint16_t raw16[6];
-	};
+  union {
+    struct {
+      union {
+        uint16_t AF;
+        struct {
+          CpuFlagRegister F;
+          uint8_t A;
+        };
+      };
+      union {
+        uint16_t BC;
+        struct {
+          uint8_t C;
+          uint8_t B;
+        };
+      };
+      union {
+        uint16_t DE;
+        struct {
+          uint8_t E;
+          uint8_t D;
+        };
+      };
+      union {
+        uint16_t HL;
+        struct {
+          uint8_t L;
+          uint8_t H;
+        };
+      };
+      uint16_t SP;
+      uint16_t PC;
+    };
+    uint8_t raw8[12];
+    uint16_t raw16[6];
+  };
 };
 
 
 class Cpu : public Component {
  public:
   uint8_t sprite_bug;
-	uint64_t cycles;
+  uint64_t cycles;
   Cpu();
   ~Cpu();
   void Initialize(Emu* emu);
@@ -140,7 +140,7 @@ class Cpu : public Component {
 
   template<uint8_t dest,uint8_t src,int mode>
   void arithmeticMode(uint8_t& a, uint8_t& b) {
-	  if (mode == 0) {
+    if (mode == 0) {
       a = reg.raw8[dest];
       b = reg.raw8[src];
     } else if (mode == 1) {
@@ -166,18 +166,18 @@ class Cpu : public Component {
   void NOP(); 
   void ILLEGAL();
   void RST();
-	template<uint8_t dest,uint8_t src>
-	void LDrr();
-	template<uint8_t dest,uint8_t src>
-	void LD$rr();
-	template<uint8_t dest,uint8_t src>
-	void LDr$r();
-	template<uint8_t dest,uint8_t src>
-	void LD$FF00rr();
-	template<uint8_t dest,uint8_t src>
-	void LDr$FF00r();
-	template<uint8_t dest>
-	void LDrd16();
+  template<uint8_t dest,uint8_t src>
+  void LDrr();
+  template<uint8_t dest,uint8_t src>
+  void LD$rr();
+  template<uint8_t dest,uint8_t src>
+  void LDr$r();
+  template<uint8_t dest,uint8_t src>
+  void LD$FF00rr();
+  template<uint8_t dest,uint8_t src>
+  void LDr$FF00r();
+  template<uint8_t dest>
+  void LDrd16();
   template<uint8_t dest,uint8_t src>
   void LDI$regreg();
   template<uint8_t dest,uint8_t src>
@@ -187,36 +187,36 @@ class Cpu : public Component {
   template<uint8_t dest,uint8_t src>
   void LDDreg$reg();
 
-	template<uint8_t dest,uint8_t src,int mode>
-	void LD();
+  template<uint8_t dest,uint8_t src,int mode>
+  void LD();
 
   void LDSPHL();
   void LDHLSPr8();
   void LDa16SP();
-	template<uint8_t dest,uint8_t src,int mode>
-	void ADD();
+  template<uint8_t dest,uint8_t src,int mode>
+  void ADD();
   template<uint8_t dest,uint8_t src>
   void ADD_16bit();
-	void ADD_SPr8();
-	template<uint8_t dest,uint8_t src,int mode>
-	void ADC();
-	template<uint8_t dest,uint8_t src,int mode>
-	void SUB();
-	template<uint8_t dest,uint8_t src,int mode>
-	void SBC();
-	template<uint8_t dest,uint8_t src,int mode>
-	void AND();
-	template<uint8_t dest,uint8_t src,int mode>
-	void XOR();
-	template<uint8_t dest,uint8_t src,int mode>
-	void OR();
+  void ADD_SPr8();
+  template<uint8_t dest,uint8_t src,int mode>
+  void ADC();
+  template<uint8_t dest,uint8_t src,int mode>
+  void SUB();
+  template<uint8_t dest,uint8_t src,int mode>
+  void SBC();
+  template<uint8_t dest,uint8_t src,int mode>
+  void AND();
+  template<uint8_t dest,uint8_t src,int mode>
+  void XOR();
+  template<uint8_t dest,uint8_t src,int mode>
+  void OR();
   void SCF();
   void CCF();
-	void HALT();
+  void HALT();
   void STOP();
   void CPL();
-	void PREFIX_CB();
-	void JR();
+  void PREFIX_CB();
+  void JR();
   template<CpuFlags condbit,bool inv>
   void JR_cc();
 
@@ -262,7 +262,7 @@ class Cpu : public Component {
   void DI();
   void EI();
 
-	void RETI();
+  void RETI();
 
   void DAA();
 };

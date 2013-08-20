@@ -39,11 +39,11 @@ void Cartridge::Deinitialize() {
 
 void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
   emu_->Reset();
-	SafeDeleteArray(&rom_);
+  SafeDeleteArray(&rom_);
   if (mbc) {
     mbc->Deinitialize();
-		delete mbc;
-	}
+    delete mbc;
+  }
   uint8_t* data;
   size_t length;
   core::io::ReadWholeFileBinary(filename,&data,length);

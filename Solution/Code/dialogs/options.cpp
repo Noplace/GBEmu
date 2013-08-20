@@ -101,8 +101,8 @@ INT_PTR CALLBACK Options::DialogProc(__in  HWND hwndDlg,__in  UINT uMsg,__in  WP
     self->init_ = true;
   }
   switch (uMsg) {
-  	case WM_CLOSE:
-		  EndDialog(hwndDlg,self->create_result);
+    case WM_CLOSE:
+      EndDialog(hwndDlg,self->create_result);
       return TRUE;
     case WM_HSCROLL:{
         auto slider1 = GetDlgItem(hwndDlg,IDC_SLIDER1);

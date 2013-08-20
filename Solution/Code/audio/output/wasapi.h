@@ -43,7 +43,7 @@ class WASAPI : public Interface {
   int Write(void* data_pointer, uint32_t size_bytes);
   int BeginWrite(uint32_t& samples);
   int EndWrite(void* data_pointer) ;  
-	void Sync() {}
+  void Sync() {}
  protected:
   IMMDeviceEnumerator* device_enumurator;
   IMMDevice *device;

@@ -41,7 +41,7 @@ union SweepRegister {
  };
  uint8_t raw;
 };
-	
+  
 
 union SoundLengthWaveDutyRegister {
  struct {
@@ -73,7 +73,7 @@ union SoundChannelControlVolumeRegister {
  };
  uint8_t raw;
 };
-	
+  
 union SoundOutputTerminalRegister {
  struct {
    uint8_t ch1so1:1;
@@ -113,11 +113,11 @@ class Apu : public Component {
   void Step(double dt);
   uint8_t Read(uint16_t address);
   void  Write(uint16_t address, uint8_t data);
-	audio::output::Interface* output() {
-		return output_;
-	}
+  audio::output::Interface* output() {
+    return output_;
+  }
  private:
-	uint8_t* ioports;
+  uint8_t* ioports;
   audio::output::Interface* output_;
   uint32_t sample_counter;
   uint32_t sample_ratio;
@@ -142,10 +142,10 @@ class Apu : public Component {
   struct {
     Apu* apu_;
     uint16_t freqcounterload,freqcounter,sweepfreqcounter;
-		VolumeEnvelope envelope;
+    VolumeEnvelope envelope;
     uint8_t wavepatternduty,wavepatterncounter;
     uint8_t lengthcounterload,lengthcounter;
-		uint8_t sweepcounter;
+    uint8_t sweepcounter;
     uint32_t envcounter,envcounterload; 
 
     void Initialize(Apu* sc) {
@@ -154,8 +154,8 @@ class Apu : public Component {
       wavepatternduty = 0;
       freqcounter = 0;
       sample = 0;
-			envelope.raw = 0;
-			sweepcounter = 0;
+      envelope.raw = 0;
+      sweepcounter = 0;
       envcounter = envcounterload = 0;
     }
 
@@ -169,37 +169,37 @@ class Apu : public Component {
       }
     }
 
-		void SweepTick() {
-			if (apu_->nr10_.sweep_time != 0 && --sweepcounter == 0) {
-			  sweepcounter = apu_->nr10_.sweep_time;
-				if (apu_->nr10_.incdec) //could be reversed but doubt it
-					freqcounterload += sweepfreqcounter;
-				else
-					freqcounterload -= sweepfreqcounter;
-			}
-		}
+    void SweepTick() {
+      if (apu_->nr10_.sweep_time != 0 && --sweepcounter == 0) {
+        sweepcounter = apu_->nr10_.sweep_time;
+        if (apu_->nr10_.incdec) //could be reversed but doubt it
+          freqcounterload += sweepfreqcounter;
+        else
+          freqcounterload -= sweepfreqcounter;
+      }
+    }
 
-		void LengthTick() {
-			if (lengthcounter!=0)
-				if ((apu_->nr14_ & 0x40) && --lengthcounter == 0) {
-					//apu_->nr14_ &= ~0x80;
-				}
-		}
+    void LengthTick() {
+      if (lengthcounter!=0)
+        if ((apu_->nr14_ & 0x40) && --lengthcounter == 0) {
+          //apu_->nr14_ &= ~0x80;
+        }
+    }
 
     uint8_t sample;
     uint8_t SampleTick() {
-			if ((apu_->nr14_ & 0x80)&&--freqcounter == 0) {
-				sample = dutycycletable[wavepatternduty|wavepatterncounter];
-				wavepatterncounter = (wavepatterncounter +1 ) % 8;
-				freqcounter = freqcounterload;
-			}
+      if ((apu_->nr14_ & 0x80)&&--freqcounter == 0) {
+        sample = dutycycletable[wavepatternduty|wavepatterncounter];
+        wavepatterncounter = (wavepatterncounter +1 ) % 8;
+        freqcounter = freqcounterload;
+      }
       return sample;
 
     }
   }channel1;
 
-	struct {
-		VolumeEnvelope envelope;
+  struct {
+    VolumeEnvelope envelope;
     uint8_t wavepatternduty,wavepatterncounter;
     Apu* apu_;
     uint16_t freqcounterload,freqcounter;
@@ -211,7 +211,7 @@ class Apu : public Component {
       wavepatternduty = 0;
       freqcounter = 0;
       sample = 0;
-			envelope.raw = 0;
+      envelope.raw = 0;
       envcounter = envcounterload = 0;
     }
 
@@ -225,20 +225,20 @@ class Apu : public Component {
       }
     }
 
-		void LengthTick() {
-			if (lengthcounter!=0)
-				if ((apu_->nr24_ & 0x40) && --lengthcounter == 0) {
-					//apu_->nr24_ &= ~0x80;
-				}
-		}
+    void LengthTick() {
+      if (lengthcounter!=0)
+        if ((apu_->nr24_ & 0x40) && --lengthcounter == 0) {
+          //apu_->nr24_ &= ~0x80;
+        }
+    }
 
     uint8_t sample;
     uint8_t SampleTick() {
-			if ((apu_->nr24_ & 0x80)&&--freqcounter == 0) {
-				sample = dutycycletable[wavepatternduty|wavepatterncounter];
-				wavepatterncounter = (wavepatterncounter +1 ) % 8;
-				freqcounter = freqcounterload;
-			}
+      if ((apu_->nr24_ & 0x80)&&--freqcounter == 0) {
+        sample = dutycycletable[wavepatternduty|wavepatterncounter];
+        wavepatterncounter = (wavepatterncounter +1 ) % 8;
+        freqcounter = freqcounterload;
+      }
       return sample;
     }
   }channel2;
@@ -251,15 +251,15 @@ class Apu : public Component {
 
     uint16_t freqcounter,freqcounterload;
     uint8_t lengthcounterload,lengthcounter;
-		uint8_t sample;
+    uint8_t sample;
     bool enabled;
     void Initialize(Apu* sc) {
       playback_counter = 0;
       freqcounter=0;
-			freqcounterload =0;
+      freqcounterload =0;
 
-			vol=0;
-			lengthcounter=0;
+      vol=0;
+      lengthcounter=0;
       apu_ = sc;
       wavsample = 0;
       enabled = false;
@@ -267,36 +267,36 @@ class Apu : public Component {
       sample = 0;
     }
 
-		void LengthTick() {
-			if (lengthcounter!=0)
-				if ((apu_->nr34_ & 0x40) && --lengthcounter == 0) {
-					//apu_->nr34_ &= ~0x80;
-					enabled = false;
-				}
-		}
+    void LengthTick() {
+      if (lengthcounter!=0)
+        if ((apu_->nr34_ & 0x40) && --lengthcounter == 0) {
+          //apu_->nr34_ &= ~0x80;
+          enabled = false;
+        }
+    }
 
     uint8_t SampleTick() {
-			if (!enabled) return 0;
-			if ((apu_->nr24_ & 0x80)&&--freqcounter == 0) {
-				sample = apu_->wavram[playback_counter];
-				playback_counter = (playback_counter + 1) & 0x1F;
-				freqcounter = freqcounterload;
-			}
+      if (!enabled) return 0;
+      if ((apu_->nr24_ & 0x80)&&--freqcounter == 0) {
+        sample = apu_->wavram[playback_counter];
+        playback_counter = (playback_counter + 1) & 0x1F;
+        freqcounter = freqcounterload;
+      }
       return sample;
     }
 
   } channel3;
 
-	struct {
-		Apu* apu_;
-		VolumeEnvelope envelope;
+  struct {
+    Apu* apu_;
+    VolumeEnvelope envelope;
     uint32_t envcounter,envcounterload; 
     uint8_t lengthcounterload,lengthcounter;
     uint8_t sample;
     uint16_t shiftreg;
     void Initialize(Apu* sc) {
       apu_ = sc;
-			envelope.raw = 0;
+      envelope.raw = 0;
       envcounter = envcounterload = 0;
       lengthcounter = lengthcounterload = 0;
       shiftreg = 1;
@@ -313,11 +313,11 @@ class Apu : public Component {
     }
     
     void LengthTick() {
-			if (lengthcounter!=0)
-				if ((apu_->nr44_ & 0x40) && --lengthcounter == 0) {
-					//apu_->nr44_ &= ~0x80;
-				}
-		}
+      if (lengthcounter!=0)
+        if ((apu_->nr44_ & 0x40) && --lengthcounter == 0) {
+          //apu_->nr44_ &= ~0x80;
+        }
+    }
 
     uint8_t SampleTick() {
       
@@ -327,16 +327,16 @@ class Apu : public Component {
         uint8_t tap = 14 - (apu_->nr43_ & 8);
         const unsigned mask = ~(1u << tap);
         unsigned feedback = shiftreg;
-				shiftreg >>= 1;
-				feedback = 1 & (feedback ^ shiftreg);
-				shiftreg = (feedback << tap) | (shiftreg & mask);
+        shiftreg >>= 1;
+        feedback = 1 & (feedback ^ shiftreg);
+        shiftreg = (feedback << tap) | (shiftreg & mask);
 
         sample = shiftreg & 1;
         apu_->channel4polycounterms = 0;
       }
       return sample;
     }
-	} channel4;
+  } channel4;
   
   
   real_t channel4freq,channel4polycounterms;

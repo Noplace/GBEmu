@@ -42,8 +42,8 @@ class Emu {
   Cpu* cpu() { return &cpu_; }
   Memory* memory() { return &memory_; }
   LCDDriver* lcd_driver() { return &lcd_driver_; }
-	Apu* apu() { return &apu_; }
-	Timer* timer() { return &timer_; }
+  Apu* apu() { return &apu_; }
+  Timer* timer() { return &timer_; }
   std::function <void ()> on_render;
   void set_on_render(const  std::function <void ()>& on_render) {
     if (on_render != nullptr)
@@ -63,8 +63,8 @@ class Emu {
   Cpu cpu_;
   Memory memory_;
   LCDDriver lcd_driver_;
-	Apu apu_;
-	Timer timer_;
+  Apu apu_;
+  Timer timer_;
   std::thread* thread;
   struct {
     uint64_t extra_cycles;

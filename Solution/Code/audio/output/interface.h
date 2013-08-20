@@ -32,7 +32,7 @@ class Interface {
   virtual int Write(void* data_pointer, uint32_t size_bytes) = 0;
   virtual int BeginWrite(uint32_t& samples) = 0;
   virtual int EndWrite(void* data_pointer) = 0;
-	virtual void Sync() = 0;
+  virtual void Sync() = 0;
   const WAVEFORMATEX& wave_format() { return wave_format_; }
   void* window_handle() { return window_handle_; }
   void set_window_handle(HWND window_handle) { window_handle_ = window_handle; }

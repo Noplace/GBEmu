@@ -25,7 +25,7 @@ namespace gb {
 
 void Timer::Initialize(Emu* emu) {
   Component::Initialize(emu);
-	ioports = emu_->memory()->ioports();
+  ioports = emu_->memory()->ioports();
   Reset();
 }
 
@@ -35,7 +35,7 @@ void Timer::Deinitialize() {
 
 void Timer::Reset() {
   div = tma = tac = 0;
-	tima = 0;
+  tima = 0;
   counter1 = 0;
   counter2 = 0;
   tima_max = 0;
@@ -78,7 +78,7 @@ uint8_t Timer::Read(uint16_t address) {
       return tac;
  
   }
-	return 0;
+  return 0;
 }
 
 void Timer::Write(uint16_t address, uint8_t data) {

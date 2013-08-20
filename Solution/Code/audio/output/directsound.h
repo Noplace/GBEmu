@@ -43,8 +43,8 @@ class DirectSound : public Interface {
   int BeginWrite(uint32_t& samples);
   int EndWrite(void* data_pointer) ;  
   void Sync() {
-			while (lock != 0) std::this_thread::sleep_for(std::chrono::milliseconds(2));
-	}
+      while (lock != 0) std::this_thread::sleep_for(std::chrono::milliseconds(2));
+  }
  protected:
   IDirectSound8* ds8;
   LPDIRECTSOUNDBUFFER primary_buffer;
@@ -53,7 +53,7 @@ class DirectSound : public Interface {
   DWORD len1, len2;
   uint32_t last_cursor_pos;
   DWORD last_write_cursor;
-	std::atomic<int> lock;
+  std::atomic<int> lock;
   std::atomic<int> mode;
 };
 

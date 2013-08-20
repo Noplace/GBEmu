@@ -59,7 +59,7 @@ void DisplayWindow::Init() {
   emu.set_on_render([this]() {
     //InvalidateRect(handle(),nullptr,true);
     SendMessage(handle(),WM_PAINT,0,0);
-		//Render();
+    //Render();
   });
 
   emu.set_on_vertical_blank([this]() {
@@ -102,11 +102,11 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\mem_timing-2\\mem_timing-2\\mem_timing.gb",&header);
   //cartridge_.LoadFile("..\\test\\cpu_instrs\\individual\\01-special.gb",&header);
-	//cartridge_.ReadFile("..\\test\\cpu_instrs\\cpu_instrs.gb",&header);
-	//cartridge_.LoadFile("..\\test\\PUZZLE.gb",&header);
-	//cartridge_.LoadFile("..\\test\\opus5.gb",&header);
-	emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\01-registers.gb",&header);
-	//emu.cartridge()->LoadFile("..\\test\\Super Mario Land (World).gb",&header);
+  //cartridge_.ReadFile("..\\test\\cpu_instrs\\cpu_instrs.gb",&header);
+  //cartridge_.LoadFile("..\\test\\PUZZLE.gb",&header);
+  //cartridge_.LoadFile("..\\test\\opus5.gb",&header);
+  emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\01-registers.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\Super Mario Land (World).gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
   //
@@ -232,7 +232,7 @@ int DisplayWindow::OnCommand(WPARAM wParam,LPARAM lParam) {
 int DisplayWindow::OnKeyDown(WPARAM wParam,LPARAM lParam) {
 
   if (wParam == 'Z')
-		emu.memory()->JoypadPress(emulation::gb::JoypadA);
+    emu.memory()->JoypadPress(emulation::gb::JoypadA);
   if (wParam == 'X')
     emu.memory()->JoypadPress(emulation::gb::JoypadB);
   if (wParam == VK_RETURN)
@@ -253,7 +253,7 @@ int DisplayWindow::OnKeyDown(WPARAM wParam,LPARAM lParam) {
 
 int DisplayWindow::OnKeyUp(WPARAM wParam,LPARAM lParam) {
   if (wParam == 'Z')
-		emu.memory()->JoypadRelease(emulation::gb::JoypadA);
+    emu.memory()->JoypadRelease(emulation::gb::JoypadA);
   if (wParam == 'X')
     emu.memory()->JoypadRelease(emulation::gb::JoypadB);
   if (wParam == VK_RETURN)
@@ -305,9 +305,9 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
     case ID_VIDEO_STD320X288:
       //glDrawPixels(256,240,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
       //glEnable(GL_TEXTURE_2D);
-			memcpy(output,emu.lcd_driver()->frame_buffer,256*256*4);
+      memcpy(output,emu.lcd_driver()->frame_buffer,256*256*4);
       glBindTexture( GL_TEXTURE_2D, texture );
-			glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,256,256,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
+      glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,256,256,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
       glBegin( GL_QUADS );
       glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
       glTexCoord2d(0.625,0.0); glVertex2d(320,0.0);

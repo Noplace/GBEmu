@@ -71,7 +71,7 @@ class XAudio : public Interface {
   int Deinitialize();
   uint32_t GetBytesBuffered();
   int Write(void* data_pointer, uint32_t size_bytes);
-	void Sync() { }
+  void Sync() { }
   void set_window_handle(HWND window_handle) { window_handle_ = window_handle; }
   void set_buffer_size(uint32_t buffer_size) { buffer_size_ = buffer_size; }
   IXAudio2SourceVoice* pSourceVoice;

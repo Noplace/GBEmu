@@ -45,7 +45,7 @@ int XAudio::Initialize(uint32_t sample_rate, uint8_t channels, uint8_t bits) {
   #ifdef _DEBUG
     //flags |= XAUDIO2_DEBUG_ENGINE;
   #endif
-		
+    
   if  (FAILED(hr = XAudio2Create(&pXAudio2,flags)))  {
     Deinitialize();
     return S_FALSE;
@@ -57,13 +57,13 @@ int XAudio::Initialize(uint32_t sample_rate, uint8_t channels, uint8_t bits) {
   }
   
 
-	ZeroMemory( &wave_format_, sizeof(WAVEFORMATEX) ); 
-	wave_format_.wFormatTag      = (WORD) WAVE_FORMAT_PCM; 
-	wave_format_.nChannels       =  channels; 
-	wave_format_.nSamplesPerSec  = sample_rate; 
-	wave_format_.wBitsPerSample  = (WORD) bits; 
-	wave_format_.nBlockAlign     = (WORD) ((wave_format_.wBitsPerSample >> 3) * wave_format_.nChannels);
-	wave_format_.nAvgBytesPerSec = (DWORD) (wave_format_.nSamplesPerSec * wave_format_.nBlockAlign);
+  ZeroMemory( &wave_format_, sizeof(WAVEFORMATEX) ); 
+  wave_format_.wFormatTag      = (WORD) WAVE_FORMAT_PCM; 
+  wave_format_.nChannels       =  channels; 
+  wave_format_.nSamplesPerSec  = sample_rate; 
+  wave_format_.wBitsPerSample  = (WORD) bits; 
+  wave_format_.nBlockAlign     = (WORD) ((wave_format_.wBitsPerSample >> 3) * wave_format_.nChannels);
+  wave_format_.nAvgBytesPerSec = (DWORD) (wave_format_.nSamplesPerSec * wave_format_.nBlockAlign);
   wave_format_.cbSize = 0;
   if (FAILED(hr = pXAudio2->CreateSourceVoice(&pSourceVoice, &wave_format_, 0, 1.0f, &voiceContext))) {
     Deinitialize();

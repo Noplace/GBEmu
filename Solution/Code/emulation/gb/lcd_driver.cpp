@@ -58,30 +58,30 @@ void LCDDriver::Step(double dt) {
   if (stat_.coincidence_inr && stat_.coincidence)
     emu_->memory()->interrupt_flag() |= 2;
 
-	switch (stat_.mode) {
-		case 2:
-			if (counter2==80)
-				stat_.mode = 3;
-			break;
-		case 3:
-		  if (counter2 == 282) {
-	  		RenderLine();
-				stat_.mode = 0;
+  switch (stat_.mode) {
+    case 2:
+      if (counter2==80)
+        stat_.mode = 3;
+      break;
+    case 3:
+      if (counter2 == 282) {
+        RenderLine();
+        stat_.mode = 0;
         if (stat_.hblank_int)
           emu_->memory()->interrupt_flag() |= 2;
-			}
-			break;
-		case 0:
+      }
+      break;
+    case 0:
       if (sprite_bug_counter > 0 && lcdc_.lcd_enable == 1) {
         emu_->memory()->oam()[8+(rand()%152)] = rand()&0xFF; 
         --sprite_bug_counter;
       }
 
 
-			if (counter2==456) {
-				
+      if (counter2==456) {
+        
         if (ly == 143) {
-					stat_.mode = 1;//vblank period
+          stat_.mode = 1;//vblank period
           emu_->memory()->interrupt_flag() |= 1;
         } else {
           stat_.mode = 2;
@@ -89,26 +89,26 @@ void LCDDriver::Step(double dt) {
             emu_->memory()->interrupt_flag() |= 2;
         }
       }
-			break;
-		case 1:
+      break;
+    case 1:
         if (stat_.vblank_int)
           emu_->memory()->interrupt_flag() |= 2;
-				
-			break;
-	}
+        
+      break;
+  }
 
-	
+  
   if (counter2 == 456) {
-		if (ly++ == 153 && counter2 == 456) {
+    if (ly++ == 153 && counter2 == 456) {
       //if (lcdc_.lcd_enable)
-			emu_->Render();
-			stat_.mode = 2;
-			ly = 0;
-			counter1 = 0;
-			counter2 = 0;
-		} 
-		counter2 = 0;
-	}
+      emu_->Render();
+      stat_.mode = 2;
+      ly = 0;
+      counter1 = 0;
+      counter2 = 0;
+    } 
+    counter2 = 0;
+  }
 
 
 
@@ -140,7 +140,7 @@ uint8_t LCDDriver::Read(uint16_t address) {
     case 0xFF4B:
       return wx;
   }
-	return 0;
+  return 0;
 }
 
 void LCDDriver::Write(uint16_t address, uint8_t data) {
@@ -210,116 +210,116 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
 #define pixel(bit) (((tile[y<<1]>>(bit&0x7))&0x1)+((((tile[(y<<1)+1]>>(bit&0x7))<<1)&0x2)))
 
 void LCDDriver::RenderAllBGTiles() {
-	auto mapoffset = ((ly)&0xFF) >> 3;
-	auto y = (ly) & 7;
-	auto x = 0;
-	auto readTile = [&](){
-			uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
-			auto tileindex = bgtilemap[(mapoffset<<5)];
-			if(lcdc_.tile_data == 1) {
-				int8_t d = tileindex;
-				d+=128;
-				tileindex = d;
-			}
-			return tileindex;
-	};
+  auto mapoffset = ((ly)&0xFF) >> 3;
+  auto y = (ly) & 7;
+  auto x = 0;
+  auto readTile = [&](){
+      uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
+      auto tileindex = bgtilemap[(mapoffset<<5)];
+      if(lcdc_.tile_data == 1) {
+        int8_t d = tileindex;
+        d+=128;
+        tileindex = d;
+      }
+      return tileindex;
+  };
 
-	if (lcdc_.bgdisplay == 0) {
-		for (int i=0;i<256;++i) {
-			colormap[((ly)<<8)+(i)] = 0;
-		}
-	} else {
-		uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
-		for (int i=0;i<256;++i) {
-			auto tileindex = (i>>3)+(ly>>3)*32;
-			uint8_t* tile = &tiledata[(tileindex<<4)];
-			
-			colormap[((ly)<<8)+i] = bg_pal[pixel((7-x))];
+  if (lcdc_.bgdisplay == 0) {
+    for (int i=0;i<256;++i) {
+      colormap[((ly)<<8)+(i)] = 0;
+    }
+  } else {
+    uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
+    for (int i=0;i<256;++i) {
+      auto tileindex = (i>>3)+(ly>>3)*32;
+      uint8_t* tile = &tiledata[(tileindex<<4)];
+      
+      colormap[((ly)<<8)+i] = bg_pal[pixel((7-x))];
 
-			++x;
-			if (x==8) {
-				x = 0;
-			}
-		}
-	}
+      ++x;
+      if (x==8) {
+        x = 0;
+      }
+    }
+  }
 }
 
 void LCDDriver::RenderBGLine(uint8_t* cmline) {
-	auto mapoffset = ((ly+scroll_y)&0xFF) >> 3;
-	auto lineoffset = ((scroll_x>>3))&0x1F;
-	auto y = (ly + scroll_y) & 7;
-	auto x = scroll_x & 7;
-	auto readTile = [&](){
-		  uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
-			auto tileindex = bgtilemap[(mapoffset<<5) + lineoffset];
-			if(lcdc_.tile_data == 0) {
-				int8_t d = tileindex;
-				d+=128;
-				tileindex = d;
-			}
-			return tileindex;
-	};
+  auto mapoffset = ((ly+scroll_y)&0xFF) >> 3;
+  auto lineoffset = ((scroll_x>>3))&0x1F;
+  auto y = (ly + scroll_y) & 7;
+  auto x = scroll_x & 7;
+  auto readTile = [&](){
+      uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
+      auto tileindex = bgtilemap[(mapoffset<<5) + lineoffset];
+      if(lcdc_.tile_data == 0) {
+        int8_t d = tileindex;
+        d+=128;
+        tileindex = d;
+      }
+      return tileindex;
+  };
 
   auto incx = [&x,&lineoffset](){
-			++x;
-			if (x==8) {
-				x = 0;
-				lineoffset = (lineoffset+1)&0x1F;
+      ++x;
+      if (x==8) {
+        x = 0;
+        lineoffset = (lineoffset+1)&0x1F;
       }
   };
 
-	if (lcdc_.bgdisplay == 0) {
-		for (int i=0;i<256;++i) {
-			cmline[i] = 0;
-		}
-	} else {
-		uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
-		for (int i=0;i<256;++i) {
-			auto tileindex = readTile();
-			uint8_t* tile = &tiledata[(tileindex<<4)];
+  if (lcdc_.bgdisplay == 0) {
+    for (int i=0;i<256;++i) {
+      cmline[i] = 0;
+    }
+  } else {
+    uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
+    for (int i=0;i<256;++i) {
+      auto tileindex = readTile();
+      uint8_t* tile = &tiledata[(tileindex<<4)];
       uint8_t bgcolor = pixel((7-x));
       incx();
       cmline[i] = bg_pal[bgcolor];
-		}
-	}
+    }
+  }
 }
 
 void LCDDriver::RenderWindowLine(uint8_t* cmline) {
-	if (lcdc_.window_enable == 1) {
+  if (lcdc_.window_enable == 1) {
     auto mapoffset = ((ly-wy)&0xFF) >> 3;
-	  auto lineoffset = 0;
-	  auto y = (ly-wy) & 7;
-	  auto x = 0;
-	  auto readTile = [&](){
+    auto lineoffset = 0;
+    auto y = (ly-wy) & 7;
+    auto x = 0;
+    auto readTile = [&](){
         uint8_t* tilemap = &emu_->memory()->vram()[lcdc_.window_tile_map ==0?0x1800:0x1C00];
-			  auto tileindex = tilemap[(mapoffset<<5) + lineoffset];
-			  if(lcdc_.tile_data == 0) {
-				  int8_t d = tileindex;
-				  d+=128;
-				  tileindex = d;
-			  }
-			  return tileindex;
-	  };
+        auto tileindex = tilemap[(mapoffset<<5) + lineoffset];
+        if(lcdc_.tile_data == 0) {
+          int8_t d = tileindex;
+          d+=128;
+          tileindex = d;
+        }
+        return tileindex;
+    };
 
     auto incx = [&x,&lineoffset](){
-			  ++x;
-			  if (x==8) {
-				  x = 0;
-				  lineoffset = (lineoffset+1)&0x1F;
+        ++x;
+        if (x==8) {
+          x = 0;
+          lineoffset = (lineoffset+1)&0x1F;
         }
     };
 
     if ((ly >= wy)&&(wx>=7&&wx<=166)) { 
-		  uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
-		  for (int i=(wx-7);i<=(wx-7)+166-7;++i) {
-			  auto tileindex = readTile();
-			  uint8_t* tile = &tiledata[(tileindex<<4)];
+      uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
+      for (int i=(wx-7);i<=(wx-7)+166-7;++i) {
+        auto tileindex = readTile();
+        uint8_t* tile = &tiledata[(tileindex<<4)];
         uint8_t bgcolor = pixel((7-x));
         incx();
         cmline[i] = bg_pal[bgcolor];
-		  }
+      }
     }
-	}
+  }
 }
 
 void LCDDriver::RenderSpriteLine(uint8_t* cmline) {
@@ -347,8 +347,8 @@ void LCDDriver::RenderSpriteLine(uint8_t* cmline) {
     }attr;
 
   } ;
-	if (lcdc_.sprite_enable == 1) {
-		uint8_t* tiledata = &emu_->memory()->vram()[0x0000];
+  if (lcdc_.sprite_enable == 1) {
+    uint8_t* tiledata = &emu_->memory()->vram()[0x0000];
     Sprite* sprites = (Sprite*)emu_->memory()->oam();
 
     for (int j=0;j<40;++j) {
@@ -362,8 +362,8 @@ void LCDDriver::RenderSpriteLine(uint8_t* cmline) {
           uint8_t* pal = sprites[j].attr.pal == 0?obj_pal1:obj_pal2;
           if (sprites[j].attr.yflip)
             y = ((8<<lcdc_.sprite_size)) - y;
-			     
-			    for (int x=0;x<8;++x) {
+           
+          for (int x=0;x<8;++x) {
             uint8_t p = 0;
             if (sprites[j].attr.xflip) {
               p = pixel((x));
@@ -372,26 +372,26 @@ void LCDDriver::RenderSpriteLine(uint8_t* cmline) {
             }
             
             if (((p!=0)&&((sprites[j].attr.priority==0)||(cmline[x+spritex] == bg_pal[0])))&&
-							(x+spritex)>=0)
+              (x+spritex)>=0)
               cmline[x+spritex] = pal[p];
           }
 
-			  --sprite_count;
+        --sprite_count;
        }
      }
 
-	}
+  }
 }
 
 void LCDDriver::RenderLine() {
-	auto cmline = &colormap[ly<<8];
+  auto cmline = &colormap[ly<<8];
 
-	//RenderAllBGTiles();
-	RenderBGLine(cmline);
-	RenderWindowLine(cmline);
-	RenderSpriteLine(cmline);
+  //RenderAllBGTiles();
+  RenderBGLine(cmline);
+  RenderWindowLine(cmline);
+  RenderSpriteLine(cmline);
 
-	auto fbline = &frame_buffer[ly<<8];
+  auto fbline = &frame_buffer[ly<<8];
   for (int i=0;i<256;++i) //256px per line
    *fbline++ = pal32[*cmline++];
 }

@@ -28,8 +28,8 @@ SquareOscillator::SquareOscillator() : Wavetable() {
   int div2 = kIndexRange >> 1;
   int i;
   for(i=0;i<div2;++i) {
-	  table[i]     =  1.0f;
-	  table[i+div2] = -1.0f;
+    table[i]     =  1.0f;
+    table[i+div2] = -1.0f;
   }
   table[kIndexRange] = 1.0f;
 }

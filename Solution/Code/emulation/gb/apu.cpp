@@ -26,9 +26,9 @@ namespace gb {
 
 void Apu::Initialize(Emu* emu) {
   Component::Initialize(emu);
-	ioports = emu_->memory()->ioports();
-	output_ = new audio::output::DirectSound();
-	output_->set_window_handle(app::Application::Current()->display_window().handle());
+  ioports = emu_->memory()->ioports();
+  output_ = new audio::output::DirectSound();
+  output_->set_window_handle(app::Application::Current()->display_window().handle());
   output_->Initialize(44100,2,16);
   //WASAPI_Initialize(44100,2,16);
 
@@ -51,9 +51,9 @@ void Apu::Reset() {
   channel4polycounterms = 0;
  
   channel1.Initialize(this);
-	channel2.Initialize(this);
+  channel2.Initialize(this);
   channel3.Initialize(this);
-	channel4.Initialize(this);
+  channel4.Initialize(this);
   
   nr10_.raw = 0;
   nr11_.raw = 0;
@@ -128,28 +128,28 @@ void Apu::Step(double dt) {
 
   if ((maincounter & 0x3) == 0) {// its like every 32/8 because 8 samples in duty cycle
       channel1.SampleTick();
-			channel2.SampleTick();
+      channel2.SampleTick();
   }
 
-	if ((maincounter & 0x1) == 0) {
+  if ((maincounter & 0x1) == 0) {
       channel3.SampleTick();
   }
   channel4polycounterms += float(dt);
   channel4.SampleTick();
 
-	maincounter = (maincounter+1) & 0x1F;
+  maincounter = (maincounter+1) & 0x1F;
 
   if (++ulencounterclock == 16384) { //256hz from original cpu speed
-		channel1.LengthTick();
-		channel2.LengthTick();
-		channel3.LengthTick();
+    channel1.LengthTick();
+    channel2.LengthTick();
+    channel3.LengthTick();
     channel4.LengthTick();
-		static bool sweep_tick = false;
-		if (sweep_tick) { //128hz
-			channel1.SweepTick();
-		}
-		sweep_tick = !sweep_tick;
-		ulencounterclock = 0;
+    static bool sweep_tick = false;
+    if (sweep_tick) { //128hz
+      channel1.SweepTick();
+    }
+    sweep_tick = !sweep_tick;
+    ulencounterclock = 0;
   }
 
   channel1.EnvelopeTick();
@@ -168,9 +168,9 @@ void Apu::Step(double dt) {
    
     auto sample_left = ((nr51_.ch1so1 * channel1_sample)+(nr51_.ch2so1 * channel2_sample)+(nr51_.ch3so1 * channel3_sample)+(nr51_.ch4so1 * channel4_sample));
     auto sample_right = ((nr51_.ch1so2 * channel1_sample)+(nr51_.ch2so2 * channel2_sample)+(nr51_.ch3so2 * channel3_sample)+(nr51_.ch4so2 * channel4_sample));
-		
-		sample_left = ((sample_left*2.0f)-1) * 0.25f * 32767.0f;
-		sample_right = ((sample_right*2.0f)-1) * 0.25f * 32767.0f;
+    
+    sample_left = ((sample_left*2.0f)-1) * 0.25f * 32767.0f;
+    sample_right = ((sample_right*2.0f)-1) * 0.25f * 32767.0f;
     sample_left *= nr50_.so1vol / 7.0f;
     sample_right *= nr50_.so2vol / 7.0f;
 
@@ -207,108 +207,108 @@ uint8_t Apu::Read(uint16_t address) {
   switch (address) {
     case 0xFF10:
       ioports[address&0xFF] = nr10_.raw | masks[0];
-			break;
+      break;
     case 0xFF11:
       ioports[address&0xFF] = nr11_.raw | masks[1];
-			break;
+      break;
     case 0xFF12:
       ioports[address&0xFF] = nr12_.raw | masks[2];
-			break;
+      break;
     case 0xFF13:
       ioports[address&0xFF] = nr13_ | masks[3];
-			break;
+      break;
     case 0xFF14:
       ioports[address&0xFF] = nr14_ | masks[4];
-			break;
+      break;
 
     case 0xFF15:
       ioports[address&0xFF] |= masks[5];
-			break;
+      break;
     case 0xFF16:
       ioports[address&0xFF] = nr21_.raw| masks[6];
-			break;
+      break;
     case 0xFF17:
       ioports[address&0xFF] = nr22_.raw| masks[7];
-			break;
+      break;
     case 0xFF18:
       ioports[address&0xFF] = nr23_| masks[8];
-			break;
+      break;
     case 0xFF19:
       ioports[address&0xFF] = nr24_| masks[9];
-			break;
+      break;
 
     case 0xFF1A:
       ioports[address&0xFF] = nr30_| masks[10];
-			break;
+      break;
     case 0xFF1B:
       ioports[address&0xFF] = nr31_| masks[11];
-			break;
+      break;
     case 0xFF1C:
       ioports[address&0xFF] = nr32_| masks[12];
-			break;
+      break;
     case 0xFF1D:
       ioports[address&0xFF] = nr33_| masks[13];
-			break;
+      break;
     case 0xFF1E:
       ioports[address&0xFF] = nr34_| masks[14];
-			break;
+      break;
 
     case 0xFF1F:
       ioports[address&0xFF] = nr34_| masks[15];
-			break;
+      break;
 
     case 0xFF20:
       ioports[address&0xFF] = nr41_.raw| masks[16];
-			break;
+      break;
     case 0xFF21:
       ioports[address&0xFF] = nr42_.raw| masks[17];
-			break;
+      break;
     case 0xFF22:
       ioports[address&0xFF] = nr43_| masks[18];
-			break;
+      break;
     case 0xFF23:
       ioports[address&0xFF] = nr44_| masks[19];
-			break;
+      break;
 
     case 0xFF24:
       ioports[address&0xFF] = nr50_.raw| masks[20];
-			break;
+      break;
     case 0xFF25:
       ioports[address&0xFF] = nr51_.raw| masks[21]; 
-			break;
+      break;
     case 0xFF26:
       ioports[address&0xFF] = nr52_| masks[22]; 
-			break;
+      break;
 
     case 0xFF27:
       ioports[address&0xFF] |= masks[23]; 
-			break;
+      break;
     case 0xFF28:
       ioports[address&0xFF] |= masks[24]; 
-			break;
+      break;
     case 0xFF29:
       ioports[address&0xFF] |= masks[25]; 
-			break;
+      break;
     case 0xFF2A:
       ioports[address&0xFF] |= masks[26]; 
-			break;
+      break;
     case 0xFF2B:
       ioports[address&0xFF] |= masks[27]; 
-			break;
+      break;
     case 0xFF2C:
       ioports[address&0xFF] |= masks[28]; 
-			break;
+      break;
     case 0xFF2D:
       ioports[address&0xFF] |= masks[29]; 
-			break;
+      break;
     case 0xFF2E:
       ioports[address&0xFF] |= masks[30]; 
-			break;
+      break;
     case 0xFF2F:
       ioports[address&0xFF] |= masks[31]; 
-			break;
+      break;
   }
-	return ioports[address&0xFF];
+  return ioports[address&0xFF];
 }
 
 void Apu::Write(uint16_t address, uint8_t data) {
@@ -317,19 +317,19 @@ void Apu::Write(uint16_t address, uint8_t data) {
      int index = (address & 0x0F)<<1;
      wavram[index] = data>>4;
      wavram[index+1] = data&0xF;
-		 ioports[address&0xFF] = data;
-		 return;
+     ioports[address&0xFF] = data;
+     return;
   }
 
-	if ((nr52_&0x80)==0 && address != 0xFF26)
-		return;
+  if ((nr52_&0x80)==0 && address != 0xFF26)
+    return;
 
-	ioports[address&0xFF] = data;
+  ioports[address&0xFF] = data;
 
   switch (address) {
     case 0xFF10:
       nr10_.raw = data;
-			
+      
       break;
     case 0xFF11:
       nr11_.raw = data;
@@ -354,8 +354,8 @@ void Apu::Write(uint16_t address, uint8_t data) {
         channel1.envelope.raw = nr12_.raw;
         channel1.envcounterload = (channel1.envelope.env_sweep*4194304/64);
         channel1.envcounter = channel1.envcounterload;
-				channel1.sweepcounter = nr10_.sweep_time;
-				channel1.sweepfreqcounter = (x>>nr10_.sweep_shift);
+        channel1.sweepcounter = nr10_.sweep_time;
+        channel1.sweepfreqcounter = (x>>nr10_.sweep_shift);
         channel1.freqcounter = channel1.freqcounterload;
         channel1.lengthcounter = channel1.lengthcounterload;
       }
@@ -378,7 +378,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
       nr24_ = data;
       uint32_t x = nr23_;
       x |= (nr24_&0x7)<<8;
-			channel2.freqcounterload = 2048-x;
+      channel2.freqcounterload = 2048-x;
       //channel2freq = 131072.0f/(2048-x);
       if (nr24_ & 0x80) {
         nr52_ |= 0x02;
@@ -397,7 +397,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
       break;
     case 0xFF1B:
       nr31_ = data;
-			channel3.lengthcounterload = 256 - data;
+      channel3.lengthcounterload = 256 - data;
       break;
     case 0xFF1C:
       nr32_ = data;  
@@ -415,7 +415,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
       nr34_ = data;
       uint32_t x = nr33_;
       x |= (nr34_&0x7)<<8;
-			channel3.freqcounterload = 2048-x;
+      channel3.freqcounterload = 2048-x;
       //if (nr34_&0x40)
         //channel3.soundlength_ms = 1000.0f * (256.0f-nr31_)*(1/256.0f);
       if ((nr34_&0x80)&&(nr30_&0x80)) {
@@ -467,33 +467,33 @@ void Apu::Write(uint16_t address, uint8_t data) {
     case 0xFF26:
       nr52_ = (data&0x80) | (nr52_&0x7F);
       if ((nr52_&0x80)==0) {
-				nr10_.raw = ioports[0xFF10&0xFF] = 0;
-				nr11_.raw = ioports[0xFF11&0xFF] = 0;
-				nr12_.raw = ioports[0xFF12&0xFF] = 0;
-				nr13_ = ioports[0xFF13&0xFF] = 0;
-				nr14_ = ioports[0xFF14&0xFF] = 0;
-				ioports[0xFF15&0xFF] = 0;
-				nr21_.raw = ioports[0xFF16&0xFF] = 0;
-				nr22_.raw = ioports[0xFF17&0xFF] = 0;
-				nr23_ = ioports[0xFF18&0xFF] = 0;
-				nr24_ = ioports[0xFF19&0xFF] = 0;
-				nr30_ = ioports[0xFF1A&0xFF] = 0;
-				nr31_ = ioports[0xFF1B&0xFF] = 0;
-				nr32_ = ioports[0xFF1C&0xFF] = 0;
-				nr33_ = ioports[0xFF1D&0xFF] = 0;
-				nr34_ = ioports[0xFF1E&0xFF] = 0;
-				ioports[0xFF1F&0xFF] = 0;
-				nr41_.raw = ioports[0xFF20&0xFF] = 0;
-				nr42_.raw = ioports[0xFF21&0xFF] = 0;
-				nr43_ = ioports[0xFF22&0xFF] = 0;
-				nr44_ = ioports[0xFF23&0xFF] = 0;
-				nr50_.raw = ioports[0xFF24&0xFF] = 0;
-				nr51_.raw = ioports[0xFF25&0xFF] = 0;
-				nr52_ = ioports[0xFF26&0xFF] &= ~0x7F;
-				output_->Stop();
-			} else {
-				output_->Play();
-			}
+        nr10_.raw = ioports[0xFF10&0xFF] = 0;
+        nr11_.raw = ioports[0xFF11&0xFF] = 0;
+        nr12_.raw = ioports[0xFF12&0xFF] = 0;
+        nr13_ = ioports[0xFF13&0xFF] = 0;
+        nr14_ = ioports[0xFF14&0xFF] = 0;
+        ioports[0xFF15&0xFF] = 0;
+        nr21_.raw = ioports[0xFF16&0xFF] = 0;
+        nr22_.raw = ioports[0xFF17&0xFF] = 0;
+        nr23_ = ioports[0xFF18&0xFF] = 0;
+        nr24_ = ioports[0xFF19&0xFF] = 0;
+        nr30_ = ioports[0xFF1A&0xFF] = 0;
+        nr31_ = ioports[0xFF1B&0xFF] = 0;
+        nr32_ = ioports[0xFF1C&0xFF] = 0;
+        nr33_ = ioports[0xFF1D&0xFF] = 0;
+        nr34_ = ioports[0xFF1E&0xFF] = 0;
+        ioports[0xFF1F&0xFF] = 0;
+        nr41_.raw = ioports[0xFF20&0xFF] = 0;
+        nr42_.raw = ioports[0xFF21&0xFF] = 0;
+        nr43_ = ioports[0xFF22&0xFF] = 0;
+        nr44_ = ioports[0xFF23&0xFF] = 0;
+        nr50_.raw = ioports[0xFF24&0xFF] = 0;
+        nr51_.raw = ioports[0xFF25&0xFF] = 0;
+        nr52_ = ioports[0xFF26&0xFF] &= ~0x7F;
+        output_->Stop();
+      } else {
+        output_->Play();
+      }
       break;
  
   }

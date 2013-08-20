@@ -23,7 +23,7 @@ namespace gb {
 
 void Emu::Initialize() {
   cartridge_.Initialize(this);
-	timer_.Initialize(this);
+  timer_.Initialize(this);
   lcd_driver_.Initialize(this);
   memory_.Initialize(this);
   cpu_.Initialize(this);
@@ -38,7 +38,7 @@ void Emu::Deinitialize() {
   cpu_.Deinitialize();
   memory_.Deinitialize();
   lcd_driver_.Deinitialize();
-	timer_.Deinitialize();
+  timer_.Deinitialize();
   cartridge_.Deinitialize();
 }
 
@@ -51,7 +51,7 @@ double Emu::Step() {
 
   timing.span_accumulator += time_span;
   while (timing.span_accumulator >= dt) {
-		//emu_->cartridge()->mbc->Tick();
+    //emu_->cartridge()->mbc->Tick();
     cpu_.Step(dt);
     timing.span_accumulator -= dt*cpu_.cycles;
   }
@@ -70,7 +70,7 @@ void Emu::Run() {
 
 void Emu::Stop() {
   if (thread==nullptr && state == 0) return;
-	apu_.output()->Stop();
+  apu_.output()->Stop();
   state = 0;
   thread->join();
   OutputDebugString("killed thread\n");
@@ -83,7 +83,7 @@ void Emu::Pause() {
 
 void Emu::Reset() {
   Stop();
-	timer_.Reset();
+  timer_.Reset();
   lcd_driver_.Reset();
   memory_.Reset();
   cpu_.Reset();

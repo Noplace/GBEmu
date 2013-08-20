@@ -28,12 +28,12 @@ class MBCNone : public MemoryBankController {
   }
   uint8_t Read(uint16_t address) {
       if (address >= 0x0000 && address <= 0x3FFF) {
-	    return cartridge->rom()[address];
-	  } else if (address >= 0x4000 && address <= 0x7FFF) {
+      return cartridge->rom()[address];
+    } else if (address >= 0x4000 && address <= 0x7FFF) {
       return cartridge->rom()[address];
     } else if (address >= 0xA000 && address <= 0xBFFF) {
       return 0;
-	  }
+    }
     return 0;
   }
   void Write(uint16_t address, uint8_t data) {
@@ -56,8 +56,8 @@ class MBC1 : public MemoryBankController {
   }
   uint8_t Read(uint16_t address) {
     if (address >= 0x0000 && address <= 0x3FFF) {
-	    return cartridge->rom()[address];
-	  } else if (address >= 0x4000 && address <= 0x7FFF) {
+      return cartridge->rom()[address];
+    } else if (address >= 0x4000 && address <= 0x7FFF) {
       return cartridge->rom()[address+0x4000*(rom_bank_number-1)];
     } else if (address >= 0xA000 && address <= 0xBFFF) {
       if ((eram_enable&0x0A)==0x0A)
@@ -69,8 +69,8 @@ class MBC1 : public MemoryBankController {
   }
   void Write(uint16_t address, uint8_t data) {
    if (address >= 0x0000 && address <= 0x1FFF) {
-	    eram_enable = data;
-	  } else if (address >= 0x2000 && address <= 0x3FFF) {
+      eram_enable = data;
+    } else if (address >= 0x2000 && address <= 0x3FFF) {
       rom_bank_number = data&0x1F;
       if (rom_bank_number == 0)
         rom_bank_number = 1;
@@ -88,7 +88,7 @@ class MBC1 : public MemoryBankController {
     } else if (address >= 0xA000 && address <= 0xBFFF) {
       if ((eram_enable&0x0A)==0x0A)
         eram_[address&0x1FFF] = data;
-	  }
+    }
   }
   uint8_t rom_bank_number;
   uint8_t mode;
@@ -115,8 +115,8 @@ class MBC3 : public MemoryBankController {
   }
   uint8_t Read(uint16_t address) {
     if (address >= 0x0000 && address <= 0x3FFF) {
-	    return cartridge->rom()[address];
-	  } else if (address >= 0x4000 && address <= 0x7FFF) {
+      return cartridge->rom()[address];
+    } else if (address >= 0x4000 && address <= 0x7FFF) {
       return cartridge->rom()[address+0x4000*(rom_bank_number-1)];
     } else if (address >= 0xA000 && address <= 0xBFFF) {
 
@@ -133,9 +133,9 @@ class MBC3 : public MemoryBankController {
   }
   void Write(uint16_t address, uint8_t data) {
    if (address >= 0x0000 && address <= 0x1FFF) {
-	    eram_enable = data;
+      eram_enable = data;
       rtc_enable = data;
-	  } else if (address >= 0x2000 && address <= 0x3FFF) {
+    } else if (address >= 0x2000 && address <= 0x3FFF) {
       rom_bank_number = data&0x7F;
       if (rom_bank_number == 0)
         rom_bank_number = 1;
@@ -156,7 +156,7 @@ class MBC3 : public MemoryBankController {
       
       if ((rtc_enable&0x0A)==0x0A&&mode==1)
         rtc[rtc_select] = data;
-	  }
+    }
   }
   void Tick() {
     if (++counter1 == 128) { //32768Hz, for original gameboy
@@ -209,8 +209,8 @@ class MBC5 : public MemoryBankController {
   }
   uint8_t Read(uint16_t address) {
     if (address >= 0x0000 && address <= 0x3FFF) {
-	    return cartridge->rom()[address];
-	  } else if (address >= 0x4000 && address <= 0x7FFF) {
+      return cartridge->rom()[address];
+    } else if (address >= 0x4000 && address <= 0x7FFF) {
       return cartridge->rom()[address+0x4000*(rom_bank_number-1)];
     } else if (address >= 0xA000 && address <= 0xBFFF) {
       if ((eram_enable&0x0A)==0x0A)
@@ -222,8 +222,8 @@ class MBC5 : public MemoryBankController {
   }
   void Write(uint16_t address, uint8_t data) {
    if (address >= 0x0000 && address <= 0x1FFF) {
-	    eram_enable = data;
-	  } else if (address >= 0x2000 && address <= 0x2FFF) {
+      eram_enable = data;
+    } else if (address >= 0x2000 && address <= 0x2FFF) {
       rom_bank_number = (rom_bank_number&0xFF00)|data;
     } else if (address >= 0x3000 && address <= 0x3FFF) {
       rom_bank_number = ((data&0x1)<<8)|(rom_bank_number&0xFF);
@@ -237,7 +237,7 @@ class MBC5 : public MemoryBankController {
     } else if (address >= 0xA000 && address <= 0xBFFF) {
       if ((eram_enable&0x0A)==0x0A)
         eram_[address&0x1FFF] = data;
-	  }
+    }
   }
   uint16_t rom_bank_number;
   uint8_t ram_bank_number;

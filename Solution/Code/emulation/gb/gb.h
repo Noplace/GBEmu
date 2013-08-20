@@ -47,10 +47,10 @@ class Component {
   virtual void Initialize(Emu* emu) {
     emu_ = emu;
   }
-	virtual void Deinitialize() {
-	}
-	virtual void Reset() {
-	}
+  virtual void Deinitialize() {
+  }
+  virtual void Reset() {
+  }
  protected:
    Emu* emu_;
 };

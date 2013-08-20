@@ -30,7 +30,7 @@ WASAPI::WASAPI() : device_enumurator(nullptr),device(nullptr),audio_client(nullp
   numFramesAvailable=0;
   numFramesPadding=0;
 
-	hnsRequestedDuration = (REFERENCE_TIME)(REFTIMES_PER_SEC*0.4);
+  hnsRequestedDuration = (REFERENCE_TIME)(REFTIMES_PER_SEC*0.4);
   hnsActualDuration;
   written_samples;
   memset(&fmt,0,sizeof(fmt));
@@ -57,8 +57,8 @@ int WASAPI::Initialize(uint32_t sample_rate, uint8_t channels, uint8_t bits) {
   fmt.Format.nAvgBytesPerSec	= fmt.Format.nBlockAlign * fmt.Format.nSamplesPerSec;
   fmt.Format.cbSize					= 22;
   fmt.Samples.wValidBitsPerSample	= bits;
-	fmt.dwChannelMask					= channels==2 ? 3 : 4;	//Select left & right (stereo) or center (mono)
-	fmt.SubFormat						= KSDATAFORMAT_SUBTYPE_PCM;
+  fmt.dwChannelMask					= channels==2 ? 3 : 4;	//Select left & right (stereo) or center (mono)
+  fmt.SubFormat						= KSDATAFORMAT_SUBTYPE_PCM;
   pwfx = &fmt.Format;
   
   HRESULT hr;

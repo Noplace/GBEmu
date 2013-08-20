@@ -22,12 +22,12 @@
 
 namespace audio {
 namespace output {
-  s
+  
   
 DirectSound::DirectSound() : last_write_cursor(0),last_cursor_pos(0) {
   window_handle_ = nullptr;
   buffer_size_ = 0;
-	lock = 0;
+  lock = 0;
   mode = 0;
 }
 
@@ -51,25 +51,25 @@ int DirectSound::Initialize(uint32_t sample_rate, uint8_t channels, uint8_t bits
   }
 
   DSBUFFERDESC dsbd;
-	ZeroMemory(&dsbd,sizeof(DSBUFFERDESC));
-	dsbd.dwSize        = sizeof(DSBUFFERDESC);
-	dsbd.dwFlags       = DSBCAPS_PRIMARYBUFFER;
-	dsbd.dwBufferBytes = 0;
-	dsbd.lpwfxFormat   = NULL;
+  ZeroMemory(&dsbd,sizeof(DSBUFFERDESC));
+  dsbd.dwSize        = sizeof(DSBUFFERDESC);
+  dsbd.dwFlags       = DSBCAPS_PRIMARYBUFFER;
+  dsbd.dwBufferBytes = 0;
+  dsbd.lpwfxFormat   = NULL;
 
 
-	hr = ds8->CreateSoundBuffer(&dsbd,&primary_buffer,nullptr) ;
+  hr = ds8->CreateSoundBuffer(&dsbd,&primary_buffer,nullptr) ;
   if (FAILED(hr)) return S_FALSE;
 
-	ZeroMemory( &wave_format_, sizeof(WAVEFORMATEX) ); 
-	wave_format_.wFormatTag      = (WORD) WAVE_FORMAT_PCM; 
-	wave_format_.nChannels       =  channels; 
-	wave_format_.nSamplesPerSec  = sample_rate; 
-	wave_format_.wBitsPerSample  = (WORD) bits; 
-	wave_format_.nBlockAlign     = (WORD) ((wave_format_.wBitsPerSample >> 3) * wave_format_.nChannels);
-	wave_format_.nAvgBytesPerSec = (DWORD) (wave_format_.nSamplesPerSec * wave_format_.nBlockAlign);
+  ZeroMemory( &wave_format_, sizeof(WAVEFORMATEX) ); 
+  wave_format_.wFormatTag      = (WORD) WAVE_FORMAT_PCM; 
+  wave_format_.nChannels       =  channels; 
+  wave_format_.nSamplesPerSec  = sample_rate; 
+  wave_format_.wBitsPerSample  = (WORD) bits; 
+  wave_format_.nBlockAlign     = (WORD) ((wave_format_.wBitsPerSample >> 3) * wave_format_.nChannels);
+  wave_format_.nAvgBytesPerSec = (DWORD) (wave_format_.nSamplesPerSec * wave_format_.nBlockAlign);
   wave_format_.cbSize = 0;
-	hr = primary_buffer->SetFormat(&wave_format_);
+  hr = primary_buffer->SetFormat(&wave_format_);
   if (FAILED(hr)) return S_FALSE;
 
 
@@ -77,13 +77,13 @@ int DirectSound::Initialize(uint32_t sample_rate, uint8_t channels, uint8_t bits
     buffer_size_ = uint32_t(wave_format_.nBlockAlign * wave_format_.nSamplesPerSec * 0.4); //400ms
 
 
-	ZeroMemory( &dsbd, sizeof(DSBUFFERDESC) );
-	dsbd.dwSize        = sizeof(DSBUFFERDESC);
-	dsbd.dwFlags       = DSBCAPS_GLOBALFOCUS | DSBCAPS_GETCURRENTPOSITION2;
-	dsbd.dwBufferBytes = buffer_size_;
-	dsbd.lpwfxFormat   = &wave_format_;
+  ZeroMemory( &dsbd, sizeof(DSBUFFERDESC) );
+  dsbd.dwSize        = sizeof(DSBUFFERDESC);
+  dsbd.dwFlags       = DSBCAPS_GLOBALFOCUS | DSBCAPS_GETCURRENTPOSITION2;
+  dsbd.dwBufferBytes = buffer_size_;
+  dsbd.lpwfxFormat   = &wave_format_;
   // Create a temporary sound buffer with the specific buffer settings.
-	hr = ds8->CreateSoundBuffer(&dsbd, &secondary_buffer, NULL);
+  hr = ds8->CreateSoundBuffer(&dsbd, &secondary_buffer, NULL);
   if (FAILED(hr)) return S_FALSE;
 
     //hr = secondary_buffer->SetVolume(DSBVOLUME_MAX);
@@ -114,7 +114,7 @@ int DirectSound::Play() {
 
 int DirectSound::Stop() {
   if (mode == 0) return 2;
-	OutputDebugString("ds stop\n");
+  OutputDebugString("ds stop\n");
   if (secondary_buffer != nullptr) {
     auto hr = secondary_buffer->Stop();
     if (FAILED(hr)) return S_FALSE;
@@ -146,12 +146,12 @@ void DirectSound::GetCursors(uint32_t& play, uint32_t& write) {
 
 
 int DirectSound::Write(void* data_pointer, uint32_t size_bytes) {
-	lock = 1;
+  lock = 1;
   LPVOID buf_ptr1, buf_ptr2;
   HRESULT hr;
   DWORD play_cursor,write_cursor;
   DWORD buf_size1,buf_size2; 
-	
+  
   for (;;) {
     hr = secondary_buffer->GetCurrentPosition(&play_cursor,&write_cursor);
     if (hr == S_OK)
@@ -164,11 +164,11 @@ int DirectSound::Write(void* data_pointer, uint32_t size_bytes) {
     else if (hr == DSERR_BUFFERLOST)
       secondary_buffer->Restore();
     else {
-			lock = 0;
+      lock = 0;
       return S_FALSE;
-		}
+    }
   }  
-	//OutputDebugString("ds write\n");
+  //OutputDebugString("ds write\n");
 
   auto dest_buf=(uint8_t*)buf_ptr1;
   auto len=buf_size1;
@@ -183,7 +183,7 @@ int DirectSound::Write(void* data_pointer, uint32_t size_bytes) {
   }
 
   secondary_buffer->Unlock(buf_ptr1,buf_size1,buf_ptr2,buf_size2);
-	lock = 0;
+  lock = 0;
   return S_OK;
 }
 
