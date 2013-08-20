@@ -98,17 +98,16 @@ void DisplayWindow::Init() {
 
   emu.Initialize();
   emulation::gb::CartridgeHeader header;
-  //cartridge_.LoadFile("..\\test\\oam_bug\\oam_bug\\rom_singles\\2-causes.gb",&header);
-  //emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\cpu_instrs\\cpu_instrs.gb",&header);
+  emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\mem_timing-2\\mem_timing-2\\mem_timing.gb",&header);
-  //cartridge_.LoadFile("..\\test\\cpu_instrs\\individual\\01-special.gb",&header);
-  //cartridge_.ReadFile("..\\test\\cpu_instrs\\cpu_instrs.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\02-len ctr.gb",&header);
+
   //cartridge_.LoadFile("..\\test\\PUZZLE.gb",&header);
   //cartridge_.LoadFile("..\\test\\opus5.gb",&header);
-  //emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\01-registers.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Super Mario Land (World).gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);
-  emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
   //
   emu.Run();
 }

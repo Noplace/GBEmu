@@ -48,7 +48,11 @@ void LCDDriver::Reset() {
   hsync = 0;
   sprite_bug_counter = 0;
 }
-
+/*todo variable time for mode 3 and 0
+mode 3:
+between 4194304*0.00004137=173.51835648 and
+4194304*0.00007069=296.49534976
+*/
 void LCDDriver::Step(double dt) {
   ++counter2; //line clock
   ++counter1;//screen clock

@@ -346,7 +346,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
       nr11_.raw = data;
       channel1.wavepatternduty = (data&0xC0)>>3;
       channel1.lengthcounterload = 64 - (data&0x3F);
-      //check channel1.lengthcounter = channel1.lengthcounterload;
+      //channel1.lengthcounter = channel1.lengthcounterload;
       break;
     case 0xFF12:
       nr12_.raw = data;    
@@ -380,6 +380,8 @@ void Apu::Write(uint16_t address, uint8_t data) {
       nr21_.raw = data;
       channel2.wavepatternduty = (data&0xC0)>>3;
       channel2.lengthcounterload = 64 - (data&0x3F);
+      if (nr24_ & 0x40) 
+        channel2.lengthcounter = channel2.lengthcounterload;
       break;
     case 0xFF17:
       nr22_.raw = data;
