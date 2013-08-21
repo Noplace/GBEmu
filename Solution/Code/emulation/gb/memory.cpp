@@ -139,9 +139,11 @@ uint8_t Memory::Read8(uint16_t address) {
     if (address >= 0xFF10 && address <= 0xFF3F) {
       result = emu_->apu()->Read(address);
     } else if (address >= 0xFF40 && address <= 0xFF4B) {
-      result = ioports_[address&0xFF] = emu_->lcd_driver()->Read(address);
+      result = emu_->lcd_driver()->Read(address);
     } else if (address >= 0xFF04 && address <= 0xFF07) {
       result = emu_->timer()->Read(address);
+    } else if (address == 0xFF0F) {
+      result = 0xE0|ioports_[address&0xFF];
     } else {
       result = ioports_[address&0xFF];
     }
@@ -197,7 +199,6 @@ void Memory::Write8(uint16_t address, uint8_t data) {
     } else if (address >= 0xFF10 && address <= 0xFF3F) {
       emu_->apu()->Write(address,data);
     } else if (address >= 0xFF40 && address <= 0xFF4B) {
-      ioports_[address&0xFF]=data;
       emu_->lcd_driver()->Write(address,data);
     } else {
       ioports_[address&0xFF]=data;
@@ -212,14 +213,17 @@ void Memory::Write8(uint16_t address, uint8_t data) {
 
 void Memory::Tick() {
   ioports_[0] |= 0x0F;
-  if ((ioports_[0] & 0x30)==0x20) {
+
+  if ((ioports_[0] & 0x10)==0) {
     for (int i=0;i<4;++i) {
       if (joypadflags[i]==true)//pressed
         ioports_[0] &= ~(1<<i);
       else
         ioports_[0] |= (1<<i);
     }
-  } else if ((ioports_[0] & 0x30)==0x10) {
+  }
+
+  if ((ioports_[0] & 0x20)==0) {
     for (int i=0;i<4;++i) {
       if (joypadflags[i+4]==true)//pressed
         ioports_[0] &= ~(1<<i);

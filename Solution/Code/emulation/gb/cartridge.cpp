@@ -17,7 +17,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
 #include "gb.h"
-#include "mbc.h"
+#include "mbc/mbc.h"
 
 namespace emulation {
 namespace gb {
@@ -30,7 +30,7 @@ void Cartridge::Initialize(Emu* emu) {
 
 void Cartridge::Deinitialize() {
   if (mbc) {
-    SaveRam();
+    //SaveRam();
     mbc->Deinitialize();
   }
   SafeDelete(&mbc);
@@ -65,6 +65,10 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
     case 3:
       mbc = new MBC1();
       break;
+    case 5:
+    case 6:
+      mbc = new MBC2();
+      break;
     case 0x0F:
     case 0x10:
     case 0x11:
@@ -78,19 +82,15 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
     default:
       DebugBreak();
   }
-
-  mbc->Initialize(this);
-
+  core::io::DestroyFileBuffer(&data);
   const char* a = strrchr(filename,'\\');
   memset(cartridge_path,0,sizeof(cartridge_path));
   strncpy(cartridge_path,filename,a-filename+1);
   cartridge_path[a-filename+1] = '\0';
   strcpy(cartridge_filename,a+1);
 
-  LoadRam();
-  core::io::DestroyFileBuffer(&data);
+  mbc->Initialize(this);
   emu_->memory()->rom_ = emu_->cartridge()->rom();
-  
 }
 
 void Cartridge::LoadRam() {

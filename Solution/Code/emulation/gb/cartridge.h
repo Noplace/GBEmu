@@ -81,7 +81,7 @@ struct CartridgeHeader {
  
   uint32_t ram_size_bytes() {
     switch (ram_size) {
-      case 0: if (cartridge_type==5 || cartridge_type==6) return 256; else return 0;
+      case 0: if (cartridge_type==5 || cartridge_type==6) return 512; else return 0;
       case 1:return 2*1024;
       case 2:return 8*1024;
       case 3:return 32*1024;
@@ -116,6 +116,7 @@ class Cartridge : public Component {
 class MemoryBankController {
  public:
   virtual void Initialize(Cartridge* cartridge) {
+    battery_ = false;
     this->cartridge = cartridge;
     switch (cartridge->header->ram_size) {
       case 0 : eram_ = nullptr; break;
@@ -135,6 +136,7 @@ class MemoryBankController {
   Cartridge* cartridge;
   uint8_t* eram_;
   uint8_t eram_enable;
+  bool battery_;
 };
 
 

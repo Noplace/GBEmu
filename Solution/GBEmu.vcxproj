@@ -212,7 +212,12 @@
     <ClInclude Include="Code\emulation\gb\emu.h" />
     <ClInclude Include="Code\emulation\gb\gb.h" />
     <ClInclude Include="Code\emulation\gb\lcd_driver.h" />
-    <ClInclude Include="Code\emulation\gb\mbc.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\mbc.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\mbc1.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\mbc2.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\mbc3.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\mbc5.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\none.h" />
     <ClInclude Include="Code\emulation\gb\memory.h" />
     <ClCompile Include="Code\emulation\gb\apu.cpp" />
     <ClCompile Include="Code\emulation\gb\timer.cpp" />

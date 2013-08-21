@@ -18,27 +18,9 @@
 *****************************************************************************************************************/
 #pragma once
 
-namespace emulation {
-namespace gb {
+#include "none.h"
+#include "mbc1.h"
+#include "mbc2.h"
+#include "mbc3.h"
+#include "mbc5.h"
 
-  
-class Timer : public Component {
- public:
-
-  Timer() {}
-  ~Timer() {}
-  void Initialize(Emu* emu);
-  void Deinitialize();
-  void Reset();
-  void Tick();
-  void Check();
-  uint8_t Read(uint16_t address);
-  void  Write(uint16_t address, uint8_t data);
- private:
-  uint64_t counter1,counter2,tima_max;
-  uint8_t div,tma,tac;
-  uint8_t tima;
-};
-
-}
-}

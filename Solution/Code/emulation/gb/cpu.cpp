@@ -371,6 +371,7 @@ void Cpu::Step(double dt) {
       } else if (test & 0x4) {
         reg.PC = 0x0050; //timer overflow
         emu_->memory()->interrupt_flag() &= ~0x4;
+        //emu_->memory()->interrupt_enable() &= ~0x4;
       } else if (test & 0x8) {
         reg.PC = 0x0058; //serial transfer
         emu_->memory()->interrupt_flag() &= ~0x8;

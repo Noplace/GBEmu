@@ -49,12 +49,6 @@ class Emu {
     if (on_render != nullptr)
       this->on_render = on_render;
   } 
-
-  std::function <void ()> on_vertical_blank;
-  void set_on_vertical_blank(const  std::function <void ()>& on_vertical_blank) {
-    if (on_vertical_blank != nullptr)
-      this->on_vertical_blank = on_vertical_blank;
-  }
   std::atomic<int> state;
   double fps() { return timing.fps; }
  private:

@@ -28,6 +28,7 @@ void LCDDriver::Initialize(Emu* emu) {
   Component::Initialize(emu);
   frame_buffer = new uint32_t[256*256];
   colormap = new uint8_t[256*256];
+  lcdscreenmode_ = LCDScreenModeProgressive;
   Reset();
 }
 
@@ -37,6 +38,8 @@ void LCDDriver::Deinitialize() {
 }
 
 void LCDDriver::Reset() {
+  memset(&spritedma,0,sizeof(spritedma));
+  evenodd = 0;
   lcdc_.raw = 0;
   stat_.raw = 2;
   ly = 0;
@@ -47,28 +50,41 @@ void LCDDriver::Reset() {
   vsync = 0;
   hsync = 0;
   sprite_bug_counter = 0;
+  mode3_extra_cycles = 0;
 }
 /*todo variable time for mode 3 and 0
 mode 3:
-between 4194304*0.00004137=173.51835648 and
-4194304*0.00007069=296.49534976
+between 4194304*0.00004137=173.51835648 and //172
+4194304*0.00007069=296.49534976 //296
 */
+
 void LCDDriver::Step(double dt) {
   ++counter2; //line clock
   ++counter1;//screen clock
 
   stat_.coincidence = lyc == ly;
-  if (stat_.coincidence_inr && stat_.coincidence)
-    emu_->memory()->interrupt_flag() |= 2;
+
+
+  //dma 
+  if (spritedma.start == true) { //launched
+
+  }
 
   switch (stat_.mode) {
     case 2:
+      if (counter2==1) {
+        if (stat_.coincidence_inr && stat_.coincidence) //lyc interrupts occurs at start of mode 2
+          emu_->memory()->interrupt_flag() |= 2;
+      }
       if (counter2==80)
         stat_.mode = 3;
       break;
     case 3:
-      if (counter2 == 282) {
-        RenderLine();
+      if (counter2 == 252) {
+        RenderLine();//will update mode3_extra_cycles
+      }
+
+      if (counter2 == 252+mode3_extra_cycles) {
         stat_.mode = 0;
         if (stat_.hblank_int)
           emu_->memory()->interrupt_flag() |= 2;
@@ -86,6 +102,8 @@ void LCDDriver::Step(double dt) {
         if (ly == 143) {
           stat_.mode = 1;//vblank period
           emu_->memory()->interrupt_flag() |= 1;
+          if (stat_.vblank_int) //either here or in mode 1 all the time//doubt it
+            emu_->memory()->interrupt_flag() |= 2;
         } else {
           stat_.mode = 2;
           if (stat_.oam_int)
@@ -94,8 +112,7 @@ void LCDDriver::Step(double dt) {
       }
       break;
     case 1:
-        if (stat_.vblank_int)
-          emu_->memory()->interrupt_flag() |= 2;
+
         
       break;
   }
@@ -105,6 +122,7 @@ void LCDDriver::Step(double dt) {
     if (ly++ == 153 && counter2 == 456) {
       //if (lcdc_.lcd_enable)
       emu_->Render();
+      evenodd = !evenodd;
       stat_.mode = 2;
       ly = 0;
       counter1 = 0;
@@ -123,7 +141,7 @@ uint8_t LCDDriver::Read(uint16_t address) {
     case 0xFF40:
       return lcdc_.raw;
     case 0xFF41:
-      return stat_.raw;
+      return 0x80|stat_.raw;
     case 0xFF42:
       return scroll_y;
     case 0xFF43:
@@ -152,7 +170,7 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       lcdc_.raw = data;
       if (lcdc_.lcd_enable) {
         counter1 = 0;
-        counter2 = 4;//4-7 work
+        counter2 = 0;//4-7 work
         ly = 0;
         stat_.mode = 2;
       }
@@ -175,6 +193,9 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       break;
     case 0xFF46: {
       uint16_t srcaddr = data<<8;
+      //char str[25];
+      //sprintf(str,"sprite dma during mode %d\n",stat_.mode);
+      //OutputDebugString(str);
       auto dest = emu_->memory()->oam();
       for (int i=0;i<160;++i)
         *dest++ = emu_->memory()->Read8(srcaddr++);
@@ -252,16 +273,8 @@ void LCDDriver::RenderBGLine(uint8_t* cmline) {
   auto lineoffset = ((scroll_x>>3))&0x1F;
   auto y = (ly + scroll_y) & 7;
   auto x = scroll_x & 7;
-  auto readTile = [&](){
-      uint8_t* bgtilemap = &emu_->memory()->vram()[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
-      auto tileindex = bgtilemap[(mapoffset<<5) + lineoffset];
-      if(lcdc_.tile_data == 0) {
-        int8_t d = tileindex;
-        d+=128;
-        tileindex = d;
-      }
-      return tileindex;
-  };
+  auto vram = emu_->memory()->vram();
+
 
   auto incx = [&x,&lineoffset](){
       ++x;
@@ -277,8 +290,13 @@ void LCDDriver::RenderBGLine(uint8_t* cmline) {
     }
   } else {
     uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
+    uint8_t* bgtilemap = &vram[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
     for (int i=0;i<256;++i) {
-      auto tileindex = readTile();
+      auto tileindex = bgtilemap[(mapoffset<<5) + lineoffset];
+      if(lcdc_.tile_data == 0) {
+        if(tileindex < 128) tileindex += 128;
+        else tileindex -= 128;
+      }
       uint8_t* tile = &tiledata[(tileindex<<4)];
       uint8_t bgcolor = pixel((7-x));
       incx();
@@ -293,16 +311,6 @@ void LCDDriver::RenderWindowLine(uint8_t* cmline) {
     auto lineoffset = 0;
     auto y = (ly-wy) & 7;
     auto x = 0;
-    auto readTile = [&](){
-        uint8_t* tilemap = &emu_->memory()->vram()[lcdc_.window_tile_map ==0?0x1800:0x1C00];
-        auto tileindex = tilemap[(mapoffset<<5) + lineoffset];
-        if(lcdc_.tile_data == 0) {
-          int8_t d = tileindex;
-          d+=128;
-          tileindex = d;
-        }
-        return tileindex;
-    };
 
     auto incx = [&x,&lineoffset](){
         ++x;
@@ -314,8 +322,13 @@ void LCDDriver::RenderWindowLine(uint8_t* cmline) {
 
     if ((ly >= wy)&&(wx>=7&&wx<=166)) { 
       uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
+      uint8_t* tilemap = &emu_->memory()->vram()[lcdc_.window_tile_map ==0?0x1800:0x1C00];
       for (int i=(wx-7);i<=(wx-7)+166-7;++i) {
-        auto tileindex = readTile();
+        auto tileindex = tilemap[(mapoffset<<5) + lineoffset];
+        if(lcdc_.tile_data == 0) {
+          if(tileindex < 128) tileindex += 128;
+          else tileindex -= 128;
+        }
         uint8_t* tile = &tiledata[(tileindex<<4)];
         uint8_t bgcolor = pixel((7-x));
         incx();
@@ -350,10 +363,11 @@ void LCDDriver::RenderSpriteLine(uint8_t* cmline) {
     }attr;
 
   } ;
+  mode3_extra_cycles = 0;
   if (lcdc_.sprite_enable == 1) {
     uint8_t* tiledata = &emu_->memory()->vram()[0x0000];
     Sprite* sprites = (Sprite*)emu_->memory()->oam();
-
+    //&&sprite_count!=0
     for (int j=0;j<40;++j) {
        int16_t spritey = sprites[j].y-16;
        int16_t spritex = sprites[j].x-8;
@@ -380,6 +394,7 @@ void LCDDriver::RenderSpriteLine(uint8_t* cmline) {
           }
 
         --sprite_count;
+        mode3_extra_cycles += 12;
        }
      }
 
@@ -393,10 +408,13 @@ void LCDDriver::RenderLine() {
   RenderBGLine(cmline);
   RenderWindowLine(cmline);
   RenderSpriteLine(cmline);
-
-  auto fbline = &frame_buffer[ly<<8];
-  for (int i=0;i<256;++i) //256px per line
-   *fbline++ = pal32[*cmline++];
+  //either display whole time if progressive, or based on ly if interlace
+  //if (((lcdscreenmode_==LCDScreenModeInterlace)&&((evenodd == 0 && !(ly%2))||(evenodd == 1 && (ly%2))))
+  //  ||(lcdscreenmode_==LCDScreenModeProgressive)) {
+    auto fbline = &frame_buffer[ly<<8];
+    for (int i=0;i<256;++i) //256px per line
+     *fbline++ = pal32[*cmline++];
+  //}
 }
 
 }

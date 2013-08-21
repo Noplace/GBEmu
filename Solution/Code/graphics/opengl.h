@@ -22,6 +22,8 @@
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#define GL_GLEXT_PROTOTYPES
+#include <gl/glext.h>
 #include "graphics.h"
 
 namespace graphics {
@@ -38,6 +40,7 @@ class OpenGL : public Graphics {
   void SwitchThread() {
     wglMakeCurrent( device_context_, render_context_ );
   }
+  GLuint CreateTexture();
  private:
   HDC device_context_;
   HGLRC render_context_;

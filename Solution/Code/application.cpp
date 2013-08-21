@@ -45,8 +45,9 @@ int Application::Run() {
       DispatchMessage(&msg);
     } else {
       //display_window_.Step(); 
+      std::this_thread::sleep_for(std::chrono::milliseconds(2));
     }
-  } while(msg.message!=WM_QUIT && display_window_.exit_signal() == false);
+  } while(msg.message!=WM_QUIT);
 
  //CoUninitialize();
  //Return the exit code to the system. 

@@ -21,7 +21,6 @@
 namespace emulation {
 namespace gb {
 
-
 union LCDControlRegister {
   struct {
     uint8_t bgdisplay:1;
@@ -51,6 +50,8 @@ union LCDStatusRegister {
   uint8_t raw;
 };
 
+enum LCDScreenMode {LCDScreenModeInterlace,LCDScreenModeProgressive};
+
 class LCDDriver : public Component {
  public:
   uint8_t sprite_bug_counter;
@@ -71,6 +72,10 @@ class LCDDriver : public Component {
   const LCDControlRegister& lcdc() { return lcdc_; }
   const LCDStatusRegister& stat() { return stat_; }
  private:
+   struct {
+     uint8_t* oam;
+     bool start;
+   }spritedma;
    uint8_t* colormap;
    LCDControlRegister lcdc_;
    LCDStatusRegister stat_;
@@ -81,7 +86,10 @@ class LCDDriver : public Component {
    uint8_t bg_pallete_data;
    uint8_t obj_pallete1_data;
    uint8_t obj_pallete2_data;
+   uint64_t mode3_extra_cycles;
    uint64_t counter1,counter2;
+   LCDScreenMode lcdscreenmode_;
+   bool evenodd;
    double vsync,hsync;
 };
 

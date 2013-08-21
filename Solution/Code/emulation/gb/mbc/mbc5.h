@@ -21,23 +21,60 @@
 namespace emulation {
 namespace gb {
 
-  
-class Timer : public Component {
+class MBC5 : public MemoryBankController {
  public:
+  void Initialize(Cartridge* cartridge) {
+    MemoryBankController::Initialize(cartridge);
+    eram_enable = 0;
+    eram_enable = 0;
+    rom_bank_number = 0;
+    ram_bank_number = 0;
+    switch(cartridge->header->cartridge_type) {
+      case 0x1B:battery_ = true; break;
+      case 0x1E:battery_ = true; break;
+    }
+    if (battery_)
+      cartridge->LoadRam();
+  }
+  void Deinitialize() {
+    if (battery_)
+      cartridge->SaveRam();
+    MemoryBankController::Deinitialize();
+  }
+  uint8_t Read(uint16_t address) {
+    if (address >= 0x0000 && address <= 0x3FFF) {
+      return cartridge->rom()[address];
+    } else if (address >= 0x4000 && address <= 0x7FFF) {
+      return cartridge->rom()[address+0x4000*(rom_bank_number-1)];
+    } else if (address >= 0xA000 && address <= 0xBFFF) {
+      if ((eram_enable&0x0A)==0x0A)
+        return eram_[(address&0x1FFF)+(0x2000*ram_bank_number)];
+      else
+        return 0;
+    }
+    return 0;
+  }
+  void Write(uint16_t address, uint8_t data) {
+   if (address >= 0x0000 && address <= 0x1FFF) {
+      eram_enable = data;
+    } else if (address >= 0x2000 && address <= 0x2FFF) {
+      rom_bank_number = (rom_bank_number&0xFF00)|data;
+    } else if (address >= 0x3000 && address <= 0x3FFF) {
+      rom_bank_number = ((data&0x1)<<8)|(rom_bank_number&0xFF);
+    }else if (address >= 0x4000 && address <= 0x5FFF) {
 
-  Timer() {}
-  ~Timer() {}
-  void Initialize(Emu* emu);
-  void Deinitialize();
-  void Reset();
-  void Tick();
-  void Check();
-  uint8_t Read(uint16_t address);
-  void  Write(uint16_t address, uint8_t data);
- private:
-  uint64_t counter1,counter2,tima_max;
-  uint8_t div,tma,tac;
-  uint8_t tima;
+        ram_bank_number = data&0xF;
+      
+    } else if (address >= 0x6000 && address <= 0x7FFF) {
+     
+
+    } else if (address >= 0xA000 && address <= 0xBFFF) {
+      if ((eram_enable&0x0A)==0x0A)
+        eram_[address&0x1FFF] = data;
+    }
+  }
+  uint16_t rom_bank_number;
+  uint8_t ram_bank_number;
 };
 
 }

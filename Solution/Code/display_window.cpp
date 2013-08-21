@@ -55,19 +55,11 @@ void DisplayWindow::Init() {
   DragAcceptFiles(handle(),true);
 
   gfx.Initialize(handle(),0,0);
-  
-  emu.set_on_render([this]() {
+  HWND windowhandle = handle();
+  emu.set_on_render([windowhandle]() {
     //InvalidateRect(handle(),nullptr,true);
-    SendMessage(handle(),WM_PAINT,0,0);
+    SendMessage(windowhandle,WM_PAINT,0,0);
     //Render();
-  });
-
-  emu.set_on_vertical_blank([this]() {
-   /* MSG msg;
-    while (PeekMessage(&msg,NULL,0,0,PM_REMOVE)!=0) {//while(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-      TranslateMessage(&msg);
-      DispatchMessage(&msg);
-    }*/
   });
 
   //auto a = glGetError();
@@ -75,13 +67,7 @@ void DisplayWindow::Init() {
   //a = glGetError();
   //glRasterPos2i(0,0);
   //a = glGetError();
-  glEnable( GL_TEXTURE_2D );
-  auto a = glGetError();
-  glGenTextures( 1, &texture );
-  a = glGetError();
-  glBindTexture( GL_TEXTURE_2D, texture );
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+  texture = gfx.CreateTexture();
   //wglMakeCurrent(NULL, NULL);
 
   //settings setup
@@ -100,6 +86,7 @@ void DisplayWindow::Init() {
   emulation::gb::CartridgeHeader header;
   //emu.cartridge()->LoadFile("..\\test\\cpu_instrs\\cpu_instrs.gb",&header);
   emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\mem_timing-2\\mem_timing-2\\mem_timing.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\02-len ctr.gb",&header);
 
@@ -108,7 +95,8 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\Super Mario Land (World).gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
-  //
+
+  //emu.cartridge()->LoadFile("D:\\Personal\\Dev\\GB\\roms\\Kirby's Dream Land (USA, Europe).gb",&header);
   emu.Run();
 }
 

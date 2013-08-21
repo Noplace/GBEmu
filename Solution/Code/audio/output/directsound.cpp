@@ -114,6 +114,7 @@ int DirectSound::Play() {
 
 int DirectSound::Stop() {
   if (mode == 0) return 2;
+  Sync();
   OutputDebugString("ds stop\n");
   if (secondary_buffer != nullptr) {
     auto hr = secondary_buffer->Stop();

@@ -21,23 +21,49 @@
 namespace emulation {
 namespace gb {
 
-  
-class Timer : public Component {
+class MBC2 : public MemoryBankController {
  public:
-
-  Timer() {}
-  ~Timer() {}
-  void Initialize(Emu* emu);
-  void Deinitialize();
-  void Reset();
-  void Tick();
-  void Check();
-  uint8_t Read(uint16_t address);
-  void  Write(uint16_t address, uint8_t data);
- private:
-  uint64_t counter1,counter2,tima_max;
-  uint8_t div,tma,tac;
-  uint8_t tima;
+  void Initialize(Cartridge* cartridge) {
+    MemoryBankController::Initialize(cartridge);
+    eram_ = new uint8_t[512];
+    rom_bank_number = 1;
+    battery_ = cartridge->header->cartridge_type == 0x06;
+    if (battery_)
+      cartridge->LoadRam();
+  }
+  void Deinitialize() {
+    if (battery_)
+      cartridge->SaveRam();
+    SafeDeleteArray(&eram_);
+    MemoryBankController::Deinitialize();
+  }
+  uint8_t Read(uint16_t address) {
+    if (address >= 0x0000 && address <= 0x3FFF) {
+      return cartridge->rom()[address];
+    } else if (address >= 0x4000 && address <= 0x7FFF) {
+      return cartridge->rom()[(address&0x3FFF)+(rom_bank_number<<14)];
+    } else if (address >= 0xA000 && address <= 0xA1FF) {
+      if ((eram_enable&0x0A)==0x0A)
+        return eram_[address&0x1FF]&0x0F;
+      else
+        return 0;
+    } 
+    return 0;
+  }
+  void Write(uint16_t address, uint8_t data) {
+   if (address >= 0x0000 && address <= 0x1FFF) {
+      if ((address&0x0100) == 0)
+        eram_enable = data;
+    } else if (address >= 0x2000 && address <= 0x3FFF) {
+      if ((address&0x0100) == 0x0100) {
+        rom_bank_number = data&0x0F;
+      }
+    } else if (address >= 0xA000 && address <= 0xA1FF) {
+      if ((eram_enable&0x0A)==0x0A)
+        eram_[address&0x1FF]=data;
+    } 
+  }
+  uint8_t rom_bank_number;
 };
 
 }

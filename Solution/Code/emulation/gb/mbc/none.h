@@ -21,23 +21,24 @@
 namespace emulation {
 namespace gb {
 
-  
-class Timer : public Component {
+class MBCNone : public MemoryBankController {
  public:
-
-  Timer() {}
-  ~Timer() {}
-  void Initialize(Emu* emu);
-  void Deinitialize();
-  void Reset();
-  void Tick();
-  void Check();
-  uint8_t Read(uint16_t address);
-  void  Write(uint16_t address, uint8_t data);
- private:
-  uint64_t counter1,counter2,tima_max;
-  uint8_t div,tma,tac;
-  uint8_t tima;
+  void Deinitialize() {
+    MemoryBankController::Deinitialize();
+  }
+  uint8_t Read(uint16_t address) {
+      if (address >= 0x0000 && address <= 0x3FFF) {
+      return cartridge->rom()[address];
+    } else if (address >= 0x4000 && address <= 0x7FFF) {
+      return cartridge->rom()[address];
+    } else if (address >= 0xA000 && address <= 0xBFFF) {
+      return 0;
+    }
+    return 0;
+  }
+  void Write(uint16_t address, uint8_t data) {
+    int a = 1;
+  }
 };
 
 }
