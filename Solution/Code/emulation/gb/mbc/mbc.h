@@ -18,6 +18,39 @@
 *****************************************************************************************************************/
 #pragma once
 
+namespace emulation {
+namespace gb {
+
+class MemoryBankController {
+ public:
+  virtual void Initialize(Cartridge* cartridge) {
+    battery_ = false;
+    this->cartridge = cartridge;
+    eram_size = cartridge->header->ram_size_bytes();
+    if (eram_size)
+       eram_ = new uint8_t[eram_size];
+    else
+      eram_ = nullptr;
+  }
+  virtual void Deinitialize() {
+     SafeDeleteArray(&eram_); 
+  };
+  virtual uint8_t Read(uint16_t address) = 0;
+  virtual void Write(uint16_t address, uint8_t data) = 0;
+  virtual void Tick() { }
+  uint8_t* eram() { return eram_; }
+ protected:
+  Cartridge* cartridge;
+  uint8_t* eram_;
+  uint8_t eram_enable;
+  uint32_t eram_size;
+  bool battery_;
+};
+
+
+}
+}
+
 #include "none.h"
 #include "mbc1.h"
 #include "mbc2.h"

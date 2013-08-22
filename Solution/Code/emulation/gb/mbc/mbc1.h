@@ -45,7 +45,7 @@ class MBC1 : public MemoryBankController {
     } else if (address >= 0x4000 && address <= 0x7FFF) {
       return cartridge->rom()[(address&0x3FFF)+(rom_bank_number<<14)];
     } else if (address >= 0xA000 && address <= 0xBFFF) {
-      if ((eram_enable&0x0A)==0x0A)
+      if ((eram_enable&0x0A)==0x0A && eram_size)
         return eram_[(address&0x1FFF)+(0x2000*ram_bank_number*mode)];
       else
         return 0;
@@ -71,7 +71,7 @@ class MBC1 : public MemoryBankController {
        mode = data&1;
 
     } else if (address >= 0xA000 && address <= 0xBFFF) {
-      if ((eram_enable&0x0A)==0x0A)
+      if ((eram_enable&0x0A)==0x0A && eram_size)
         eram_[address&0x1FFF] = data;
     }
   }

@@ -102,6 +102,16 @@ class WaveramSynth : public audio::synth::Wavetable<5> {
    
 };
 
+struct ApuChannel {
+  uint8_t reg0,reg1,reg2,reg3,reg4;
+  uint16_t freqcounterload,freqcounter,sweepfreqcounter;
+  VolumeEnvelope envelope;
+  uint8_t wavepatternduty,wavepatterncounter;
+  uint8_t lengthcounter;
+  uint8_t sweepcounter;
+  uint32_t envcounter,envcounterload; 
+};
+
 class Apu : public Component {
  public:
 
@@ -154,7 +164,7 @@ class Apu : public Component {
     uint16_t freqcounterload,freqcounter,sweepfreqcounter;
     VolumeEnvelope envelope;
     uint8_t wavepatternduty,wavepatterncounter;
-    uint8_t lengthcounterload,lengthcounter;
+    uint8_t lengthcounter;
     uint8_t sweepcounter;
     uint32_t envcounter,envcounterload; 
 
@@ -193,6 +203,7 @@ class Apu : public Component {
       if (lengthcounter!=0)
         if ((apu_->nr14_ & 0x40) && --lengthcounter == 0) {
           //apu_->nr14_ &= ~0x80;
+          apu_->nr52_ &= ~0x01;
         }
     }
 
@@ -213,7 +224,7 @@ class Apu : public Component {
     uint8_t wavepatternduty,wavepatterncounter;
     Apu* apu_;
     uint16_t freqcounterload,freqcounter;
-    uint8_t lengthcounterload,lengthcounter;
+    uint8_t lengthcounter;
     uint32_t envcounter,envcounterload; 
     void Initialize(Apu* sc) {
       apu_ = sc;
@@ -223,7 +234,7 @@ class Apu : public Component {
       sample = 0;
       envelope.raw = 0;
       envcounter = envcounterload = 0;
-      lengthcounterload = lengthcounter = 0;
+      lengthcounter = 0;
     }
 
     void EnvelopeTick() {
@@ -240,6 +251,7 @@ class Apu : public Component {
       if (lengthcounter!=0)
         if ((apu_->nr24_ & 0x40) && --lengthcounter == 0) {
           //apu_->nr24_ &= ~0x80;
+          apu_->nr52_ &= ~0x02;
         }
     }
 
@@ -261,7 +273,7 @@ class Apu : public Component {
     real_t wavsample;
     uint8_t wavedata[32];
     uint16_t freqcounter,freqcounterload;
-    uint8_t lengthcounterload,lengthcounter;
+    uint8_t lengthcounter;
     uint8_t sample;
     bool enabled;
     void Initialize(Apu* sc) {
@@ -282,6 +294,7 @@ class Apu : public Component {
       if (lengthcounter!=0)
         if ((apu_->nr34_ & 0x40) && --lengthcounter == 0) {
           //apu_->nr34_ &= ~0x80;
+          apu_->nr52_ &= ~0x04;
           enabled = false;
         }
     }
@@ -302,14 +315,14 @@ class Apu : public Component {
     Apu* apu_;
     VolumeEnvelope envelope;
     uint32_t envcounter,envcounterload; 
-    uint8_t lengthcounterload,lengthcounter;
+    uint8_t lengthcounter;
     uint8_t sample;
     uint16_t shiftreg;
     void Initialize(Apu* sc) {
       apu_ = sc;
       envelope.raw = 0;
       envcounter = envcounterload = 0;
-      lengthcounter = lengthcounterload = 0;
+      lengthcounter = 0;
       shiftreg = 1;
     }
 
@@ -327,6 +340,7 @@ class Apu : public Component {
       if (lengthcounter!=0)
         if ((apu_->nr44_ & 0x40) && --lengthcounter == 0) {
           //apu_->nr44_ &= ~0x80;
+          apu_->nr52_ &= ~0x08;
         }
     }
 

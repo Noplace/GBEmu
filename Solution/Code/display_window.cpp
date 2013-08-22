@@ -85,10 +85,12 @@ void DisplayWindow::Init() {
   emu.Initialize();
   emulation::gb::CartridgeHeader header;
   //emu.cartridge()->LoadFile("..\\test\\cpu_instrs\\cpu_instrs.gb",&header);
-  emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\interrupt_time\\interrupt_time\\interrupt_time.gb",&header);
+  
   //emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\mem_timing-2\\mem_timing-2\\mem_timing.gb",&header);
-  //emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\02-len ctr.gb",&header);
+  emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\02-len ctr.gb",&header);
 
   //cartridge_.LoadFile("..\\test\\PUZZLE.gb",&header);
   //cartridge_.LoadFile("..\\test\\opus5.gb",&header);

@@ -80,13 +80,17 @@ struct CartridgeHeader {
   }
  
   uint32_t ram_size_bytes() {
-    switch (ram_size) {
-      case 0: if (cartridge_type==5 || cartridge_type==6) return 512; else return 0;
-      case 1:return 2*1024;
-      case 2:return 8*1024;
-      case 3:return 32*1024;
-    }
-    return 0;
+    if (cartridge_type==5 || cartridge_type==6) return 512;
+    const int ramsizes[6] = { 
+      0x00000000, 
+      0x00000800, // 2K
+      0x00002000, // 8K
+      0x00008000, // 32K
+      0x00020000, // 128K
+      0x00010000  // 64K
+    };
+    auto size = ramsizes[ram_size];
+    return size;
   }
 
 };
@@ -113,31 +117,6 @@ class Cartridge : public Component {
 };
 
 
-class MemoryBankController {
- public:
-  virtual void Initialize(Cartridge* cartridge) {
-    battery_ = false;
-    this->cartridge = cartridge;
-    switch (cartridge->header->ram_size) {
-      case 0 : eram_ = nullptr; break;
-      case 1 : eram_ = new uint8_t[2048]; break;
-      case 2 : eram_ = new uint8_t[0x2000]; break;
-      case 3 : eram_ = new uint8_t[0x8000]; break;
-    }
-  }
-  virtual void Deinitialize() {
-     SafeDeleteArray(&eram_); 
-  };
-  virtual uint8_t Read(uint16_t address) = 0;
-  virtual void Write(uint16_t address, uint8_t data) = 0;
-  virtual void Tick() { }
-  uint8_t* eram() { return eram_; }
- protected:
-  Cartridge* cartridge;
-  uint8_t* eram_;
-  uint8_t eram_enable;
-  bool battery_;
-};
 
 
 }

@@ -56,7 +56,7 @@ class MBC3 : public MemoryBankController {
     } else if (address >= 0xA000 && address <= 0xBFFF) {
 
 
-      if ((eram_enable&0x0A)==0x0A&&mode==0)
+      if ((eram_enable&0x0A)==0x0A&&mode==0 && eram_size)
         return eram_[(address&0x1FFF)+(0x2000*ram_bank_number*mode)];
       
       if ((rtc_enable&0x0A)==0x0A&&mode==1)
@@ -86,7 +86,7 @@ class MBC3 : public MemoryBankController {
       
 
     } else if (address >= 0xA000 && address <= 0xBFFF) {
-      if ((eram_enable&0x0A)==0x0A&&mode==0)
+      if ((eram_enable&0x0A)==0x0A&&mode==0 && eram_size)
         eram_[address&0x1FFF] = data;
       
       if ((rtc_enable&0x0A)==0x0A&&mode==1)

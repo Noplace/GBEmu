@@ -345,8 +345,9 @@ void Apu::Write(uint16_t address, uint8_t data) {
     case 0xFF11:
       nr11_.raw = data;
       channel1.wavepatternduty = (data&0xC0)>>3;
-      channel1.lengthcounterload = 64 - (data&0x3F);
-      //channel1.lengthcounter = channel1.lengthcounterload;
+      channel1.lengthcounter = 64 - (data&0x3F);
+      if (channel1.lengthcounter == 0)
+        nr52_ &= ~0x01;
       break;
     case 0xFF12:
       nr12_.raw = data;    
@@ -369,7 +370,8 @@ void Apu::Write(uint16_t address, uint8_t data) {
         channel1.sweepcounter = nr10_.sweep_time;
         channel1.sweepfreqcounter = (x>>nr10_.sweep_shift);
         channel1.freqcounter = channel1.freqcounterload;
-        channel1.lengthcounter = channel1.lengthcounterload;
+        if (!channel1.lengthcounter)
+          channel1.lengthcounter = 64;
       }
       break;
     }
@@ -379,9 +381,9 @@ void Apu::Write(uint16_t address, uint8_t data) {
     case 0xFF16:
       nr21_.raw = data;
       channel2.wavepatternduty = (data&0xC0)>>3;
-      channel2.lengthcounterload = 64 - (data&0x3F);
-      if (nr24_ & 0x40) 
-        channel2.lengthcounter = channel2.lengthcounterload;
+      channel2.lengthcounter = 64 - (data&0x3F);
+      if (channel2.lengthcounter == 0)
+        nr52_ &= ~0x02;
       break;
     case 0xFF17:
       nr22_.raw = data;
@@ -401,7 +403,6 @@ void Apu::Write(uint16_t address, uint8_t data) {
         channel2.envcounterload = (channel2.envelope.env_sweep*4194304/64);
         channel2.envcounter = channel2.envcounterload;
         channel2.freqcounter = channel2.freqcounterload;
-        channel2.lengthcounter = channel2.lengthcounterload;
       }
       break;
     }
@@ -412,7 +413,9 @@ void Apu::Write(uint16_t address, uint8_t data) {
       break;
     case 0xFF1B:
       nr31_ = data;
-      channel3.lengthcounterload = 256 - data;
+      channel3.lengthcounter = 256 - data;
+      if (channel3.lengthcounter == 0)
+        nr52_ &= ~0x04;
       break;
     case 0xFF1C:
       nr32_ = data;  
@@ -435,7 +438,6 @@ void Apu::Write(uint16_t address, uint8_t data) {
         //channel3.soundlength_ms = 1000.0f * (256.0f-nr31_)*(1/256.0f);
       if ((nr34_&0x80)&&(nr30_&0x80)) {
         nr52_ |= 0x04;
-        channel3.lengthcounter = channel3.lengthcounterload;
         channel3.freqcounter = channel3.freqcounterload;
         channel3.playback_counter = 0;
         channel3.enabled = true;
@@ -446,7 +448,9 @@ void Apu::Write(uint16_t address, uint8_t data) {
     case 0xFF1F:io_0xff1f_ = data; break;
     case 0xFF20:
       nr41_.raw = data;
-      channel4.lengthcounterload = 64 - (data&0x3F);
+      channel4.lengthcounter = 64 - (data&0x3F);
+      if (channel4.lengthcounter == 0)
+        nr52_ &= ~0x08;
       break;
     case 0xFF21:
       nr42_.raw = data;
@@ -464,7 +468,6 @@ void Apu::Write(uint16_t address, uint8_t data) {
       if (nr24_ & 0x80) {
         nr52_ |= 0x08;
         channel4polycounterms = 0;
-        channel4.lengthcounter = channel4.lengthcounterload;
         channel4.envelope.raw = nr42_.raw;
         channel4.envcounterload = (channel4.envelope.env_sweep*4194304/64);
         channel4.envcounter = channel4.envcounterload;
