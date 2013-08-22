@@ -367,7 +367,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
       uint32_t x = channel1.reg3;
       x |= (channel1.reg4&0x7)<<8;
       channel1.freqcounterload = (2048-x);
-      channel1.enable_length_clock = (data&0x40)==0x40;
+      
       //channel1freq = 131072.0f/(2048-x);
       if (channel1.reg4 & 0x80) {
         if (channel1.dac_enable) //dac
@@ -378,14 +378,16 @@ void Apu::Write(uint16_t address, uint8_t data) {
         channel1.sweepcounter = channel1.reg0.sweep_time;
         channel1.sweepfreqcounter = (x>>channel1.reg0.sweep_shift);
         channel1.freqcounter = channel1.freqcounterload;
-        if (!channel1.lengthcounter)
+        if (!channel1.lengthcounter) {
           channel1.lengthcounter = 64;
-        /*if ((data&0x40)&&(channel1.enable_length_clock==false)) 
-          channel1.LengthTick(nr52_);*/
+        }
+        //if ((data&0x40)&&(channel1.enable_length_clock==false)) 
+        //  channel1.LengthTick(nr52_);
       }
       
 
-      /*if (data&0x40) {
+      if (data&0x40) {
+        //channel1.lengthcounter = 0;
         if (channel1.enable_length_clock == false)  {
           int period = (64 - (channel1.reg1&0x3F));
           bool firsthalf = (ulencounterclock < 8192);
@@ -394,9 +396,9 @@ void Apu::Write(uint16_t address, uint8_t data) {
         }
         channel1.enable_length_clock = true;
       } else
-        channel1.enable_length_clock = false;*/
+        channel1.enable_length_clock = false;
 
-
+      channel1.enable_length_clock = (data&0x40)==0x40;
       break;
     }
 
