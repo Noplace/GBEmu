@@ -49,8 +49,8 @@ void Apu::Reset() {
   channel4freq = 0;
   channel4polycounterms = 0;
  
-  channel1.Initialize(this);
-  channel2.Initialize(this);
+  channel1.Initialize(this,1);
+  channel2.Initialize(this,2);
   channel3.Initialize(this);
   channel4.Initialize(this);
   
@@ -66,22 +66,10 @@ void Apu::Reset() {
   io_0xff2e_ = 0;
   io_0xff2f_ = 0;
 
-  nr10_.raw = 0;
-  nr11_.raw = 0;
-  nr12_.raw = 0;
-  nr13_ = 0;
-  nr14_ = 0;
-  nr21_.raw = 0;
-  nr22_.raw = 0;
-  nr23_ = 0;
-  nr24_ = 0;
-  nr30_ = nr31_ = nr32_ = nr33_ = nr34_ = 0;
+
   memset(channel3.wavedata,0,sizeof(channel3.wavedata));
 
-  nr41_.raw = 0;
-  nr42_.raw = 0;
-  nr43_ = 0;
-  nr44_ = 0;
+  
   nr50_.raw = 0;
   nr51_.raw = 0;
   nr52_ = 0;
@@ -151,10 +139,10 @@ void Apu::Step(double dt) {
   maincounter = (maincounter+1) & 0x1F;
 
   if (++ulencounterclock == 16384) { //256hz from original cpu speed
-    channel1.LengthTick();
-    channel2.LengthTick();
-    channel3.LengthTick();
-    channel4.LengthTick();
+    channel1.LengthTick(nr52_);
+    channel2.LengthTick(nr52_);
+    channel3.LengthTick(nr52_);
+    channel4.LengthTick(nr52_);
     static bool sweep_tick = false;
     if (sweep_tick) { //128hz
       channel1.SweepTick();
@@ -173,9 +161,9 @@ void Apu::Step(double dt) {
   {
 
     auto channel1_sample = ((channel1.sample) * (channel1.envelope.vol / 15.0f));
-    auto channel2_sample = 0;//((channel2.sample) * (channel2.envelope.vol / 15.0f));
-    auto channel3_sample = 0;//(channel3.sample / 15.0f)*channel3.vol;
-    auto channel4_sample = 0;//float(channel4.sample) * (channel4.envelope.vol / 15.0f);
+    auto channel2_sample = ((channel2.sample) * (channel2.envelope.vol / 15.0f));
+    auto channel3_sample = (channel3.sample / 15.0f)*channel3.vol;
+    auto channel4_sample = float(channel4.sample) * (channel4.envelope.vol / 15.0f);
    
     auto sample_left = ((nr51_.ch1so1 * channel1_sample)+(nr51_.ch2so1 * channel2_sample)+(nr51_.ch3so1 * channel3_sample)+(nr51_.ch4so1 * channel4_sample));
     auto sample_right = ((nr51_.ch1so2 * channel1_sample)+(nr51_.ch2so2 * channel2_sample)+(nr51_.ch3so2 * channel3_sample)+(nr51_.ch4so2 * channel4_sample));
@@ -219,51 +207,51 @@ uint8_t Apu::Read(uint16_t address) {
 
     switch (address) {
       case 0xFF10:
-        result = nr10_.raw | masks[0];
+        result = channel1.reg0.raw | masks[0];
         break;
       case 0xFF11:
-        result = nr11_.raw | masks[1];
+        result = channel1.reg1 | masks[1];
         break;
       case 0xFF12:
-        result = nr12_.raw | masks[2];
+        result = channel1.reg2 | masks[2];
         break;
       case 0xFF13:
-        result = nr13_ | masks[3];
+        result = channel1.reg3 | masks[3];
         break;
       case 0xFF14:
-       result = nr14_ | masks[4];
+       result = channel1.reg4 | masks[4];
         break;
 
       case 0xFF15:
         result = io_0xff15_ | masks[5];
         break;
       case 0xFF16:
-        result = nr21_.raw| masks[6];
+        result = channel2.reg1| masks[6];
         break;
       case 0xFF17:
-        result = nr22_.raw| masks[7];
+        result = channel2.reg2| masks[7];
         break;
       case 0xFF18:
-        result = nr23_| masks[8];
+        result = channel2.reg3| masks[8];
         break;
       case 0xFF19:
-        result = nr24_| masks[9];
+        result = channel2.reg4| masks[9];
         break;
 
       case 0xFF1A:
-        result = nr30_| masks[10];
+        result = channel3.reg0.raw | masks[10];
         break;
       case 0xFF1B:
-        result = nr31_| masks[11];
+        result = channel3.reg1 | masks[11];
         break;
       case 0xFF1C:
-        result = nr32_| masks[12];
+        result = channel3.reg2 | masks[12];
         break;
       case 0xFF1D:
-        result = nr33_| masks[13];
+        result = channel3.reg3 | masks[13];
         break;
       case 0xFF1E:
-        result = nr34_| masks[14];
+        result = channel3.reg4 | masks[14];
         break;
 
       case 0xFF1F:
@@ -271,16 +259,16 @@ uint8_t Apu::Read(uint16_t address) {
         break;
 
       case 0xFF20:
-        result = nr41_.raw| masks[16];
+        result = channel4.reg1| masks[16];
         break;
       case 0xFF21:
-        result = nr42_.raw| masks[17];
+        result = channel4.reg2| masks[17];
         break;
       case 0xFF22:
-        result = nr43_| masks[18];
+        result = channel4.reg3| masks[18];
         break;
       case 0xFF23:
-        result = nr44_| masks[19];
+        result = channel4.reg4| masks[19];
         break;
 
       case 0xFF24:
@@ -322,10 +310,20 @@ uint8_t Apu::Read(uint16_t address) {
         break;
     }
   }
+#ifdef APU_LOG
+  char str[255];
+  sprintf(str,"PC:0x%04x - Apu::Read(0x%04x) = 0x%02x\n",emu_->cpu()->opcode_pc,address,result);
+  OutputDebugString(str);
+#endif
   return result;
 }
 
 void Apu::Write(uint16_t address, uint8_t data) {
+#ifdef APU_LOG
+  char str[255];
+  sprintf(str,"PC:0x%04x - Apu::Write(0x%04x,0x%02x)\n",emu_->cpu()->opcode_pc,address,data);
+  OutputDebugString(str);
+#endif
 
   if (address>=0xFF30 && address<=0xFF3F) {
      int index = (address & 0x0F)<<1;
@@ -340,86 +338,125 @@ void Apu::Write(uint16_t address, uint8_t data) {
 
   switch (address) {
     case 0xFF10:
-      nr10_.raw = data;
+      channel1.reg0.raw = data;
       break;
     case 0xFF11:
-      nr11_.raw = data;
+      channel1.reg1 = data;
       channel1.wavepatternduty = (data&0xC0)>>3;
       channel1.lengthcounter = 64 - (data&0x3F);
       if (channel1.lengthcounter == 0)
         nr52_ &= ~0x01;
       break;
     case 0xFF12:
-      nr12_.raw = data;    
+      channel1.reg2 = data;  
+      if ((channel1.reg2&0xF8)==0x00) {
+        nr52_ &= ~0x01;
+        channel1.dac_enable = false;
+      } else  {
+        channel1.dac_enable = true;
+      }
       break;
     case 0xFF13:
-      nr13_ = data;
+      channel1.reg3 = data;
       break;
     case 0xFF14: {
-      nr14_ = data;
-      uint32_t x = nr13_;
-      x |= (nr14_&0x7)<<8;
-      channel1.freqcounterload = (2048-x);
 
+
+
+      channel1.reg4 = data;
+      uint32_t x = channel1.reg3;
+      x |= (channel1.reg4&0x7)<<8;
+      channel1.freqcounterload = (2048-x);
+      channel1.enable_length_clock = (data&0x40)==0x40;
       //channel1freq = 131072.0f/(2048-x);
-      if (nr14_ & 0x80) {
-        nr52_ |= 0x01;
-        channel1.envelope.raw = nr12_.raw;
+      if (channel1.reg4 & 0x80) {
+        if (channel1.dac_enable) //dac
+          nr52_ |= 0x01;
+        channel1.envelope.raw = channel1.reg2;
         channel1.envcounterload = (channel1.envelope.env_sweep*4194304/64);
         channel1.envcounter = channel1.envcounterload;
-        channel1.sweepcounter = nr10_.sweep_time;
-        channel1.sweepfreqcounter = (x>>nr10_.sweep_shift);
+        channel1.sweepcounter = channel1.reg0.sweep_time;
+        channel1.sweepfreqcounter = (x>>channel1.reg0.sweep_shift);
         channel1.freqcounter = channel1.freqcounterload;
         if (!channel1.lengthcounter)
           channel1.lengthcounter = 64;
+        /*if ((data&0x40)&&(channel1.enable_length_clock==false)) 
+          channel1.LengthTick(nr52_);*/
       }
+      
+
+      /*if (data&0x40) {
+        if (channel1.enable_length_clock == false)  {
+          int period = (64 - (channel1.reg1&0x3F));
+          bool firsthalf = (ulencounterclock < 8192);
+          if (firsthalf)
+            channel1.LengthTick(nr52_);
+        }
+        channel1.enable_length_clock = true;
+      } else
+        channel1.enable_length_clock = false;*/
+
+
       break;
     }
 
     case 0xFF15:io_0xff15_ = data; break;
 
     case 0xFF16:
-      nr21_.raw = data;
+      channel2.reg1 = data;
       channel2.wavepatternduty = (data&0xC0)>>3;
       channel2.lengthcounter = 64 - (data&0x3F);
       if (channel2.lengthcounter == 0)
         nr52_ &= ~0x02;
       break;
     case 0xFF17:
-      nr22_.raw = data;
+      channel2.reg2 = data;
+      if ((channel2.reg2&0xF8)==0x00) {
+        nr52_ &= ~0x02;
+        channel2.dac_enable = false;
+      } else  {
+        channel2.dac_enable = true;
+      }
       break;
     case 0xFF18:
-      nr23_ = data;
+      channel2.reg3 = data;
       break;
     case 0xFF19: {
-      nr24_ = data;
-      uint32_t x = nr23_;
-      x |= (nr24_&0x7)<<8;
+      channel2.reg4 = data;
+      uint32_t x = channel2.reg3;
+      x |= (channel2.reg4&0x7)<<8;
       channel2.freqcounterload = 2048-x;
       //channel2freq = 131072.0f/(2048-x);
-      if (nr24_ & 0x80) {
-        nr52_ |= 0x02;
-        channel2.envelope.raw = nr22_.raw;
+      channel2.enable_length_clock = (data&0x40)==0x40;
+      if (channel2.reg4 & 0x80) {
+        if (channel2.dac_enable) //dac
+          nr52_ |= 0x02;
+        channel2.envelope.raw = channel2.reg2;
         channel2.envcounterload = (channel2.envelope.env_sweep*4194304/64);
         channel2.envcounter = channel2.envcounterload;
         channel2.freqcounter = channel2.freqcounterload;
+        if (!channel2.lengthcounter)
+          channel2.lengthcounter = 64;
       }
       break;
     }
 
     case 0xFF1A:
-      nr30_ = data;
-      channel3.enabled = (nr30_&0x80)==0x80;
+      channel3.reg0.raw = data;
+      channel3.enabled = (channel3.reg0.raw&0x80)==0x80;
+      if (channel3.enabled==false) 
+        nr52_ &= ~0x04;
+              
       break;
     case 0xFF1B:
-      nr31_ = data;
+      channel3.reg1 = data;
       channel3.lengthcounter = 256 - data;
       if (channel3.lengthcounter == 0)
         nr52_ &= ~0x04;
       break;
     case 0xFF1C:
-      nr32_ = data;  
-      switch ((nr32_ & 0x60)>>5) {
+      channel3.reg2 = data;  
+      switch ((channel3.reg2 & 0x60)>>5) {
         case 0x0:channel3.vol = 0; break;
         case 0x1:channel3.vol = 1.0f; break;
         case 0x2:channel3.vol = 0.5f; break;
@@ -427,51 +464,64 @@ void Apu::Write(uint16_t address, uint8_t data) {
       }
       break;
     case 0xFF1D:
-      nr33_ = data;
+      channel3.reg3 = data;
       break;
     case 0xFF1E: {
-      nr34_ = data;
-      uint32_t x = nr33_;
-      x |= (nr34_&0x7)<<8;
+      channel3.reg4 = data;
+      uint32_t x = channel3.reg3;
+      x |= (channel3.reg4&0x7)<<8;
       channel3.freqcounterload = 2048-x;
       //if (nr34_&0x40)
         //channel3.soundlength_ms = 1000.0f * (256.0f-nr31_)*(1/256.0f);
-      if ((nr34_&0x80)&&(nr30_&0x80)) {
-        nr52_ |= 0x04;
+      //channel3.enable_length_clock = data&0x40==0x40;
+      if ((channel3.reg4&0x80)&&(channel3.reg0.raw&0x80)) {
+        if(channel3.enabled)
+          nr52_ |= 0x04;
         channel3.freqcounter = channel3.freqcounterload;
         channel3.playback_counter = 0;
-        channel3.enabled = true;
         memset(waveram,0,sizeof(waveram));
+        if (!channel3.lengthcounter)
+          channel3.lengthcounter = 256;
       }
       break;
     }
     case 0xFF1F:io_0xff1f_ = data; break;
     case 0xFF20:
-      nr41_.raw = data;
+      channel4.reg1 = data;
       channel4.lengthcounter = 64 - (data&0x3F);
       if (channel4.lengthcounter == 0)
         nr52_ &= ~0x08;
       break;
     case 0xFF21:
-      nr42_.raw = data;
+      channel4.reg2 = data;
+      if ((channel4.reg2&0xF8)==0x00) {
+        nr52_ &= ~0x08;
+        channel4.dac_enable = false;
+      } else  {
+        channel4.dac_enable = true;
+      }
       break;
     case 0xFF22:
-      nr43_ = data;
+      channel4.reg3 = data;
       break;
     case 0xFF23: {
-      nr44_ = data;
-      uint32_t x = nr43_;
-      x |= (nr44_&0x7)<<8;
-      float r = float(nr43_&0x7);
-      float s = float((nr43_&0xF0)>>4);
+      channel4.reg4 = data;
+      uint32_t x = channel4.reg3;
+      x |= (channel4.reg4&0x7)<<8;
+      float r = float(channel4.reg3&0x7);
+      float s = float((channel4.reg3&0xF0)>>4);
       channel4freq = 524288.0f/r/powf(2.0,s+1);
-      if (nr24_ & 0x80) {
-        nr52_ |= 0x08;
+      channel4.enable_length_clock = (data&0x40)==0x40;
+      if (channel4.reg4 & 0x80) {
+        if (channel4.dac_enable) //dac
+          nr52_ |= 0x08;
         channel4polycounterms = 0;
-        channel4.envelope.raw = nr42_.raw;
+        channel4.envelope.raw = channel4.reg2;
         channel4.envcounterload = (channel4.envelope.env_sweep*4194304/64);
         channel4.envcounter = channel4.envcounterload;
         channel4.shiftreg = 0xFF;
+        if (!channel4.lengthcounter)
+          channel4.lengthcounter = 64;
       }
       break;
     }
@@ -485,26 +535,12 @@ void Apu::Write(uint16_t address, uint8_t data) {
     case 0xFF26:
       nr52_ = (data&0x80) | (nr52_&0x7F);
       if ((nr52_&0x80)==0) {
-        nr10_.raw = 0;
-        nr11_.raw =  0;
-        nr12_.raw =  0;
-        nr13_ =  0;
-        nr14_ =  0;
+        channel1.reg0.raw = channel1.reg1 = channel1.reg2 = channel1.reg3 = channel1.reg4 = 0;
         io_0xff15_ = 0;
-        nr21_.raw = 0;
-        nr22_.raw =  0;
-        nr23_ =  0;
-        nr24_ =  0;
-        nr30_ =  0;
-        nr31_ =  0;
-        nr32_ =  0;
-        nr33_ =  0;
-        nr34_ =  0;
+        channel2.reg1 = channel2.reg2 = channel2.reg3 = channel2.reg4 = 0;
+        channel3.reg0.raw = channel3.reg1 = channel3.reg2 = channel3.reg3 = channel3.reg4 = 0;
         io_0xff1f_ = 0;
-        nr41_.raw =  0;
-        nr42_.raw =  0;
-        nr43_ =  0;
-        nr44_ =  0;
+        channel4.reg1 = channel4.reg2 = channel4.reg3 = channel4.reg4 = 0;
         nr50_.raw =  0;
         nr51_.raw =  0;
         nr52_ &= ~0x7F;

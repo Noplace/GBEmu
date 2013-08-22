@@ -349,6 +349,7 @@ void Cpu::Step(double dt) {
   }
   if (cpumode_ == CpuModeNormal) {
     if (sprite_bug!=0) --sprite_bug;
+    opcode_pc = reg.PC;
     opcode = emu_->memory()->Read8(reg.PC++);
     (this->*(instructions[opcode]))();
   } else if (cpumode_ == CpuModeHalt) {
