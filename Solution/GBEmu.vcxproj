@@ -201,10 +201,12 @@
       <FileType>Text</FileType>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </Text>
+    <ClInclude Include="..\..\StormTank\StormTankApp\Code\audio\synth\filters\lowpass.h" />
     <ClInclude Include="Code\audio\output\directsound.h" />
     <ClInclude Include="Code\audio\output\interface.h" />
     <ClInclude Include="Code\audio\output\wasapi.h" />
     <ClInclude Include="Code\audio\output\xaudio.h" />
+    <ClInclude Include="Code\audio\synth\lowpass.h" />
     <ClInclude Include="Code\audio\synth\quadrangular_wave.h" />
     <ClInclude Include="Code\dialogs\options.h" />
     <ClInclude Include="Code\emulation\gb\cartridge.h" />
@@ -244,9 +246,6 @@
     <ResourceCompile Include="Code\resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resource\Nintendo-NES.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\WinCore\WinCore.vcxproj">
       <Project>{43ac74e9-a89d-4e31-8c01-fa2cce27f5c2}</Project>
       <Private>true</Private>
@@ -255,6 +254,9 @@
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resource\gb.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

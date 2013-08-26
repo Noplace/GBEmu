@@ -26,10 +26,10 @@ namespace emulation {
 namespace gb {
 
 const uint8_t dutycycletable[32] = {
-  0,0,0,0,1,0,0,0,
-  0,0,0,0,1,1,0,0,
-  0,0,1,1,1,1,0,0,
-  1,1,1,1,0,0,1,1,
+  0,0,0,0,0,0,0,1,
+  1,0,0,0,0,0,0,1,
+  1,0,0,0,0,1,1,1,
+  0,1,1,1,1,1,1,0,
 };
 
 union SweepRegister {
@@ -129,6 +129,7 @@ struct ApuChannel {
     reg0.raw = 0;
     reg1 = reg2 = reg3 = reg4 = 0;
     dac_enable = false;
+    lengthcounter = 0;
   }
 
   void EnvelopeTick() {
@@ -138,16 +139,6 @@ struct ApuChannel {
       if (!envelope.direction && envelope.vol>0)
         --envelope.vol;
       envcounter = envcounterload;
-    }
-  }
-
-  void SweepTick() {
-    if (reg0.sweep_time != 0 && --sweepcounter == 0) {
-      sweepcounter = reg0.sweep_time;
-      if (reg0.incdec) //could be reversed but doubt it
-        freqcounterload += sweepfreqcounter;
-      else
-        freqcounterload -= sweepfreqcounter;
     }
   }
 
@@ -209,14 +200,31 @@ class Apu : public Component {
 
   uint32_t maincounter;
   uint32_t ulencounterclock;
+  uint32_t frame_seq_step,frame_seq_clock;
 
   struct : ApuChannel {
+
+    void SweepTick() {
+      if (reg0.sweep_time != 0 && --sweepcounter == 0) {
+        if (reg0.sweep_shift == 0) {
+          apu_->nr52_ &= ~0x01;
+          return;
+        }
+        sweepcounter = reg0.sweep_time;
+        if (reg0.incdec) //could be reversed but doubt it
+          freqcounterload += sweepfreqcounter;
+        else
+          freqcounterload -= sweepfreqcounter;
+      }
+    }
+
     uint8_t SampleTick() {
       if ((reg4 & 0x80)&&--freqcounter == 0) {
         sample = dutycycletable[wavepatternduty|wavepatterncounter];
         wavepatterncounter = (wavepatterncounter +1 ) % 8;
         freqcounter = freqcounterload;
       }
+      if (!dac_enable) return 0;
       return sample;
     }
   }channel1;
@@ -229,6 +237,7 @@ class Apu : public Component {
         wavepatterncounter = (wavepatterncounter +1 ) % 8;
         freqcounter = freqcounterload;
       }
+      if (!dac_enable) return 0;
       return sample;
     }
   }channel2;
@@ -238,22 +247,21 @@ class Apu : public Component {
     uint8_t playback_counter;
     real_t wavsample;
     uint8_t wavedata[32];
-    bool enabled;
+    //bool enabled;
     void Initialize(Apu* sc) {
       ApuChannel::Initialize(sc,3);
       playback_counter = 0;
       vol=0;
       wavsample = 0;
-      enabled = false;
     }
 
     uint8_t SampleTick() {
-      if (!enabled) return 0;
       if ((reg4& 0x80)&&--freqcounter == 0) {
         sample = wavedata[playback_counter];
         playback_counter = (playback_counter + 1) & 0x1F;
         freqcounter = freqcounterload;
       }
+      if (!dac_enable) return 0;
       return sample;
     }
 
@@ -280,11 +288,24 @@ class Apu : public Component {
         sample = shiftreg & 1;
         apu_->channel4polycounterms = 0;
       }
+      if (!dac_enable) return 0;
       return sample;
     }
   } channel4;
   
+  void LengthTick() {
+    channel1.LengthTick(nr52_);
+    channel2.LengthTick(nr52_);
+    channel3.LengthTick(nr52_);
+    channel4.LengthTick(nr52_);
+  }
   
+  void EnvelopeTick() {
+    channel1.EnvelopeTick();
+    channel2.EnvelopeTick();
+    channel4.EnvelopeTick();
+  }
+
   real_t channel4freq,channel4polycounterms;
   SoundChannelControlVolumeRegister nr50_;
   SoundOutputTerminalRegister nr51_;

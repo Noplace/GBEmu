@@ -47,6 +47,10 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
   uint8_t* data;
   size_t length;
   core::io::ReadWholeFileBinary(filename,&data,length);
+  if (data == nullptr) {
+    header = nullptr;
+    return;
+  }
   memcpy(header,data+0x100,0x50);
   if (header->rom_size_bytes() == 0) {
     //report error

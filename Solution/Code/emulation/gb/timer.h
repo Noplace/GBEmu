@@ -37,7 +37,7 @@ class Timer : public Component {
  private:
   uint64_t counter1,counter2,tima_max;
   uint8_t div,tma,tac;
-  uint8_t tima;
+  uint16_t tima;
 };
 
 }

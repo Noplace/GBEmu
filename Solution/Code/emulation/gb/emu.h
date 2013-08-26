@@ -21,15 +21,15 @@
 namespace emulation {
 namespace gb {
 
-const double clockspeed = 4194304.0; //(4.295454MHz for SGB, max. 8.4MHz for CGB)
-const uint32_t hsync_hz = 9198; // Hz (9420 KHz for SGB)
+const double default_gb_hz = 4194304.0; //(4.295454MHz for SGB, max. 8.4MHz for CGB)
+//const uint32_t hsync_hz = 9198; // Hz (9420 KHz for SGB)
 //const uint32_t vsync_hz = 59.730; // Hz (61.17 Hz for SGB)
 
 class Emu {
  public:
   Emu() {}
   ~Emu() {}
-  void Initialize();
+  void Initialize(double base_freq_hz);
   void Deinitialize();
   double Step();
   void Run();
@@ -50,7 +50,8 @@ class Emu {
       this->on_render = on_render;
   } 
   std::atomic<int> state;
-  double fps() { return timing.fps; }
+  const double fps() { return timing.fps; }
+  const double base_freq_hz() { return base_freq_hz_; }
  private:
   utilities::Timer utimer;
   Cartridge cartridge_;
@@ -60,6 +61,7 @@ class Emu {
   Apu apu_;
   Timer timer_;
   std::thread* thread;
+  double base_freq_hz_;
   struct {
     uint64_t extra_cycles;
     uint64_t current_cycles;

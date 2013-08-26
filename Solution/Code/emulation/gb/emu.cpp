@@ -21,7 +21,8 @@
 namespace emulation {
 namespace gb {
 
-void Emu::Initialize() {
+void Emu::Initialize(double base_freq_hz) {
+  base_freq_hz_ = base_freq_hz;
   cartridge_.Initialize(this);
   timer_.Initialize(this);
   lcd_driver_.Initialize(this);
@@ -43,7 +44,7 @@ void Emu::Deinitialize() {
 }
 
 double Emu::Step() {
-  const double dt =  1000.0 / emulation::gb::clockspeed;//options.cpu_freq(); 0.00058f;//16.667f;
+  const double dt =  1000.0 / base_freq_hz_;//options.cpu_freq(); 0.00058f;//16.667f;
   timing.current_cycles = utimer.GetCurrentCycles();
   double time_span =  (timing.current_cycles - timing.prev_cycles) * utimer.resolution();
   if (time_span > 500.0) //clamping time

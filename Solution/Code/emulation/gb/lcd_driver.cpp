@@ -91,7 +91,7 @@ void LCDDriver::Step(double dt) {
       }
       break;
     case 0:
-      if (sprite_bug_counter > 0 && lcdc_.lcd_enable == 1) {
+      if (sprite_bug_counter != 0 && lcdc_.lcd_enable == 1) {
         emu_->memory()->oam()[8+(rand()%152)] = rand()&0xFF; 
         --sprite_bug_counter;
       }
@@ -166,15 +166,23 @@ uint8_t LCDDriver::Read(uint16_t address) {
 
 void LCDDriver::Write(uint16_t address, uint8_t data) {
   switch (address) {
-    case 0xFF40:
+    case 0xFF40:{
+      int change = (lcdc_.raw & 0x80) ^ (data & 0x80);
       lcdc_.raw = data;
-      if (lcdc_.lcd_enable) {
-        counter1 = 0;
-        counter2 = 0;//4-7 work
+      if (change) {
+        if (lcdc_.lcd_enable) {
+          counter1 = 0;
+          counter2 = 4;//4-7 work
+        } else {
+          counter1 = 0;
+          counter2 = 0;
+        }
+
         ly = 0;
         stat_.mode = 2;
       }
       break;
+    }
     case 0xFF41:
       stat_.raw = (data & ~0x7) | (stat_.raw&0x7);
       break;

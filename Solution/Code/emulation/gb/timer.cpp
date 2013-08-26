@@ -48,7 +48,7 @@ void Timer::Tick() {
   }
   if ((tac&0x4)==0)return;
   if (++counter2 == tima_max) {
-    if (++tima == 0) {
+    if (++tima > 0xFF) {
       emu_->memory()->interrupt_flag() |= 0x4;
       emu_->cpu()->Wake();
       tima = tma;

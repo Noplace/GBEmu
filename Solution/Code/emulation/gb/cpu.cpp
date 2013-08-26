@@ -22,7 +22,7 @@
 
 */
 
-#define StopAt(x) { if (x == reg.PC) DebugBreak(); } 
+#define StopAt(x) { if (x == opcode_pc) DebugBreak(); } 
 
 namespace emulation {
 namespace gb {
@@ -340,7 +340,6 @@ void Cpu::Step(double dt) {
   this->dt = dt;
   cycles = 0;
   //reg.F._unused = 0;//always 0 according to docs
-  //StopAt(0xC47A);
   //StopAt(0x0100);
   //StopAt(0x0073);
   if (cpumode_ == CpuModeStop) {
@@ -355,7 +354,6 @@ void Cpu::Step(double dt) {
   } else if (cpumode_ == CpuModeHalt) {
     Tick();
   }
-  emu_->timer()->Check();
 
   if (ime) {
     uint8_t test = emu_->memory()->interrupt_enable() & emu_->memory()->interrupt_flag();
@@ -363,6 +361,7 @@ void Cpu::Step(double dt) {
       ime = false;
       cpumode_ = CpuModeNormal;
       pushPC();
+
       if (test & 0x1) { //vblank
         reg.PC = 0x0040;
         emu_->memory()->interrupt_flag() &= ~0x1;
@@ -380,6 +379,7 @@ void Cpu::Step(double dt) {
         reg.PC = 0x0060; //hi-lo p10-p13
         emu_->memory()->interrupt_flag() &= ~0x10;
       }
+
     }
   }
 }
@@ -568,8 +568,9 @@ void Cpu::ADC() {
   updateCpuFlagZ(reg.raw8[dest]);
 
   if (opcode == 0x8E){
-          Tick();Tick();Tick();Tick();
-          Tick();Tick();Tick();Tick();
+    int a = 1;
+          //Tick();Tick();Tick();Tick();
+          //Tick();Tick();Tick();Tick();
   }
   
 }
@@ -763,7 +764,7 @@ void Cpu::PREFIX_CB() {
     reg.F.H  = reg.F.N = 0;
     updateCpuFlagZ(r);
   }
-  Tick();Tick();Tick();Tick();
+  //Tick();Tick();Tick();Tick();
 }
 
 void Cpu::JR() {

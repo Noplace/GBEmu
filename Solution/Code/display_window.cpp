@@ -81,8 +81,7 @@ void DisplayWindow::Init() {
 
   //emu_th = new std::thread(&app::DisplayWindow::Step,this);
   //emu_th->join();
-
-  emu.Initialize();
+  emu.Initialize(emulation::gb::default_gb_hz);
   emulation::gb::CartridgeHeader header;
   //emu.cartridge()->LoadFile("..\\test\\cpu_instrs\\cpu_instrs.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
@@ -90,14 +89,17 @@ void DisplayWindow::Init() {
   
   //emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\mem_timing-2\\mem_timing-2\\mem_timing.gb",&header);
-  emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\03-trigger.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\03-trigger.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\oam_bug\\oam_bug\\rom_singles\\2-causes.gb",&header);
 
-  //cartridge_.LoadFile("..\\test\\PUZZLE.gb",&header);
-  //cartridge_.LoadFile("..\\test\\opus5.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\PUZZLE.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\opus5.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Super Mario Land (World).gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);
-  //emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
-
+  emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
+  
+  //emu.cartridge()->LoadFile("..\\test\\Final Fantasy Legend, The (U) [!].gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);
   //emu.cartridge()->LoadFile("D:\\Personal\\Dev\\GB\\roms\\Kirby's Dream Land (USA, Europe).gb",&header);
   emu.Run();
 }
@@ -109,43 +111,7 @@ void DisplayWindow::ResetTiming() {
 }
 
 void DisplayWindow::Step() {
-  //PostMessage(handle(),WM_PAINT,0,0);
- 
-  //gfx.SwitchThread();
-  //while (exit_signal_ == false) {
 
-    //if (nes.on == false) return;
-    const double dt =  1000.0 / emulation::gb::clockspeed;//options.cpu_freq(); 0.00058f;//16.667f;
-    timing.current_cycles = timer.GetCurrentCycles();
-    double time_span =  (timing.current_cycles - timing.prev_cycles) * timer.resolution();
-    if (time_span > 250.0) //clamping time
-      time_span = 250.0;
-
-    timing.span_accumulator += time_span;
-    while (timing.span_accumulator >= dt) {
-      timing.span_accumulator -= emu.Step();
-    }
-
-    timing.total_cycles += timing.current_cycles-timing.prev_cycles;
-    timing.prev_cycles = timing.current_cycles;
-    //timing.render_time_span += time_span;
-    //++timing.fps_counter;
-    timing.fps_time_span += time_span;
-    if (timing.fps_time_span >= 1000.0) {
-      timing.fps = timing.fps_counter;
-      timing.fps_counter = 0;
-      timing.fps_time_span = 0;
-
-      char caption[256];
-      //sprintf(caption,"Freq : %0.2f MHz",nes.frequency_mhz());
-      //sprintf(caption,"CPS: %llu ",nes.cycles_per_second());
-    
-      sprintf(caption,"GBEmu - FPS: %02d\0",timing.fps);
-      SetWindowText(handle(),caption);
- 
-    }
-    
-  //}
 }
 
 int DisplayWindow::OnCreate(WPARAM wParam,LPARAM lParam) {

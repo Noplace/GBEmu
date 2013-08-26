@@ -27,7 +27,6 @@ namespace output {
 DirectSound::DirectSound() : last_write_cursor(0),last_cursor_pos(0) {
   window_handle_ = nullptr;
   buffer_size_ = 0;
-  lock = 0;
   mode = 0;
 }
 
@@ -93,6 +92,7 @@ int DirectSound::Initialize(uint32_t sample_rate, uint8_t channels, uint8_t bits
 }
 
 int DirectSound::Deinitialize() {
+  //std::lock_guard<std::mutex> lock(mutex);
   Stop();
   SafeRelease(&secondary_buffer);
   SafeRelease(&primary_buffer);
@@ -113,6 +113,7 @@ int DirectSound::Play() {
 }
 
 int DirectSound::Stop() {
+  std::lock_guard<std::mutex> lock(mutex);
   if (mode == 0) return 2;
   Sync();
   OutputDebugString("ds stop\n");
@@ -147,7 +148,7 @@ void DirectSound::GetCursors(uint32_t& play, uint32_t& write) {
 
 
 int DirectSound::Write(void* data_pointer, uint32_t size_bytes) {
-  lock = 1;
+  std::lock_guard<std::mutex> lock(mutex);
   LPVOID buf_ptr1, buf_ptr2;
   HRESULT hr;
   DWORD play_cursor,write_cursor;
@@ -165,7 +166,6 @@ int DirectSound::Write(void* data_pointer, uint32_t size_bytes) {
     else if (hr == DSERR_BUFFERLOST)
       secondary_buffer->Restore();
     else {
-      lock = 0;
       return S_FALSE;
     }
   }  
@@ -184,7 +184,6 @@ int DirectSound::Write(void* data_pointer, uint32_t size_bytes) {
   }
 
   secondary_buffer->Unlock(buf_ptr1,buf_size1,buf_ptr2,buf_size2);
-  lock = 0;
   return S_OK;
 }
 
