@@ -60,6 +60,13 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
   memcpy(rom_,data,header->rom_size_bytes());
   this->header = (CartridgeHeader*)&rom_[0x100];
 
+
+  if (header->cgb_flag() == 0xC0) {
+    emu_->set_mode(EmuModeGBC); //force gbc
+  } else if ((header->cgb_flag()&0x80) == 0) {
+    emu_->set_mode(EmuModeGB); //force original gb
+  }
+
   switch (header->cartridge_type) {
     case 0:
       mbc = new MBCNone();
@@ -80,7 +87,9 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
     case 0x13:
       mbc = new MBC3();
       break;
+    case 0x19:
     case 0x1A:
+    case 0x1B:
       mbc = new MBC5();
       break;
     default:
@@ -113,6 +122,10 @@ void Cartridge::SaveRam() {
   FILE* fp = fopen(filename,"wb");
   fwrite(mbc->eram(),1,header->ram_size_bytes(),fp);
   fclose(fp);
+}
+
+uint8_t* Cartridge::GetMemoryPointer(uint16_t address) {
+  return mbc->GetMemoryPointer(address);
 }
 
 uint8_t Cartridge::Read(uint16_t address) {

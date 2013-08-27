@@ -41,26 +41,24 @@ float high_pass( float in, bool dacs_enabled )
      }
      return out;
 }
-short* sbuf;
+
 void Apu::Initialize(Emu* emu) {
   Component::Initialize(emu);
-  output_ = new audio::output::DirectSound();
+  output_buffer_ = new short[4410*2];
+  output_ = new audio::output::WASAPI();
   output_->set_window_handle(app::Application::Current()->display_window().handle());
-  output_->set_buffer_size(4*44100*2);
+  //output_->set_buffer_size(4*44100*2);
   output_->Initialize(44100,2,16);
   output_->Play();
   //WASAPI_Initialize(44100,2,16);
 
-  sample_counter = 0;
-  sample_ratio = uint32_t(emu_->base_freq_hz() / 44100);
+  sample_counter_ = 0;
+  sample_ratio_ = uint32_t(emu_->base_freq_hz() / 44100);
   //noise.set_sample_rate(44100);
   maincounter = 0;
   ulencounterclock = 0;
   frame_seq_clock = 0;
   frame_seq_step = 0;
-  time_t t;
-  time(&t);
-  srand((int)t);
 
   audio::synth::noiseseed = rand();
   Reset();
@@ -68,7 +66,7 @@ void Apu::Initialize(Emu* emu) {
   lowpass.set_sample_rate(44100);
   lowpass.set_cutoff_freq(22100);
   lowpass.Initialize();
-  sbuf = new short[4410*2];
+  
 }
 
 void Apu::Reset() {
@@ -146,11 +144,11 @@ void Apu::Deinitialize() {
   output_->Stop();
   output_->Deinitialize(); 
   SafeDelete(&output_);
-  //WASAPI_Deinitialize();
-  SafeDeleteArray(&sbuf);
+  SafeDeleteArray(&output_buffer_);
 }
 
-void Apu::Step(double dt) {
+void Apu::Tick() {
+  const double dt =  1000.0 / emu_->base_freq_hz();
   if ((nr52_&0x80)==0)
     return;
 
@@ -185,32 +183,31 @@ void Apu::Step(double dt) {
  
 
 
-  ++sample_counter;
-  //if (sample_counter >= sample_ratio)
+  ++sample_counter_;
+  if (sample_counter_ >= sample_ratio_)
   {
 
     auto channel1_sample = ((channel1.sample) * (channel1.envelope.vol / 15.0f));
-    auto channel2_sample = 0;//((channel2.sample) * (channel2.envelope.vol / 15.0f));
-    auto channel3_sample = 0;//(channel3.sample / 15.0f)*channel3.vol;
-    auto channel4_sample = 0;//float(channel4.sample) * (channel4.envelope.vol / 15.0f);
+    auto channel2_sample = ((channel2.sample) * (channel2.envelope.vol / 15.0f));
+    auto channel3_sample = (channel3.sample / 15.0f)*channel3.vol;
+    auto channel4_sample = float(channel4.sample) * (channel4.envelope.vol / 15.0f);
    
     auto sample_right = ((nr51_.ch1so1 * channel1_sample)+(nr51_.ch2so1 * channel2_sample)+(nr51_.ch3so1 * channel3_sample)+(nr51_.ch4so1 * channel4_sample));
     auto sample_left = ((nr51_.ch1so2 * channel1_sample)+(nr51_.ch2so2 * channel2_sample)+(nr51_.ch3so2 * channel3_sample)+(nr51_.ch4so2 * channel4_sample));
     sample_right = high_pass(sample_right,channel1.dac_enable);
     sample_right = ((sample_right*2.0f)-1) * 0.25f * 32767.0f;
-    sample_left = 0;//((sample_left*2.0f)-1) * 0.25f * 32767.0f;
+    sample_left = ((sample_left*2.0f)-1) * 0.25f * 32767.0f;
     sample_right *=  (nr50_.so1vol / 7.0f);
     sample_left *=  (nr50_.so2vol / 7.0f);
 
     
     static int sindex = 0;
-    sbuf[sindex++] = short(sample_left*0.5f);
-    sbuf[sindex++] = short(sample_right*0.5f); 
-    sample_counter -= sample_ratio;   
+    output_buffer_[sindex++] = short(sample_left*0.5f);
+    output_buffer_[sindex++] = short(sample_right*0.5f); 
+    sample_counter_ -= sample_ratio_;   
 
     if (sindex == 8820) {
-      output_->Write(sbuf,8820<<1);
-      //WASAPI_WriteData(sbuf,8820);
+      output_->Write(output_buffer_,8820<<1);
       sindex = 0;
     }
   }
@@ -539,15 +536,18 @@ void Apu::Write(uint16_t address, uint8_t data) {
       break;
     case 0xFF23: {
       channel4.reg4 = data;
-      uint32_t x = channel4.reg3;
-      x |= (channel4.reg4&0x7)<<8;
       float r = float(channel4.reg3&0x7);
       float s = float((channel4.reg3&0xF0)>>4);
       channel4freq = 524288.0f/r/powf(2.0,s+1);
       channel4.enable_length_clock = (data&0x40)==0x40;
+      const uint16_t divisors[8] = {8,16,32,48,64,80,96,112};
+      auto divisor = divisors[channel4.reg3&0x7];
+      auto shift = (channel4.reg3&0xF0)>>4;
+      channel4.freqcounterload = divisor<<shift;
       if (channel4.reg4 & 0x80) {
         if (channel4.dac_enable) //dac
           nr52_ |= 0x08;
+        channel4.freqcounter = channel4.freqcounterload;
         channel4polycounterms = 0;
         channel4.envelope.raw = channel4.reg2;
         channel4.envcounterload = (channel4.envelope.env_sweep);

@@ -37,6 +37,19 @@ class MBC2 : public MemoryBankController {
     SafeDeleteArray(&eram_);
     MemoryBankController::Deinitialize();
   }
+  uint8_t* GetMemoryPointer(uint16_t address) {
+    if (address >= 0x0000 && address <= 0x3FFF) {
+      return &cartridge->rom()[address];
+    } else if (address >= 0x4000 && address <= 0x7FFF) {
+      return &cartridge->rom()[(address&0x3FFF)+(rom_bank_number<<14)];
+    } else if (address >= 0xA000 && address <= 0xA1FF) {
+      if ((eram_enable&0x0A)==0x0A)
+        return &eram_[address&0x1FF];
+      else
+        return nullptr;
+    } 
+    return nullptr;
+  }
   uint8_t Read(uint16_t address) {
     if (address >= 0x0000 && address <= 0x3FFF) {
       return cartridge->rom()[address];

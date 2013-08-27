@@ -25,9 +25,13 @@ const double default_gb_hz = 4194304.0; //(4.295454MHz for SGB, max. 8.4MHz for 
 //const uint32_t hsync_hz = 9198; // Hz (9420 KHz for SGB)
 //const uint32_t vsync_hz = 59.730; // Hz (61.17 Hz for SGB)
 
+enum EmuMode { EmuModeGB,EmuModeGBC };
+
 class Emu {
  public:
-  Emu() {}
+  uint64_t cycles_;
+  uint8_t speed;
+  Emu():cycles_(0) {}
   ~Emu() {}
   void Initialize(double base_freq_hz);
   void Deinitialize();
@@ -37,7 +41,8 @@ class Emu {
   void Pause();
   void Reset();
   void Render();
-
+  EmuMode mode() { return mode_; }
+  void set_mode(EmuMode mode) { mode_= mode; }
   Cartridge* cartridge() { return &cartridge_; }
   Cpu* cpu() { return &cpu_; }
   Memory* memory() { return &memory_; }
@@ -52,6 +57,31 @@ class Emu {
   std::atomic<int> state;
   const double fps() { return timing.fps; }
   const double base_freq_hz() { return base_freq_hz_; }
+  void set_base_freq_hz(double base_freq_hz) { base_freq_hz_ = base_freq_hz; }
+
+  void ClockTick() {
+    ++cycles_;
+    timer_.Tick();
+    memory_.Tick();
+    if (speed == 0) {
+      lcd_driver_.Tick();
+      apu_.Tick();
+    } else {
+      static bool s = false;
+      if (s == false) {
+        lcd_driver_.Tick();
+        apu_.Tick();
+      }
+      s = !s;
+    }
+  }
+  void MachineTick() {
+    ClockTick();
+    ClockTick();
+    ClockTick();
+    ClockTick();
+  }
+
  private:
   utilities::Timer utimer;
   Cartridge cartridge_;
@@ -62,6 +92,7 @@ class Emu {
   Timer timer_;
   std::thread* thread;
   double base_freq_hz_;
+  EmuMode mode_;
   struct {
     uint64_t extra_cycles;
     uint64_t current_cycles;

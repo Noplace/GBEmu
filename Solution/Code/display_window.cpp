@@ -82,6 +82,7 @@ void DisplayWindow::Init() {
   //emu_th = new std::thread(&app::DisplayWindow::Step,this);
   //emu_th->join();
   emu.Initialize(emulation::gb::default_gb_hz);
+  emu.set_mode(emulation::gb::EmuModeGBC);
   emulation::gb::CartridgeHeader header;
   //emu.cartridge()->LoadFile("..\\test\\cpu_instrs\\cpu_instrs.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
@@ -92,12 +93,14 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\03-trigger.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\oam_bug\\oam_bug\\rom_singles\\2-causes.gb",&header);
 
-  //emu.cartridge()->LoadFile("..\\test\\PUZZLE.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\SPRITE.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\opus5.gb",&header);
-  //emu.cartridge()->LoadFile("..\\test\\Super Mario Land (World).gb",&header);
+  emu.cartridge()->LoadFile("..\\test\\Super Mario Land (World).gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);
-  emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
+  //emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
   
+  //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Final Fantasy Legend, The (U) [!].gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);
   //emu.cartridge()->LoadFile("D:\\Personal\\Dev\\GB\\roms\\Kirby's Dream Land (USA, Europe).gb",&header);

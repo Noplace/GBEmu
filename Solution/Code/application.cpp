@@ -32,9 +32,14 @@ Application::~Application() {
 }
 
 int Application::Run() {
+  CoInitializeEx(nullptr,COINIT_MULTITHREADED);
   //CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
   //unsigned old_fp_state;
   //_controlfp_s(&old_fp_state, _PC_53, _MCW_PC);
+
+  time_t t;
+  time(&t);
+  srand((int)t);
 
   display_window_.Init();
   
@@ -49,7 +54,7 @@ int Application::Run() {
     }
   } while(msg.message!=WM_QUIT);
 
- //CoUninitialize();
+ CoUninitialize();
  //Return the exit code to the system. 
  return static_cast<int>(msg.wParam);
 }

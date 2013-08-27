@@ -49,15 +49,16 @@ const uint8_t dmgrom[0x100] = {
 
 void Memory::Initialize(Emu* emu) {
   Component::Initialize(emu);
-  vram_ = new uint8_t[0x2000];
-  wram1_ = new uint8_t[0x1000];
-  wram2_ = new uint8_t[0x1000];
+  vram_ = new uint8_t[0x4000];
+  wram_ = new uint8_t[0x8000];
+  memset(vram_,0,0x4000);
+  wram_select = 1;
+  vram_select = 0;
   Reset();
 }
 
 void Memory::Deinitialize() {
-  SafeDeleteArray(&wram2_);
-  SafeDeleteArray(&wram1_);
+  SafeDeleteArray(&wram_);
   SafeDeleteArray(&vram_);
 }
 
@@ -99,9 +100,48 @@ void Memory::Reset() {
    ioports_[0xFF] = 0x00; // IE*/
 }
 
+
+uint8_t* Memory::GetMemoryPointer(uint16_t address) {
+
+  if (address >= 0x0000 && address <= 0x3FFF) {
+    if (ioports_[0x50] == 0 && address < 0x100) { 
+      return nullptr;//&dmgrom[address&0xFF];
+    } else {
+      return emu_->cartridge()->GetMemoryPointer(address);
+    }
+  } else if (address >= 0x4000 && address <= 0x7FFF) {
+    return emu_->cartridge()->GetMemoryPointer(address);
+  } else if (address >= 0x8000 && address <= 0x9FFF) {
+    return &vram_[(address&0x1FFF)|(vram_select<<13)];
+  } else if (address >= 0xA000 && address <= 0xBFFF) {
+    return emu_->cartridge()->GetMemoryPointer(address);
+  } else if (address >= 0xC000 && address <= 0xCFFF) {
+    return &wram_[address&0x0FFF];
+  } else if (address >= 0xD000 && address <= 0xDFFF) {
+    return &wram_[(address&0x0FFF)+(0x1000*wram_select)];
+  } else if (address >= 0xE000 && address <= 0xFDFF) {
+    if ((address&0xF000)==0xE000)
+      return &wram_[address&0x0FFF];
+    else if ((address&0xF000)==0xF000)
+      return &wram_[(address&0x0FFF)+(0x1000*wram_select)];
+  } else if (address >= 0xFE00 && address <= 0xFE9F) {
+    return &oam_[address-0xFE00];
+  } else if (address >= 0xFEA0 && address <= 0xFEFF) {
+    return nullptr;
+  } else if (address >= 0xFF00 && address <= 0xFF7F) {
+    return nullptr;
+  } else if (address >= 0xFF80 && address <= 0xFFFE) {
+    return &hram_[address-0xFF80];
+  } else if (address == 0xFFFF) {
+    return nullptr;
+  }
+
+  return nullptr;
+}
+
 uint8_t Memory::Read8(uint16_t address) {
   uint8_t result = 0;
-  emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick(); 
+  emu_->MachineTick();
   if (address >= 0x0000 && address <= 0x3FFF) {
     if (ioports_[0x50] == 0 && address < 0x100) { 
       result = dmgrom[address&0xFF];
@@ -115,18 +155,18 @@ uint8_t Memory::Read8(uint16_t address) {
     if ((emu_->lcd_driver()->stat().mode == 3)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
       result = 0xFF;
     else
-      result = vram_[address&0x1FFF];
+      result = vram_[(address&0x1FFF)|(vram_select<<13)];
   } else if (address >= 0xA000 && address <= 0xBFFF) {
     result = emu_->cartridge()->Read(address);//emu_->cartridge()->eram()[address&0x1FFF];
   } else if (address >= 0xC000 && address <= 0xCFFF) {
-    result = wram1_[address&0x0FFF];
+    result = wram_[address&0x0FFF];
   } else if (address >= 0xD000 && address <= 0xDFFF) {
-    result = wram2_[address&0x0FFF];
+    result = wram_[(address&0x0FFF)+(0x1000*wram_select)];
   } else if (address >= 0xE000 && address <= 0xFDFF) {
     if ((address&0xF000)==0xE000)
-     result = wram1_[address&0xFFF];
+     result = wram_[address&0x0FFF];
     else if ((address&0xF000)==0xF000)
-     result = wram2_[address&0xFFF];
+     result =  wram_[(address&0x0FFF)+(0x1000*wram_select)];
   } else if (address >= 0xFE00 && address <= 0xFE9F) {
 
     if ((emu_->lcd_driver()->stat().mode&0x2)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
@@ -139,6 +179,10 @@ uint8_t Memory::Read8(uint16_t address) {
     if (address >= 0xFF10 && address <= 0xFF3F) {
       result = emu_->apu()->Read(address);
     } else if (address >= 0xFF40 && address <= 0xFF4B) {
+      result = emu_->lcd_driver()->Read(address);
+    } else if (address >= 0xFF51 && address <= 0xFF55) { //HDMA
+      result = emu_->lcd_driver()->Read(address);
+    } else if (address >= 0xFF68 && address <= 0xFF6B) { //color pallete
       result = emu_->lcd_driver()->Read(address);
     } else if (address >= 0xFF04 && address <= 0xFF07) {
       result = emu_->timer()->Read(address);
@@ -157,7 +201,7 @@ uint8_t Memory::Read8(uint16_t address) {
 }
 
 void Memory::Write8(uint16_t address, uint8_t data) {
-  emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();emu_->cpu()->Tick();
+  emu_->MachineTick();
   if (address >= 0x0000 && address <= 0x3FFF) {
     emu_->cartridge()->Write(address,data);
   } else if (address >= 0x4000 && address <= 0x7FFF) {
@@ -165,19 +209,19 @@ void Memory::Write8(uint16_t address, uint8_t data) {
   } else if (address >= 0x8000 && address <= 0x9FFF) {
     if ((emu_->lcd_driver()->stat().mode == 3)&&(emu_->lcd_driver()->lcdc().lcd_enable==1)) {
     } else {
-     vram_[address&0x1FFF] = data;
+      vram_[(address&0x1FFF)|(vram_select<<13)] = data;
     }
   } else if (address >= 0xA000 && address <= 0xBFFF) {
     emu_->cartridge()->Write(address,data);
   } else if (address >= 0xC000 && address <= 0xCFFF) {
-    wram1_[address&0x0FFF] = data;
+     wram_[(address&0x0FFF)] = data;
   } else if (address >= 0xD000 && address <= 0xDFFF) {
-    wram2_[address&0x0FFF] = data;
+     wram_[(address&0x0FFF)+(0x1000*wram_select)] = data;
   } else if (address >= 0xE000 && address <= 0xFDFF) {
     if ((address&0xF000)==0xE000)
-     wram1_[address&0xFFF] = data;
+     wram_[(address&0x0FFF)] = data;
     if ((address&0xF000)==0xF000)
-     wram2_[address&0xFFF] = data;
+     wram_[(address&0x0FFF)+(0x1000*wram_select)] = data;
   } else if (address >= 0xFE00 && address <= 0xFE9F) {
     if ((emu_->lcd_driver()->stat().mode&0x2)&&(emu_->lcd_driver()->lcdc().lcd_enable==1)) {
     } else {
@@ -200,6 +244,18 @@ void Memory::Write8(uint16_t address, uint8_t data) {
       emu_->apu()->Write(address,data);
     } else if (address >= 0xFF40 && address <= 0xFF4B) {
       emu_->lcd_driver()->Write(address,data);
+    } else if ((address&0xFF) == 0x4F) { //FF4F - VBK - CGB Mode Only - VRAM Bank
+      ioports_[address&0xFF]=data;
+      vram_select = data&0x1;
+    } else if (address >= 0xFF51 && address <= 0xFF55) { //HDMA
+      emu_->lcd_driver()->Write(address,data);
+    } else if (address >= 0xFF68 && address <= 0xFF6B) { //color pallete
+      emu_->lcd_driver()->Write(address,data);
+    } else if ((address&0xFF) == 0x70) { //FF70 - SVBK - CGB Mode Only - WRAM Bank
+      ioports_[address&0xFF]=data;
+      wram_select = data&0x3;
+      if (wram_select == 0) 
+        wram_select = 1;
     } else {
       ioports_[address&0xFF]=data;
     }

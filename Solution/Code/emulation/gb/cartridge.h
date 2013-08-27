@@ -65,7 +65,7 @@ struct CartridgeHeader {
   uint16_t global_checksum;
 
 
-  char cgb_flag() { return title[15]; } 
+  uint8_t cgb_flag() { return title[15]; } 
   uint32_t rom_size_bytes() {
     if (rom_size < 10){
       return 0x8000 << rom_size;
@@ -105,8 +105,8 @@ class Cartridge : public Component {
   void LoadFile(const char* filename, CartridgeHeader* header);
   void LoadRam();
   void SaveRam();
-  const uint8_t* rom() { return rom_; }
-
+  uint8_t* rom() { return rom_; }
+  uint8_t* GetMemoryPointer(uint16_t address);
   uint8_t Read(uint16_t address);
   void Write(uint16_t address, uint8_t data);
   MemoryBankController* mbc;

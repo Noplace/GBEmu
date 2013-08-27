@@ -31,6 +31,9 @@ void Emu::Initialize(double base_freq_hz) {
   apu_.Initialize(this);
   thread = null;
   state = 0;
+  cycles_ = 0;
+  mode_ = EmuModeGB;
+  speed = 0;
 }
 
 void Emu::Deinitialize() {
@@ -53,8 +56,9 @@ double Emu::Step() {
   timing.span_accumulator += time_span;
   while (timing.span_accumulator >= dt) {
     //emu_->cartridge()->mbc->Tick();
-    cpu_.Step(dt);
-    timing.span_accumulator -= dt*cpu_.cycles;
+    cycles_ = 0;
+    cpu_.Step();
+    timing.span_accumulator -= dt*cycles_;
   }
 
   timing.total_cycles += timing.current_cycles-timing.prev_cycles;

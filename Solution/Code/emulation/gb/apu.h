@@ -162,16 +162,17 @@ class Apu : public Component {
   void Initialize(Emu* emu);
   void Deinitialize();
   void Reset();
-  void Step(double dt);
+  void Tick();
   uint8_t Read(uint16_t address);
   void  Write(uint16_t address, uint8_t data);
   audio::output::Interface* output() {
     return output_;
   }
  private:
+  short* output_buffer_;
   audio::output::Interface* output_;
-  uint32_t sample_counter;
-  uint32_t sample_ratio;
+  uint32_t sample_counter_;
+  uint32_t sample_ratio_;
 
   /*SweepRegister nr10_;
   SoundLengthWaveDutyRegister nr11_;
@@ -219,26 +220,33 @@ class Apu : public Component {
     }
 
     uint8_t SampleTick() {
-      if ((reg4 & 0x80)&&--freqcounter == 0) {
+      if (--freqcounter == 0) {
         sample = dutycycletable[wavepatternduty|wavepatterncounter];
         wavepatterncounter = (wavepatterncounter +1 ) % 8;
         freqcounter = freqcounterload;
       }
-      if (!dac_enable) return 0;
-      return sample;
+      if (dac_enable) {
+        return sample;
+      } else {
+        return 0;
+      }
+      
     }
   }channel1;
 
   struct : ApuChannel {
     uint8_t sample;
     uint8_t SampleTick() {
-      if ((reg4 & 0x80)&&--freqcounter == 0) {
+      if (--freqcounter == 0) {
         sample = dutycycletable[wavepatternduty|wavepatterncounter];
         wavepatterncounter = (wavepatterncounter +1 ) % 8;
         freqcounter = freqcounterload;
       }
-      if (!dac_enable) return 0;
-      return sample;
+      if (dac_enable) {
+        return sample;
+      } else {
+        return 0;
+      }
     }
   }channel2;
 
@@ -256,13 +264,16 @@ class Apu : public Component {
     }
 
     uint8_t SampleTick() {
-      if ((reg4& 0x80)&&--freqcounter == 0) {
+      if (--freqcounter == 0) {
         sample = wavedata[playback_counter];
         playback_counter = (playback_counter + 1) & 0x1F;
         freqcounter = freqcounterload;
       }
-      if (!dac_enable) return 0;
-      return sample;
+      if (dac_enable) {
+        return sample;
+      } else {
+        return 0;
+      }
     }
 
   } channel3;
@@ -276,6 +287,24 @@ class Apu : public Component {
 
 
     uint8_t SampleTick() {
+
+      if (--freqcounter == 0) {
+        uint8_t tap = 14 - (reg3 & 8);
+        const unsigned mask = ~(1u << tap);
+        unsigned feedback = shiftreg;
+        shiftreg >>= 1;
+        feedback = 1 & (feedback ^ shiftreg);
+        shiftreg = (feedback << tap) | (shiftreg & mask);
+
+        sample = shiftreg & 1;
+        freqcounter = freqcounterload;
+      } 
+      if (dac_enable) {
+        return sample;
+      } else {
+        return 0;
+      }
+      /*
       real_t noisetimems = 1000.0f/apu_->channel4freq;
       if (apu_->channel4polycounterms >= noisetimems) {
         uint8_t tap = 14 - (reg3 & 8);
@@ -289,7 +318,7 @@ class Apu : public Component {
         apu_->channel4polycounterms = 0;
       }
       if (!dac_enable) return 0;
-      return sample;
+      return sample;*/
     }
   } channel4;
   

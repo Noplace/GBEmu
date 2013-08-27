@@ -26,8 +26,18 @@ class MBCNone : public MemoryBankController {
   void Deinitialize() {
     MemoryBankController::Deinitialize();
   }
+  uint8_t* GetMemoryPointer(uint16_t address) {
+    if (address >= 0x0000 && address <= 0x3FFF) {
+      return &cartridge->rom()[address];
+    } else if (address >= 0x4000 && address <= 0x7FFF) {
+      return &cartridge->rom()[address];
+    } else if (address >= 0xA000 && address <= 0xBFFF) {
+      return 0;
+    }
+    return 0;
+  }
   uint8_t Read(uint16_t address) {
-      if (address >= 0x0000 && address <= 0x3FFF) {
+    if (address >= 0x0000 && address <= 0x3FFF) {
       return cartridge->rom()[address];
     } else if (address >= 0x4000 && address <= 0x7FFF) {
       return cartridge->rom()[address];

@@ -322,37 +322,33 @@ void Cpu::Deinitialize() {
 void Cpu::Reset() {
   memset(&reg,0,sizeof(reg));
   reg.PC = 0;
-  cycles = 0;
   ime = false;
   cpumode_ = CpuModeNormal;
   sprite_bug = 0;
 }
 
-void Cpu::Tick() {
-  ++cycles;
-  emu_->timer()->Tick();
-  emu_->memory()->Tick();
-  emu_->lcd_driver()->Step(dt);
-  emu_->apu()->Step(dt);
-}
 
-void Cpu::Step(double dt) {
+
+void Cpu::Step() {
   this->dt = dt;
-  cycles = 0;
   //reg.F._unused = 0;//always 0 according to docs
   //StopAt(0x0100);
   //StopAt(0x0073);
   if (cpumode_ == CpuModeStop) {
-    cycles = 1;
+    emu_->cycles_ = 1;
     return;
   }
   if (cpumode_ == CpuModeNormal) {
     if (sprite_bug!=0) --sprite_bug;
     opcode_pc = reg.PC;
+    if (opcode_pc == 0x100) {
+      if (emu_->mode() == EmuModeGBC) //hack
+        reg.A = 0x11;
+    }
     opcode = emu_->memory()->Read8(reg.PC++);
     (this->*(instructions[opcode]))();
   } else if (cpumode_ == CpuModeHalt) {
-    Tick();
+    emu_->ClockTick();
   }
 
   if (ime) {
@@ -399,7 +395,7 @@ void Cpu::RST() {
   pushPC();
   uint8_t t = (opcode&0x38)>>3;
   reg.PC = t*8;
-  Tick();Tick();Tick();Tick();
+  emu_->MachineTick();
 }
 
 template<uint8_t dest,uint8_t src>
@@ -487,7 +483,7 @@ void Cpu::LD() {
 
 void Cpu::LDSPHL() {
   reg.SP = reg.HL;
-  Tick();Tick();Tick();Tick();
+  emu_->MachineTick();
 }
 
 void Cpu::LDHLSPr8() {
@@ -504,7 +500,7 @@ void Cpu::LDHLSPr8() {
   reg.F.H = r1>0xFFF?1:0;
   uint32_t r2 = (a&0xFFFF) + (r8&0xFFFF);
   reg.F.C = r2>0xFFFF?1:0;*/
-  Tick();Tick();Tick();Tick();
+  emu_->MachineTick();
 }
 
 void Cpu::LDa16SP() {
@@ -536,7 +532,7 @@ void Cpu::ADD_16bit() {
   reg.F.H = r1>0xFFF?1:0;
   uint32_t r2 = (a&0xFFFF) + (b&0xFFFF);
   reg.F.C = r2>0xFFFF?1:0;
-  Tick();Tick();Tick();Tick();
+  emu_->MachineTick();
 }
 
 void Cpu::ADD_SPr8() {
@@ -547,8 +543,8 @@ void Cpu::ADD_SPr8() {
 
   updateCpuFlagC(a&0xFF,r8,0);
   updateCpuFlagH(a&0xFF,r8,0);
-  Tick();Tick();Tick();Tick();
-  Tick();Tick();Tick();Tick();
+  emu_->MachineTick();
+  emu_->MachineTick();
 }
 
 template<uint8_t dest,uint8_t src,int mode>
@@ -649,6 +645,14 @@ void Cpu::HALT() {
 
 void Cpu::STOP() {
   cpumode_ = CpuModeStop;
+  if (mem_->ioports()[0x4D] & 0x1) {
+    emu_->speed = (mem_->ioports()[0x4D])>>7;
+    if (emu_->speed == 1)
+      emu_->set_base_freq_hz(default_gb_hz*2);
+    else
+      emu_->set_base_freq_hz(default_gb_hz);
+    cpumode_ = CpuModeNormal;
+  }
 }
 
 void Cpu::CPL() {
@@ -770,7 +774,7 @@ void Cpu::PREFIX_CB() {
 void Cpu::JR() {
    int8_t disp8 = mem_->Read8(reg.PC++);
    reg.PC += disp8;
-   Tick();Tick();Tick();Tick();
+   emu_->MachineTick();
 }
 
 template<CpuFlags condbit,bool inv>
@@ -809,7 +813,7 @@ template<uint8_t dest>
 void Cpu::INC_16bit() {
   simulateSpriteBug();
   ++reg.raw16[dest];
-  Tick();Tick();Tick();Tick(); 
+  emu_->MachineTick();
 }
 
 template<uint8_t dest,int mode>
@@ -844,7 +848,7 @@ template<uint8_t dest>
 void Cpu::DEC_16bit() {
   simulateSpriteBug();
   --reg.raw16[dest];
-  Tick();Tick();Tick();Tick();
+  emu_->MachineTick();
 }
 
 void Cpu::JP() {
@@ -853,7 +857,7 @@ void Cpu::JP() {
   nn |= (mem_->Read8(reg.PC++))<<8;
   reg.PC = nn;
 
-  Tick();Tick();Tick();Tick();
+  emu_->MachineTick();
 }
 
 template<CpuFlags condbit,bool inv>
@@ -882,7 +886,7 @@ void Cpu::CALL() {
   pushPC();
   reg.PC = nn;
 
-  Tick();Tick();Tick();Tick();
+  emu_->MachineTick();
 }
 
 template<CpuFlags condbit,bool inv>
@@ -902,7 +906,7 @@ void Cpu::CALL_cc() {
 void Cpu::RET() {
   reg.PC = pop();
   reg.PC |= pop() << 8;
-  Tick();Tick();Tick();Tick();
+  emu_->MachineTick();
 }
 
 template<CpuFlags condbit,bool inv>
@@ -915,7 +919,7 @@ void Cpu::RET_cc() {
   } else {
    
   }
-   Tick();Tick();Tick();Tick();
+  emu_->MachineTick();
 }
 
 
@@ -924,7 +928,7 @@ void Cpu::PUSH() {
   simulateSpriteBug();
   push(reg.raw16[src]>>8);
   push(reg.raw16[src]&0xFF);
-  Tick();Tick();Tick();Tick();
+  emu_->MachineTick();
 }
 
 template<uint8_t dest>

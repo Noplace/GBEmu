@@ -61,12 +61,16 @@ class LCDDriver : public Component {
   void Initialize(Emu* emu);
   void Deinitialize();
   void Reset();
-  void Step(double dt);
+  void Tick();
   uint8_t Read(uint16_t address);
   void    Write(uint16_t address, uint8_t data);
-  void RenderBGLine(uint8_t* cmline);
-  void RenderWindowLine(uint8_t* cmline);
-  void RenderSpriteLine(uint8_t* cmline);
+  void RenderBGLine(uint16_t* cmline);
+  void RenderWindowLine(uint16_t* cmline);
+  void RenderSpriteLine(uint16_t* cmline);
+
+  void RenderCGBBGLine(uint16_t* cmline);
+  void RenderCGBWindowLine(uint16_t* cmline);
+  void RenderCGBSpriteLine(uint16_t* cmline);
   void RenderLine();
   void RenderAllBGTiles();
   const LCDControlRegister& lcdc() { return lcdc_; }
@@ -76,7 +80,28 @@ class LCDDriver : public Component {
      uint8_t* oam;
      bool start;
    }spritedma;
-   uint8_t* colormap;
+   struct {
+     union {
+      struct {
+        uint8_t low;
+        uint8_t high;
+      };
+      uint16_t raw;
+     }src;
+     union {
+      struct {
+        uint8_t low;
+        uint8_t high;
+      };
+      uint16_t raw;
+     }dest;
+    uint16_t length;
+    uint8_t mode;
+    uint8_t active() {
+      return length == 0; //0 is active
+    }
+   }hdma;
+   uint16_t* colormap;
    LCDControlRegister lcdc_;
    LCDStatusRegister stat_;
    uint8_t scroll_x,scroll_y;
@@ -86,6 +111,9 @@ class LCDDriver : public Component {
    uint8_t bg_pallete_data;
    uint8_t obj_pallete1_data;
    uint8_t obj_pallete2_data;
+   uint8_t cgb_bgpal_index,cgb_bgpal_data,cgb_sppal_index,cgb_sppal_data;
+   uint8_t cgb_bgpal[64];
+   uint8_t cgb_sppal[64];
    uint64_t mode3_extra_cycles;
    uint64_t counter1,counter2;
    LCDScreenMode lcdscreenmode_;

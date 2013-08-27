@@ -114,7 +114,7 @@ void ReserveBottomMemory()
 
 
 int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
-  ReserveBottomMemory();
+  //ReserveBottomMemory();
   
   app::Application app(hInstance,lpCmdLine,nShowCmd);
   //app.InitConsole();

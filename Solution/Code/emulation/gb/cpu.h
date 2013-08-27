@@ -82,14 +82,12 @@ class Cpu : public Component {
  public:
   uint16_t opcode_pc;
   uint8_t sprite_bug;
-  uint64_t cycles;
   Cpu();
   ~Cpu();
   void Initialize(Emu* emu);
   void Deinitialize();
   void Reset();
-  void Tick();
-  void Step(double dt);
+  void Step();
   void Wake() {
     cpumode_ = CpuModeNormal;
   }
