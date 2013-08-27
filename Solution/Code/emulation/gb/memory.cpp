@@ -141,7 +141,7 @@ uint8_t* Memory::GetMemoryPointer(uint16_t address) {
 
 uint8_t Memory::Read8(uint16_t address) {
   uint8_t result = 0;
-  emu_->MachineTick();
+  
   if (address >= 0x0000 && address <= 0x3FFF) {
     if (ioports_[0x50] == 0 && address < 0x100) { 
       result = dmgrom[address&0xFF];
@@ -201,7 +201,7 @@ uint8_t Memory::Read8(uint16_t address) {
 }
 
 void Memory::Write8(uint16_t address, uint8_t data) {
-  emu_->MachineTick();
+  
   if (address >= 0x0000 && address <= 0x3FFF) {
     emu_->cartridge()->Write(address,data);
   } else if (address >= 0x4000 && address <= 0x7FFF) {
@@ -265,6 +265,16 @@ void Memory::Write8(uint16_t address, uint8_t data) {
     interrupt_enable_register_ = data;
   }
   
+}
+
+uint8_t Memory::ClockedRead8(uint16_t address) {
+  emu_->MachineTick();
+  return Read8(address);
+}
+
+void Memory::ClockedWrite8(uint16_t address, uint8_t data) {
+  emu_->MachineTick();
+  Write8(address,data);
 }
 
 void Memory::Tick() {

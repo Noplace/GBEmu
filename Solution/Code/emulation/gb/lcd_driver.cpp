@@ -260,7 +260,7 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       //OutputDebugString(str);
       auto dest = emu_->memory()->oam();
       for (int i=0;i<160;++i)
-        *dest++ = emu_->memory()->Read8(srcaddr++);
+        *dest++ = emu_->memory()->ClockedRead8(srcaddr++);
       break;
     }
     case 0xFF47:
@@ -439,8 +439,9 @@ void LCDDriver::RenderWindowLine(uint16_t* cmline) {
     };
 
     if ((ly >= wy)&&(wx>=7&&wx<=166)) { 
-      uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
-      uint8_t* tilemap = &emu_->memory()->vram()[lcdc_.window_tile_map ==0?0x1800:0x1C00];
+      auto vram = emu_->memory()->vram();
+      uint8_t* tiledata = &vram[lcdc_.tile_data ==0?0x0800:0x0000];
+      uint8_t* tilemap = &vram[lcdc_.window_tile_map ==0?0x1800:0x1C00];
       for (int i=(wx-7);i<=(wx-7)+166-7;++i) {
         auto tileindex = tilemap[(mapoffset<<5) + lineoffset];
         if(lcdc_.tile_data == 0) {

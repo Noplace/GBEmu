@@ -106,7 +106,7 @@ struct ApuChannel {
   Apu* apu_;
   SweepRegister reg0;
   uint8_t reg1,reg2,reg3,reg4;
-  uint16_t freqcounterload,freqcounter,sweepfreqcounter;
+  uint32_t freqcounterload,freqcounter,sweepfreqcounter;
   VolumeEnvelope envelope;
   uint8_t wavepatternduty,wavepatterncounter;
   uint8_t sweepcounter;
@@ -335,7 +335,7 @@ class Apu : public Component {
     channel4.EnvelopeTick();
   }
 
-  real_t channel4freq,channel4polycounterms;
+  //real_t channel4freq,channel4polycounterms;
   SoundChannelControlVolumeRegister nr50_;
   SoundOutputTerminalRegister nr51_;
   uint8_t nr52_; 

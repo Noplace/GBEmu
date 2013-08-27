@@ -33,7 +33,7 @@ void Emu::Initialize(double base_freq_hz) {
   state = 0;
   cycles_ = 0;
   mode_ = EmuModeGB;
-  speed = 0;
+  speed = 1;
 }
 
 void Emu::Deinitialize() {

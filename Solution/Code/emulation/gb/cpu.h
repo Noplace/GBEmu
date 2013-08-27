@@ -130,11 +130,11 @@ class Cpu : public Component {
   }
 
   void push(uint8_t data) {
-    mem_->Write8(--reg.SP,data);
+    mem_->ClockedWrite8(--reg.SP,data);
   }
 
   uint8_t pop() {
-    return mem_->Read8(reg.SP++);
+    return mem_->ClockedRead8(reg.SP++);
   }
 
   template<uint8_t dest,uint8_t src,int mode>
@@ -144,10 +144,10 @@ class Cpu : public Component {
       b = reg.raw8[src];
     } else if (mode == 1) {
       a = reg.raw8[dest];
-      b = mem_->Read8(reg.raw16[src]);
+      b = mem_->ClockedRead8(reg.raw16[src]);
     } else if (mode == 2) {
       a = reg.raw8[dest];
-      b = mem_->Read8(reg.PC++);
+      b = mem_->ClockedRead8(reg.PC++);
     }
   }
 

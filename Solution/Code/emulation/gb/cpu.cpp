@@ -345,7 +345,7 @@ void Cpu::Step() {
       if (emu_->mode() == EmuModeGBC) //hack
         reg.A = 0x11;
     }
-    opcode = emu_->memory()->Read8(reg.PC++);
+    opcode = emu_->memory()->ClockedRead8(reg.PC++);
     (this->*(instructions[opcode]))();
   } else if (cpumode_ == CpuModeHalt) {
     emu_->ClockTick();
@@ -405,79 +405,79 @@ void Cpu::LDrr() {
 
 template<uint8_t dest,uint8_t src>
 void Cpu::LD$rr() { //(dest), src
-  mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+  mem_->ClockedWrite8(reg.raw16[dest],reg.raw8[src]);
 }
 
 template<uint8_t dest,uint8_t src>
 void Cpu::LDr$r() {
-  reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+  reg.raw8[dest] = mem_->ClockedRead8(reg.raw16[src]);
 }
 
 template<uint8_t dest,uint8_t src>
 void Cpu::LD$FF00rr() {
-  mem_->Write8(0xFF00+reg.raw8[dest],reg.raw8[src]);
+  mem_->ClockedWrite8(0xFF00+reg.raw8[dest],reg.raw8[src]);
 }
 
 template<uint8_t dest,uint8_t src>
 void Cpu::LDr$FF00r() {
-  reg.raw8[dest] = mem_->Read8(0xFF00+reg.raw8[src]);
+  reg.raw8[dest] = mem_->ClockedRead8(0xFF00+reg.raw8[src]);
 }
 
 template<uint8_t dest>
 void Cpu::LDrd16() {
-  reg.raw16[dest] = mem_->Read8(reg.PC++);
-  reg.raw16[dest] |= (mem_->Read8(reg.PC++))<<8;
+  reg.raw16[dest] = mem_->ClockedRead8(reg.PC++);
+  reg.raw16[dest] |= (mem_->ClockedRead8(reg.PC++))<<8;
   if (dest != RegAF && (reg.raw16[dest]>=0xFE00&&reg.raw16[dest]<=0xFEFF) && emu_->lcd_driver()->lcdc().lcd_enable == 1)
     sprite_bug = 2;
 }
 
 template<uint8_t dest,uint8_t src>
 void Cpu::LDI$regreg() {
-  mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+  mem_->ClockedWrite8(reg.raw16[dest],reg.raw8[src]);
   ++reg.raw16[dest];
 }
 
 template<uint8_t dest,uint8_t src>
 void Cpu::LDD$regreg() {
-  mem_->Write8(reg.raw16[dest],reg.raw8[src]);
+  mem_->ClockedWrite8(reg.raw16[dest],reg.raw8[src]);
   --reg.raw16[dest];
 }
 
 template<uint8_t dest,uint8_t src>
 void Cpu::LDIreg$reg() {
   simulateSpriteBug();
-  reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+  reg.raw8[dest] = mem_->ClockedRead8(reg.raw16[src]);
   ++reg.raw16[src];
 }
 
 template<uint8_t dest,uint8_t src>
 void Cpu::LDDreg$reg() {
   simulateSpriteBug();
-  reg.raw8[dest] = mem_->Read8(reg.raw16[src]);
+  reg.raw8[dest] = mem_->ClockedRead8(reg.raw16[src]);
   --reg.raw16[src];
 }
 
 template<uint8_t dest,uint8_t src,int mode>
 void Cpu::LD() {
   if (mode == 10) { //dest,d8
-    reg.raw8[dest] = mem_->Read8(reg.PC++);
+    reg.raw8[dest] = mem_->ClockedRead8(reg.PC++);
   }else if (mode == 11) { //(dest),d8
-    auto d8 = mem_->Read8(reg.PC++);
-    mem_->Write8(reg.raw16[dest],d8);
+    auto d8 = mem_->ClockedRead8(reg.PC++);
+    mem_->ClockedWrite8(reg.raw16[dest],d8);
   } else if (mode == 12) { //0xFF00+d8 src
-    uint8_t a8 = mem_->Read8(reg.PC++);
-    mem_->Write8(0xFF00+a8,reg.raw8[src]);
+    uint8_t a8 = mem_->ClockedRead8(reg.PC++);
+    mem_->ClockedWrite8(0xFF00+a8,reg.raw8[src]);
   } else if (mode == 13) { //dest,0xFF00+d8 
-    uint8_t a8 = mem_->Read8(reg.PC++);
-    reg.raw8[dest] = mem_->Read8(0xFF00+a8);
+    uint8_t a8 = mem_->ClockedRead8(reg.PC++);
+    reg.raw8[dest] = mem_->ClockedRead8(0xFF00+a8);
   } else if (mode == 14) { //(d16),src
-    uint16_t d16 = mem_->Read8(reg.PC++);
-    d16 |= (mem_->Read8(reg.PC++))<<8;
-    mem_->Write8(d16,reg.raw8[src]);
+    uint16_t d16 = mem_->ClockedRead8(reg.PC++);
+    d16 |= (mem_->ClockedRead8(reg.PC++))<<8;
+    mem_->ClockedWrite8(d16,reg.raw8[src]);
   } else if (mode == 15) { //src,(d16)
-    uint16_t d16 = mem_->Read8(reg.PC++);
-    d16 |= (mem_->Read8(reg.PC++))<<8;
-    reg.raw8[dest] = mem_->Read8(d16);
+    uint16_t d16 = mem_->ClockedRead8(reg.PC++);
+    d16 |= (mem_->ClockedRead8(reg.PC++))<<8;
+    reg.raw8[dest] = mem_->ClockedRead8(d16);
   }
 }
 
@@ -492,7 +492,7 @@ void Cpu::LDHLSPr8() {
 
   reg.F.N  = reg.F.Z = 0;
   uint16_t a = reg.SP;
-  int8_t r8 = mem_->Read8(reg.PC++);
+  int8_t r8 = mem_->ClockedRead8(reg.PC++);
   reg.HL = (reg.SP + r8);
   updateCpuFlagC(a&0xFF,r8,0);
   updateCpuFlagH(a&0xFF,r8,0);
@@ -504,10 +504,10 @@ void Cpu::LDHLSPr8() {
 }
 
 void Cpu::LDa16SP() {
-  uint16_t a16 = mem_->Read8(reg.PC++);
-  a16 |= (mem_->Read8(reg.PC++))<<8;
-  mem_->Write8(a16,reg.SP&0xFF);
-  mem_->Write8(a16+1,reg.SP>>8);
+  uint16_t a16 = mem_->ClockedRead8(reg.PC++);
+  a16 |= (mem_->ClockedRead8(reg.PC++))<<8;
+  mem_->ClockedWrite8(a16,reg.SP&0xFF);
+  mem_->ClockedWrite8(a16+1,reg.SP>>8);
 }
 
 template<uint8_t dest,uint8_t src,int mode>
@@ -538,7 +538,7 @@ void Cpu::ADD_16bit() {
 void Cpu::ADD_SPr8() {
   reg.F.N  = reg.F.Z = 0;
   uint16_t a = reg.SP;
-  int8_t r8 = mem_->Read8(reg.PC++);
+  int8_t r8 = mem_->ClockedRead8(reg.PC++);
   reg.SP += r8;
 
   updateCpuFlagC(a&0xFF,r8,0);
@@ -646,8 +646,8 @@ void Cpu::HALT() {
 void Cpu::STOP() {
   cpumode_ = CpuModeStop;
   if (mem_->ioports()[0x4D] & 0x1) {
-    emu_->speed = (mem_->ioports()[0x4D])>>7;
-    if (emu_->speed == 1)
+    emu_->speed = ((mem_->ioports()[0x4D])>>7)+1;
+    if (emu_->speed == 2)
       emu_->set_base_freq_hz(default_gb_hz*2);
     else
       emu_->set_base_freq_hz(default_gb_hz);
@@ -666,14 +666,14 @@ const CpuRegisterNames8 reg_index[8] = {
 };
 
 void Cpu::PREFIX_CB() {
-  uint8_t code = emu_->memory()->Read8(reg.PC++);
+  uint8_t code = emu_->memory()->ClockedRead8(reg.PC++);
 
   auto getr = [=]() {
     if ((code&0x7) != 6) {
       return reg.raw8[reg_index[code&0x7]];
     } else {
 
-      return mem_->Read8(reg.HL);
+      return mem_->ClockedRead8(reg.HL);
     }
   };
 
@@ -681,7 +681,7 @@ void Cpu::PREFIX_CB() {
     if ((code&0x7) != 6) {
       reg.raw8[reg_index[code&0x7]] = r;
     } else {
-      mem_->Write8(reg.HL,r);
+      mem_->ClockedWrite8(reg.HL,r);
     }
   };
 
@@ -772,7 +772,7 @@ void Cpu::PREFIX_CB() {
 }
 
 void Cpu::JR() {
-   int8_t disp8 = mem_->Read8(reg.PC++);
+   int8_t disp8 = mem_->ClockedRead8(reg.PC++);
    reg.PC += disp8;
    emu_->MachineTick();
 }
@@ -785,7 +785,7 @@ void Cpu::JR_cc() {
   if (table[inv]&1) {
     JR();
   } else {
-    int8_t disp8 = mem_->Read8(reg.PC++);
+    int8_t disp8 = mem_->ClockedRead8(reg.PC++);
   }
 
 }
@@ -799,10 +799,10 @@ void Cpu::INC_8bit() {
     ++reg.raw8[dest];
     updateCpuFlagZ(reg.raw8[dest]);
   } else {
-    uint8_t data = mem_->Read8(reg.HL);
+    uint8_t data = mem_->ClockedRead8(reg.HL);
     updateCpuFlagH(data,1,0);
     ++data;
-    mem_->Write8(reg.HL,data);
+    mem_->ClockedWrite8(reg.HL,data);
      updateCpuFlagZ(data);
   }
     
@@ -829,7 +829,7 @@ void Cpu::DEC_8bit() {
       reg.F.H = 0;
     updateCpuFlagZ(reg.raw8[dest]);
   } else {
-    uint8_t data = mem_->Read8(reg.HL);
+    uint8_t data = mem_->ClockedRead8(reg.HL);
 
     //updateCpuFlagH(data,1,1);
     --data;
@@ -838,7 +838,7 @@ void Cpu::DEC_8bit() {
     else
       reg.F.H = 0;
     updateCpuFlagZ(data);
-    mem_->Write8(reg.HL,data);
+    mem_->ClockedWrite8(reg.HL,data);
 
   }
   
@@ -853,8 +853,8 @@ void Cpu::DEC_16bit() {
 
 void Cpu::JP() {
   uint16_t nn;
-  nn = mem_->Read8(reg.PC++);
-  nn |= (mem_->Read8(reg.PC++))<<8;
+  nn = mem_->ClockedRead8(reg.PC++);
+  nn |= (mem_->ClockedRead8(reg.PC++))<<8;
   reg.PC = nn;
 
   emu_->MachineTick();
@@ -869,8 +869,8 @@ void Cpu::JP_cc() {
     JP();
   } else {
     uint16_t nn;
-    nn = mem_->Read8(reg.PC++);
-    nn |= (mem_->Read8(reg.PC++))<<8;
+    nn = mem_->ClockedRead8(reg.PC++);
+    nn |= (mem_->ClockedRead8(reg.PC++))<<8;
   }
 }
 
@@ -881,8 +881,8 @@ void Cpu::JP_HL() {
 
 void Cpu::CALL() {
   uint16_t nn;
-  nn = mem_->Read8(reg.PC++);
-  nn |= (mem_->Read8(reg.PC++))<<8;
+  nn = mem_->ClockedRead8(reg.PC++);
+  nn |= (mem_->ClockedRead8(reg.PC++))<<8;
   pushPC();
   reg.PC = nn;
 
@@ -898,8 +898,8 @@ void Cpu::CALL_cc() {
     CALL();
   } else {
     uint16_t nn;
-    nn = mem_->Read8(reg.PC++);
-    nn |= (mem_->Read8(reg.PC++))<<8;
+    nn = mem_->ClockedRead8(reg.PC++);
+    nn |= (mem_->ClockedRead8(reg.PC++))<<8;
   }
 }
 
@@ -995,11 +995,11 @@ void Cpu::CP_reg() {
 }
 
 void Cpu::CP_d8() {
-  CP(reg.A,mem_->Read8(reg.PC++));
+  CP(reg.A,mem_->ClockedRead8(reg.PC++));
 }
 
 void Cpu::CP_HL() {
-  CP(reg.A,mem_->Read8(reg.HL));
+  CP(reg.A,mem_->ClockedRead8(reg.HL));
 }
 
 void Cpu::DI() {

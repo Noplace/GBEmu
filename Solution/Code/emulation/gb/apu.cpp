@@ -71,8 +71,8 @@ void Apu::Initialize(Emu* emu) {
 
 void Apu::Reset() {
   
-  channel4freq = 0;
-  channel4polycounterms = 0;
+  //channel4freq = 0;
+ // channel4polycounterms = 0;
  
   channel1.Initialize(this,1);
   channel2.Initialize(this,2);
@@ -148,7 +148,7 @@ void Apu::Deinitialize() {
 }
 
 void Apu::Tick() {
-  const double dt =  1000.0 / emu_->base_freq_hz();
+  //const double dt =  1000.0 / emu_->base_freq_hz();
   if ((nr52_&0x80)==0)
     return;
 
@@ -160,12 +160,12 @@ void Apu::Tick() {
   //if ((maincounter & 0x1) == 0) {
       channel3.SampleTick();
   //}
-  channel4polycounterms += float(dt);
+  //channel4polycounterms += float(dt);
   channel4.SampleTick();
 
   maincounter = (maincounter+1) & 0x1F;
   //++ulencounterclock;
-  if (++frame_seq_clock == 8192) {
+  if (++frame_seq_clock == 8192*emu_->speed) {
     switch (frame_seq_step) {
       case 0:LengthTick(); break;
       case 1: break;
@@ -392,7 +392,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
       channel1.reg4 = data;
       uint32_t x = channel1.reg3;
       x |= (channel1.reg4&0x7)<<8;
-      channel1.freqcounterload = (2048-x)<<2; //*4
+      channel1.freqcounterload = ((2048-x)<<2)*emu_->speed; //*4
       
       //channel1freq = 131072.0f/(2048-x);
       if (channel1.reg4 & 0x80) {
@@ -402,7 +402,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
         channel1.envcounterload = (channel1.envelope.env_sweep);
         channel1.envcounter = channel1.envcounterload;
         channel1.sweepcounter = channel1.reg0.sweep_time;
-        channel1.sweepfreqcounter = (x>>channel1.reg0.sweep_shift)<<2;
+        channel1.sweepfreqcounter = ((x>>channel1.reg0.sweep_shift)<<2)*emu_->speed;
         channel1.freqcounter = channel1.freqcounterload;
         
       
@@ -455,7 +455,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
       channel2.reg4 = data;
       uint32_t x = channel2.reg3;
       x |= (channel2.reg4&0x7)<<8;
-      channel2.freqcounterload = (2048-x)<<2;
+      channel2.freqcounterload = ((2048-x)<<2)*emu_->speed;
       //channel2freq = 131072.0f/(2048-x);
       channel2.enable_length_clock = (data&0x40)==0x40;
       if (channel2.reg4 & 0x80) {
@@ -500,7 +500,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
       channel3.reg4 = data;
       uint32_t x = channel3.reg3;
       x |= (channel3.reg4&0x7)<<8;
-      channel3.freqcounterload = (2048-x)<<1;
+      channel3.freqcounterload = ((2048-x)<<1)*emu_->speed;
       //if (nr34_&0x40)
         //channel3.soundlength_ms = 1000.0f * (256.0f-nr31_)*(1/256.0f);
       //channel3.enable_length_clock = data&0x40==0x40;
@@ -536,19 +536,19 @@ void Apu::Write(uint16_t address, uint8_t data) {
       break;
     case 0xFF23: {
       channel4.reg4 = data;
-      float r = float(channel4.reg3&0x7);
-      float s = float((channel4.reg3&0xF0)>>4);
-      channel4freq = 524288.0f/r/powf(2.0,s+1);
+     // float r = float(channel4.reg3&0x7);
+      //float s = float((channel4.reg3&0xF0)>>4);
+      //channel4freq = 524288.0f/r/powf(2.0,s+1);
       channel4.enable_length_clock = (data&0x40)==0x40;
       const uint16_t divisors[8] = {8,16,32,48,64,80,96,112};
       auto divisor = divisors[channel4.reg3&0x7];
       auto shift = (channel4.reg3&0xF0)>>4;
-      channel4.freqcounterload = divisor<<shift;
+      channel4.freqcounterload = (divisor<<shift)*emu_->speed;
       if (channel4.reg4 & 0x80) {
         if (channel4.dac_enable) //dac
           nr52_ |= 0x08;
         channel4.freqcounter = channel4.freqcounterload;
-        channel4polycounterms = 0;
+        //channel4polycounterms = 0;
         channel4.envelope.raw = channel4.reg2;
         channel4.envcounterload = (channel4.envelope.env_sweep);
         channel4.envcounter = channel4.envcounterload;

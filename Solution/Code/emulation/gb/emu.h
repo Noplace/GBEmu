@@ -63,17 +63,18 @@ class Emu {
     ++cycles_;
     timer_.Tick();
     memory_.Tick();
-    if (speed == 0) {
+    if (speed == 1) {
       lcd_driver_.Tick();
-      apu_.Tick();
+      
     } else {
       static bool s = false;
       if (s == false) {
         lcd_driver_.Tick();
-        apu_.Tick();
+        
       }
       s = !s;
     }
+    apu_.Tick();
   }
   void MachineTick() {
     ClockTick();
