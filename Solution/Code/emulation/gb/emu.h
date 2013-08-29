@@ -29,9 +29,9 @@ enum EmuMode { EmuModeGB,EmuModeGBC };
 
 class Emu {
  public:
-  uint64_t cycles_;
+  uint64_t cpu_cycles_,last_cpu_cycles_,cpu_cycles_per_step_;
   uint8_t speed;
-  Emu():cycles_(0) {}
+  Emu():cpu_cycles_(0),last_cpu_cycles_(0),cpu_cycles_per_step_(0) {}
   ~Emu() {}
   void Initialize(double base_freq_hz);
   void Deinitialize();
@@ -58,9 +58,11 @@ class Emu {
   const double fps() { return timing.fps; }
   const double base_freq_hz() { return base_freq_hz_; }
   void set_base_freq_hz(double base_freq_hz) { base_freq_hz_ = base_freq_hz; }
+  double frequency_mhz() { return frequency_mhz_; }
+  uint64_t cycles_per_second() { return cycles_per_second_; }
 
   void ClockTick() {
-    ++cycles_;
+    ++cpu_cycles_per_step_;
     timer_.Tick();
     memory_.Tick();
     if (speed == 1) {
@@ -84,6 +86,7 @@ class Emu {
   }
 
  private:
+  uint64_t cycles_per_second_;
   utilities::Timer utimer;
   Cartridge cartridge_;
   Cpu cpu_;
@@ -92,7 +95,7 @@ class Emu {
   Apu apu_;
   Timer timer_;
   std::thread* thread;
-  double base_freq_hz_;
+  double base_freq_hz_,frequency_mhz_;
   EmuMode mode_;
   struct {
     uint64_t extra_cycles;
@@ -100,12 +103,11 @@ class Emu {
     uint64_t prev_cycles;
     uint64_t total_cycles;
     uint32_t fps_counter;
-    uint32_t ups_counter;
     double fps;
-    uint32_t ups;
-    double render_time_span;
+    double misc_time_span;
     double fps_time_span;
     double span_accumulator;
+    double time_span;
 
   } timing;
   static void thread_func(Emu* emu);

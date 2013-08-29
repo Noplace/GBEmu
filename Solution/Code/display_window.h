@@ -53,22 +53,6 @@ class DisplayWindow: public core::windows::Window {
     emulation::gb::Emu emu;
     GLuint texture;
     dialogs::Options options;
-
-    utilities::Timer timer;
-    struct {
-      uint64_t extra_cycles;
-      uint64_t current_cycles;
-      uint64_t prev_cycles;
-      uint64_t total_cycles;
-      uint32_t fps_counter;
-      uint32_t ups_counter;
-      uint32_t fps;
-      uint32_t ups;
-      double render_time_span;
-      double fps_time_span;
-      double span_accumulator;
-
-    } timing;
     HINSTANCE instance;
 };
 

@@ -220,6 +220,7 @@
     <ClInclude Include="Code\emulation\gb\mbc\mbc3.h" />
     <ClInclude Include="Code\emulation\gb\mbc\mbc5.h" />
     <ClInclude Include="Code\emulation\gb\mbc\none.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\mbc_pocketcamera.h" />
     <ClInclude Include="Code\emulation\gb\memory.h" />
     <ClCompile Include="Code\emulation\gb\apu.cpp" />
     <ClCompile Include="Code\emulation\gb\timer.cpp" />

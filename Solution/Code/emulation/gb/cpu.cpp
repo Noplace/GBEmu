@@ -335,7 +335,7 @@ void Cpu::Step() {
   //StopAt(0x0100);
   //StopAt(0x0073);
   if (cpumode_ == CpuModeStop) {
-    emu_->cycles_ = 1;
+    emu_->cpu_cycles_per_step_ = 1;
     return;
   }
   if (cpumode_ == CpuModeNormal) {

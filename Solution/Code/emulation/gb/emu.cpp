@@ -31,7 +31,8 @@ void Emu::Initialize(double base_freq_hz) {
   apu_.Initialize(this);
   thread = null;
   state = 0;
-  cycles_ = 0;
+  cpu_cycles_ = 0;
+  last_cpu_cycles_ = 0;
   mode_ = EmuModeGB;
   speed = 1;
 }
@@ -49,27 +50,40 @@ void Emu::Deinitialize() {
 double Emu::Step() {
   const double dt =  1000.0 / base_freq_hz_;//options.cpu_freq(); 0.00058f;//16.667f;
   timing.current_cycles = utimer.GetCurrentCycles();
-  double time_span =  (timing.current_cycles - timing.prev_cycles) * utimer.resolution();
-  if (time_span > 500.0) //clamping time
-    time_span = 500.0;
+  timing.time_span =  (timing.current_cycles - timing.prev_cycles) * utimer.resolution();
+  if (timing.time_span > 500.0) //clamping time
+    timing.time_span = 500.0;
 
-  timing.span_accumulator += time_span;
+  timing.span_accumulator += timing.time_span;
   while (timing.span_accumulator >= dt) {
-    //emu_->cartridge()->mbc->Tick();
-    cycles_ = 0;
+    cartridge()->MBCStep(dt);
+    cpu_cycles_per_step_ = 0;
     cpu_.Step();
-    timing.span_accumulator -= dt*cycles_;
+    timing.span_accumulator -= dt*cpu_cycles_per_step_;
+    cpu_cycles_ += cpu_cycles_per_step_;
+  }
+
+  timing.misc_time_span += timing.time_span;
+  if (timing.misc_time_span > 1000.0) {
+    cycles_per_second_ = cpu_cycles_ - last_cpu_cycles_;
+    frequency_mhz_ = double( cycles_per_second_ ) * 0.000001f;
+    last_cpu_cycles_ = cpu_cycles_;
+    timing.misc_time_span = 0;
   }
 
   timing.total_cycles += timing.current_cycles-timing.prev_cycles;
   timing.prev_cycles = timing.current_cycles;
-  timing.fps_time_span += time_span;
+  timing.fps_time_span += timing.time_span;
   return timing.span_accumulator;
 }
 
 void Emu::Run() {
   if (thread!=nullptr && state == 1) return;
   state = 1;
+  frequency_mhz_ = 0;
+  cycles_per_second_ = 0;
+  cpu_cycles_ = 0;
+  last_cpu_cycles_ = 0;
   thread = new std::thread(Emu::thread_func,this);
 }
 
@@ -97,7 +111,6 @@ void Emu::Reset() {
 }
 
 void Emu::Render() {
-  timing.render_time_span = 0;
   ++timing.fps_counter;
   on_render();
   if (timing.fps_time_span >= 1000.0) {

@@ -78,7 +78,7 @@ void OpenGL::Initialize(HWND window_handle,int width,int height) {
   if (init_ == true)
     return;
   Graphics::Initialize(window_handle,width,height);
-  init_ = true;
+
   // get the device context (DC)
   device_context_ = GetDC( window_handle_ );
   if (device_context_ == nullptr) {
@@ -89,7 +89,7 @@ void OpenGL::Initialize(HWND window_handle,int width,int height) {
   ZeroMemory( &pfd, sizeof( pfd ) );
   pfd.nSize = sizeof( pfd );
   pfd.nVersion = 1;
-  pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL |
+  pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_SUPPORT_GDI |
                 PFD_DOUBLEBUFFER;
   pfd.iPixelType = PFD_TYPE_RGBA;
   pfd.cColorBits = 32;
@@ -99,19 +99,27 @@ void OpenGL::Initialize(HWND window_handle,int width,int height) {
   SetPixelFormat( device_context_, iFormat, &pfd );
 
   // create and enable the render context (RC)
-  render_context_ = wglCreateContext( device_context_ );
-  wglMakeCurrent( device_context_, render_context_ );
+  render_context_ = wglCreateContext(device_context_);
+  wglMakeCurrent(device_context_,render_context_);
   
   //const GLubyte* str = glGetString(GL_EXTENSIONS);
   glShadeModel(GL_SMOOTH);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  auto e = glGetError();
   SetDisplaySize(width,height);
+  
+  fontlistbase = 1000;
+  SelectObject(device_context_, GetStockObject (SYSTEM_FONT)); 
+  wglUseFontBitmaps(device_context_, 0, 255, fontlistbase); 
+  init_ = true;
 }
 
 void OpenGL::Deinitialize() {
   if (init_ == true) {
     wglMakeCurrent( NULL, NULL );
     wglDeleteContext( render_context_ );
-    ReleaseDC( window_handle_, device_context_ );
+    ReleaseDC(window_handle_,device_context_);
     init_ = false;
   }
 }
@@ -120,7 +128,9 @@ void OpenGL::SetDisplaySize(int width,int height) {
   display_width_ = width;
   display_height_ = height;
   glClearColor(0.25f, 0.25f, 0.5f, 0.0f);
+  auto e = glGetError();
   glViewport(0, 0, display_width_, display_height_);					// Reset The Current Viewport
+  e = glGetError();
 	/*glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glLoadIdentity();							// Reset The Projection Matrix
 	gluPerspective(45.0f,(GLfloat)display_width_/(GLfloat)display_height_,0.1f,100.0f);
@@ -131,6 +141,26 @@ void OpenGL::SetDisplaySize(int width,int height) {
   glOrtho(0, display_width_, display_height_, 0, 0, 1);
   glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();							// Reset The Modelview Matrix
+  e = glGetError();
+}
+
+void OpenGL::PrintText(int x,int y,const char* str,size_t len) {
+
+  glPushAttrib(GL_LIST_BIT);
+  glPushAttrib(GL_LIGHTING_BIT);
+  glPushAttrib(GL_TEXTURE_BIT);
+  glDisable(GL_TEXTURE_2D);
+  glDisable(GL_LIGHTING);
+
+  glColor3ub(0xFF,0xFF,0xFF);
+  glRasterPos2i(x,y);
+  glListBase(fontlistbase);
+  glCallLists(len, GL_UNSIGNED_BYTE, str);
+
+
+  glPopAttrib();
+  glPopAttrib();
+  glPopAttrib();
 }
 
 void OpenGL::Clear(RGBQUAD color) {
@@ -138,6 +168,19 @@ void OpenGL::Clear(RGBQUAD color) {
 }
 
 void OpenGL::Render() {
+ /* HFONT font,oldfont;
+  font = (HFONT)GetStockObject(ANSI_VAR_FONT);
+  if (oldfont = (HFONT)SelectObject(device_context_,font)) {
+    TextOut(device_context_,0,0,"Hello World",11);
+    SelectObject(device_context_,oldfont);
+  }*/
+  //PAINTSTRUCT ps;
+  //auto hdc = BeginPaint(handle(), &ps);
+  // Draw the text string
+  //SetTextColor(device_context_, RGB(255, 0, 0));
+
+  // Release the device context
+  //EndPaint(handle(), &ps);
   SwapBuffers(device_context_);
 }
 
@@ -151,6 +194,7 @@ GLuint OpenGL::CreateTexture() {
   glBindTexture( GL_TEXTURE_2D, texture );
   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+  
   return texture;
 }
 

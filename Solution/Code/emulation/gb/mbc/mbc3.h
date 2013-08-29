@@ -32,8 +32,8 @@ class MBC3 : public MemoryBankController {
     mode = 0;
     rtc_enable = 0;
     rtc_select = 0;
-    counter1 = 0;
-    counter2 = 0;
+
+    timecounter = 0;
     memset(rtc,0,sizeof(rtc));
     switch(cartridge->header->cartridge_type) {
       case 0x0F:battery_ = true; break;
@@ -50,14 +50,14 @@ class MBC3 : public MemoryBankController {
   }
   uint8_t* GetMemoryPointer(uint16_t address) {
     if (address >= 0x0000 && address <= 0x3FFF) {
-      return &cartridge->rom()[address];
+      return &rom_[address];
     } else if (address >= 0x4000 && address <= 0x7FFF) {
-      return &cartridge->rom()[(address&0x3FFF)+(rom_bank_number<<14)];
+      return &rom_[(address&0x3FFF)|((rom_bank_number)<<14)];
     } else if (address >= 0xA000 && address <= 0xBFFF) {
 
 
       if ((eram_enable&0x0A)==0x0A&&mode==0 && eram_size)
-        return &eram_[(address&0x1FFF)+(0x2000*ram_bank_number*mode)];
+        return &eram_[(address&0x1FFF)|(ram_bank_number<<13)];
       
       if ((rtc_enable&0x0A)==0x0A&&mode==1)
         return &rtc[rtc_select];
@@ -68,14 +68,13 @@ class MBC3 : public MemoryBankController {
   }
   uint8_t Read(uint16_t address) {
     if (address >= 0x0000 && address <= 0x3FFF) {
-      return cartridge->rom()[address];
+      return rom_[address];
     } else if (address >= 0x4000 && address <= 0x7FFF) {
-      return cartridge->rom()[(address&0x3FFF)+(rom_bank_number<<14)];
+      return rom_[(address&0x3FFF)|((rom_bank_number)<<14)];
     } else if (address >= 0xA000 && address <= 0xBFFF) {
 
-
       if ((eram_enable&0x0A)==0x0A&&mode==0 && eram_size)
-        return eram_[(address&0x1FFF)+(0x2000*ram_bank_number*mode)];
+        return eram_[(address&0x1FFF)|(ram_bank_number<<13)];
       
       if ((rtc_enable&0x0A)==0x0A&&mode==1)
         return rtc[rtc_select];
@@ -105,35 +104,34 @@ class MBC3 : public MemoryBankController {
 
     } else if (address >= 0xA000 && address <= 0xBFFF) {
       if ((eram_enable&0x0A)==0x0A&&mode==0 && eram_size)
-        eram_[address&0x1FFF] = data;
+        eram_[(address&0x1FFF)|(ram_bank_number<<13)] = data;
       
       if ((rtc_enable&0x0A)==0x0A&&mode==1)
         rtc[rtc_select] = data;
     }
   }
-  void Tick() {
-    if (++counter1 == 128) { //32768Hz, for original gameboy
-      if (++counter2 == 32768) {
-        if (rtc[4]&0x40) return;//halt
-        if (++rtc[0] == 60) { //sec
-          if (++rtc[1] == 60) { //min
-            if (++rtc[2] == 24) { //hour
-              if (++rtc[3] == 0xFF) { //day
-                if (rtc[4]&1)
-                  rtc[4] |= 0x80;
-                else
-                  rtc[4] |= 1;
-                rtc[3] = 0;
-              }
-              rtc[2] = 0;
+  void Step(double dt) {
+    timecounter += dt;
+    if (timecounter >= 0.001) { // 1sec ////32768Hz, for original gameboy
+
+      if (rtc[4]&0x40) return;//halt
+      if (++rtc[0] == 60) { //sec
+        if (++rtc[1] == 60) { //min
+          if (++rtc[2] == 24) { //hour
+            if (++rtc[3] == 0xFF) { //day
+              if (rtc[4]&1)
+                rtc[4] |= 0x80;
+              else
+                rtc[4] |= 1;
+              rtc[3] = 0;
             }
-            rtc[1] = 0;
+            rtc[2] = 0;
           }
-          rtc[0] = 0;
+          rtc[1] = 0;
         }
-        counter2 =0 ;
+        rtc[0] = 0;
       }
-      counter1 = 0;
+      timecounter = 0;
     }
   }
   uint8_t rom_bank_number;
@@ -142,8 +140,7 @@ class MBC3 : public MemoryBankController {
   uint8_t rtc[5];
   uint8_t rtc_enable;
   uint8_t rtc_select;
-  uint8_t counter1;
-  uint16_t counter2;
+  double timecounter;
 };
 
 }

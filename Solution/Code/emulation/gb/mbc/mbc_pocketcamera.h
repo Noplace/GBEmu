@@ -16,39 +16,43 @@
 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE            *
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
-#ifndef UISYSTEM_GRAPHICS_OPENGL_H
-#define UISYSTEM_GRAPHICS_OPENGL_H
+#pragma once
 
-#include <windows.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#define GL_GLEXT_PROTOTYPES
-#include <gl/glext.h>
-#include "graphics.h"
+namespace emulation {
+namespace gb {
 
-namespace graphics {
-
-class OpenGL : public Graphics {
+class MBCPocketCamera : public MemoryBankController {
  public:
-  OpenGL();
-  ~OpenGL();
-  void Initialize(HWND window_handle,int width,int height);
-  void Deinitialize();
-  void SetDisplaySize(int width,int height);
-  void PrintText(int x,int y,const char* str,size_t len);
-  void Clear(RGBQUAD color);
-  void Render();
-  void SwitchThread() {
-    wglMakeCurrent( device_context_, render_context_ );
+  void Initialize(Cartridge* cartridge) {
+    MemoryBankController::Initialize(cartridge);
   }
-  GLuint CreateTexture();
- private:
-  HDC device_context_;
-  HGLRC render_context_;
-  GLuint fontlistbase;
-  bool init_;
+  void Deinitialize() {
+    MemoryBankController::Deinitialize();
+  }
+  uint8_t* GetMemoryPointer(uint16_t address) {
+    if (address >= 0x0000 && address <= 0x3FFF) {
+      return &cartridge->rom()[address];
+    } else if (address >= 0x4000 && address <= 0x7FFF) {
+      return &cartridge->rom()[address];
+    } else if (address >= 0xA000 && address <= 0xBFFF) {
+      return 0;
+    }
+    return 0;
+  }
+  uint8_t Read(uint16_t address) {
+    if (address >= 0x0000 && address <= 0x3FFF) {
+      return cartridge->rom()[address];
+    } else if (address >= 0x4000 && address <= 0x7FFF) {
+      return cartridge->rom()[address];
+    } else if (address >= 0xA000 && address <= 0xBFFF) {
+      return 0;
+    }
+    return 0;
+  }
+  void Write(uint16_t address, uint8_t data) {
+    int a = 1;
+  }
 };
 
 }
-
-#endif
+}

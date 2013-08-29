@@ -18,11 +18,14 @@
 *****************************************************************************************************************/
 #include "gb.h"
 
+/*
+note: I have made two cgb sprite palletes for sake of easier code for the mono game -> color conversion
+*/
 
 namespace emulation {
 namespace gb {
   
-static inline uint32_t bgr555torgb(uint16_t src) {
+static inline uint32_t bgr555torgb(uint32_t src) {
   uint8_t r = (src&0x1F)<<3;
   uint8_t g = ((src>>5)&0x1F)<<3;
   uint8_t b = ((src>>10)&0x1F)<<3;
@@ -39,14 +42,19 @@ static inline uint32_t rgbtobgr555(uint32_t src) {
 
 const uint32_t pal32[4] = {0xffffffff,0xffAAAAAA,0xff545454,0xff000000};
 
+
+
 void LCDDriver::Initialize(Emu* emu) {
   Component::Initialize(emu);
   frame_buffer = new uint32_t[256*256];
-  colormap = new uint16_t[256*256];
+  colormap = new uint32_t[256*256];
+  memset(frame_buffer,0,256*256*4);
+  memset(colormap,0,256*256*4);
   lcdscreenmode_ = LCDScreenModeProgressive;
   memset(&hdma,0,sizeof(hdma));
   memset(&cgb_bgpal,0xFF,sizeof(cgb_bgpal));
-  memset(&cgb_sppal,0,sizeof(cgb_sppal));
+  memset(&cgb_sppal1,0,sizeof(cgb_sppal1));
+  memset(&cgb_sppal2,0,sizeof(cgb_sppal2));
   //hack, to show something during boot in cgb mode
   for (int i=0;i<64;i+=8) {
     cgb_bgpal[i+0] = rgbtobgr555(pal32[0]);
@@ -59,6 +67,58 @@ void LCDDriver::Initialize(Emu* emu) {
     cgb_bgpal[i+7] = rgbtobgr555(pal32[3])>>8;
   }
   Reset();
+}
+
+
+struct cgb_pal_config {
+  uint32_t bg[4];
+  uint32_t obj1[4];
+  uint32_t obj2[4];
+};
+ 
+cgb_pal_config cgbp_default = {
+  {0xFFFFFFFF	, 0xFF7BFF31	, 0xFF0063C5	, 0xFF000000},
+  {0xFFFFFFFF	, 0xFFFF8484	, 0xFF943A3A	, 0xFF000000},
+  {0xFFFFFFFF	, 0xFFFF8484	, 0xFF943A3A	, 0xFF000000},
+};
+
+cgb_pal_config cgbp_supermario_0x46 = {
+  {0xB5B5FF	, 0xFFFF94	, 0xAD5A42	, 0x000000},
+  {0x000000	, 0xFFFFFF	, 0xFF8484,	 0x943A3A},
+  {0x000000	, 0xFFFFFF	, 0xFF8484	, 0x943A3A},
+};
+/*
+BG	 
+OBJ0	 
+OBJ1	 
+*/
+void LCDDriver::UpdateCGBPalBasedonGBPal(int paltype) {
+  if (emu_->mode() != EmuModeGBC) return; //we should use a seperate flag to force mono to color regardless of gb mode/type
+  return;
+
+  uint8_t* src;
+  uint8_t* dest;
+  uint32_t* palcol;
+  cgb_pal_config* pal_config;
+  switch (emu_->cartridge()->hash) {
+    case 0x46:pal_config= &cgbp_supermario_0x46; break;
+    default:pal_config= &cgbp_default; break;
+  }
+  switch (paltype) {
+    case 0:src = bg_pal; dest=cgb_bgpal; palcol =pal_config->bg;  break;
+    case 1:src = obj_pal1;dest=cgb_sppal1;palcol =pal_config->obj1; break;
+    case 2:src = obj_pal2;dest=cgb_sppal2;palcol =pal_config->obj2; break;
+  }
+  for (int i=0;i<64;i+=8) {
+    dest[i+0] = rgbtobgr555(palcol[src[0]]);
+    dest[i+1] = rgbtobgr555(palcol[src[0]])>>8;
+    dest[i+2] = rgbtobgr555(palcol[src[1]]);
+    dest[i+3] = rgbtobgr555(palcol[src[1]])>>8;
+    dest[i+4] = rgbtobgr555(palcol[src[2]]);
+    dest[i+5] = rgbtobgr555(palcol[src[2]])>>8;
+    dest[i+6] = rgbtobgr555(palcol[src[3]]);
+    dest[i+7] = rgbtobgr555(palcol[src[3]])>>8;
+  }
 }
 
 void LCDDriver::Deinitialize() {
@@ -110,8 +170,15 @@ void LCDDriver::Tick() {
         stat_.mode = 3;
       break;
     case 3:
+      {
+        static auto flag = lcdc_.bgdisplay;
+        if (flag != lcdc_.bgdisplay) {
+          OutputDebugString("bg display changed during mode3\n");
+          flag = lcdc_.bgdisplay;
+        }
+      }
       if (counter2 == 252) {
-        RenderLine();//will update mode3_extra_cycles
+        RenderLine(0,166);//will update mode3_extra_cycles
       }
 
       if (counter2 == 252+mode3_extra_cycles) {
@@ -269,6 +336,7 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       bg_pal[1] = (data>>2)&0x3;
       bg_pal[2] = (data>>4)&0x3;
       bg_pal[3] = (data>>6)&0x3;
+      UpdateCGBPalBasedonGBPal(0);
       break;
     case 0xFF48:
       obj_pallete1_data = data;
@@ -276,6 +344,7 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       obj_pal1[1] = (data>>2)&0x3;
       obj_pal1[2] = (data>>4)&0x3;
       obj_pal1[3] = (data>>6)&0x3;
+      UpdateCGBPalBasedonGBPal(1);
       break;
     case 0xFF49:
       obj_pallete2_data = data;
@@ -283,6 +352,7 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       obj_pal2[1] = (data>>2)&0x3;
       obj_pal2[2] = (data>>4)&0x3;
       obj_pal2[3] = (data>>6)&0x3;
+      UpdateCGBPalBasedonGBPal(2);
       break;
     case 0xFF4A:
       wy = data;
@@ -308,20 +378,11 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       hdma.mode = (data&0x80)>>7;
       if (hdma.mode == 0) {
         //uint16_t offset = 0;
-        /*auto src = emu_->memory()->GetMemoryPointer(hdma.src.raw);
-        auto dest = emu_->memory()->GetMemoryPointer(hdma.dest.raw);
-        memcpy(dest,src,hdma.length);*/
-
-        for (auto i=0;i<hdma.length;++i) {
-          auto src = emu_->memory()->Read8(hdma.src.raw+i);
-          emu_->memory()->Write8(hdma.dest.raw+i,src);
-        }
-
+        auto src = emu_->memory()->GetMemoryPointer(hdma.src.raw&0xFFFB);
+        auto dest = emu_->memory()->GetMemoryPointer(0x8000|(hdma.dest.raw&0x1FF0));
+        memcpy(dest,src,hdma.length);
         hdma.length = 0;
-        /*do {
-         --hdma.length;
-         dest[hdma.length] = src[hdma.length];
-        } while (hdma.length);*/
+
       }
       break;
 
@@ -340,7 +401,7 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       break;
     case 0xFF6B:
       cgb_sppal_data = data;
-      cgb_sppal[cgb_sppal_index&0x3F] = data;
+      cgb_sppal1[cgb_sppal_index&0x3F] = cgb_sppal2[cgb_sppal_index&0x3F] = data;
       if (cgb_sppal_index&0x80)
         ++cgb_sppal_index;
       break;
@@ -385,7 +446,7 @@ void LCDDriver::RenderAllBGTiles() {
   }
 }
 
-void LCDDriver::RenderBGLine(uint16_t* cmline) {
+void LCDDriver::RenderBGLine(int x0,int x1,uint32_t* cmline) {
   auto mapoffset = ((ly+scroll_y)&0xFF) >> 3;
   auto lineoffset = ((scroll_x>>3))&0x1F;
   auto y = (ly + scroll_y) & 7;
@@ -402,14 +463,14 @@ void LCDDriver::RenderBGLine(uint16_t* cmline) {
   };
 
   if (lcdc_.bgdisplay == 0) {
-    for (int i=0;i<256;++i) {
+    for (int i=0;i<160;++i) {
       cmline[i] = 0;
     }
   } else {
     uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data ==0?0x0800:0x0000];
     uint8_t* bgtilemap = &vram[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
 
-    for (int i=0;i<256;++i) {
+    for (int i=0;i<160;++i) {
       auto tileindex = bgtilemap[(mapoffset<<5) + lineoffset];
       if(lcdc_.tile_data == 0) {
         if(tileindex < 128) tileindex += 128;
@@ -423,7 +484,7 @@ void LCDDriver::RenderBGLine(uint16_t* cmline) {
   }
 }
 
-void LCDDriver::RenderWindowLine(uint16_t* cmline) {
+void LCDDriver::RenderWindowLine(int x0,int x1,uint32_t* cmline) {
   if (lcdc_.window_enable == 1) {
     auto mapoffset = ((ly-wy)&0xFF) >> 3;
     auto lineoffset = 0;
@@ -442,7 +503,7 @@ void LCDDriver::RenderWindowLine(uint16_t* cmline) {
       auto vram = emu_->memory()->vram();
       uint8_t* tiledata = &vram[lcdc_.tile_data ==0?0x0800:0x0000];
       uint8_t* tilemap = &vram[lcdc_.window_tile_map ==0?0x1800:0x1C00];
-      for (int i=(wx-7);i<=(wx-7)+166-7;++i) {
+      for (int i=(wx-7);i<160;++i) {
         auto tileindex = tilemap[(mapoffset<<5) + lineoffset];
         if(lcdc_.tile_data == 0) {
           if(tileindex < 128) tileindex += 128;
@@ -457,7 +518,7 @@ void LCDDriver::RenderWindowLine(uint16_t* cmline) {
   }
 }
 
-void LCDDriver::RenderSpriteLine(uint16_t* cmline) {
+void LCDDriver::RenderSpriteLine(int x0,int x1,uint32_t* cmline) {
   uint8_t sprite_count = 10;
   struct Sprite{
     uint8_t y,x,tileindex;
@@ -522,7 +583,7 @@ void LCDDriver::RenderSpriteLine(uint16_t* cmline) {
 
 
 
-void LCDDriver::RenderCGBBGLine(uint16_t* cmline) {
+void LCDDriver::RenderCGBBGLine(int x0,int x1,uint32_t* cmline) {
   auto mapoffset = ((ly+scroll_y)&0xFF) >> 3;
   auto lineoffset = ((scroll_x>>3))&0x1F;
   auto y = (ly + scroll_y) & 7;
@@ -543,7 +604,7 @@ void LCDDriver::RenderCGBBGLine(uint16_t* cmline) {
   uint8_t* tilemap = &vram[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
   uint8_t* tileattr =  &vram[lcdc_.bg_tile_map ==0?0x3800:0x3C00];
 
-  for (int i=0;i<256;++i) {
+  for (int i=0;i<160;++i) {
     auto attr = tileattr[(mapoffset<<5) + lineoffset];
     auto palindex = attr&0x7;
  
@@ -559,15 +620,19 @@ void LCDDriver::RenderCGBBGLine(uint16_t* cmline) {
     bgcolor = (attr&0x20)?pixel((x)):pixel((7-x));
      
     incx();
-    cmline[i] = ((cgb_bgpal[(palindex<<3)+(bgcolor<<1)+1]<<8)|cgb_bgpal[(palindex<<3)+(bgcolor<<1)])&0x7FFF;
+
+    cmline[i] = ((cgb_bgpal[(palindex<<3)|(bgcolor<<1)|1]<<8)|cgb_bgpal[(palindex<<3)|(bgcolor<<1)])&0x7FFF;
+    cmline[i] |= bgcolor<<17;
     if (lcdc_.bgdisplay)
-      cmline[i] |= (attr&0x80)<<8; //hack bit to indicate priority over oam/sprites
+      cmline[i] |= 0x8000; //hack bit to indicate priority over oam/sprites
+    if (attr&0x80)
+      cmline[i] |= 0x10000;//indicate bg over oam
   }
   
 }
 
 
-void LCDDriver::RenderCGBWindowLine(uint16_t* cmline) {
+void LCDDriver::RenderCGBWindowLine(int x0,int x1,uint32_t* cmline) {
   if (lcdc_.window_enable == 1) {
     auto mapoffset = ((ly-wy)&0xFF) >> 3;
     auto lineoffset = 0;
@@ -587,7 +652,7 @@ void LCDDriver::RenderCGBWindowLine(uint16_t* cmline) {
       uint8_t* tilemap = &vram[lcdc_.window_tile_map ==0?0x1800:0x1C00];
       uint8_t* tileattr =  &vram[lcdc_.window_tile_map ==0?0x3800:0x3C00];
 
-      for (int i=(wx-7);i<=(wx-7)+166-7;++i) {
+      for (int i=(wx-7);i<160;++i) {
         auto attr = tileattr[(mapoffset<<5) + lineoffset];
         auto palindex = attr&0x7;
       
@@ -605,8 +670,17 @@ void LCDDriver::RenderCGBWindowLine(uint16_t* cmline) {
           bgcolor = pixel((x));
         incx();
         cmline[i] = ((cgb_bgpal[(palindex<<3)+(bgcolor<<1)+1]<<8)|cgb_bgpal[(palindex<<3)+(bgcolor<<1)])&0x7FFF;
+        cmline[i] |= bgcolor<<17;
+
         if (lcdc_.bgdisplay)
-          cmline[i] |= (attr&0x80)<<8; //hack bit to indicate priority over oam/sprites
+          cmline[i] |= 0x8000; //hack bit to indicate priority over oam/sprites all all cost
+        else
+          cmline[i] &= ~0x8000;
+
+        if (attr&0x80)
+          cmline[i] |= 0x10000;//indicate bg over oam
+        else
+          cmline[i] &= ~0x10000;
       }
 
     }
@@ -614,7 +688,7 @@ void LCDDriver::RenderCGBWindowLine(uint16_t* cmline) {
 }
 
 
-void LCDDriver::RenderCGBSpriteLine(uint16_t* cmline) {
+void LCDDriver::RenderCGBSpriteLine(int x0,int x1,uint32_t* cmline) {
   uint8_t sprite_count = 10;
   struct Sprite{
     uint8_t y,x,tileindex;
@@ -666,9 +740,27 @@ void LCDDriver::RenderCGBSpriteLine(uint16_t* cmline) {
             } else {
               p = pixel((7-x));
             }
+            uint8_t* pal = sprites[j].attr.pal == 0?cgb_sppal1:cgb_sppal2;
+             
+            auto& cmp = cmline[x+spritex];
             
-            if (((cmline[x+spritex]&0x8000)==0)&&(sprites[j].attr.priority==0)&&(p!=0)&&(x+spritex)>=0)
-              cmline[x+spritex] = ((cgb_sppal[(sprites[j].attr.cgbpalnum<<3)+(p<<1)+1]<<8)|cgb_sppal[(sprites[j].attr.cgbpalnum<<3)+(p<<1)])&0x7FFF;
+           
+            //cgb mode
+           /* if ( ((cmp&0x8000)==0) || //global priority
+              
+              (((cmp&0x10000)==0) && //bg not taking priority
+              (sprites[j].attr.priority==0||((cmp&0x60000)==0))) //either sprite priority or bg col 0
+              
+              &&(p!=0)&&((x+spritex)>=0)
+              )
+              cmp = ((pal[(sprites[j].attr.cgbpalnum<<3)+(p<<1)+1]<<8)|pal[(sprites[j].attr.cgbpalnum<<3)+(p<<1)])&0x7FFF;
+            */
+            
+              if ((
+                (((cmp&0x10000)==0)&&(cmp&0x8000))||(cmp&0x8000)==0)
+                
+                &&(sprites[j].attr.priority==0||((cmp&0x60000)==0)) &&(p!=0)&&((x+spritex)>=0)  )
+                cmp = ((pal[(sprites[j].attr.cgbpalnum<<3)+(p<<1)+1]<<8)|pal[(sprites[j].attr.cgbpalnum<<3)+(p<<1)])&0x7FFF;
           }
 
         --sprite_count;
@@ -680,7 +772,7 @@ void LCDDriver::RenderCGBSpriteLine(uint16_t* cmline) {
 }
 
 
-void LCDDriver::RenderLine() {
+void LCDDriver::RenderLine(int x0,int x1) {
   auto cmline = &colormap[ly<<8];
 
   //either display whole time if progressive, or based on ly if interlace
@@ -688,17 +780,17 @@ void LCDDriver::RenderLine() {
     ||(lcdscreenmode_==LCDScreenModeProgressive)) {
 
     if (emu_->mode() == EmuModeGBC) {
-      RenderCGBBGLine(cmline);
-      RenderCGBWindowLine(cmline);
-      RenderCGBSpriteLine(cmline);
+      RenderCGBBGLine(x0,x1,cmline);
+      RenderCGBWindowLine(x0,x1,cmline);
+      RenderCGBSpriteLine(x0,x1,cmline);
       auto fbline = &frame_buffer[ly<<8];
         for (int i=0;i<256;++i) //256px per line
          *fbline++ = bgr555torgb(*cmline++);
     } else {
       //RenderAllBGTiles();
-      RenderBGLine(cmline);
-      RenderWindowLine(cmline);
-      RenderSpriteLine(cmline);
+      RenderBGLine(x0,x1,cmline);
+      RenderWindowLine(x0,x1,cmline);
+      RenderSpriteLine(x0,x1,cmline);
 
         auto fbline = &frame_buffer[ly<<8];
         for (int i=0;i<256;++i) //256px per line

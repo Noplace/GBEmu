@@ -43,12 +43,12 @@ class MBC5 : public MemoryBankController {
   }
   uint8_t* GetMemoryPointer(uint16_t address) {
     if (address >= 0x0000 && address <= 0x3FFF) {
-      return &cartridge->rom()[address];
+      return &rom_[address];
     } else if (address >= 0x4000 && address <= 0x7FFF) {
-      return &cartridge->rom()[address+0x4000*(rom_bank_number-1)];
+      return &rom_[(address&0x3FFF)|((rom_bank_number)<<14)];
     } else if (address >= 0xA000 && address <= 0xBFFF) {
       if ((eram_enable&0x0A)==0x0A && eram_size)
-        return &eram_[(address&0x1FFF)+(0x2000*ram_bank_number)];
+        return &eram_[(address&0x1FFF)|(ram_bank_number<<13)];
       else
         return 0;
     }
@@ -56,12 +56,12 @@ class MBC5 : public MemoryBankController {
   }
   uint8_t Read(uint16_t address) {
     if (address >= 0x0000 && address <= 0x3FFF) {
-      return cartridge->rom()[address];
+      return rom_[address];
     } else if (address >= 0x4000 && address <= 0x7FFF) {
-      return cartridge->rom()[address+0x4000*(rom_bank_number-1)];
+      return rom_[(address&0x3FFF)|((rom_bank_number)<<14)];
     } else if (address >= 0xA000 && address <= 0xBFFF) {
       if ((eram_enable&0x0A)==0x0A && eram_size)
-        return eram_[(address&0x1FFF)+(0x2000*ram_bank_number)];
+        return eram_[(address&0x1FFF)|(ram_bank_number<<13)];//*0x2000
       else
         return 0;
     }
@@ -83,11 +83,12 @@ class MBC5 : public MemoryBankController {
 
     } else if (address >= 0xA000 && address <= 0xBFFF) {
       if ((eram_enable&0x0A)==0x0A && eram_size)
-        eram_[address&0x1FFF] = data;
+        eram_[(address&0x1FFF)|(ram_bank_number<<13)] = data;
     }
   }
   uint16_t rom_bank_number;
   uint8_t ram_bank_number;
+
 };
 
 }

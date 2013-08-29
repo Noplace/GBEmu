@@ -96,23 +96,23 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\SPRITE.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\opus5.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Super Mario Land (World).gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\Pocket Camera (Japan) (Rev A).gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
+  emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);//not original rom, problem with window
+  //emu.cartridge()->LoadFile("..\\test\\Final Fantasy Legend, The (U) [!].gb",&header); 
+  //emu.cartridge()->LoadFile("D:\\Personal\\Dev\\GB\\roms\\Kirby's Dream Land (USA, Europe).gb",&header);
+
   //emu.cartridge()->LoadFile("..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
-  //emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
-  
+  //emu.cartridge()->LoadFile("..\\test\\introcollection.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
-  //emu.cartridge()->LoadFile("..\\test\\Final Fantasy Legend, The (U) [!].gb",&header); //not original rom, problem with window
+  //emu.cartridge()->LoadFile("..\\test\\Pokemon Silver.gbc",&header);
   
-  emu.cartridge()->LoadFile("..\\test\\Pokemon Silver.gbc",&header);
-  //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);
-  //emu.cartridge()->LoadFile("D:\\Personal\\Dev\\GB\\roms\\Kirby's Dream Land (USA, Europe).gb",&header);
   emu.Run();
 }
 
 void DisplayWindow::ResetTiming() {
-  memset(&timing,0,sizeof(timing));
-  timer.Calibrate();
-  timing.prev_cycles = timer.GetCurrentCycles();
+  
 }
 
 void DisplayWindow::Step() {
@@ -261,6 +261,8 @@ int DisplayWindow::Render() {
 
 int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
   if (emu.state == 0) return 0;
+  glEnable( GL_TEXTURE_2D );
+  glColor3ub(0xFF,0xFF,0xFF);
   switch(display_mode) {
     case ID_VIDEO_STD320X288:
       //glDrawPixels(256,240,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
@@ -294,16 +296,19 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
       //glDrawPixels(512,480,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
     break;
   }
+  
+
+  char caption[256];
+  glColor4ub(150,150,150,80);
+  glRecti(0,0,125,42);
+  sprintf(caption,"FPS: %02.2f Hz\0",emu.fps());
+  gfx.PrintText(0,11,caption,strlen(caption));
+  sprintf(caption,"Freq : %0.2f Mhz\0",emu.frequency_mhz());
+  gfx.PrintText(0,22,caption,strlen(caption));
+  sprintf(caption,"CPS: %llu\0",emu.cycles_per_second());
+  gfx.PrintText(0,33,caption,strlen(caption));
 
   gfx.Render();
-  timing.render_time_span = 0;
-  ++timing.fps_counter;
-    char caption[256];
-    //sprintf(caption,"Freq : %0.2f MHz",nes.frequency_mhz());
-    //sprintf(caption,"CPS: %llu ",nes.cycles_per_second());
-    
-    sprintf(caption,"GBEmu - FPS: %02.2f\0",emu.fps());
-    SetWindowText(handle(),caption);
   return 0;
 }
 

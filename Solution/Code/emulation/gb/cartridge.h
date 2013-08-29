@@ -97,6 +97,7 @@ struct CartridgeHeader {
 
 class Cartridge : public Component {
  public:
+  uint8_t hash;
   CartridgeHeader* header;
   Cartridge() : rom_(nullptr) {}
   ~Cartridge() {  }
@@ -109,6 +110,7 @@ class Cartridge : public Component {
   uint8_t* GetMemoryPointer(uint16_t address);
   uint8_t Read(uint16_t address);
   void Write(uint16_t address, uint8_t data);
+  void MBCStep(double dt);
   MemoryBankController* mbc;
  private:
   uint8_t* rom_;

@@ -22,6 +22,7 @@
 namespace emulation {
 namespace gb {
 
+
 void Cartridge::Initialize(Emu* emu) {
   Component::Initialize(emu);
   rom_ = nullptr;
@@ -60,6 +61,9 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
   memcpy(rom_,data,header->rom_size_bytes());
   this->header = (CartridgeHeader*)&rom_[0x100];
 
+  hash=0;
+  for (int i=0;i<16;++i) 
+    hash += header->title[i];
 
   if (header->cgb_flag() == 0xC0) {
     emu_->set_mode(EmuModeGBC); //force gbc
@@ -91,6 +95,9 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
     case 0x1A:
     case 0x1B:
       mbc = new MBC5();
+      break;
+    case 0xFC:
+      mbc = new MBCPocketCamera();
       break;
     default:
       DebugBreak();
@@ -136,7 +143,9 @@ void Cartridge::Write(uint16_t address, uint8_t data) {
   mbc->Write(address,data);
 }
 
-
+void Cartridge::MBCStep(double dt) {
+  mbc->Step(dt);
+}
 
 }
 }
