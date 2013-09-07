@@ -22,11 +22,14 @@
 namespace emulation {
 namespace gb {
 
+Cartridge* thisc;
 
 void Cartridge::Initialize(Emu* emu) {
   Component::Initialize(emu);
   rom_ = nullptr;
   mbc = nullptr;
+  thisc = this;
+  
 }
 
 void Cartridge::Deinitialize() {
@@ -66,11 +69,12 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
     hash += header->title[i];
 
   if (header->cgb_flag() == 0xC0) {
-    emu_->set_mode(EmuModeGBC); //force gbc
+    //emu_->set_mode(EmuModeGBC); //force gbc
   } else if ((header->cgb_flag()&0x80) == 0) {
-    emu_->set_mode(EmuModeGB); //force original gb
+    //emu_->set_mode(EmuModeGB); //force original gb
   }
 
+  save_rtc = false;
   switch (header->cartridge_type) {
     case 0:
       mbc = new MBCNone();
@@ -89,6 +93,7 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
     case 0x11:
     case 0x12:
     case 0x13:
+      save_rtc = true;
       mbc = new MBC3();
       break;
     case 0x19:
@@ -121,6 +126,16 @@ void Cartridge::LoadRam() {
   core::io::ReadWholeFileBinary(filename,&data,length);
   if (data)
     memcpy(mbc->eram(),data,length);
+
+  if (save_rtc == true) {
+    sprintf(filename,"%s%s.rtc",cartridge_path,cartridge_filename);
+    FILE* fp = fopen(filename,"rb");
+    if (fp) {
+      MBC3* mbc3 = (MBC3*)mbc;
+      fread(&mbc3->rtc_timer,1,8,fp);
+      fclose(fp);
+    }
+  }
 }
 
 void Cartridge::SaveRam() {
@@ -129,6 +144,14 @@ void Cartridge::SaveRam() {
   FILE* fp = fopen(filename,"wb");
   fwrite(mbc->eram(),1,header->ram_size_bytes(),fp);
   fclose(fp);
+
+  if (save_rtc == true) {
+    sprintf(filename,"%s%s.rtc",cartridge_path,cartridge_filename);
+    FILE* fp = fopen(filename,"wb");
+    MBC3* mbc3 = (MBC3*)mbc;
+    fwrite(&mbc3->rtc_timer,1,8,fp);
+    fclose(fp);
+  }
 }
 
 uint8_t* Cartridge::GetMemoryPointer(uint16_t address) {
@@ -147,5 +170,16 @@ void Cartridge::MBCStep(double dt) {
   mbc->Step(dt);
 }
 
+
+
 }
+}
+
+
+char* mbc3_rtc_test() {
+  emulation::gb::MBC3* mbc3 = (emulation::gb::MBC3*)emulation::gb::thisc->mbc;
+
+  static char str[256];
+  sprintf(str,"timer:%I64d rtc0:%d,rtc1:%d,rtc2:%d",mbc3->rtc_timer,mbc3->rtc[0],mbc3->rtc[1],mbc3->rtc[2]);
+  return str;
 }

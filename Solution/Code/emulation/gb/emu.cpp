@@ -17,12 +17,14 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
 #include "gb.h"
+#include "../../application.h"
 
 namespace emulation {
 namespace gb {
 
 void Emu::Initialize(double base_freq_hz) {
-  base_freq_hz_ = base_freq_hz;
+  memset(&timing,0,sizeof(timing));
+  set_base_freq_hz(base_freq_hz);
   cartridge_.Initialize(this);
   timer_.Initialize(this);
   lcd_driver_.Initialize(this);
@@ -48,27 +50,28 @@ void Emu::Deinitialize() {
 }
 
 double Emu::Step() {
-  const double dt =  1000.0 / base_freq_hz_;//options.cpu_freq(); 0.00058f;//16.667f;
+  //const double dt =  1000.0 / base_freq_hz_;//options.cpu_freq(); 0.00058f;//16.667f;
   timing.current_cycles = utimer.GetCurrentCycles();
   timing.time_span =  (timing.current_cycles - timing.prev_cycles) * utimer.resolution();
   if (timing.time_span > 500.0) //clamping time
     timing.time_span = 500.0;
 
   timing.span_accumulator += timing.time_span;
-  while (timing.span_accumulator >= dt) {
-    cartridge()->MBCStep(dt);
+  cartridge()->MBCStep(timing.time_span);
+  while (timing.span_accumulator >= timing.step_dt) {
+    
     cpu_cycles_per_step_ = 0;
     cpu_.Step();
-    timing.span_accumulator -= dt*cpu_cycles_per_step_;
+    timing.span_accumulator -= timing.step_dt*cpu_cycles_per_step_;
     cpu_cycles_ += cpu_cycles_per_step_;
   }
 
   timing.misc_time_span += timing.time_span;
-  if (timing.misc_time_span > 1000.0) {
-    cycles_per_second_ = cpu_cycles_ - last_cpu_cycles_;
+  if (timing.misc_time_span >= 1000.0) {
+    cycles_per_second_ = uint64_t((cpu_cycles_ - last_cpu_cycles_)*(timing.misc_time_span/1000.0));
     frequency_mhz_ = double( cycles_per_second_ ) * 0.000001f;
     last_cpu_cycles_ = cpu_cycles_;
-    timing.misc_time_span = 0;
+    timing.misc_time_span -= 1000.0;
   }
 
   timing.total_cycles += timing.current_cycles-timing.prev_cycles;
@@ -84,12 +87,23 @@ void Emu::Run() {
   cycles_per_second_ = 0;
   cpu_cycles_ = 0;
   last_cpu_cycles_ = 0;
-  thread = new std::thread(Emu::thread_func,this);
+  thread = new std::thread([](Emu* emu){
+
+  memset(&emu->timing,0,sizeof(emu->timing));
+  emu->utimer.Calibrate();
+  emu->timing.prev_cycles = emu->utimer.GetCurrentCycles();
+  emu->set_base_freq_hz(emu->base_freq_hz_);
+  while (emu->state != 0) {
+    emu->Step();
+  }
+ 
+  OutputDebugString("end of thread\n"); 
+  },this);
+  SetThreadAffinityMask(thread->native_handle(),1);
 }
 
 void Emu::Stop() {
   if (thread==nullptr && state == 0) return;
-  apu_.output()->Stop();
   state = 0;
   thread->join();
   OutputDebugString("killed thread\n");
@@ -120,13 +134,26 @@ void Emu::Render() {
   }
 }
 
+
+
 void Emu::thread_func(Emu* emu) {
+  //auto output_ = new audio::output::WASAPI();
+  //output_->set_window_handle(app::Application::Current()->display_window().handle());
+  //output_->set_buffer_size(4*44100*2);
+  //output_->Initialize(44100,2,16);
+  //output_->Play();
+  //WASAPI_Initialize(44100,2,16);
+  //emu->apu_.set_output(output_);
   memset(&emu->timing,0,sizeof(emu->timing));
   emu->utimer.Calibrate();
   emu->timing.prev_cycles = emu->utimer.GetCurrentCycles();
+  emu->set_base_freq_hz(emu->base_freq_hz_);
   while (emu->state != 0) {
     emu->Step();
   }
+  //output_->Stop();
+  //output_->Deinitialize(); 
+  //SafeDelete(&output_);
   OutputDebugString("end of thread\n");
 }
 

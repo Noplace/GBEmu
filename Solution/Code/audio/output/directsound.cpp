@@ -113,7 +113,7 @@ int DirectSound::Play() {
 }
 
 int DirectSound::Stop() {
-  std::lock_guard<std::mutex> lock(mutex);
+  //std::lock_guard<std::mutex> lock(mutex);
   if (mode == 0) return 2;
   Sync();
   OutputDebugString("ds stop\n");
@@ -148,7 +148,7 @@ void DirectSound::GetCursors(uint32_t& play, uint32_t& write) {
 
 
 int DirectSound::Write(void* data_pointer, uint32_t size_bytes) {
-  std::lock_guard<std::mutex> lock(mutex);
+  //std::lock_guard<std::mutex> lock(mutex);
   LPVOID buf_ptr1, buf_ptr2;
   HRESULT hr;
   DWORD play_cursor,write_cursor;

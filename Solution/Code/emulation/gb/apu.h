@@ -20,6 +20,7 @@
 
 #include "../../audio/output/wasapi.h"
 #include "../../audio/output/directsound.h"
+#include "../../audio/output/wasapi.h"
 #include "../../audio/synth/quadrangular_wave.h"
 
 namespace emulation {
@@ -104,6 +105,7 @@ class WaveramSynth : public audio::synth::Wavetable<5> {
 
 struct ApuChannel {
   Apu* apu_;
+  uint32_t acc_sample_left,acc_sample_right;
   SweepRegister reg0;
   uint8_t reg1,reg2,reg3,reg4;
   uint32_t freqcounterload,freqcounter,sweepfreqcounter;
@@ -130,6 +132,7 @@ struct ApuChannel {
     reg1 = reg2 = reg3 = reg4 = 0;
     dac_enable = false;
     lengthcounter = 0;
+    acc_sample_left = acc_sample_right = 0;
   }
 
   void EnvelopeTick() {
@@ -168,6 +171,7 @@ class Apu : public Component {
   audio::output::Interface* output() {
     return output_;
   }
+  void set_output(audio::output::Interface* output) { output_ = output; }
  private:
   short* output_buffer_;
   audio::output::Interface* output_;
@@ -202,7 +206,7 @@ class Apu : public Component {
   uint32_t maincounter;
   uint32_t ulencounterclock;
   uint32_t frame_seq_step,frame_seq_clock;
-
+  uint32_t acc_sample_left,acc_sample_right;
   struct : ApuChannel {
 
     void SweepTick() {
@@ -250,7 +254,8 @@ class Apu : public Component {
     }
   }channel2;
 
-  struct : ApuChannel {    
+  struct : ApuChannel {   
+    uint8_t volshift;
     real_t vol;
     uint8_t playback_counter;
     real_t wavsample;
@@ -261,6 +266,7 @@ class Apu : public Component {
       playback_counter = 0;
       vol=0;
       wavsample = 0;
+      volshift = 0;
     }
 
     uint8_t SampleTick() {

@@ -341,10 +341,10 @@ void Cpu::Step() {
   if (cpumode_ == CpuModeNormal) {
     if (sprite_bug!=0) --sprite_bug;
     opcode_pc = reg.PC;
-    if (opcode_pc == 0x100) {
-      if (emu_->mode() == EmuModeGBC) //hack
-        reg.A = 0x11;
-    }
+    //if (opcode_pc == 0x100) {
+      //if (emu_->mode() == EmuModeGBC) //hack
+      //  reg.A = 0x11;
+    //}
     opcode = emu_->memory()->ClockedRead8(reg.PC++);
     (this->*(instructions[opcode]))();
   } else if (cpumode_ == CpuModeHalt) {
@@ -427,8 +427,8 @@ template<uint8_t dest>
 void Cpu::LDrd16() {
   reg.raw16[dest] = mem_->ClockedRead8(reg.PC++);
   reg.raw16[dest] |= (mem_->ClockedRead8(reg.PC++))<<8;
-  if (dest != RegAF && (reg.raw16[dest]>=0xFE00&&reg.raw16[dest]<=0xFEFF) && emu_->lcd_driver()->lcdc().lcd_enable == 1)
-    sprite_bug = 2;
+  //if (dest != RegAF && (reg.raw16[dest]>=0xFDFF&&reg.raw16[dest]<=0xFEFF) && emu_->lcd_driver()->lcdc().lcd_enable == 1)
+  //  sprite_bug = 2;
 }
 
 template<uint8_t dest,uint8_t src>
@@ -445,14 +445,14 @@ void Cpu::LDD$regreg() {
 
 template<uint8_t dest,uint8_t src>
 void Cpu::LDIreg$reg() {
-  simulateSpriteBug();
+  simulateSpriteBug(reg.raw16[src]);
   reg.raw8[dest] = mem_->ClockedRead8(reg.raw16[src]);
   ++reg.raw16[src];
 }
 
 template<uint8_t dest,uint8_t src>
 void Cpu::LDDreg$reg() {
-  simulateSpriteBug();
+  simulateSpriteBug(reg.raw16[src]);
   reg.raw8[dest] = mem_->ClockedRead8(reg.raw16[src]);
   --reg.raw16[src];
 }
@@ -811,7 +811,8 @@ void Cpu::INC_8bit() {
 
 template<uint8_t dest>
 void Cpu::INC_16bit() {
-  simulateSpriteBug();
+  if (dest != RegAF)
+    simulateSpriteBug(reg.raw16[dest]);
   ++reg.raw16[dest];
   emu_->MachineTick();
 }
@@ -846,7 +847,8 @@ void Cpu::DEC_8bit() {
 
 template<uint8_t dest>
 void Cpu::DEC_16bit() {
-  simulateSpriteBug();
+  if (dest != RegAF)
+    simulateSpriteBug(reg.raw16[dest]);
   --reg.raw16[dest];
   emu_->MachineTick();
 }
@@ -925,7 +927,8 @@ void Cpu::RET_cc() {
 
 template<uint8_t src>
 void Cpu::PUSH() {
-  simulateSpriteBug();
+
+  simulateSpriteBug(reg.SP+1);
   push(reg.raw16[src]>>8);
   push(reg.raw16[src]&0xFF);
   emu_->MachineTick();
@@ -933,11 +936,14 @@ void Cpu::PUSH() {
 
 template<uint8_t dest>
 void Cpu::POP() {
-  simulateSpriteBug();
+
+  simulateSpriteBug(reg.SP+1);
   reg.raw16[dest] = pop();
   reg.raw16[dest] |= pop() << 8;
   if (dest == RegAF)
     reg.F._unused = 0;
+
+
 }
 
 void Cpu::RLCA() {
@@ -1045,14 +1051,20 @@ void Cpu::DAA() {
   reg.A = (uint8_t)a;
 }
 
-void Cpu::simulateSpriteBug() {
-   
-  if (sprite_bug == 1) {
-    emu_->lcd_driver()->sprite_bug_counter = 80;//20cycles
+void Cpu::simulateSpriteBug(uint16_t value) {
+  auto driver = emu_->lcd_driver();
+  auto lcdc = driver->lcdc();
+  auto mode = driver->stat().mode;
+  if ((value>=0xFE00&&value<=0xFEFF) && lcdc.lcd_enable == 1 && mode != 1 && driver->scanline_counter() <= 72) {
+
+    driver->sprite_bug_counter = 80;
     //auto oam = emu_->memory()->oam();
     //for (int i=8;i<0xA0;++i)
     //  oam[i] = rand()&0xFF;
     sprite_bug = 0;
+
+
+
   }
   
 }

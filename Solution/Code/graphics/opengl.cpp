@@ -93,20 +93,21 @@ void OpenGL::Initialize(HWND window_handle,int width,int height) {
                 PFD_DOUBLEBUFFER;
   pfd.iPixelType = PFD_TYPE_RGBA;
   pfd.cColorBits = 32;
-  pfd.cDepthBits = 16;
+  pfd.cDepthBits = 24;
   pfd.iLayerType = PFD_MAIN_PLANE;
   iFormat = ChoosePixelFormat( device_context_, &pfd );
   SetPixelFormat( device_context_, iFormat, &pfd );
-
+  auto e = glGetError();
   // create and enable the render context (RC)
   render_context_ = wglCreateContext(device_context_);
+  e = glGetError();
   wglMakeCurrent(device_context_,render_context_);
-  
+  e = glGetError();
   //const GLubyte* str = glGetString(GL_EXTENSIONS);
   glShadeModel(GL_SMOOTH);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  auto e = glGetError();
+  e = glGetError();
   SetDisplaySize(width,height);
   
   fontlistbase = 1000;
@@ -155,7 +156,7 @@ void OpenGL::PrintText(int x,int y,const char* str,size_t len) {
   glColor3ub(0xFF,0xFF,0xFF);
   glRasterPos2i(x,y);
   glListBase(fontlistbase);
-  glCallLists(len, GL_UNSIGNED_BYTE, str);
+  glCallLists((GLsizei)len, GL_UNSIGNED_BYTE, str);
 
 
   glPopAttrib();

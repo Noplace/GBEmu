@@ -40,6 +40,7 @@ class DisplayWindow: public core::windows::Window {
     int OnCreate(WPARAM wParam,LPARAM lParam);
     int OnDestroy(WPARAM wParam,LPARAM lParam);
     int OnDropFiles(WPARAM wParam,LPARAM lParam);
+    int OnResize(WPARAM wparam, LPARAM lparam);
     int OnPaint(WPARAM wParam,LPARAM lParam);
     int Render();
   private:

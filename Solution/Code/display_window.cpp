@@ -36,7 +36,7 @@ namespace IO {
 namespace app {
 
 DisplayWindow::DisplayWindow() : Window() {
-  output = new uint32_t[256*256];
+  output = new uint32_t[512*512];
 //  counter = 0;
   instance = GetModuleHandle(nullptr);
 }
@@ -50,6 +50,7 @@ void DisplayWindow::Init() {
   PrepareClass("GBEmu");
   window_class.hIcon = static_cast<HICON>(LoadImage(instance, MAKEINTRESOURCE(IDI_ICON1),IMAGE_ICON,32,32,LR_DEFAULTSIZE));
   window_class.hIconSm = static_cast<HICON>(LoadImage(instance, MAKEINTRESOURCE(IDI_ICON1),IMAGE_ICON,16,16,LR_DEFAULTSIZE));
+  set_style(style()|WS_SIZEBOX);
   Create();
   SetMenu(LoadMenu(instance, MAKEINTRESOURCE(IDR_MENU1)));
   DragAcceptFiles(handle(),true);
@@ -82,7 +83,8 @@ void DisplayWindow::Init() {
   //emu_th = new std::thread(&app::DisplayWindow::Step,this);
   //emu_th->join();
   emu.Initialize(emulation::gb::default_gb_hz);
-  emu.set_mode(emulation::gb::EmuModeGBC);
+  //emu.lcd_driver()->lcdscreenmode_
+  OnCommand(ID_MODE_GBC,0);
   emulation::gb::CartridgeHeader header;
   //emu.cartridge()->LoadFile("..\\test\\cpu_instrs\\cpu_instrs.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
@@ -91,20 +93,22 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\mem_timing-2\\mem_timing-2\\mem_timing.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\03-trigger.gb",&header);
-  //emu.cartridge()->LoadFile("..\\test\\oam_bug\\oam_bug\\rom_singles\\2-causes.gb",&header);
+  emu.cartridge()->LoadFile("..\\test\\oam_bug\\oam_bug\\rom_singles\\5-timing_bug.gb",&header);
 
   //emu.cartridge()->LoadFile("..\\test\\SPRITE.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\opus5.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Super Mario Land (World).gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Pocket Camera (Japan) (Rev A).gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
-  emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);//not original rom, problem with window
+  //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);//not original rom, problem with window
   //emu.cartridge()->LoadFile("..\\test\\Final Fantasy Legend, The (U) [!].gb",&header); 
   //emu.cartridge()->LoadFile("D:\\Personal\\Dev\\GB\\roms\\Kirby's Dream Land (USA, Europe).gb",&header);
 
   //emu.cartridge()->LoadFile("..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\introcollection.gbc",&header);
+  //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
+
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Pokemon Silver.gbc",&header);
   
@@ -125,16 +129,30 @@ int DisplayWindow::OnCreate(WPARAM wParam,LPARAM lParam) {
 
 int DisplayWindow::OnDestroy(WPARAM wParam,LPARAM lParam) {
   exit_signal_ = true;
-  PostQuitMessage(0);
+  //
   emu.Stop();
   emu.Deinitialize();
   glDeleteTextures(1,&texture);
   gfx.Deinitialize();
-  
+  PostQuitMessage(0);
   return 0;
 }
 
 int DisplayWindow::OnCommand(WPARAM wParam,LPARAM lParam) {
+
+  switch (LOWORD(wParam)) {
+    case ID_MODE_GB:
+      CheckMenuItem(menu_,ID_MODE_GB,MF_CHECKED);
+      CheckMenuItem(menu_,ID_MODE_GBC,MF_UNCHECKED);
+      emu.set_mode(emulation::gb::EmuModeGB); 
+      break;
+    case ID_MODE_GBC:
+      CheckMenuItem(menu_,ID_MODE_GBC,MF_CHECKED);
+      CheckMenuItem(menu_,ID_MODE_GB,MF_UNCHECKED);
+      emu.set_mode(emulation::gb::EmuModeGBC); 
+      break;
+  }
+
   if (HIWORD(wParam)==0) {
     
     if (LOWORD(wParam)==ID_VIDEO_STD320X288) {
@@ -148,8 +166,8 @@ int DisplayWindow::OnCommand(WPARAM wParam,LPARAM lParam) {
     if (LOWORD(wParam)==ID_VIDEO_EAGLE512X480) {
       CheckMenuItem(menu_,ID_VIDEO_EAGLE512X480,MF_CHECKED);
       CheckMenuItem(menu_,ID_VIDEO_STD320X288,MF_UNCHECKED);
-      SetClientSize(512,480);
-      gfx.SetDisplaySize(512,480);
+      SetClientSize(640,288*2);
+      gfx.SetDisplaySize(640,288*2);
       display_mode = ID_VIDEO_EAGLE512X480;
     }
 
@@ -259,10 +277,18 @@ int DisplayWindow::Render() {
   return 0;
 }
 
+int DisplayWindow::OnResize(WPARAM wparam, LPARAM lparam) {
+  gfx.SetDisplaySize(LOWORD(lparam),HIWORD(lparam));
+  client_width_ = LOWORD(lparam);
+  client_height_ = HIWORD(lparam);
+  return 0;
+}
+
 int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
   if (emu.state == 0) return 0;
   glEnable( GL_TEXTURE_2D );
   glColor3ub(0xFF,0xFF,0xFF);
+
   switch(display_mode) {
     case ID_VIDEO_STD320X288:
       //glDrawPixels(256,240,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
@@ -272,9 +298,9 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
       glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,256,256,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
       glBegin( GL_QUADS );
       glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
-      glTexCoord2d(0.625,0.0); glVertex2d(320,0.0);
-      glTexCoord2d(0.625,0.5625); glVertex2d(320,288);
-      glTexCoord2d(0.0,0.5625); glVertex2d(0.0,288);
+      glTexCoord2d(0.625,0.0); glVertex2d(client_width_,0.0);
+      glTexCoord2d(0.625,0.5625); glVertex2d(client_width_,client_height_);
+      glTexCoord2d(0.0,0.5625); glVertex2d(0.0,client_height_);
       /*glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
       glTexCoord2d(1,0.0); glVertex2d(256,0.0);
       glTexCoord2d(1,1); glVertex2d(256,256);
@@ -283,14 +309,14 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
     break;
       
     case ID_VIDEO_EAGLE512X480:
-      //ScaleImageEagle2X(nes.frame_buffer,256,240,output);
+      ScaleImageEagle2X(emu.lcd_driver()->frame_buffer,256,256,output);
       glBindTexture( GL_TEXTURE_2D, texture );
-      glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,512,480,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
+      glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,512,512,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
       glBegin( GL_QUADS );
       glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
-      glTexCoord2d(1.0,0.0); glVertex2d(256.0*2,0.0);
-      glTexCoord2d(1.0,1.0); glVertex2d(256.0*2,240.0*2);
-      glTexCoord2d(0.0,1.0); glVertex2d(0.0,240.0*2);
+      glTexCoord2d(0.625,0.0); glVertex2d(client_width_,0.0);
+      glTexCoord2d(0.625,0.5625); glVertex2d(client_width_,client_height_);
+      glTexCoord2d(0.0,0.5625); glVertex2d(0.0,client_height_);
       glEnd();
       //hq2x_filter_render(output,256,nes.frame_buffer,256,256,240);
       //glDrawPixels(512,480,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
@@ -299,14 +325,18 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
   
 
   char caption[256];
-  glColor4ub(150,150,150,80);
-  glRecti(0,0,125,42);
+  glColor4ub(0,0,0,150);
+  //glRecti(0,0,225,62);
   sprintf(caption,"FPS: %02.2f Hz\0",emu.fps());
   gfx.PrintText(0,11,caption,strlen(caption));
   sprintf(caption,"Freq : %0.2f Mhz\0",emu.frequency_mhz());
   gfx.PrintText(0,22,caption,strlen(caption));
   sprintf(caption,"CPS: %llu\0",emu.cycles_per_second());
   gfx.PrintText(0,33,caption,strlen(caption));
+
+  char* mbc3_rtc_test();
+  auto str = mbc3_rtc_test();
+  //gfx.PrintText(0,43,str,strlen(str));
 
   gfx.Render();
   return 0;

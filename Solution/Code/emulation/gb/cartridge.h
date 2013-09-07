@@ -116,6 +116,7 @@ class Cartridge : public Component {
   uint8_t* rom_;
   char cartridge_filename[256];
   char cartridge_path[1024];
+  bool save_rtc;
 };
 
 

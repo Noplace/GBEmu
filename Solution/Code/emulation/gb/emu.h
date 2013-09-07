@@ -57,7 +57,7 @@ class Emu {
   std::atomic<int> state;
   const double fps() { return timing.fps; }
   const double base_freq_hz() { return base_freq_hz_; }
-  void set_base_freq_hz(double base_freq_hz) { base_freq_hz_ = base_freq_hz; }
+  void set_base_freq_hz(double base_freq_hz) { base_freq_hz_ = base_freq_hz; timing.step_dt =  1000.0 / base_freq_hz_; }
   double frequency_mhz() { return frequency_mhz_; }
   uint64_t cycles_per_second() { return cycles_per_second_; }
 
@@ -108,7 +108,7 @@ class Emu {
     double fps_time_span;
     double span_accumulator;
     double time_span;
-
+    double step_dt;
   } timing;
   static void thread_func(Emu* emu);
 

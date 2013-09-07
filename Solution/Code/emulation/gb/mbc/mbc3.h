@@ -34,6 +34,7 @@ class MBC3 : public MemoryBankController {
     rtc_select = 0;
 
     timecounter = 0;
+    rtc_timer = 0;
     memset(rtc,0,sizeof(rtc));
     switch(cartridge->header->cartridge_type) {
       case 0x0F:battery_ = true; break;
@@ -42,6 +43,8 @@ class MBC3 : public MemoryBankController {
     }
     if (battery_)
       cartridge->LoadRam();
+
+    latch_seq = 0;
   }
   void Deinitialize() {
     if (battery_)
@@ -100,7 +103,21 @@ class MBC3 : public MemoryBankController {
         rtc_select = data-0x08;
       }
     } else if (address >= 0x6000 && address <= 0x7FFF) {
-      
+      if (data == 0x00 && latch_seq == 0)
+        latch_seq = 1;
+      if (data == 0x01 && latch_seq == 1) {
+        
+        rtc[0] = rtc_timer % 60;
+        rtc[1] = (rtc_timer/ 60) % 60;
+        rtc[2] = (rtc_timer / 60 / 60) % 24;
+        auto days = rtc_timer / 60 / 60 / 24;
+        rtc[3] = days&0xFF;
+        rtc[4] &= ~0x81;
+        rtc[4] |= (days>>8)&0x1;
+        rtc[4] |= (days>>2)&0x80;
+        latch_seq = 0;
+      }
+  
 
     } else if (address >= 0xA000 && address <= 0xBFFF) {
       if ((eram_enable&0x0A)==0x0A&&mode==0 && eram_size)
@@ -112,10 +129,11 @@ class MBC3 : public MemoryBankController {
   }
   void Step(double dt) {
     timecounter += dt;
-    if (timecounter >= 0.001) { // 1sec ////32768Hz, for original gameboy
+    if (timecounter >= 1000.0) { // 1sec ////32768Hz, for original gameboy
 
       if (rtc[4]&0x40) return;//halt
-      if (++rtc[0] == 60) { //sec
+      ++rtc_timer;
+     /* if (++rtc[0] == 60) { //sec
         if (++rtc[1] == 60) { //min
           if (++rtc[2] == 24) { //hour
             if (++rtc[3] == 0xFF) { //day
@@ -130,16 +148,18 @@ class MBC3 : public MemoryBankController {
           rtc[1] = 0;
         }
         rtc[0] = 0;
-      }
-      timecounter = 0;
+      }*/
+      timecounter -= 1000.0;
     }
   }
   uint8_t rom_bank_number;
   uint8_t mode;
   uint8_t ram_bank_number;
   uint8_t rtc[5];
+  uint64_t rtc_timer;
   uint8_t rtc_enable;
   uint8_t rtc_select;
+  uint8_t latch_seq;
   double timecounter;
 };
 

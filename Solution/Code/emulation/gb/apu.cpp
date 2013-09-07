@@ -18,13 +18,13 @@
 *****************************************************************************************************************/
 #include "gb.h"
 #include "../../application.h"
-#include "../../audio/output/wasapi.h"
+
 #include "../../audio/synth/lowpass.h"
 
 namespace emulation {
 namespace gb {
 
-audio::synth::filters::LowPassFilter lowpass;
+audio::synth::filters::LowPassFilter lowpass_left,lowpass_right;
 
 
 
@@ -47,10 +47,9 @@ void Apu::Initialize(Emu* emu) {
   output_buffer_ = new short[4410*2];
   output_ = new audio::output::WASAPI();
   output_->set_window_handle(app::Application::Current()->display_window().handle());
-  //output_->set_buffer_size(4*44100*2);
+  output_->set_buffer_size(4*44100*2);
   output_->Initialize(44100,2,16);
   output_->Play();
-  //WASAPI_Initialize(44100,2,16);
 
   sample_counter_ = 0;
   sample_ratio_ = uint32_t(emu_->base_freq_hz() / 44100);
@@ -63,10 +62,13 @@ void Apu::Initialize(Emu* emu) {
   audio::synth::noiseseed = rand();
   Reset();
 
-  lowpass.set_sample_rate(44100);
-  lowpass.set_cutoff_freq(22100);
-  lowpass.Initialize();
+  lowpass_left.set_sample_rate(44100);
+  lowpass_left.set_cutoff_freq(22050);
+  lowpass_left.Initialize();
   
+  lowpass_right.set_sample_rate(44100);
+  lowpass_right.set_cutoff_freq(22050);
+  lowpass_right.Initialize();
 }
 
 void Apu::Reset() {
@@ -141,6 +143,7 @@ void Apu::Reset() {
 }
 
 void Apu::Deinitialize() {
+
   output_->Stop();
   output_->Deinitialize(); 
   SafeDelete(&output_);
@@ -182,23 +185,28 @@ void Apu::Tick() {
   }
  
 
+  
+  channel1.acc_sample_left += channel1.sample*channel1.envelope.vol*nr51_.ch1so2;
+  channel2.acc_sample_left += channel2.sample*channel2.envelope.vol*nr51_.ch2so2;
+  channel3.acc_sample_left += (channel3.sample>>channel3.volshift)*nr51_.ch3so2;
+  channel4.acc_sample_left += channel4.sample*channel4.envelope.vol*nr51_.ch4so2;
 
-  ++sample_counter_;
-  if (sample_counter_ >= sample_ratio_)
+  channel1.acc_sample_right += channel1.sample*channel1.envelope.vol*nr51_.ch1so1;
+  channel2.acc_sample_right += channel2.sample*channel2.envelope.vol*nr51_.ch2so1;
+  channel3.acc_sample_right += (channel3.sample>>channel3.volshift)*nr51_.ch3so1;
+  channel4.acc_sample_right += channel4.sample*channel4.envelope.vol*nr51_.ch4so1;
+
+  if (++sample_counter_ == sample_ratio_)
   {
 
-    auto channel1_sample = ((channel1.sample) * (channel1.envelope.vol / 15.0f));
-    auto channel2_sample = ((channel2.sample) * (channel2.envelope.vol / 15.0f));
-    auto channel3_sample = (channel3.sample / 15.0f)*channel3.vol;
-    auto channel4_sample = float(channel4.sample) * (channel4.envelope.vol / 15.0f);
-   
-    auto sample_right = ((nr51_.ch1so1 * channel1_sample)+(nr51_.ch2so1 * channel2_sample)+(nr51_.ch3so1 * channel3_sample)+(nr51_.ch4so1 * channel4_sample));
-    auto sample_left = ((nr51_.ch1so2 * channel1_sample)+(nr51_.ch2so2 * channel2_sample)+(nr51_.ch3so2 * channel3_sample)+(nr51_.ch4so2 * channel4_sample));
-    sample_right = high_pass(sample_right,channel1.dac_enable);
-    sample_right = ((sample_right*2.0f)-1) * 0.25f * 32767.0f;
-    sample_left = ((sample_left*2.0f)-1) * 0.25f * 32767.0f;
-    sample_right *=  (nr50_.so1vol / 7.0f);
-    sample_left *=  (nr50_.so2vol / 7.0f);
+    auto sample_right = (channel1.acc_sample_right+channel2.acc_sample_right+channel3.acc_sample_right+channel4.acc_sample_right)/(15.0f*sample_counter_)*(nr50_.so1vol+1);
+    auto sample_left =  (channel1.acc_sample_left+channel2.acc_sample_left+channel3.acc_sample_left+channel4.acc_sample_left)/(15.0f*sample_counter_)*(nr50_.so2vol+1);
+    //sample_right = high_pass(sample_right,channel1.dac_enable);
+    sample_left= lowpass_left.Tick(sample_left);
+    sample_right= lowpass_right.Tick(sample_right);
+    sample_right = ((sample_right*2.0f)-1) * 0.25f * 32767.0f * 0.125f; //0.125 = master volume attentuation,0.25 to reduce for 4 channels
+    sample_left = ((sample_left*2.0f)-1) * 0.25f * 32767.0f * 0.125f;
+
 
     
     static int sindex = 0;
@@ -210,6 +218,9 @@ void Apu::Tick() {
       output_->Write(output_buffer_,8820<<1);
       sindex = 0;
     }
+
+    channel1.acc_sample_left = channel2.acc_sample_left = channel3.acc_sample_left = channel4.acc_sample_left = 0;
+    channel1.acc_sample_right = channel2.acc_sample_right = channel3.acc_sample_right = channel4.acc_sample_right = 0;
   }
 
   
@@ -487,10 +498,10 @@ void Apu::Write(uint16_t address, uint8_t data) {
     case 0xFF1C:
       channel3.reg2 = data;  
       switch ((channel3.reg2 & 0x60)>>5) {
-        case 0x0:channel3.vol = 0; break;
-        case 0x1:channel3.vol = 1.0f; break;
-        case 0x2:channel3.vol = 0.5f; break;
-        case 0x3:channel3.vol = 0.25f; break;
+        case 0x0:channel3.vol = 0; channel3.volshift = 4; break;
+        case 0x1:channel3.vol = 1.0f;channel3.volshift = 0; break;
+        case 0x2:channel3.vol = 0.5f; channel3.volshift = 1;break;
+        case 0x3:channel3.vol = 0.25f;channel3.volshift = 2; break;
       }
       break;
     case 0xFF1D:

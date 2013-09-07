@@ -102,6 +102,16 @@ int WASAPI::Initialize(uint32_t sample_rate, uint8_t channels, uint8_t bits) {
 
   written_samples = 0;
 
+  { //clear
+  BYTE *dest_buf=nullptr;
+  
+  render_client->GetBuffer(buffer_sample_count, &dest_buf);
+  if (dest_buf) {
+    memset(dest_buf,0,buffer_sample_count<<2);
+  }
+  render_client->ReleaseBuffer(buffer_sample_count, 0);
+  }
+
   return S_OK;
 }
 int WASAPI::Deinitialize() {

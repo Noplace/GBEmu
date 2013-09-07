@@ -102,7 +102,7 @@ class Cpu : public Component {
   uint8_t opcode;
   
 
-  void simulateSpriteBug();
+  void simulateSpriteBug(uint16_t value);
   void updateCpuFlagC(uint8_t a,uint8_t b,int mode) {
     if (mode == 0) {
       uint16_t r2 = (a) + (b);

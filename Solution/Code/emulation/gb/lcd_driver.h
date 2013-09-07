@@ -52,6 +52,13 @@ union LCDStatusRegister {
 
 enum LCDScreenMode {LCDScreenModeInterlace,LCDScreenModeProgressive};
 
+struct ColorMapLine {
+  uint16_t pixel;
+  uint8_t orgcol;
+  bool bgpriority;
+  bool bgoveroam;
+};
+
 class LCDDriver : public Component {
  public:
   uint8_t sprite_bug_counter;
@@ -64,18 +71,19 @@ class LCDDriver : public Component {
   void Tick();
   uint8_t Read(uint16_t address);
   void    Write(uint16_t address, uint8_t data);
-  void RenderBGLine(int x0,int x1,uint32_t* cmline);
-  void RenderWindowLine(int x0,int x1,uint32_t* cmline);
-  void RenderSpriteLine(int x0,int x1,uint32_t* cmline);
+  void RenderBGLine(int x0,int x1,ColorMapLine* cmline);
+  void RenderWindowLine(int x0,int x1,ColorMapLine* cmline);
+  void RenderSpriteLine(int x0,int x1,ColorMapLine* cmline);
 
-  void RenderCGBBGLine(int x0,int x1,uint32_t* cmline);
-  void RenderCGBWindowLine(int x0,int x1,uint32_t* cmline);
-  void RenderCGBSpriteLine(int x0,int x1,uint32_t* cmline);
+  void RenderCGBBGLine(int x0,int x1,ColorMapLine* cmline);
+  void RenderCGBWindowLine(int x0,int x1,ColorMapLine* cmline);
+  void RenderCGBSpriteLine(int x0,int x1,ColorMapLine* cmline);
   void RenderLine(int x0,int x1);
   void RenderAllBGTiles();
   void UpdateCGBPalBasedonGBPal(int paltype);
   const LCDControlRegister& lcdc() { return lcdc_; }
   const LCDStatusRegister& stat() { return stat_; }
+  const uint32_t scanline_counter() { return scanline_counter_; }
  private:
    struct {
      uint8_t* oam;
@@ -102,7 +110,7 @@ class LCDDriver : public Component {
       return length == 0; //0 is active
     }
    }hdma;
-   uint32_t* colormap;
+   ColorMapLine* colormap;
    LCDControlRegister lcdc_;
    LCDStatusRegister stat_;
    uint8_t scroll_x,scroll_y;
@@ -112,11 +120,13 @@ class LCDDriver : public Component {
    uint8_t bg_pallete_data;
    uint8_t obj_pallete1_data;
    uint8_t obj_pallete2_data;
+   uint8_t lcdmode_;
    uint8_t cgb_bgpal_index,cgb_bgpal_data,cgb_sppal_index,cgb_sppal_data;
+   uint8_t pallock_;
    uint8_t cgb_bgpal[64];
    uint8_t cgb_sppal1[64],cgb_sppal2[64];
-   uint64_t mode3_extra_cycles;
-   uint64_t counter1,counter2;
+   uint32_t mode3_extra_cycles_;
+   uint32_t screen_counter_,scanline_counter_;
    LCDScreenMode lcdscreenmode_;
    bool evenodd;
    double vsync,hsync;

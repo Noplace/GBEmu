@@ -55,8 +55,8 @@ class DirectSound : public Interface {
   uint32_t last_cursor_pos;
   DWORD last_write_cursor;
   //std::atomic<int> lock;
-  std::atomic<int> mode;
-  std::mutex mutex;
+  int mode;
+  //std::mutex mutex;
 };
 
 }
