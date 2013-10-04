@@ -27,6 +27,7 @@ class MBC2 : public MemoryBankController {
     MemoryBankController::Initialize(cartridge);
     eram_ = new uint8_t[512];
     rom_bank_number = 1;
+    ram_bank_number = 0;
     battery_ = cartridge->header->cartridge_type == 0x06;
     if (battery_)
       cartridge->LoadRam();
@@ -76,7 +77,6 @@ class MBC2 : public MemoryBankController {
         eram_[address&0x1FF]=data;
     } 
   }
-  uint8_t rom_bank_number;
 };
 
 }

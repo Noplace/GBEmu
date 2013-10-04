@@ -27,26 +27,50 @@ void hq2x_filter_render(
 );
 
 
+void dotmatrix_sim(uint32_t* inbuf,uint32_t* outbuf) {
 
+  for(int y =0;y<256;++y) {
+    auto srcline = &inbuf[y<<8];
+    
+    for (int x=0;x<256;++x) {
+      //
+      for (int z=0;z<5;++z) {
+        auto destline = &outbuf[((y*6)+z)*(256*6)];
+        destline[x*6] = srcline[x];
+        destline[x*6+1] = srcline[x];
+        destline[x*6+2] = srcline[x];
+        destline[x*6+3] = srcline[x];
+        destline[x*6+4] = srcline[x];
+        destline[x*6+5] = 0xFF808E0B;
+      }
+        auto destline = &outbuf[((y*6)+5)*(256*6)];
+        destline[x*6] = 0xFF808E0B;
+        destline[x*6+1] = 0xFF808E0B;
+        destline[x*6+2] = 0xFF808E0B;
+        destline[x*6+3] = 0xFF808E0B;
+        destline[x*6+4] = 0xFF808E0B;
+        destline[x*6+5] = 0xFF808E0B;
+    }
+  }
 
-namespace IO {
-  extern HWND window_handle;
 }
 
 namespace app {
 
 DisplayWindow::DisplayWindow() : Window() {
-  output = new uint32_t[512*512];
+
 //  counter = 0;
   instance = GetModuleHandle(nullptr);
 }
 
 DisplayWindow::~DisplayWindow() {
-  delete []output;
+
 }
 
 void DisplayWindow::Init() {
-  exit_signal_ = false;
+  output = new uint32_t[512*512];
+  dotmatrix_output = new uint32_t[256*256*6*6];
+//  exit_signal_ = false;
   PrepareClass("GBEmu");
   window_class.hIcon = static_cast<HICON>(LoadImage(instance, MAKEINTRESOURCE(IDI_ICON1),IMAGE_ICON,32,32,LR_DEFAULTSIZE));
   window_class.hIconSm = static_cast<HICON>(LoadImage(instance, MAKEINTRESOURCE(IDI_ICON1),IMAGE_ICON,16,16,LR_DEFAULTSIZE));
@@ -93,11 +117,12 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\mem_timing-2\\mem_timing-2\\mem_timing.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\03-trigger.gb",&header);
-  emu.cartridge()->LoadFile("..\\test\\oam_bug\\oam_bug\\rom_singles\\5-timing_bug.gb",&header);
-
+  //emu.cartridge()->LoadFile("..\\test\\oam_bug\\oam_bug\\rom_singles\\8-instr_effect.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\oam_bug\\oam_bug\\rom_singles\\6-timing_no_bug.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\halt_bug\\halt_bug.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\SPRITE.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\opus5.gb",&header);
-  //emu.cartridge()->LoadFile("..\\test\\Super Mario Land (World).gb",&header);
+  emu.cartridge()->LoadFile("..\\test\\Super Mario Land (World).gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Pocket Camera (Japan) (Rev A).gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);//not original rom, problem with window
@@ -109,9 +134,10 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\introcollection.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
 
+
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Pokemon Silver.gbc",&header);
-  
+  //emu.cartridge()->LoadFile("..\\test\\Grand Theft Auto.gbc",&header);
   emu.Run();
 }
 
@@ -128,12 +154,14 @@ int DisplayWindow::OnCreate(WPARAM wParam,LPARAM lParam) {
 }
 
 int DisplayWindow::OnDestroy(WPARAM wParam,LPARAM lParam) {
-  exit_signal_ = true;
+  //exit_signal_ = true;
   //
   emu.Stop();
   emu.Deinitialize();
   glDeleteTextures(1,&texture);
   gfx.Deinitialize();
+  delete []output;
+  SafeDeleteArray(&dotmatrix_output);
   PostQuitMessage(0);
   return 0;
 }
@@ -286,6 +314,17 @@ int DisplayWindow::OnResize(WPARAM wparam, LPARAM lparam) {
 
 int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
   if (emu.state == 0) return 0;
+  glDisable( GL_TEXTURE_2D );
+  
+  glColor4ub(0x72,0x7E,0x01,0xFF);
+  glColor4ub(0x80,0x8E,0x0B,0xFF);
+  glBegin( GL_QUADS );
+  glVertex2d(0.0,0.0);
+  glVertex2d(client_width_,0.0);
+  glVertex2d(client_width_,client_height_);
+  glVertex2d(0.0,client_height_);
+  glEnd();
+
   glEnable( GL_TEXTURE_2D );
   glColor3ub(0xFF,0xFF,0xFF);
 
@@ -293,18 +332,17 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
     case ID_VIDEO_STD320X288:
       //glDrawPixels(256,240,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
       //glEnable(GL_TEXTURE_2D);
-      memcpy(output,emu.lcd_driver()->frame_buffer,256*256*4);
+
+
+
+      //memcpy(output,emu.lcd_driver()->frame_buffer,256*256*4);
       glBindTexture( GL_TEXTURE_2D, texture );
-      glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,256,256,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
+      glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,256,256,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,emu.lcd_driver()->frame_buffer);
       glBegin( GL_QUADS );
       glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
       glTexCoord2d(0.625,0.0); glVertex2d(client_width_,0.0);
       glTexCoord2d(0.625,0.5625); glVertex2d(client_width_,client_height_);
       glTexCoord2d(0.0,0.5625); glVertex2d(0.0,client_height_);
-      /*glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
-      glTexCoord2d(1,0.0); glVertex2d(256,0.0);
-      glTexCoord2d(1,1); glVertex2d(256,256);
-      glTexCoord2d(0.0,1); glVertex2d(0.0,256);*/
       glEnd();
     break;
       
@@ -321,21 +359,33 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
       //hq2x_filter_render(output,256,nes.frame_buffer,256,256,240);
       //glDrawPixels(512,480,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
     break;
+
+    case 3:
+      dotmatrix_sim(emu.lcd_driver()->frame_buffer,dotmatrix_output);
+      glBindTexture( GL_TEXTURE_2D, texture );
+      glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,256*6,256*6,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,dotmatrix_output);
+      glBegin( GL_QUADS );
+      glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
+      glTexCoord2d(0.625,0.0); glVertex2d(client_width_,0.0);
+      glTexCoord2d(0.625,0.5625); glVertex2d(client_width_,client_height_);
+      glTexCoord2d(0.0,0.5625); glVertex2d(0.0,client_height_);
+      glEnd();
+    break;
   }
   
 
   char caption[256];
   glColor4ub(0,0,0,150);
   //glRecti(0,0,225,62);
-  sprintf(caption,"FPS: %02.2f Hz\0",emu.fps());
-  gfx.PrintText(0,11,caption,strlen(caption));
-  sprintf(caption,"Freq : %0.2f Mhz\0",emu.frequency_mhz());
-  gfx.PrintText(0,22,caption,strlen(caption));
-  sprintf(caption,"CPS: %llu\0",emu.cycles_per_second());
-  gfx.PrintText(0,33,caption,strlen(caption));
+  sprintf(caption,"FPS\t: %02.2f Hz\0",emu.fps());
+  gfx.PrintText(0,14,caption,strlen(caption));
+  sprintf(caption,"Freq\t: %0.2f Mhz\0",emu.frequency_mhz());
+  gfx.PrintText(0,28,caption,strlen(caption));
+  sprintf(caption,"CPS\t: %llu\0",emu.cycles_per_second());
+  gfx.PrintText(0,42,caption,strlen(caption));
 
-  char* mbc3_rtc_test();
-  auto str = mbc3_rtc_test();
+  //char* mbc3_rtc_test();
+  //auto str = mbc3_rtc_test();
   //gfx.PrintText(0,43,str,strlen(str));
 
   gfx.Render();

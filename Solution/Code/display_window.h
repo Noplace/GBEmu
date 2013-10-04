@@ -32,7 +32,7 @@ class DisplayWindow: public core::windows::Window {
     void Init();
     void ResetTiming();
     void Step();
-    bool exit_signal() { return exit_signal_; }
+    //bool exit_signal() { return exit_signal_; }
   protected:
     int OnCommand(WPARAM wParam,LPARAM lParam);
     int OnKeyDown(WPARAM wParam,LPARAM lParam);
@@ -44,11 +44,12 @@ class DisplayWindow: public core::windows::Window {
     int OnPaint(WPARAM wParam,LPARAM lParam);
     int Render();
   private:
-    std::thread* emu_th;
-    std::atomic_bool exit_signal_;
+    //std::thread* emu_th;
+    //std::atomic_bool exit_signal_;
     int display_mode;
     int machine_mode;
     uint32_t* output;
+    uint32_t* dotmatrix_output;
     //graphics::GDI gfx;
     graphics::OpenGL gfx;
     emulation::gb::Emu emu;

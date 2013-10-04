@@ -103,7 +103,7 @@ class Cpu : public Component {
   
 
   void simulateSpriteBug(uint16_t value);
-  void updateCpuFlagC(uint8_t a,uint8_t b,int mode) {
+  inline void updateCpuFlagC(uint8_t a,uint8_t b,int mode) {
     if (mode == 0) {
       uint16_t r2 = (a) + (b);
       reg.F.C = r2>0xFF?1:0;
@@ -112,7 +112,7 @@ class Cpu : public Component {
     }
   }
   
-  void updateCpuFlagH(uint8_t a,uint8_t b,int mode) {
+  inline void updateCpuFlagH(uint8_t a,uint8_t b,int mode) {
     /*if((dest^b^a)&0x10)
       reg.F.H=1;
     else
@@ -125,20 +125,20 @@ class Cpu : public Component {
     }
   }
 
-  void updateCpuFlagZ(uint8_t r) {
+  inline void updateCpuFlagZ(uint8_t r) {
     reg.F.Z = r == 0?1:0;
   }
 
-  void push(uint8_t data) {
+  inline void push(uint8_t data) {
     mem_->ClockedWrite8(--reg.SP,data);
   }
 
-  uint8_t pop() {
+  inline uint8_t pop() {
     return mem_->ClockedRead8(reg.SP++);
   }
 
   template<uint8_t dest,uint8_t src,int mode>
-  void arithmeticMode(uint8_t& a, uint8_t& b) {
+  inline void arithmeticMode(uint8_t& a, uint8_t& b) {
     if (mode == 0) {
       a = reg.raw8[dest];
       b = reg.raw8[src];
@@ -149,6 +149,24 @@ class Cpu : public Component {
       a = reg.raw8[dest];
       b = mem_->ClockedRead8(reg.PC++);
     }
+  }
+
+  template<uint8_t dest,uint8_t src>
+  inline void arithmeticMode0(uint8_t& a, uint8_t& b) {
+      a = reg.raw8[dest];
+      b = reg.raw8[src];
+  }
+
+  template<uint8_t dest,uint8_t src>
+  inline void arithmeticMode1(uint8_t& a, uint8_t& b) {
+      a = reg.raw8[dest];
+      b = mem_->ClockedRead8(reg.raw16[src]);
+  }
+
+  template<uint8_t dest,uint8_t src>
+  inline void arithmeticMode2(uint8_t& a, uint8_t& b) {
+      a = reg.raw8[dest];
+      b = mem_->ClockedRead8(reg.PC++);
   }
 
   void pushPC() {

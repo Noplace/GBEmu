@@ -44,5 +44,20 @@ class Interface {
   uint32_t buffer_size_;
 };
 
+class NullAudio : public Interface {
+ public:
+   int Initialize(uint32_t sample_rate,uint8_t channels,uint8_t bits) { return 0; }
+  int Deinitialize() { return 0; }
+  int Play() { return 0; }
+  int Stop() { return 0; }
+  uint32_t GetBytesBuffered() { return 0; }
+  void GetCursors(uint32_t& play, uint32_t& write) {}
+  int Write(void* data_pointer, uint32_t size_bytes) { return 0; }
+  int BeginWrite(uint32_t& samples) { return 0; }
+  int EndWrite(void* data_pointer) { return 0; }
+  void Sync() {};
+
+};
+
 }
 }

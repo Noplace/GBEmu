@@ -19,10 +19,20 @@
 #include "gb.h"
 #include "../../application.h"
 
+
+inline void printThreadId() {
+  {
+    char str[25];
+    sprintf(str,"thread id:%llu\n",std::this_thread::get_id().hash());
+    OutputDebugString(str);
+  }
+}
+
 namespace emulation {
 namespace gb {
 
 void Emu::Initialize(double base_freq_hz) {
+  InitializeCriticalSection(&cs);
   memset(&timing,0,sizeof(timing));
   set_base_freq_hz(base_freq_hz);
   cartridge_.Initialize(this);
@@ -47,6 +57,7 @@ void Emu::Deinitialize() {
   lcd_driver_.Deinitialize();
   timer_.Deinitialize();
   cartridge_.Deinitialize();
+  DeleteCriticalSection(&cs);
 }
 
 double Emu::Step() {
@@ -87,25 +98,20 @@ void Emu::Run() {
   cycles_per_second_ = 0;
   cpu_cycles_ = 0;
   last_cpu_cycles_ = 0;
-  thread = new std::thread([](Emu* emu){
-
-  memset(&emu->timing,0,sizeof(emu->timing));
-  emu->utimer.Calibrate();
-  emu->timing.prev_cycles = emu->utimer.GetCurrentCycles();
-  emu->set_base_freq_hz(emu->base_freq_hz_);
-  while (emu->state != 0) {
-    emu->Step();
-  }
- 
-  OutputDebugString("end of thread\n"); 
-  },this);
+  thread = new std::thread(Emu::thread_func,this);
   SetThreadAffinityMask(thread->native_handle(),1);
+  
 }
 
 void Emu::Stop() {
   if (thread==nullptr && state == 0) return;
+  EnterCriticalSection(&cs);
   state = 0;
+  LeaveCriticalSection(&cs);
+  printThreadId();
+  //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   thread->join();
+  
   OutputDebugString("killed thread\n");
   SafeDelete(&thread);
 }
@@ -148,7 +154,9 @@ void Emu::thread_func(Emu* emu) {
   emu->utimer.Calibrate();
   emu->timing.prev_cycles = emu->utimer.GetCurrentCycles();
   emu->set_base_freq_hz(emu->base_freq_hz_);
-  while (emu->state != 0) {
+  printThreadId();
+  
+  while (emu->state==1) {
     emu->Step();
   }
   //output_->Stop();

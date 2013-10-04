@@ -86,8 +86,7 @@ class MBC5 : public MemoryBankController {
         eram_[(address&0x1FFF)|(ram_bank_number<<13)] = data;
     }
   }
-  uint16_t rom_bank_number;
-  uint8_t ram_bank_number;
+
 
 };
 

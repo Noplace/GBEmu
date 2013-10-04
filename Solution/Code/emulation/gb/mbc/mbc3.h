@@ -152,9 +152,7 @@ class MBC3 : public MemoryBankController {
       timecounter -= 1000.0;
     }
   }
-  uint8_t rom_bank_number;
   uint8_t mode;
-  uint8_t ram_bank_number;
   uint8_t rtc[5];
   uint64_t rtc_timer;
   uint8_t rtc_enable;

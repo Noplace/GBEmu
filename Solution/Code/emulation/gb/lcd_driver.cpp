@@ -40,7 +40,8 @@ static inline uint32_t rgbtobgr555(uint32_t src) {
 }
 
 
-const uint32_t pal32[4] = {0xffffffff,0xffAAAAAA,0xff545454,0xff000000};
+//const uint32_t pal32[4] = {0xffffffff,0xffAAAAAA,0xff545454,0xff000000};
+const uint32_t dmg_colors[4] = {0x00000000,0x54000000,0xAA000000,0xFF000000};
 
 
 
@@ -141,7 +142,8 @@ void LCDDriver::Reset() {
   hsync = 0;
   sprite_bug_counter = 0;
   mode3_extra_cycles_ = 0;
-  cgb_bgpal_index-=cgb_bgpal_data=cgb_sppal_index=cgb_sppal_data=0;
+  cgb_bgpal_index=cgb_bgpal_data=cgb_sppal_index=cgb_sppal_data=0;
+  int48signal = 0;
 }
 /*todo variable time for mode 3 and 0
 mode 3:
@@ -167,8 +169,14 @@ void LCDDriver::Tick() {
   switch (stat_.mode) {
     case 2:
       if (scanline_counter_==1) {
-        if (stat_.coincidence_inr && stat_.coincidence) //lyc interrupts occurs at start of mode 2
-          emu_->memory()->interrupt_flag() |= 2;
+        if (stat_.oam_int || (stat_.coincidence_inr && stat_.coincidence)) //lyc interrupts occurs at start of mode 2
+        {
+         // if (int48signal == 0) {
+            emu_->memory()->interrupt_flag() |= 2;
+            int48signal = 1;
+         // }
+        }
+      
       }
       if (scanline_counter_==80)
         stat_.mode = 3;
@@ -194,8 +202,7 @@ void LCDDriver::Tick() {
 
       if (scanline_counter_ == 252+mode3_extra_cycles_) {
         stat_.mode = 0;
-        if (stat_.hblank_int)
-          emu_->memory()->interrupt_flag() |= 2;
+       
       }
       break;
     case 0:
@@ -203,31 +210,48 @@ void LCDDriver::Tick() {
         emu_->memory()->oam()[8+(rand()%152)] = rand()&0xFF; 
         --sprite_bug_counter;
       }*/
-
+      if (scanline_counter_ == 252+mode3_extra_cycles_+1) {
+        if (stat_.hblank_int) {
+          //if (int48signal == 0) {
+            emu_->memory()->interrupt_flag() |= 2;
+            int48signal = 1;
+         // }*/
+        }
+      }
 
       if (scanline_counter_==456) {
         
-        if (hdma.mode == 1) {
+        if (hdma.mode == 1 && hdma.length !=0) {
           uint16_t offset = 0;
-          
+
+          auto src = emu_->memory()->GetMemoryPointer(hdma.src.raw&0xFFF0);
+          auto dest = emu_->memory()->GetMemoryPointer(0x8000|(hdma.dest.raw&0x1FF0));
+          memcpy(dest,src,0x10);
+          hdma.length -= 0x10;
+          hdma.src.raw += 0x10;
+          hdma.dest.raw += 0x10;
         }
 
         if (ly == 143) {
           stat_.mode = 1;//vblank period
-          emu_->memory()->interrupt_flag() |= 1;
-          if (stat_.vblank_int) //either here or in mode 1 all the time//doubt it
-            emu_->memory()->interrupt_flag() |= 2;
         } else {
           stat_.mode = 2;
-          if (stat_.oam_int)
-            emu_->memory()->interrupt_flag() |= 2;
+
         }
       }
       break;
-    case 1:
-
-        
+    case 1:{
+      if (ly == 144 && scanline_counter_ == 1) {
+        emu_->memory()->interrupt_flag() |= 1;
+        if (stat_.vblank_int) { //either here or in mode 1 all the time//doubt it
+          //if (int48signal == 0) {
+            emu_->memory()->interrupt_flag() |= 2;
+            int48signal = 1;
+         // }
+        }
+      }
       break;
+    }
   }
 
   
@@ -242,6 +266,8 @@ void LCDDriver::Tick() {
       scanline_counter_ = 0;
     } 
     scanline_counter_ = 0;
+    //if (evenodd)
+      int48signal = 0;
   }
 
 
@@ -334,6 +360,7 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       break;
     case 0xFF45:
       lyc = data;
+      stat_.coincidence = 0;
       break;
     case 0xFF46: {
       uint16_t srcaddr = data<<8;
@@ -391,11 +418,15 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       hdma.dest.low = data;
       break;
     case 0xFF55:
+      /*if (hdma.active() && ((data&0x80)==0)) {
+        hdma.length = 0;
+        break;
+      }  */
       hdma.length = (data+1)*0x10;
       hdma.mode = (data&0x80)>>7;
       if (hdma.mode == 0) {
         //uint16_t offset = 0;
-        auto src = emu_->memory()->GetMemoryPointer(hdma.src.raw&0xFFFB);
+        auto src = emu_->memory()->GetMemoryPointer(hdma.src.raw&0xFFF0);
         auto dest = emu_->memory()->GetMemoryPointer(0x8000|(hdma.dest.raw&0x1FF0));
         memcpy(dest,src,hdma.length);
         hdma.length = 0;
@@ -606,13 +637,7 @@ void LCDDriver::RenderSpriteLine(int x0,int x1,ColorMapLine* cmline) {
 
 void LCDDriver::RenderCGBBGLine(int x0,int x1,ColorMapLine* cmline) {
 
-  
-  if (scroll_y != 0)
-  {
-    //char str[25];
-    //sprintf(str,"scroll y:%d\n",scroll_y);
-    //OutputDebugString(str);
-  }
+
   uint8_t mapoffset = ((ly+scroll_y)&0xFF) >> 3;
   uint8_t lineoffset = ((scroll_x>>3))&0x1F;
   auto y = (ly + scroll_y) & 7;
@@ -633,7 +658,7 @@ void LCDDriver::RenderCGBBGLine(int x0,int x1,ColorMapLine* cmline) {
   uint8_t* tilemap = &vram[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
   uint8_t* tileattr =  &vram[lcdc_.bg_tile_map ==0?0x3800:0x3C00];
 
-  for (int i=0;i<256;++i) {
+  for (int i=0;i<160;++i) {
     auto attr = tileattr[(mapoffset<<5) + lineoffset];
     auto palindex = attr&0x7;
  
@@ -808,19 +833,20 @@ void LCDDriver::RenderLine(int x0,int x1) {
       RenderCGBWindowLine(x0,x1,cmline);
       RenderCGBSpriteLine(x0,x1,cmline);
       auto fbline = &frame_buffer[ly<<8];
-        for (int i=0;i<256;++i) { //256px per line
+        for (int i=0;i<160;++i) { //256px per line
          *fbline++ = bgr555torgb(cmline->pixel);
          *cmline++;
         }
     } else {
+      
       //RenderAllBGTiles();
       RenderBGLine(x0,x1,cmline);
       RenderWindowLine(x0,x1,cmline);
       RenderSpriteLine(x0,x1,cmline);
 
         auto fbline = &frame_buffer[ly<<8];
-        for (int i=0;i<256;++i) {//256px per line
-          *fbline++ = pal32[cmline->pixel];
+        for (int i=0;i<160;++i) {//256px per line
+          *fbline++ = dmg_colors[cmline->pixel];
           *cmline++;
         }
     }

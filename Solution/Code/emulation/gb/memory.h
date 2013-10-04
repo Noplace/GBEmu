@@ -31,6 +31,7 @@ class Memory : public Component {
   ~Memory() {}
   void Initialize(Emu* emu);
   void Deinitialize();
+  void UpdateMemoryMap();
   void Reset();
   uint8_t* GetMemoryPointer(uint16_t address);
   uint8_t Read8(uint16_t address);
@@ -40,8 +41,8 @@ class Memory : public Component {
   uint8_t* vram() { return vram_; }
   uint8_t* oam() { return oam_; }
   uint8_t* ioports() { return ioports_; }
-  uint8_t& interrupt_enable() { return interrupt_enable_register_; }
-  uint8_t& interrupt_flag() {  return ioports_[0x0F]; }
+  inline uint8_t& interrupt_enable() { return interrupt_enable_register_; }
+  inline uint8_t& interrupt_flag() {  return ioports_[0x0F]; }
   uint16_t ClockedRead16(uint16_t address) {
     uint16_t nn;
     nn = ClockedRead8(address);
@@ -55,6 +56,7 @@ class Memory : public Component {
   }
   void Tick();
  private:
+  uint8_t* memmap[16];
   const uint8_t* rom_;
   uint8_t* vram_;
   uint8_t* wram_;

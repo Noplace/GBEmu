@@ -32,6 +32,8 @@ class MemoryBankController {
     else
       eram_ = nullptr;
     rom_ = cartridge->rom();
+    rom_bank_number = 1;
+    ram_bank_number = 0;
   }
   virtual void Deinitialize() {
      SafeDeleteArray(&eram_); 
@@ -41,6 +43,8 @@ class MemoryBankController {
   virtual void Write(uint16_t address, uint8_t data) = 0;
   virtual void Step(double dt) { }
   uint8_t* eram() { return eram_; }
+  uint16_t rom_bank_number;
+  uint8_t ram_bank_number;
  protected:
   Cartridge* cartridge;
   uint8_t* rom_;

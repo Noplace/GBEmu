@@ -106,6 +106,7 @@ class Cartridge : public Component {
   void LoadFile(const char* filename, CartridgeHeader* header);
   void LoadRam();
   void SaveRam();
+  Emu* emu() { return emu_; }
   uint8_t* rom() { return rom_; }
   uint8_t* GetMemoryPointer(uint16_t address);
   uint8_t Read(uint16_t address);

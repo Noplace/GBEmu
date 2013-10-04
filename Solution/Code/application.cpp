@@ -17,7 +17,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
 #include "application.h"
-
+#include <crtdbg.h>
 namespace app {
 
 Application* Application::current_app_ = nullptr;
@@ -29,6 +29,7 @@ Application::Application(HINSTANCE instance , LPSTR command_line, int show_comma
 
 Application::~Application() {
  current_app_ = nullptr;
+ _CrtDumpMemoryLeaks();
 }
 
 int Application::Run() {
@@ -56,6 +57,10 @@ int Application::Run() {
 
  CoUninitialize();
  //Return the exit code to the system. 
+
+
+
+ 
  return static_cast<int>(msg.wParam);
 }
 

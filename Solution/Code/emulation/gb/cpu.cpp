@@ -345,14 +345,14 @@ void Cpu::Step() {
       //if (emu_->mode() == EmuModeGBC) //hack
       //  reg.A = 0x11;
     //}
-    opcode = emu_->memory()->ClockedRead8(reg.PC++);
+    opcode = mem_->ClockedRead8(reg.PC++);
     (this->*(instructions[opcode]))();
   } else if (cpumode_ == CpuModeHalt) {
     emu_->ClockTick();
   }
 
   if (ime) {
-    uint8_t test = emu_->memory()->interrupt_enable() & emu_->memory()->interrupt_flag();
+    uint8_t test = mem_->interrupt_enable() & mem_->interrupt_flag();
     if (test) {
       ime = false;
       cpumode_ = CpuModeNormal;
@@ -360,20 +360,21 @@ void Cpu::Step() {
 
       if (test & 0x1) { //vblank
         reg.PC = 0x0040;
-        emu_->memory()->interrupt_flag() &= ~0x1;
+        mem_->interrupt_flag() &= ~0x1;
       } else if (test & 0x2) {
         reg.PC = 0x0048; //lcdc status
-        emu_->memory()->interrupt_flag() &= ~0x2;
+        mem_->interrupt_flag() &= ~0x2;
+        //emu_->lcd_driver()->int48signal = 0;
       } else if (test & 0x4) {
         reg.PC = 0x0050; //timer overflow
-        emu_->memory()->interrupt_flag() &= ~0x4;
-        //emu_->memory()->interrupt_enable() &= ~0x4;
+        mem_->interrupt_flag() &= ~0x4;
+        //mem_->interrupt_enable() &= ~0x4;
       } else if (test & 0x8) {
         reg.PC = 0x0058; //serial transfer
-        emu_->memory()->interrupt_flag() &= ~0x8;
+        mem_->interrupt_flag() &= ~0x8;
       } else if (test & 0x10) {
         reg.PC = 0x0060; //hi-lo p10-p13
-        emu_->memory()->interrupt_flag() &= ~0x10;
+        mem_->interrupt_flag() &= ~0x10;
       }
 
     }
@@ -651,6 +652,13 @@ void Cpu::STOP() {
       emu_->set_base_freq_hz(default_gb_hz*2);
     else
       emu_->set_base_freq_hz(default_gb_hz);
+#ifdef _DEBUG    
+    {
+      char str[25];
+      sprintf(str,"CPU Speed Change:%d\n",emu_->speed);
+      OutputDebugString(str);
+    }
+#endif
     cpumode_ = CpuModeNormal;
   }
 }
@@ -666,7 +674,7 @@ const CpuRegisterNames8 reg_index[8] = {
 };
 
 void Cpu::PREFIX_CB() {
-  uint8_t code = emu_->memory()->ClockedRead8(reg.PC++);
+  uint8_t code = mem_->ClockedRead8(reg.PC++);
 
   auto getr = [=]() {
     if ((code&0x7) != 6) {
@@ -1058,7 +1066,7 @@ void Cpu::simulateSpriteBug(uint16_t value) {
   if ((value>=0xFE00&&value<=0xFEFF) && lcdc.lcd_enable == 1 && mode != 1 && driver->scanline_counter() <= 72) {
 
     driver->sprite_bug_counter = 80;
-    //auto oam = emu_->memory()->oam();
+    //auto oam = mem_->oam();
     //for (int i=8;i<0xA0;++i)
     //  oam[i] = rand()&0xFF;
     sprite_bug = 0;

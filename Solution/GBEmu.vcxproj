@@ -112,6 +112,9 @@
       <StackCommitSize>131072</StackCommitSize>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
@@ -201,7 +204,6 @@
       <FileType>Text</FileType>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </Text>
-    <ClInclude Include="..\..\StormTank\StormTankApp\Code\audio\synth\filters\lowpass.h" />
     <ClInclude Include="Code\audio\output\directsound.h" />
     <ClInclude Include="Code\audio\output\interface.h" />
     <ClInclude Include="Code\audio\output\wasapi.h" />

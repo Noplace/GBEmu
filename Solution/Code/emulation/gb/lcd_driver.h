@@ -63,6 +63,7 @@ class LCDDriver : public Component {
  public:
   uint8_t sprite_bug_counter;
   uint32_t* frame_buffer;
+  uint8_t int48signal;
   LCDDriver(){}
   ~LCDDriver() {}
   void Initialize(Emu* emu);

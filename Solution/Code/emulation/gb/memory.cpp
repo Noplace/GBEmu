@@ -34,7 +34,7 @@ General Memory Map
   */
 
 #include "gb.h"
-
+#include "mbc/mbc.h"
 
 namespace emulation {
 namespace gb {
@@ -94,8 +94,6 @@ void Memory::Initialize(Emu* emu) {
   vram_ = new uint8_t[0x4000];
   wram_ = new uint8_t[0x8000];
   memset(vram_,0,0x4000);
-  wram_select = 1;
-  vram_select = 0;
   Reset();
 }
 
@@ -104,7 +102,36 @@ void Memory::Deinitialize() {
   SafeDeleteArray(&vram_);
 }
 
+void Memory::UpdateMemoryMap() {
+  uint16_t rom_bank_number = 1;
+  uint8_t ram_bank_number = 0;
+  auto mbc = emu_->cartridge()->mbc;
+  if (mbc != nullptr) {
+    rom_bank_number = mbc->rom_bank_number;
+    ram_bank_number = mbc->ram_bank_number;
+    memmap[0x0A] = &mbc->eram()[ram_bank_number<<13];
+    memmap[0x0B] = &mbc->eram()[0x1000|(ram_bank_number<<13)];
+  }
+  memmap[0x00] = (uint8_t*)&rom_[0x0000];
+  memmap[0x01] = (uint8_t*)&rom_[0x1000];
+  memmap[0x02] = (uint8_t*)&rom_[0x2000];
+  memmap[0x03] = (uint8_t*)&rom_[0x3000];
+  memmap[0x04] = (uint8_t*)&rom_[(rom_bank_number<<14)];
+  memmap[0x05] = (uint8_t*)&rom_[(rom_bank_number<<14)|0x1000];
+  memmap[0x06] = (uint8_t*)&rom_[(rom_bank_number<<14)|0x2000];
+  memmap[0x07] = (uint8_t*)&rom_[(rom_bank_number<<14)|0x3000];
+  memmap[0x08] = &vram_[(vram_select<<13)];
+  memmap[0x09] = &vram_[(vram_select<<13)|0x1000];
+
+  memmap[0x0C] = &wram_[0];
+  memmap[0x0D] = &wram_[(wram_select<<12)];
+  memmap[0x0E] = &wram_[0];
+  memmap[0x0F] = &wram_[(wram_select<<12)];
+}
+
 void Memory::Reset() {
+  wram_select = 1;
+  vram_select = 0;
   ZeroMemory(ioports_,sizeof(ioports_));
   memset(joypadflags,0,sizeof(joypadflags));
   ioports_[0] = 0x0F;
@@ -140,6 +167,7 @@ void Memory::Reset() {
    ioports_[0x4A] = 0x00; // WY
    ioports_[0x4B] = 0x00; // WX
    ioports_[0xFF] = 0x00; // IE*/
+  UpdateMemoryMap();
 }
 
 
@@ -297,6 +325,7 @@ void Memory::Write8(uint16_t address, uint8_t data) {
     } else if ((address&0xFF) == 0x4F) { //FF4F - VBK - CGB Mode Only - VRAM Bank
       ioports_[address&0xFF]=data;
       vram_select = data&0x1;
+      UpdateMemoryMap();
     } else if (address >= 0xFF51 && address <= 0xFF55) { //HDMA
       emu_->lcd_driver()->Write(address,data);
     } else if (address >= 0xFF68 && address <= 0xFF6C) { //color pallete
@@ -306,6 +335,8 @@ void Memory::Write8(uint16_t address, uint8_t data) {
       wram_select = data&0x3;
       if (wram_select == 0) 
         wram_select = 1;
+
+      UpdateMemoryMap();
     } else {
       ioports_[address&0xFF]=data;
     }

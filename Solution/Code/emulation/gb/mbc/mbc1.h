@@ -71,15 +71,18 @@ class MBC1 : public MemoryBankController {
     } else if (address >= 0x2000 && address <= 0x3FFF) {
       if (data == 0)
         data = 1;
-      rom_bank_number = (rom_bank_number&~0x1F)|data&0x1F;
+      rom_bank_number = (rom_bank_number&~0x1F)|(data&0x1F);
+      cartridge->emu()->memory()->UpdateMemoryMap();
     } else if (address >= 0x4000 && address <= 0x5FFF) {
       if (mode==0) {
-        rom_bank_number = (rom_bank_number&~0x60)|((data&0x3)<<5);
+        rom_bank_number = (rom_bank_number&~0xFFE0)|((data&0x3)<<5); //FFE0 because of 16bit var, instead of 0x60
         //ram_bank_number = 0;
       } else {
         //rom_bank_number &= 0x1F;
         ram_bank_number = data&3;
       }
+
+      //cartridge->emu()->memory()->UpdateMemoryMap();
     } else if (address >= 0x6000 && address <= 0x7FFF) {
        mode = data&1;
 
@@ -88,9 +91,7 @@ class MBC1 : public MemoryBankController {
         eram_[(address&0x1FFF)|(ram_bank_number<<13)] = data;
     }
   }
-  uint8_t rom_bank_number;
   uint8_t mode;
-  uint8_t ram_bank_number;
 };
 
 

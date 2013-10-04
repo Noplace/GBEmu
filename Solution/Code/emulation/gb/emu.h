@@ -110,6 +110,7 @@ class Emu {
     double time_span;
     double step_dt;
   } timing;
+  CRITICAL_SECTION cs;
   static void thread_func(Emu* emu);
 
 };
