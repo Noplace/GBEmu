@@ -211,6 +211,55 @@ uint8_t* Memory::GetMemoryPointer(uint16_t address) {
 
 uint8_t Memory::Read8(uint16_t address) {
   uint8_t result = 0;
+
+  /*
+  memory map concept
+  if ((address >= 0x8000 && address <= 0x9FFF)&&(emu_->lcd_driver()->stat().mode == 3)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
+      return 0xFF;
+
+  if (emu_->mode() == EmuModeGB && ioports_[0x50] == 0 && address < 0x100) { 
+    result = dmgrom[address];
+  } else if (emu_->mode() == EmuModeGBC &&  ioports_[0x50] == 0 && (address < 0x100 || (address >= 0x200 && address <= 0x8FF))) { 
+    result = gbcrom[address];
+  } else if (address < 0xFE00) {
+    return memmap[address>>12][address&0xFFF];
+  } else {
+    if (address >= 0xFE00 && address <= 0xFE9F) {
+
+    if ((emu_->lcd_driver()->stat().mode&0x2)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
+      result = 0xFF;
+    else
+      result = oam_[address-0xFE00];
+    } else if (address >= 0xFEA0 && address <= 0xFEFF) {
+      int a = 1;
+    } else if (address >= 0xFF00 && address <= 0xFF7F) {
+      if (address >= 0xFF10 && address <= 0xFF3F) {
+        result = emu_->apu()->Read(address);
+      } else if (address >= 0xFF40 && address <= 0xFF4C) {
+        result = emu_->lcd_driver()->Read(address);
+      } else if (address >= 0xFF51 && address <= 0xFF55) { //HDMA
+        result = emu_->lcd_driver()->Read(address);
+      } else if (address >= 0xFF68 && address <= 0xFF6C) { //color pallete
+        result = emu_->lcd_driver()->Read(address);
+      } else if (address >= 0xFF04 && address <= 0xFF07) {
+        result = emu_->timer()->Read(address);
+      } else if (address == 0xFF0F) {
+        result = 0xE0|ioports_[address&0xFF];
+      } else {
+        result = ioports_[address&0xFF];
+      }
+    } else if (address >= 0xFF80 && address <= 0xFFFE) {
+      result = hram_[address-0xFF80];
+    } else if (address == 0xFFFF) {
+      result = interrupt_enable_register_;
+    }
+
+
+  }*/
+
+
+
+
   
   if (address >= 0x0000 && address <= 0x3FFF) {
     if (emu_->mode() == EmuModeGB && ioports_[0x50] == 0 && address < 0x100) { 
@@ -274,6 +323,10 @@ uint8_t Memory::Read8(uint16_t address) {
   } else if (address == 0xFFFF) {
     result = interrupt_enable_register_;
   }
+
+
+
+
 
   return result;
 }

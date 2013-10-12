@@ -59,9 +59,9 @@ class MemoryBankController {
 }
 
 #include "none.h"
-#include "mbc1.h"
-#include "mbc2.h"
-#include "mbc3.h"
-#include "mbc5.h"
-#include "mbc_pocketcamera.h"
-
+#include "mbc1.cpp"
+#include "mbc2.cpp"
+#include "mbc3.cpp"
+#include "mbc5.cpp"
+#include "mbc_pocketcamera.cpp"
+#include "mbc_tama5.cpp"

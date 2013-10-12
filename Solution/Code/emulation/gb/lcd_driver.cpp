@@ -169,12 +169,11 @@ void LCDDriver::Tick() {
   switch (stat_.mode) {
     case 2:
       if (scanline_counter_==1) {
-        if (stat_.oam_int || (stat_.coincidence_inr && stat_.coincidence)) //lyc interrupts occurs at start of mode 2
-        {
-         // if (int48signal == 0) {
+        if (stat_.oam_int || (stat_.coincidence_inr && stat_.coincidence)) { //lyc interrupts occurs at start of mode 2
+          if (int48signal == 0) {
             emu_->memory()->interrupt_flag() |= 2;
             int48signal = 1;
-         // }
+          }
         }
       
       }
@@ -206,16 +205,16 @@ void LCDDriver::Tick() {
       }
       break;
     case 0:
-     /* if (sprite_bug_counter != 0 && lcdc_.lcd_enable == 1) {
+      if (sprite_bug_counter != 0 && lcdc_.lcd_enable == 1) {
         emu_->memory()->oam()[8+(rand()%152)] = rand()&0xFF; 
         --sprite_bug_counter;
-      }*/
+      }
       if (scanline_counter_ == 252+mode3_extra_cycles_+1) {
         if (stat_.hblank_int) {
-          //if (int48signal == 0) {
+          if (int48signal == 0) {
             emu_->memory()->interrupt_flag() |= 2;
             int48signal = 1;
-         // }*/
+          }
         }
       }
 
@@ -244,10 +243,10 @@ void LCDDriver::Tick() {
       if (ly == 144 && scanline_counter_ == 1) {
         emu_->memory()->interrupt_flag() |= 1;
         if (stat_.vblank_int) { //either here or in mode 1 all the time//doubt it
-          //if (int48signal == 0) {
+          if (int48signal == 0) {
             emu_->memory()->interrupt_flag() |= 2;
             int48signal = 1;
-         // }
+          }
         }
       }
       break;
@@ -266,8 +265,7 @@ void LCDDriver::Tick() {
       scanline_counter_ = 0;
     } 
     scanline_counter_ = 0;
-    //if (evenodd)
-      int48signal = 0;
+    int48signal = 0;
   }
 
 

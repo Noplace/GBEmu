@@ -16,7 +16,7 @@
 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE            *
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
-#pragma once
+
 
 namespace emulation {
 namespace gb {
@@ -82,7 +82,7 @@ class MBC1 : public MemoryBankController {
         ram_bank_number = data&3;
       }
 
-      //cartridge->emu()->memory()->UpdateMemoryMap();
+      cartridge->emu()->memory()->UpdateMemoryMap();
     } else if (address >= 0x6000 && address <= 0x7FFF) {
        mode = data&1;
 

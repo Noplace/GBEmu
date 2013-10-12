@@ -104,6 +104,9 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
     case 0xFC:
       mbc = new MBCPocketCamera();
       break;
+    case 0xFD:
+      mbc = new MBCTAMA5();
+      break;
     default:
       DebugBreak();
   }
