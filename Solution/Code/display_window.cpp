@@ -18,7 +18,8 @@
 *****************************************************************************************************************/
 #include "application.h"
 #include "graphics/eagle.h"
-
+#include <fstream>
+#include <vector>
 
 void hq2x_filter_render(
   uint32_t *output, unsigned outputPitch,
@@ -56,6 +57,20 @@ void dotmatrix_sim(uint32_t* inbuf,uint32_t* outbuf) {
 }
 
 namespace app {
+
+std::vector<GLchar>* ReadTextFile(const char* filename)
+{
+  std::ifstream hFile(filename);
+
+  auto lines = new std::vector<GLchar>();
+  std::string line;
+  do {
+    lines->push_back(hFile.get());
+  } while(hFile.eof()==false);
+  lines->push_back('\0');
+
+  return lines;
+}
 
 DisplayWindow::DisplayWindow() : Window() {
 
@@ -95,6 +110,16 @@ void DisplayWindow::Init() {
   texture = gfx.CreateTexture();
   //wglMakeCurrent(NULL, NULL);
 
+  //auto vsFile = ReadTextFile("vs.glsl");
+  //auto fsFile = ReadTextFile("fs.glsl");
+  //auto arr1 = (const GLchar*)(&(*vsFile)[0]);
+  //auto arr2 = (const GLchar*)(&(*fsFile)[0]);
+//,&(*fsFile)[0];
+
+  //graphics::Shader shader(arr1,arr2);
+ // delete fsFile;
+ // delete vsFile;
+
   //settings setup
   ResetTiming();
   
@@ -110,7 +135,7 @@ void DisplayWindow::Init() {
   //emu.lcd_driver()->lcdscreenmode_
   OnCommand(ID_MODE_GBC,0);
   emulation::gb::CartridgeHeader header;
-  //emu.cartridge()->LoadFile("..\\test\\cpu_instrs\\cpu_instrs.gb",&header);
+  emu.cartridge()->LoadFile("..\\test\\cpu_instrs\\cpu_instrs.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\interrupt_time\\interrupt_time\\interrupt_time.gb",&header);
   
@@ -129,7 +154,7 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\Final Fantasy Legend, The (U) [!].gb",&header); 
   //emu.cartridge()->LoadFile("D:\\Personal\\Dev\\GB\\roms\\Kirby's Dream Land (USA, Europe).gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Tamagotchi 3.gb",&header);
-  emu.cartridge()->LoadFile("..\\test\\Tamagotchi (USA, Europe).gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\Tamagotchi (USA, Europe).gb",&header);
   
 
   //emu.cartridge()->LoadFile("..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);

@@ -25,6 +25,7 @@
 #define GL_GLEXT_PROTOTYPES
 #include <gl/glext.h>
 #include "graphics.h"
+#include "shader.h"
 
 namespace graphics {
 
