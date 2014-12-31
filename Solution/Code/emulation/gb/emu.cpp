@@ -100,7 +100,6 @@ void Emu::Run() {
   last_cpu_cycles_ = 0;
   thread = new std::thread(Emu::thread_func,this);
   SetThreadAffinityMask(thread->native_handle(),1);
-  
 }
 
 void Emu::Stop() {

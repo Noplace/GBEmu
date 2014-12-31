@@ -128,8 +128,8 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);//not original rom, problem with window
   //emu.cartridge()->LoadFile("..\\test\\Final Fantasy Legend, The (U) [!].gb",&header); 
   //emu.cartridge()->LoadFile("D:\\Personal\\Dev\\GB\\roms\\Kirby's Dream Land (USA, Europe).gb",&header);
-  //emu.cartridge()->LoadFile("..\\test\\Tamagotchi 3.gb",&header);
-  emu.cartridge()->LoadFile("..\\test\\Tamagotchi (USA, Europe).gb",&header);
+  emu.cartridge()->LoadFile("..\\test\\Tamagotchi 3.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\Tamagotchi (USA, Europe).gb",&header);
   
 
   //emu.cartridge()->LoadFile("..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);

@@ -326,7 +326,7 @@ void update_tama_RTC()
             break;
         }
 
-      } else if (address = 0xA001) {
+      } else if (address == 0xA001) {
         tama_flag = data;
       } else {
           eram_[(address&0x1FFF)] = data;
