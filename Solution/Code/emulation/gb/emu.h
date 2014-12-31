@@ -44,7 +44,7 @@ class Emu {
   EmuMode mode() { return mode_; }
   void set_mode(EmuMode mode) { mode_= mode; }
   Cartridge* cartridge() { return &cartridge_; }
-  Cpu* cpu() { return &cpu_; }
+  Cpu* cpu() { return cpu_; }
   Memory* memory() { return &memory_; }
   LCDDriver* lcd_driver() { return &lcd_driver_; }
   Apu* apu() { return &apu_; }
@@ -89,7 +89,7 @@ class Emu {
   uint64_t cycles_per_second_;
   utilities::Timer utimer;
   Cartridge cartridge_;
-  Cpu cpu_;
+  Cpu* cpu_;
   Memory memory_;
   LCDDriver lcd_driver_;
   Apu apu_;

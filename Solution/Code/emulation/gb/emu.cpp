@@ -39,7 +39,8 @@ void Emu::Initialize(double base_freq_hz) {
   timer_.Initialize(this);
   lcd_driver_.Initialize(this);
   memory_.Initialize(this);
-  cpu_.Initialize(this);
+  cpu_ = new CpuRecompiler();
+  cpu_->Initialize(this);
   apu_.Initialize(this);
   thread = null;
   state = 0;
@@ -52,7 +53,8 @@ void Emu::Initialize(double base_freq_hz) {
 void Emu::Deinitialize() {
   Stop();
   apu_.Deinitialize();
-  cpu_.Deinitialize();
+  cpu_->Deinitialize();
+  SafeDelete(&cpu_);
   memory_.Deinitialize();
   lcd_driver_.Deinitialize();
   timer_.Deinitialize();
@@ -72,7 +74,7 @@ double Emu::Step() {
   while (timing.span_accumulator >= timing.step_dt) {
     
     cpu_cycles_per_step_ = 0;
-    cpu_.Step();
+    cpu_->Step();
     timing.span_accumulator -= timing.step_dt*cpu_cycles_per_step_;
     cpu_cycles_ += cpu_cycles_per_step_;
   }
@@ -124,7 +126,7 @@ void Emu::Reset() {
   timer_.Reset();
   lcd_driver_.Reset();
   memory_.Reset();
-  cpu_.Reset();
+  cpu_->Reset();
   apu_.Reset();
   //Run();
 }
