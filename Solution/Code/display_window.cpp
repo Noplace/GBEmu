@@ -18,8 +18,7 @@
 *****************************************************************************************************************/
 #include "gbemu.h"
 #include "graphics/eagle.h"
-#include <fstream>
-#include <vector>
+
 
 void hq2x_filter_render(
   uint32_t *output, unsigned outputPitch,
@@ -57,6 +56,7 @@ void dotmatrix_sim(uint32_t* inbuf,uint32_t* outbuf) {
 }
 
 
+<<<<<<< HEAD
 std::string ReadTextFile(const char* filename)
 {
 
@@ -181,6 +181,8 @@ namespace app {
 
 
 
+=======
+>>>>>>> origin/master
 DisplayWindow::DisplayWindow() : Window() {
 
 //  counter = 0;
@@ -218,6 +220,7 @@ void DisplayWindow::Init() {
   //a = glGetError();
   texture = gfx.CreateTexture();
   //wglMakeCurrent(NULL, NULL);
+<<<<<<< HEAD
 /*
 {
   auto vsFile = ReadTextFile("vs.glsl");
@@ -232,6 +235,9 @@ void DisplayWindow::Init() {
 }*/
   setShaders();
   setupVB();
+=======
+
+>>>>>>> origin/master
   //settings setup
   ResetTiming();
   
@@ -265,7 +271,7 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);//not original rom, problem with window
   //emu.cartridge()->LoadFile("..\\test\\Final Fantasy Legend, The (U) [!].gb",&header); 
   //emu.cartridge()->LoadFile("D:\\Personal\\Dev\\GB\\roms\\Kirby's Dream Land (USA, Europe).gb",&header);
-  //emu.cartridge()->LoadFile("..\\test\\Tamagotchi 3.gb",&header);
+  emu.cartridge()->LoadFile("..\\test\\Tamagotchi 3.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Tamagotchi (USA, Europe).gb",&header);
   
 
@@ -274,7 +280,11 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\introcollection.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
 
+<<<<<<< HEAD
   //emu.cartridge()->LoadFile("..\\test\\Mission Impossible (USA) (En,Fr,Es).gbc",&header);
+=======
+
+>>>>>>> origin/master
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Pokemon Silver.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Grand Theft Auto.gbc",&header);

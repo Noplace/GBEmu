@@ -69,6 +69,7 @@ class LCDDriver : public Component {
   void Initialize(Emu* emu);
   void Deinitialize();
   void Reset();
+  void DoHDMA();
   void Tick();
   uint8_t Read(uint16_t address);
   void    Write(uint16_t address, uint8_t data);
@@ -105,11 +106,10 @@ class LCDDriver : public Component {
       };
       uint16_t raw;
      }dest;
+     uint8_t ff55;
     uint16_t length;
     uint8_t mode;
-    uint8_t active() {
-      return length == 0; //0 is active
-    }
+    uint8_t active;
    }hdma;
    ColorMapLine* colormap;
    LCDControlRegister lcdc_;

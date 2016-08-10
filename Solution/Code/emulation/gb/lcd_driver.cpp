@@ -53,9 +53,15 @@ void LCDDriver::Initialize(Emu* emu) {
   memset(colormap,0,256*256*4);
   lcdscreenmode_ = LCDScreenModeProgressive;
   memset(&hdma,0,sizeof(hdma));
+  hdma.ff55 = 0xFF;
   memset(&cgb_bgpal,0xFF,sizeof(cgb_bgpal));
   memset(&cgb_sppal1,0,sizeof(cgb_sppal1));
   memset(&cgb_sppal2,0,sizeof(cgb_sppal2));
+  
+  //auto ioports = emu_->memory()->ioports();
+  //lcdc_ = ((LCDControlRegister*)&ioports[0x40]);
+  //stat_ = ((LCDStatusRegister*)&ioports[0x41]);
+
   /*
   //hack, to show something during boot in cgb mode
   for (int i=0;i<64;i+=8) {
@@ -151,6 +157,23 @@ between 4194304*0.00004137=173.51835648 and //172
 4194304*0.00007069=296.49534976 //296
 */
 
+void LCDDriver::DoHDMA() {
+  if (hdma.mode == 1 && hdma.active == 1) {
+    uint16_t offset = 0;
+
+    auto src = emu_->memory()->GetMemoryPointer(hdma.src.raw&0xFFF0);
+    auto dest = emu_->memory()->GetMemoryPointer(0x8000|(hdma.dest.raw&0x1FF0));
+    memcpy(dest,src,0x10);
+    hdma.length -= 0x10;
+    hdma.src.raw += 0x10;
+    hdma.dest.raw += 0x10;
+    --hdma.ff55;
+    if (hdma.ff55 == 0xFF)
+      hdma.active = 0;
+  }
+
+}
+
 void LCDDriver::Tick() {
   ++scanline_counter_; //line clock
   ++screen_counter_;//screen clock
@@ -205,10 +228,10 @@ void LCDDriver::Tick() {
       }
       break;
     case 0:
-      if (sprite_bug_counter != 0 && lcdc_.lcd_enable == 1) {
+      /*if (sprite_bug_counter != 0 && lcdc_.lcd_enable == 1) {
         emu_->memory()->oam()[8+(rand()%152)] = rand()&0xFF; 
         --sprite_bug_counter;
-      }
+      }*/
       if (scanline_counter_ == 252+mode3_extra_cycles_+1) {
         if (stat_.hblank_int) {
           if (int48signal == 0) {
@@ -220,17 +243,7 @@ void LCDDriver::Tick() {
 
       if (scanline_counter_==456) {
         
-        if (hdma.mode == 1 && hdma.length !=0) {
-          uint16_t offset = 0;
-
-          auto src = emu_->memory()->GetMemoryPointer(hdma.src.raw&0xFFF0);
-          auto dest = emu_->memory()->GetMemoryPointer(0x8000|(hdma.dest.raw&0x1FF0));
-          memcpy(dest,src,0x10);
-          hdma.length -= 0x10;
-          hdma.src.raw += 0x10;
-          hdma.dest.raw += 0x10;
-        }
-
+        //DoHDMA();
         if (ly == 143) {
           stat_.mode = 1;//vblank period
         } else {
@@ -308,7 +321,7 @@ uint8_t LCDDriver::Read(uint16_t address) {
     case 0xFF54:
       return hdma.dest.low;
     case 0xFF55:
-      return (hdma.active()<<7)|0x7F;
+      return hdma.ff55;
 
     case 0xFF68:
       return cgb_bgpal_index;
@@ -416,19 +429,36 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       hdma.dest.low = data;
       break;
     case 0xFF55:
-      /*if (hdma.active() && ((data&0x80)==0)) {
-        hdma.length = 0;
-        break;
-      }  */
-      hdma.length = (data+1)*0x10;
-      hdma.mode = (data&0x80)>>7;
-      if (hdma.mode == 0) {
-        //uint16_t offset = 0;
-        auto src = emu_->memory()->GetMemoryPointer(hdma.src.raw&0xFFF0);
-        auto dest = emu_->memory()->GetMemoryPointer(0x8000|(hdma.dest.raw&0x1FF0));
-        memcpy(dest,src,hdma.length);
-        hdma.length = 0;
+      if (emu_->mode() == EmuModeGBC) {
+        hdma.length = ((data&0x7F)+1)<<4;
 
+        if (hdma.active) {
+          if (data & 0x80) {
+            hdma.ff55 = data & 0x7F;
+          } else {
+            hdma.ff55 = 0xFF;
+            hdma.active = 0;
+          }
+        } else {
+
+          hdma.mode = (data&0x80)>>7;
+          if (hdma.mode == 0) { //GDMA
+            auto src = emu_->memory()->GetMemoryPointer(hdma.src.raw&0xFFF0);
+            auto dest = emu_->memory()->GetMemoryPointer(0x8000|(hdma.dest.raw&0x1FF0));
+            memcpy(dest,src,hdma.length);
+            hdma.dest.raw += hdma.length;
+            hdma.src.raw += hdma.length;
+          } else { //HDMA
+            hdma.active = 1;
+            hdma.ff55 = data & 0x7F;
+            if (stat_.mode == 0)
+              DoHDMA();
+          }
+
+        }
+
+        
+        
       }
       break;
 
@@ -833,7 +863,7 @@ void LCDDriver::RenderLine(int x0,int x1) {
       auto fbline = &frame_buffer[ly<<8];
         for (int i=0;i<160;++i) { //256px per line
          *fbline++ = bgr555torgb(cmline->pixel);
-         *cmline++;
+         ++cmline;
         }
     } else {
       
@@ -845,7 +875,7 @@ void LCDDriver::RenderLine(int x0,int x1) {
         auto fbline = &frame_buffer[ly<<8];
         for (int i=0;i<160;++i) {//256px per line
           *fbline++ = dmg_colors[cmline->pixel];
-          *cmline++;
+          ++cmline;
         }
     }
 
