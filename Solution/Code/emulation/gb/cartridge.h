@@ -18,7 +18,7 @@
 *****************************************************************************************************************/
 #pragma once
 
-#include <WinCore/io/io.h>
+#include "../../utilities/io.h"
 
 namespace emulation {
 namespace gb {

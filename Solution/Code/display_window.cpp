@@ -16,7 +16,7 @@
 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE            *
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
-#include "application.h"
+#include "gbemu.h"
 #include "graphics/eagle.h"
 #include <fstream>
 #include <vector>
@@ -56,11 +56,15 @@ void dotmatrix_sim(uint32_t* inbuf,uint32_t* outbuf) {
 
 }
 
-namespace app {
 
-std::vector<GLchar>* ReadTextFile(const char* filename)
+std::string ReadTextFile(const char* filename)
 {
-  std::ifstream hFile(filename);
+
+std::ifstream in(filename);
+std::string contents((std::istreambuf_iterator<char>(in)), 
+    std::istreambuf_iterator<char>());
+return contents;
+  /*std::ifstream hFile(filename);
 
   auto lines = new std::vector<GLchar>();
   std::string line;
@@ -69,8 +73,113 @@ std::vector<GLchar>* ReadTextFile(const char* filename)
   } while(hFile.eof()==false);
   lines->push_back('\0');
 
-  return lines;
+  return lines;*/
 }
+
+GLuint vertex_shader, fragment_shader, prog;
+void setShaders() {
+
+	const char *vs,*fs;
+
+	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);	
+
+  auto vsFile = ReadTextFile("vs.glsl");
+  auto fsFile = ReadTextFile("fs.glsl");
+  
+  vs = vsFile.c_str();
+  fs = fsFile.c_str();
+
+	const char * vv = vs;
+	const char * ff = fs;
+
+	glShaderSource(vertex_shader, 1, &vv,NULL);
+auto e = glGetError();
+	glShaderSource(fragment_shader, 1, &ff,NULL);
+e = glGetError();
+	//free(vs);free(fs);
+
+	glCompileShader(vertex_shader);
+e = glGetError();
+	glCompileShader(fragment_shader);
+e = glGetError();
+
+	prog = glCreateProgram();
+e = glGetError();
+	glAttachShader(prog,vertex_shader);
+	glAttachShader(prog,fragment_shader);
+//glBindAttribLocation (prog, 0, "vertex_position");
+//glBindAttribLocation (prog, 1, "vertex_colour");
+	glLinkProgram(prog);
+
+
+}
+GLuint points_vbo = 0;
+GLuint vao = 0;
+//GLuint colours_vbo = 0;
+struct myVertex2D  {
+  float x,y,u,v;
+};
+
+void setVBsize(float w, float h) {
+  glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
+
+  myVertex2D points[] = {
+    {0.0f, 0.0f,  0.0f, 0.0f},
+    {w,    0.0f,  0.625f, 0.0f},
+    {w,    h,     0.625f, 0.5625f},
+    {0.0f, h,     0.0f, 0.5625f},
+  };
+        //glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
+        //glTexCoord2d(0.625,0.0); glVertex2d(client_width_,0.0);
+        ///glTexCoord2d(0.625,0.5625); glVertex2d(client_width_,client_height_);
+        //glTexCoord2d(0.0,0.5625); glVertex2d(0.0,client_height_);
+
+    glBufferData (GL_ARRAY_BUFFER, sizeof (myVertex2D) * 4, points, GL_STATIC_DRAW);
+}
+
+
+void setupVB() {
+  glGenBuffers (1, &points_vbo);
+  setVBsize(20,20);
+
+float colours[] = {
+  1.0f, 1.0f,  0.0f,
+  0.0f, 1.0f,  0.0f,
+  0.0f, 0.0f,  1.0f,
+  1.0f, 1.0f,  1.0f,
+};
+
+//glGenBuffers (1, &colours_vbo);
+//glBindBuffer (GL_ARRAY_BUFFER, colours_vbo);
+//glBufferData (GL_ARRAY_BUFFER, 3 * sizeof (float) * 4, colours, GL_STATIC_DRAW);
+
+
+glGenVertexArrays (1, &vao);
+glBindVertexArray (vao);
+glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
+glVertexPointer( 2, GL_FLOAT, sizeof(myVertex2D), (GLvoid*)offsetof( myVertex2D, x ) );
+glTexCoordPointer( 2, GL_FLOAT, sizeof(myVertex2D), (GLvoid*)offsetof( myVertex2D, u ) );
+
+
+        //Enable vertex and texture coordinate arrays
+        glEnableClientState( GL_VERTEX_ARRAY );
+        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+//glVertexAttribPointer (0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+//glBindBuffer (GL_ARRAY_BUFFER, colours_vbo);
+//glVertexAttribPointer (1, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+//glEnableVertexAttribArray (0);
+//glEnableVertexAttribArray (1);
+
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+}
+
+
+
+namespace app {
+
+
 
 DisplayWindow::DisplayWindow() : Window() {
 
@@ -109,17 +218,20 @@ void DisplayWindow::Init() {
   //a = glGetError();
   texture = gfx.CreateTexture();
   //wglMakeCurrent(NULL, NULL);
-
-  //auto vsFile = ReadTextFile("vs.glsl");
-  //auto fsFile = ReadTextFile("fs.glsl");
-  //auto arr1 = (const GLchar*)(&(*vsFile)[0]);
-  //auto arr2 = (const GLchar*)(&(*fsFile)[0]);
+/*
+{
+  auto vsFile = ReadTextFile("vs.glsl");
+  auto fsFile = ReadTextFile("fs.glsl");
+  auto arr1 = (GLchar  **)(&(*vsFile));
+  auto arr2 = (GLchar  **)(&(*fsFile));
 //,&(*fsFile)[0];
 
-  //graphics::Shader shader(arr1,arr2);
- // delete fsFile;
- // delete vsFile;
-
+  graphics::Shader shader(arr1,arr2);
+  delete fsFile;
+  delete vsFile;
+}*/
+  setShaders();
+  setupVB();
   //settings setup
   ResetTiming();
   
@@ -158,15 +270,16 @@ void DisplayWindow::Init() {
   
 
   //emu.cartridge()->LoadFile("..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);
-  //emu.cartridge()->LoadFile("..\\test\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
+  emu.cartridge()->LoadFile("..\\test\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\introcollection.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
 
-  emu.cartridge()->LoadFile("..\\test\\Mission Impossible (USA) (En,Fr,Es).gbc",&header);
+  //emu.cartridge()->LoadFile("..\\test\\Mission Impossible (USA) (En,Fr,Es).gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Pokemon Silver.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Grand Theft Auto.gbc",&header);
   
+
   emu.Run();
 }
 
@@ -217,6 +330,7 @@ int DisplayWindow::OnCommand(WPARAM wParam,LPARAM lParam) {
       CheckMenuItem(menu_,ID_VIDEO_EAGLE512X480,MF_UNCHECKED);
       SetClientSize(320,288);
       gfx.SetDisplaySize(320,288);
+      setVBsize(320,288);
       display_mode = ID_VIDEO_STD320X288;
     }
 
@@ -343,6 +457,7 @@ int DisplayWindow::OnResize(WPARAM wparam, LPARAM lparam) {
 
 int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
   if (emu.state == 0) return 0;
+
   glDisable( GL_TEXTURE_2D );
   
   glColor4ub(0x72,0x7E,0x01,0xFF);
@@ -354,16 +469,57 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
   glVertex2d(0.0,client_height_);
   glEnd();
 
+  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+  glUseProgram(prog);
+  auto err= glGetError();
+  //glEnableClientState(GL_VERTEX_ARRAY);
+    glActiveTexture(texture);
+        glBindTexture( GL_TEXTURE_2D, texture );
+      glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,256,256,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,emu.lcd_driver()->frame_buffer);
+  //glBindTexture(GL_TEXTURE_2D,0);
+
+  auto loc = glGetUniformLocation(prog, "baseline_alpha");
+  glUniform1f(loc,1.0f);
+  //auto loc = glGetUniformLocation(prog, "texture1");
+  //glUniform1i(loc,0);
+
+  glEnableClientState( GL_VERTEX_ARRAY );
+  glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+
+  glBindVertexArray (vao);
+  glDrawArrays (GL_QUADS, 0, 4);
+  /*const GLfloat texture_coordinates[] = {0, 1,
+                                         0, 0,
+                                         1, 1,
+                                         1, 0};
+  //glTexCoordPointer(2, GL_FLOAT, 0, texture_coordinates);
+
+  const GLfloat vertices[] = {0, (float)client_height_,
+                              0, 0,
+                              (float)client_width_, (float)client_height_,
+                              float(client_width_), 0};
+  glVertexPointer(2, GL_FLOAT, 0, vertices);
+
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);*/
+  //glDisableClientState(GL_VERTEX_ARRAY);
+  gfx.Render();
+  return S_OK;
+
+
   glEnable( GL_TEXTURE_2D );
   glColor3ub(0xFF,0xFF,0xFF);
 
   switch(display_mode) {
     case ID_VIDEO_STD320X288:
+
       //glDrawPixels(256,240,GL_BGRA_EXT,GL_UNSIGNED_BYTE,output);
       //glEnable(GL_TEXTURE_2D);
 
 
-
+	    //glUseProgram(prog);
       //memcpy(output,emu.lcd_driver()->frame_buffer,256*256*4);
       glBindTexture( GL_TEXTURE_2D, texture );
       glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,256,256,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,emu.lcd_driver()->frame_buffer);

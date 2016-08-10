@@ -1,5 +1,5 @@
 /*****************************************************************************************************************
-* Copyright (c) 2013 Khalid Ali Al-Kooheji                                                                       *
+* Copyright (c) 2012 Khalid Ali Al-Kooheji                                                                       *
 *                                                                                                                *
 * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and              *
 * associated documentation files (the "Software"), to deal in the Software without restriction, including        *
@@ -18,70 +18,64 @@
 *****************************************************************************************************************/
 #pragma once
 
-#include "../../utilities/windows/windows.h"
-#include "../../utilities/types.h"
-#include <XAudio2.h>
-#include "interface.h"
+namespace utilities {
 
-namespace audio {
-namespace output {
+template<typename T>
+inline T clamp(T x, T a, T b)   {   
+  return x < a ? a : (x > b ? b : x);
+}
 
-struct StreamingVoiceContext : public IXAudio2VoiceCallback
-{
-            STDMETHOD_( void, OnVoiceProcessingPassStart )( UINT32 )
-            {
-            }
-            STDMETHOD_( void, OnVoiceProcessingPassEnd )()
-            {
-            }
-            STDMETHOD_( void, OnStreamEnd )()
-            {
-            }
-            STDMETHOD_( void, OnBufferStart )( void* )
-            {
-            }
-            STDMETHOD_( void, OnBufferEnd )( void* data)
-            {
-             // delete [] data;
-                SetEvent( hBufferEndEvent );
-            }
-            STDMETHOD_( void, OnLoopEnd )( void* )
-            {
-            }
-            STDMETHOD_( void, OnVoiceError )( void*, HRESULT )
-            {
-            }
-
-    HANDLE hBufferEndEvent;
-
-            StreamingVoiceContext() : hBufferEndEvent( CreateEvent( NULL, FALSE, FALSE, NULL ) )
-            {
-            }
-    virtual ~StreamingVoiceContext()
-    {
-        CloseHandle( hBufferEndEvent );
-    }
-};
-
-class XAudio : public Interface {
+class Timer {
  public:
-  XAudio();
-  ~XAudio();
-  int Initialize(uint32_t sample_rate, uint8_t channels, uint8_t bits);
-  int Deinitialize();
-  uint32_t GetBytesBuffered();
-  int Write(void* data_pointer, uint32_t size_bytes);
-  void Sync() { }
-  void set_window_handle(HWND window_handle) { window_handle_ = window_handle; }
-  void set_buffer_size(uint32_t buffer_size) { buffer_size_ = buffer_size; }
-  IXAudio2SourceVoice* pSourceVoice;
-  StreamingVoiceContext voiceContext;
- protected:
-  void* window_handle_;
-  uint32_t buffer_size_;
-  IXAudio2* pXAudio2;
-  IXAudio2MasteringVoice* pMasteringVoice;
+  Timer():time_slice_(0) {
+    Calibrate();
+  }
+  void Calibrate() {
+    start_cycles_ = GetCurrentCycles();
+    QueryPerformanceFrequency((LARGE_INTEGER*)&frequency_);
+    resolution_ = 1000.0 / frequency_;
+    resolution_ns_ = 1000000 / frequency_;
+  }
+
+  double time_slice() { return time_slice_; }
+  uint64_t elapsed_ticks() { return elapsed_ticks_; }
+  __forceinline double resolution() { return resolution_; }
+  void Tick() {
+    uint64_t elapsed_cycles = GetCurrentCycles() - start_cycles_;
+    start_cycles_ = GetCurrentCycles();
+    elapsed_ticks_ = elapsed_cycles;
+    time_slice_ = (1.0 / 1000.0) * (double)elapsed_ticks_;
+  }
+
+  bool isTimeForUpdate(int framerate)
+  {
+      uint64_t actual_ticks = GetCurrentCycles() - start_cycles_;
+      actual_ticks = clamp<uint64_t>(actual_ticks,(uint64_t)0,(uint64_t)(frequency_ / 20.0));
+      if (actual_ticks >= (uint64_t)(frequency_ / framerate   )) /// (1000.0 / (T)framerate)
+      {
+        Tick();
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+  }
+
+  __forceinline uint64_t GetCurrentCycles() {
+    QueryPerformanceCounter((LARGE_INTEGER*)&current_cycles_);
+    return current_cycles_; 
+  }
+
+ private:
+  uint64_t elapsed_ticks_;
+  uint64_t frequency_;
+  uint64_t current_cycles_;
+  uint64_t start_cycles_;
+  uint64_t resolution_ns_;
+  double time_slice_;
+  double resolution_;
 };
 
 }
-}
+

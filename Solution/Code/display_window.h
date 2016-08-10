@@ -16,8 +16,7 @@
 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE            *
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
-#ifndef UISYSTEM_DISPLAY_WINDOW_H
-#define UISYSTEM_DISPLAY_WINDOW_H
+#pragma once
 
 namespace app {
 
@@ -60,4 +59,3 @@ class DisplayWindow: public core::windows::Window {
 
 }
 
-#endif

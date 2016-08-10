@@ -20,10 +20,8 @@
 #define UISYSTEM_GRAPHICS_OPENGL_H
 
 #include <windows.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#define GL_GLEXT_PROTOTYPES
-#include <gl/glext.h>
+#define GLEW_STATIC
+#include <GL/glew.h>
 #include "graphics.h"
 #include "shader.h"
 

@@ -17,13 +17,13 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
 #include "gb.h"
-#include "../../application.h"
+#include "../../gbemu.h"
 
 
 inline void printThreadId() {
   {
-    char str[25];
-    sprintf(str,"thread id:%llu\n",std::this_thread::get_id().hash());
+    char str[50];
+    sprintf_s(str,"thread id:%llu\n",std::this_thread::get_id().hash());
     OutputDebugString(str);
   }
 }

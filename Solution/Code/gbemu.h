@@ -18,70 +18,44 @@
 *****************************************************************************************************************/
 #pragma once
 
-#include "../../utilities/windows/windows.h"
-#include "../../utilities/types.h"
-#include <XAudio2.h>
-#include "interface.h"
+#include "debug.h"
+#include "utilities/windows/windows.h"
+#include "timer/timer2.h"
+#include <Shellapi.h>
+#include <thread>
+#include <atomic>
+#include "emulation/gb/gb.h"
+#include "graphics/gdi.h"
+#include "graphics/opengl.h"
+#include "resource.h"
+#include "dialogs/options.h"
+#include "display_window.h"
 
-namespace audio {
-namespace output {
 
-struct StreamingVoiceContext : public IXAudio2VoiceCallback
-{
-            STDMETHOD_( void, OnVoiceProcessingPassStart )( UINT32 )
-            {
-            }
-            STDMETHOD_( void, OnVoiceProcessingPassEnd )()
-            {
-            }
-            STDMETHOD_( void, OnStreamEnd )()
-            {
-            }
-            STDMETHOD_( void, OnBufferStart )( void* )
-            {
-            }
-            STDMETHOD_( void, OnBufferEnd )( void* data)
-            {
-             // delete [] data;
-                SetEvent( hBufferEndEvent );
-            }
-            STDMETHOD_( void, OnLoopEnd )( void* )
-            {
-            }
-            STDMETHOD_( void, OnVoiceError )( void*, HRESULT )
-            {
-            }
+namespace app {
 
-    HANDLE hBufferEndEvent;
-
-            StreamingVoiceContext() : hBufferEndEvent( CreateEvent( NULL, FALSE, FALSE, NULL ) )
-            {
-            }
-    virtual ~StreamingVoiceContext()
-    {
-        CloseHandle( hBufferEndEvent );
+/*
+  Class Name  : Application
+  Description : this is the application's class
+*/
+class GBEmu : core::windows::Application {
+  public:
+    explicit GBEmu(HINSTANCE instance , LPSTR command_line, int show_command);
+    ~GBEmu();
+    int Run();
+    DisplayWindow& display_window() {
+      return display_window_;
     }
+    static GBEmu* Current() {
+      return current_app_;
+    }
+  protected:
+    static GBEmu* current_app_;
+  private:
+    DisplayWindow display_window_;
 };
 
-class XAudio : public Interface {
- public:
-  XAudio();
-  ~XAudio();
-  int Initialize(uint32_t sample_rate, uint8_t channels, uint8_t bits);
-  int Deinitialize();
-  uint32_t GetBytesBuffered();
-  int Write(void* data_pointer, uint32_t size_bytes);
-  void Sync() { }
-  void set_window_handle(HWND window_handle) { window_handle_ = window_handle; }
-  void set_buffer_size(uint32_t buffer_size) { buffer_size_ = buffer_size; }
-  IXAudio2SourceVoice* pSourceVoice;
-  StreamingVoiceContext voiceContext;
- protected:
-  void* window_handle_;
-  uint32_t buffer_size_;
-  IXAudio2* pXAudio2;
-  IXAudio2MasteringVoice* pMasteringVoice;
-};
+
 
 }
-}
+

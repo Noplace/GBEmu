@@ -16,7 +16,7 @@
 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE            *
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
-#include "application.h"
+#include "gbemu.h"
 
 void ReserveBottomMemory()
 {
@@ -116,7 +116,7 @@ void ReserveBottomMemory()
 int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
   //ReserveBottomMemory();
   
-  app::Application app(hInstance,lpCmdLine,nShowCmd);
+  app::GBEmu app(hInstance,lpCmdLine,nShowCmd);
   //app.InitConsole();
   
   return app.Run();

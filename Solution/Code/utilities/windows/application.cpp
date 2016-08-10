@@ -1,5 +1,5 @@
 /*****************************************************************************************************************
-* Copyright (c) 2013 Khalid Ali Al-Kooheji                                                                       *
+* Copyright (c) 2012 Khalid Ali Al-Kooheji                                                                       *
 *                                                                                                                *
 * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and              *
 * associated documentation files (the "Software"), to deal in the Software without restriction, including        *
@@ -17,52 +17,52 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
 #include "application.h"
-#include <crtdbg.h>
-namespace app {
+#include <stdio.h>
+#include <io.h>
+#include <fcntl.h>
 
-Application* Application::current_app_ = nullptr;
+namespace core {
+namespace windows {
 
-Application::Application(HINSTANCE instance , LPSTR command_line, int show_command) {
-  //OleInitialize(NULL);
-  current_app_ = this;
+
+Application::Application() : ran_before_(nullptr) {
+}
+
+Application::Application(HINSTANCE instance , LPSTR command_line, int show_command) : ran_before_(nullptr) {
+
 }
 
 Application::~Application() {
- current_app_ = nullptr;
- _CrtDumpMemoryLeaks();
+  FreeConsole();
+ if (ran_before_ != nullptr) {
+   CloseHandle(ran_before_);
+   ran_before_ = nullptr;
+ }
 }
 
-int Application::Run() {
-  CoInitializeEx(nullptr,COINIT_MULTITHREADED);
-  //CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
-  //unsigned old_fp_state;
-  //_controlfp_s(&old_fp_state, _PC_53, _MCW_PC);
+void Application::InitConsole() {
+  FreeConsole();
+  AllocConsole();
+  HANDLE handle_out = GetStdHandle(STD_OUTPUT_HANDLE);
+  int hCrt = _open_osfhandle((intptr_t) handle_out, _O_TEXT);
+  FILE* hf_out = _fdopen(hCrt, "w");
+  setvbuf(hf_out, NULL, _IONBF, 1);
+  *stdout = *hf_out;
 
-  time_t t;
-  time(&t);
-  srand((int)t);
+  HANDLE handle_in = GetStdHandle(STD_INPUT_HANDLE);
+  hCrt = _open_osfhandle((intptr_t) handle_in, _O_TEXT);
+  FILE* hf_in = _fdopen(hCrt, "r");
+  setvbuf(hf_in, NULL, _IONBF, 128);
+  *stdin = *hf_in;
+}
 
-  display_window_.Init();
-  
-  MSG msg;
-  do {
-    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-      TranslateMessage(&msg);
-      DispatchMessage(&msg);
-    } else {
-      //display_window_.Step(); 
-      std::this_thread::sleep_for(std::chrono::milliseconds(2));
-    }
-  } while(msg.message!=WM_QUIT);
-
- CoUninitialize();
- //Return the exit code to the system. 
-
-
-
- 
- return static_cast<int>(msg.wParam);
+bool Application::RanBefore(LPCSTR identifier) {
+  ran_before_ = CreateMutex(NULL,TRUE,identifier);
+  if (GetLastError() == ERROR_ALREADY_EXISTS) {
+    return true;
+  }
+  return false;
 }
 
 }
-
+}

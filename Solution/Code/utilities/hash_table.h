@@ -1,5 +1,5 @@
 /*****************************************************************************************************************
-* Copyright (c) 2013 Khalid Ali Al-Kooheji                                                                       *
+* Copyright (c) 2012 Khalid Ali Al-Kooheji                                                                       *
 *                                                                                                                *
 * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and              *
 * associated documentation files (the "Software"), to deal in the Software without restriction, including        *
@@ -16,50 +16,34 @@
 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE            *
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
-#ifndef UISYSTEM_APPLICATION_H
-#define UISYSTEM_APPLICATION_H
 
-#include "debug.h"
-#include <math.h>
-#include <WinCore/windows/windows.h>
-#include <WinCore/windows/application.h>
-#include <WinCore/timer/timer2.h>
-#include <Shellapi.h>
-#include <thread>
-#include <atomic>
-#include "emulation/gb/gb.h"
-#include "graphics/gdi.h"
-#include "graphics/opengl.h"
-#include "resource.h"
-#include "dialogs/options.h"
-#include "display_window.h"
+/******************************************************************************
+* Description : very primitive and simple and fast hash table to be used to 
+*  quickly access data based on key, maximum size currently must be known in 
+*  advance, 
+* 
+*  Note: no support for collisions , index must be castable to int
+*  
+*******************************************************************************/
+#pragma once
 
+namespace core {
+namespace collections {
 
-namespace app {
+template<typename Key,typename Value,int max_size>
+class HashTable {
+ public:
+  Value& operator [](Key index) {
+    int key = reinterpret_cast<int>(index);
+    int hash_index = key % max_size;
+    return buffer[hash_index];
+  }
 
-/*
-  Class Name  : Application
-  Description : this is the application's class
-*/
-class Application : core::windows::Application {
-  public:
-    explicit Application(HINSTANCE instance , LPSTR command_line, int show_command);
-    ~Application();
-    int Run();
-    DisplayWindow& display_window() {
-      return display_window_;
-    }
-    static Application* Current() {
-      return current_app_;
-    }
-  protected:
-    static Application* current_app_;
-  private:
-    DisplayWindow display_window_;
+ private:
+   Value buffer[max_size];
+
 };
 
-
-
+}
 }
 
-#endif

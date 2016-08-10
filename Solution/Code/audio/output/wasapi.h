@@ -17,8 +17,8 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
 #pragma once
-#include <WinCore/windows/windows.h>
-#include <WinCore/types.h>
+#include "../../utilities/windows/windows.h"
+#include "../../utilities/types.h"
 #include <objbase.h>
 #pragma warning(push)
 #pragma warning(disable : 4201)

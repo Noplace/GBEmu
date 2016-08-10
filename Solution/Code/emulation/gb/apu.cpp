@@ -17,7 +17,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
 #include "gb.h"
-#include "../../application.h"
+#include "../../gbemu.h"
 
 #include "../../audio/synth/lowpass.h"
 
@@ -45,8 +45,8 @@ float high_pass( float in, bool dacs_enabled )
 void Apu::Initialize(Emu* emu) {
   Component::Initialize(emu);
   output_buffer_ = new short[4410*2];
-  output_ = new audio::output::DirectSound();
-  output_->set_window_handle(app::Application::Current()->display_window().handle());
+  output_ = new audio::output::WASAPI();
+  output_->set_window_handle(app::GBEmu::Current()->display_window().handle());
   output_->set_buffer_size(4*44100*2);
   output_->Initialize(44100,2,16);
   output_->Play();

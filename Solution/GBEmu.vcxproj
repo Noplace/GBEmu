@@ -187,7 +187,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Code\application.cpp" />
+    <ClCompile Include="Code\gbemu.cpp" />
     <ClCompile Include="Code\audio\output\directsound.cpp" />
     <ClCompile Include="Code\audio\output\wasapi.cpp" />
     <ClCompile Include="Code\audio\output\xaudio.cpp" />
@@ -201,6 +201,12 @@
     <ClCompile Include="Code\emulation\gb\emu.cpp" />
     <ClCompile Include="Code\emulation\gb\lcd_driver.cpp" />
     <ClCompile Include="Code\emulation\gb\memory.cpp" />
+    <ClInclude Include="Code\utilities\hash_table.h" />
+    <ClInclude Include="Code\utilities\io.h" />
+    <ClInclude Include="Code\utilities\windows\application.h" />
+    <ClInclude Include="Code\utilities\windows\base.h" />
+    <ClInclude Include="Code\utilities\windows\window.h" />
+    <ClInclude Include="Code\utilities\windows\windows.h" />
     <Text Include="README">
       <FileType>Text</FileType>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
@@ -230,17 +236,22 @@
     <ClCompile Include="Code\emulation\gb\timer.cpp" />
     <ClCompile Include="Code\graphics\eagle.cpp" />
     <ClCompile Include="Code\graphics\HQ2x.cpp" />
+    <ClCompile Include="Code\utilities\io.cpp" />
+    <ClCompile Include="Code\utilities\windows\application.cpp" />
+    <ClCompile Include="Code\utilities\windows\window.cpp" />
     <ClCompile Include="Code\winmain.cpp" />
     <ClCompile Include="Code\graphics\gdi.cpp" />
     <ClCompile Include="Code\graphics\opengl.cpp" />
     <ClInclude Include="Code\emulation\gb\apu.h" />
     <ClInclude Include="Code\emulation\gb\timer.h" />
     <ClInclude Include="Code\graphics\shader.h" />
+    <ClInclude Include="Code\timer\timer2.h" />
+    <ClInclude Include="Code\utilities\types.h" />
     <ClInclude Include="Code\utilities\ring_buffer.h" />
     <Text Include="vs.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\application.h" />
+    <ClInclude Include="Code\gbemu.h" />
     <ClInclude Include="Code\debug.h" />
     <ClInclude Include="Code\display_window.h" />
     <ClInclude Include="Code\graphics\eagle.h" />
@@ -255,14 +266,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\RecCore\Lib\RecCore.vcxproj">
       <Project>{df0830fe-a835-4cbe-a01e-cc993304528d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\WinCore\WinCore.vcxproj">
-      <Project>{43ac74e9-a89d-4e31-8c01-fa2cce27f5c2}</Project>
-      <Private>true</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

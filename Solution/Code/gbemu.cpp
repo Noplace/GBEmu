@@ -16,72 +16,53 @@
 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE            *
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
-#pragma once
+#include "gbemu.h"
+#include <crtdbg.h>
+namespace app {
 
-#include "../../utilities/windows/windows.h"
-#include "../../utilities/types.h"
-#include <XAudio2.h>
-#include "interface.h"
+GBEmu* GBEmu::current_app_ = nullptr;
 
-namespace audio {
-namespace output {
+GBEmu::GBEmu(HINSTANCE instance , LPSTR command_line, int show_command) {
+  //OleInitialize(NULL);
+  current_app_ = this;
+}
 
-struct StreamingVoiceContext : public IXAudio2VoiceCallback
-{
-            STDMETHOD_( void, OnVoiceProcessingPassStart )( UINT32 )
-            {
-            }
-            STDMETHOD_( void, OnVoiceProcessingPassEnd )()
-            {
-            }
-            STDMETHOD_( void, OnStreamEnd )()
-            {
-            }
-            STDMETHOD_( void, OnBufferStart )( void* )
-            {
-            }
-            STDMETHOD_( void, OnBufferEnd )( void* data)
-            {
-             // delete [] data;
-                SetEvent( hBufferEndEvent );
-            }
-            STDMETHOD_( void, OnLoopEnd )( void* )
-            {
-            }
-            STDMETHOD_( void, OnVoiceError )( void*, HRESULT )
-            {
-            }
+GBEmu::~GBEmu() {
+ current_app_ = nullptr;
+ _CrtDumpMemoryLeaks();
+}
 
-    HANDLE hBufferEndEvent;
+int GBEmu::Run() {
+  CoInitializeEx(nullptr,COINIT_MULTITHREADED);
+  //CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+  //unsigned old_fp_state;
+  //_controlfp_s(&old_fp_state, _PC_53, _MCW_PC);
 
-            StreamingVoiceContext() : hBufferEndEvent( CreateEvent( NULL, FALSE, FALSE, NULL ) )
-            {
-            }
-    virtual ~StreamingVoiceContext()
-    {
-        CloseHandle( hBufferEndEvent );
+  time_t t;
+  time(&t);
+  srand((int)t);
+
+  display_window_.Init();
+  
+  MSG msg;
+  do {
+    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+      TranslateMessage(&msg);
+      DispatchMessage(&msg);
+    } else {
+      //display_window_.Step(); 
+      std::this_thread::sleep_for(std::chrono::milliseconds(2));
     }
-};
+  } while(msg.message!=WM_QUIT);
 
-class XAudio : public Interface {
- public:
-  XAudio();
-  ~XAudio();
-  int Initialize(uint32_t sample_rate, uint8_t channels, uint8_t bits);
-  int Deinitialize();
-  uint32_t GetBytesBuffered();
-  int Write(void* data_pointer, uint32_t size_bytes);
-  void Sync() { }
-  void set_window_handle(HWND window_handle) { window_handle_ = window_handle; }
-  void set_buffer_size(uint32_t buffer_size) { buffer_size_ = buffer_size; }
-  IXAudio2SourceVoice* pSourceVoice;
-  StreamingVoiceContext voiceContext;
- protected:
-  void* window_handle_;
-  uint32_t buffer_size_;
-  IXAudio2* pXAudio2;
-  IXAudio2MasteringVoice* pMasteringVoice;
-};
+ CoUninitialize();
+ //Return the exit code to the system. 
+
+
+
+ 
+ return static_cast<int>(msg.wParam);
+}
 
 }
-}
+

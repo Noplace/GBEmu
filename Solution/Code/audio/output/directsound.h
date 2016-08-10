@@ -18,8 +18,8 @@
 *****************************************************************************************************************/
 #pragma once
 
-#include <WinCore/windows/windows.h>
-#include <WinCore/types.h>
+#include "../../utilities/windows/windows.h"
+#include "../../utilities/types.h"
 #include <mmreg.h>
 #include <dsound.h>
 #include <atomic>

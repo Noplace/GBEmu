@@ -18,8 +18,8 @@
 *****************************************************************************************************************/
 #pragma once
 
-#include <WinCore/types.h>
-#include <WinCore/windows/windows.h>
+#include "../../utilities/windows/windows.h"
+#include "../../utilities/types.h"
 
 typedef float real_t;
 #define PI  3.14159265358979323846f

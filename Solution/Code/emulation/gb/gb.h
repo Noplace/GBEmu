@@ -19,7 +19,7 @@
 #pragma once
 
 //#pragma warning( disable:4800 )
-#include <WinCore/types.h>
+#include "../../utilities/types.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #define _USE_MATH_DEFINES
@@ -28,7 +28,7 @@
 #include <functional>
 #include <thread>
 #include <atomic>
-#include <WinCore/timer/timer2.h>
+#include "../../timer/timer2.h"
 //#include <WinCore/log/log_manager.h>
 #include "../../debug.h"
 

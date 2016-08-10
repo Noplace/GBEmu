@@ -20,6 +20,7 @@
 
 #pragma comment(lib,"opengl32")
 #pragma comment(lib,"glu32")
+#pragma comment(lib,"glew32s")
 
 namespace graphics {
 
@@ -63,6 +64,8 @@ void OpenGL::Initialize(HWND window_handle,int width,int height) {
   e = glGetError();
   wglMakeCurrent(device_context_,render_context_);
   e = glGetError();
+  
+  glewInit();
   //const GLubyte* str = glGetString(GL_EXTENSIONS);
   glShadeModel(GL_SMOOTH);
   glEnable(GL_BLEND);
@@ -143,6 +146,7 @@ void OpenGL::Render() {
   // Release the device context
   //EndPaint(handle(), &ps);
   SwapBuffers(device_context_);
+glewInit();
 }
 
 
