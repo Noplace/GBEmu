@@ -41,7 +41,8 @@ static inline uint32_t rgbtobgr555(uint32_t src) {
 
 
 //const uint32_t pal32[4] = {0xffffffff,0xffAAAAAA,0xff545454,0xff000000};
-const uint32_t dmg_colors[4] = {0x00000000,0x54000000,0xAA000000,0xFF000000};
+//const uint32_t dmg_colors[4] = {0x00000000,0x54000000,0xAA000000,0xFF000000};
+const uint32_t dmg_colors[4] = { 0x00000000,0x54000000,0xAA000000,0xFF000000 };
 
 
 
@@ -874,7 +875,7 @@ void LCDDriver::RenderLine(int x0,int x1) {
 
         auto fbline = &frame_buffer[ly<<8];
         for (int i=0;i<160;++i) {//256px per line
-          *fbline++ = dmg_colors[cmline->pixel];
+          *fbline++ =  dmg_colors[cmline->pixel];
           ++cmline;
         }
     }

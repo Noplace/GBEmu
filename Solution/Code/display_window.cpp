@@ -18,7 +18,9 @@
 *****************************************************************************************************************/
 #include "gbemu.h"
 #include "graphics/eagle.h"
-
+#include <iostream>
+#include <fstream>
+#include <string>
 
 void hq2x_filter_render(
   uint32_t *output, unsigned outputPitch,
@@ -56,14 +58,15 @@ void dotmatrix_sim(uint32_t* inbuf,uint32_t* outbuf) {
 }
 
 
-<<<<<<< HEAD
+
 std::string ReadTextFile(const char* filename)
 {
 
-std::ifstream in(filename);
-std::string contents((std::istreambuf_iterator<char>(in)), 
-    std::istreambuf_iterator<char>());
-return contents;
+  std::ifstream infile(filename);
+  
+  std::string contents((std::istreambuf_iterator<char>(infile)),std::istreambuf_iterator<char>());
+
+  return contents;
   /*std::ifstream hFile(filename);
 
   auto lines = new std::vector<GLchar>();
@@ -181,8 +184,6 @@ namespace app {
 
 
 
-=======
->>>>>>> origin/master
 DisplayWindow::DisplayWindow() : Window() {
 
 //  counter = 0;
@@ -213,6 +214,8 @@ void DisplayWindow::Init() {
     //Render();
   });
 
+  emu.Initialize(emulation::gb::default_gb_hz);
+
   //auto a = glGetError();
   //glPixelZoom(1, -1);
   //a = glGetError();
@@ -220,7 +223,7 @@ void DisplayWindow::Init() {
   //a = glGetError();
   texture = gfx.CreateTexture();
   //wglMakeCurrent(NULL, NULL);
-<<<<<<< HEAD
+
 /*
 {
   auto vsFile = ReadTextFile("vs.glsl");
@@ -235,9 +238,8 @@ void DisplayWindow::Init() {
 }*/
   setShaders();
   setupVB();
-=======
 
->>>>>>> origin/master
+
   //settings setup
   ResetTiming();
   
@@ -249,9 +251,9 @@ void DisplayWindow::Init() {
 
   //emu_th = new std::thread(&app::DisplayWindow::Step,this);
   //emu_th->join();
-  emu.Initialize(emulation::gb::default_gb_hz);
+  
   //emu.lcd_driver()->lcdscreenmode_
-  OnCommand(ID_MODE_GBC,0);
+  OnCommand(ID_MODE_GB,0);
   emulation::gb::CartridgeHeader header;
   //emu.cartridge()->LoadFile("..\\test\\cpu_instrs\\cpu_instrs.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\instr_timing\\instr_timing\\instr_timing.gb",&header);
@@ -269,22 +271,22 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\Pocket Camera (Japan) (Rev A).gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);//not original rom, problem with window
-  //emu.cartridge()->LoadFile("..\\test\\Final Fantasy Legend, The (U) [!].gb",&header); 
+  emu.cartridge()->LoadFile("..\\test\\Final Fantasy Legend, The (U) [!].gb",&header); 
   //emu.cartridge()->LoadFile("D:\\Personal\\Dev\\GB\\roms\\Kirby's Dream Land (USA, Europe).gb",&header);
-  emu.cartridge()->LoadFile("..\\test\\Tamagotchi 3.gb",&header);
+  //emu.cartridge()->LoadFile("..\\test\\Tamagotchi 3.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Tamagotchi (USA, Europe).gb",&header);
   
 
   //emu.cartridge()->LoadFile("..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);
-  emu.cartridge()->LoadFile("..\\test\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
+  //emu.cartridge()->LoadFile("..\\test\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\introcollection.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
 
-<<<<<<< HEAD
-  //emu.cartridge()->LoadFile("..\\test\\Mission Impossible (USA) (En,Fr,Es).gbc",&header);
-=======
 
->>>>>>> origin/master
+  //emu.cartridge()->LoadFile("..\\test\\Mission Impossible (USA) (En,Fr,Es).gbc",&header);
+
+
+
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Pokemon Silver.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Grand Theft Auto.gbc",&header);
@@ -444,9 +446,20 @@ int DisplayWindow::OnDropFiles(WPARAM wParam,LPARAM lParam) {
     ext[i] = tolower(ext[i]);
   }
 
-  if (strcmp(ext,".nes")==0) {
-    //nes.Open(filename);
+  if (strcmp(ext,".gbc")==0) {
+    emu.Stop();
+    OnCommand(ID_MODE_GBC, 0);
+    emulation::gb::CartridgeHeader header;
+    emu.cartridge()->LoadFile(filename, &header);
     OnCommand(ID_MACHINE_RESET,0);
+  }
+
+  if (strcmp(ext, ".gb") == 0) {
+    emu.Stop();
+    OnCommand(ID_MODE_GB, 0);
+    emulation::gb::CartridgeHeader header;
+    emu.cartridge()->LoadFile(filename, &header);
+    OnCommand(ID_MACHINE_RESET, 0);
   }
 
   SafeDeleteArray(&filename);
@@ -470,8 +483,8 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
 
   glDisable( GL_TEXTURE_2D );
   
-  glColor4ub(0x72,0x7E,0x01,0xFF);
-  glColor4ub(0x80,0x8E,0x0B,0xFF);
+  //glColor4ub(0x72,0x7E,0x01,0xFF);
+  glColor4ub(0, 0,0, 0x8E);
   glBegin( GL_QUADS );
   glVertex2d(0.0,0.0);
   glVertex2d(client_width_,0.0);
@@ -487,14 +500,14 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
   auto err= glGetError();
   //glEnableClientState(GL_VERTEX_ARRAY);
     glActiveTexture(texture);
-        glBindTexture( GL_TEXTURE_2D, texture );
-      glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,256,256,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,emu.lcd_driver()->frame_buffer);
+    glBindTexture( GL_TEXTURE_2D, texture );
+    glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,256,256,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,emu.lcd_driver()->frame_buffer);
   //glBindTexture(GL_TEXTURE_2D,0);
 
   auto loc = glGetUniformLocation(prog, "baseline_alpha");
   glUniform1f(loc,1.0f);
-  //auto loc = glGetUniformLocation(prog, "texture1");
-  //glUniform1i(loc,0);
+  loc = glGetUniformLocation(prog, "texture1");
+  glUniform1i(loc,0);
 
   glEnableClientState( GL_VERTEX_ARRAY );
   glEnableClientState( GL_TEXTURE_COORD_ARRAY );

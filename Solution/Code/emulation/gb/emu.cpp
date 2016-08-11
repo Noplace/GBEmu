@@ -23,7 +23,8 @@
 inline void printThreadId() {
   {
     char str[50];
-    sprintf_s(str,"thread id:%llu\n",std::this_thread::get_id().hash());
+    std::hash<std::thread::id> hasher;
+    sprintf_s(str, "thread id:%x\n", hasher(std::this_thread::get_id()));
     OutputDebugString(str);
   }
 }

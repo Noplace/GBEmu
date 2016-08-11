@@ -91,7 +91,7 @@ void OpenGL::Deinitialize() {
 void OpenGL::SetDisplaySize(int width,int height) {
   display_width_ = width;
   display_height_ = height;
-  glClearColor(0.25f, 0.25f, 0.5f, 0.0f);
+  glClearColor(0.25f, 0.5f,0.25f , 0.0f);
   auto e = glGetError();
   glViewport(0, 0, display_width_, display_height_);					// Reset The Current Viewport
   e = glGetError();
