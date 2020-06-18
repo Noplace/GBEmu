@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>cf370e5f-b4c4-4a0a-bc02-ac377b81910f</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Class1.cpp" />
+    <ClCompile Include="Code\audio\synth\quadrangular_wave.cpp" />
+    <ClCompile Include="Code\utilities\windows\application.cpp" />
+    <ClCompile Include="Code\utilities\io.cpp" />
+    <ClCompile Include="Code\emulation\gb\apu.cpp" />
+    <ClCompile Include="Code\emulation\gb\cartridge.cpp" />
+    <ClCompile Include="Code\emulation\gb\cpu_interpreter.cpp" />
+    <ClCompile Include="Code\emulation\gb\emu.cpp" />
+    <ClCompile Include="Code\emulation\gb\lcd_driver.cpp" />
+    <ClCompile Include="Code\emulation\gb\memory.cpp" />
+    <ClCompile Include="Code\emulation\gb\timer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Class1.h" />
+    <ClInclude Include="Code\audio\output\interface.h" />
+    <ClInclude Include="Code\audio\synth\lowpass.h" />
+    <ClInclude Include="Code\audio\synth\quadrangular_wave.h" />
+    <ClInclude Include="Code\utilities\windows\application.h" />
+    <ClInclude Include="Code\utilities\windows\base.h" />
+    <ClInclude Include="Code\utilities\windows\windows.h" />
+    <ClInclude Include="Code\utilities\hash_table.h" />
+    <ClInclude Include="Code\utilities\io.h" />
+    <ClInclude Include="Code\utilities\ring_buffer.h" />
+    <ClInclude Include="Code\utilities\types.h" />
+    <ClInclude Include="Code\timer\timer2.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\mbc.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\none.h" />
+    <ClInclude Include="Code\emulation\gb\apu.h" />
+    <ClInclude Include="Code\emulation\gb\cartridge.h" />
+    <ClInclude Include="Code\emulation\gb\cpu.h" />
+    <ClInclude Include="Code\emulation\gb\emu.h" />
+    <ClInclude Include="Code\emulation\gb\gb.h" />
+    <ClInclude Include="Code\emulation\gb\lcd_driver.h" />
+    <ClInclude Include="Code\emulation\gb\memory.h" />
+    <ClInclude Include="Code\emulation\gb\rom.h" />
+    <ClInclude Include="Code\emulation\gb\timer.h" />
+    <ClInclude Include="Code\gbemu.h" />
+    <ClInclude Include="Code\debug.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\mbc5.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\mbc_pocketcamera.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\mbc_tama5.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\mbc1.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\mbc2.h" />
+    <ClInclude Include="Code\emulation\gb\mbc\mbc3.h" />
+  </ItemGroup>
+</Project>
