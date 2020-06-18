@@ -325,11 +325,56 @@ void CpuInterpreter::Reset() {
   reg.PC = 0;
   ime = false;
   cpumode_ = CpuModeNormal;
-  sprite_bug = 0;
+  //sprite_bug = 0;
   ticks_to_switchspeed = 0;
 }
 
+void CpuInterpreter::HandleInterrupts() {
 
+  uint8_t test = mem_->interrupt_enable() & mem_->interrupt_flag() & 0x1F;
+  if (test) {
+    emu_->MachineTick();
+    emu_->MachineTick();
+    emu_->MachineTick();
+    ime = false;
+    cpumode_ = CpuModeNormal;
+    pushPC();
+
+    if (test & 0x1) { //vblank
+      reg.PC = 0x0040;
+      mem_->interrupt_flag() &= ~0x1;
+    }
+    else if (test & 0x2) {
+      reg.PC = 0x0048; //lcdc status
+      mem_->interrupt_flag() &= ~0x2;
+      //emu_->lcd_driver()->int48signal = 0;
+    }
+    else if (test & 0x4) {
+      reg.PC = 0x0050; //timer overflow
+      mem_->interrupt_flag() &= ~0x4;
+      //mem_->interrupt_enable() &= ~0x4;
+    }
+    else if (test & 0x8) {
+      reg.PC = 0x0058; //serial transfer
+      mem_->interrupt_flag() &= ~0x8;
+    }
+    else if (test & 0x10) {
+      reg.PC = 0x0060; //hi-lo p10-p13
+      mem_->interrupt_flag() &= ~0x10;
+    }
+  }
+}
+
+
+void CpuInterpreter::ExecuteInstruction() {
+  opcode_pc = reg.PC;
+  //if (opcode_pc == 0x100) {
+    //if (emu_->mode() == EmuModeGBC) //hack
+    //  reg.A = 0x11;
+  //}
+  opcode = mem_->ClockedRead8(reg.PC++);
+  (this->*(instructions[opcode]))();
+}
 
 void CpuInterpreter::Step() {
   this->dt = dt;
@@ -339,52 +384,37 @@ void CpuInterpreter::Step() {
   if (cpumode_ == CpuModeStop) {
     emu_->cpu_cycles_per_step_ = 1;
     return;
-  }
-  if (cpumode_ == CpuModeNormal) {
-    if (sprite_bug!=0) --sprite_bug;
-    opcode_pc = reg.PC;
-    //if (opcode_pc == 0x100) {
-      //if (emu_->mode() == EmuModeGBC) //hack
-      //  reg.A = 0x11;
-    //}
-    opcode = mem_->ClockedRead8(reg.PC++);
-    (this->*(instructions[opcode]))();
+  } else  if (cpumode_ == CpuModeNormal) {
+    //if (sprite_bug != 0) --sprite_bug;
+    ExecuteInstruction();
+
+    if (ime) {
+      HandleInterrupts();
+    }
+
   } else if (cpumode_ == CpuModeHalt) {
     emu_->ClockTick();
-  }
-
-  if (ime) {
-    
-    uint8_t test = mem_->interrupt_enable() & mem_->interrupt_flag();
-    if (test) {
-      emu_->MachineTick();
-      emu_->MachineTick();
-      emu_->MachineTick();
-      ime = false;
-      cpumode_ = CpuModeNormal;
-      pushPC();
-
-      if (test & 0x1) { //vblank
-        reg.PC = 0x0040;
-        mem_->interrupt_flag() &= ~0x1;
-      } else if (test & 0x2) {
-        reg.PC = 0x0048; //lcdc status
-        mem_->interrupt_flag() &= ~0x2;
-        //emu_->lcd_driver()->int48signal = 0;
-      } else if (test & 0x4) {
-        reg.PC = 0x0050; //timer overflow
-        mem_->interrupt_flag() &= ~0x4;
-        //mem_->interrupt_enable() &= ~0x4;
-      } else if (test & 0x8) {
-        reg.PC = 0x0058; //serial transfer
-        mem_->interrupt_flag() &= ~0x8;
-      } else if (test & 0x10) {
-        reg.PC = 0x0060; //hi-lo p10-p13
-        mem_->interrupt_flag() &= ~0x10;
-      }
-
+    if (ime) {
+      HandleInterrupts();
     }
+    else {
+      uint8_t test = mem_->interrupt_enable() & mem_->interrupt_flag() & 0x1F;
+      if (test==0) {
+        //ime = false;
+        //cpumode_ = CpuModeNormal;
+        ExecuteInstruction();
+      } else {
+        ExecuteInstruction();
+        reg.PC = opcode_pc ;
+        cpumode_ = CpuModeNormal;
+      }
+    }
+    
+
   }
+
+
+
 }
 
 void CpuInterpreter::NOP() { 
@@ -1090,7 +1120,7 @@ void CpuInterpreter::simulateSpriteBug(uint16_t value) {
     //auto oam = mem_->oam();
     //for (int i=8;i<0xA0;++i)
     //  oam[i] = rand()&0xFF;
-    sprite_bug = 0;
+    //sprite_bug = 0;
 
 
 

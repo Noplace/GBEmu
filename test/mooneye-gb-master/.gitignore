@@ -1,0 +1,11 @@
+*~
+*.swp
+*.gb
+*.o
+*.link
+*.dll
+imgui.ini
+target/
+Cargo.lock
+/roms
+/tests/tags

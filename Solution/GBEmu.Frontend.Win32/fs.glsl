@@ -35,7 +35,7 @@ void main () {
     float wave_pos = cos((fract( global_pos ) - 0.5)*3.14);
     vec4 pel = texture2D( texture1, texCoord );
 
-    frag_colour = mix(vec4(0,0,0,0), pel, wave_pos);
+    frag_colour = color;//mix(vec4(0,0,0,0), pel, wave_pos);
 
 }
 

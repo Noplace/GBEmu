@@ -71,7 +71,7 @@ void Options::OnInit(HWND hwndDlg) {
 
 void Options::set_cpu_freq_text(double cpu_freq) {
   char str[25];
-  sprintf(str,"%0.2f Mhz",cpu_freq*0.000001);
+  sprintf_s(str,"%0.2f Mhz",cpu_freq*0.000001);
   SetDlgItemText(handle_,IDC_FREQ_LABEL,str);
 }
 

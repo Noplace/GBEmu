@@ -43,6 +43,7 @@ local.properties
 
 # Build results
 
+/Solution/.vs/
 /Listing/
 /Output/Listing/*.asm
 /[Oo]utput/

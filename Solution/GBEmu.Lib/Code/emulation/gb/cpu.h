@@ -43,7 +43,7 @@ union CpuFlagRegister {
 enum CpuRegisterNames8 { RegF,RegA,RegC,RegB,RegE,RegD,RegL,RegH,RegSPl,RegSPh,RegPCl,RegPCh };
 enum CpuRegisterNames16 { RegAF,RegBC,RegDE,RegHL,RegSP,RegPC };
 enum CpuFlags { CpuFlagsUnused0 = 0, CpuFlagsC = 4,CpuFlagsH=5,CpuFlagsN=6,CpuFlagsZ=7 };
-enum CpuMode { CpuModeNormal,CpuModeHalt,CpuModeStop };
+enum CpuMode { CpuModeNormal,CpuModeHalt,CpuModeStop, CpuModeUndefined };
 //#pragma pack(1)
 struct CpuRegisters {
   union {
@@ -88,7 +88,7 @@ class Cpu : public Component {
  public:
 
   uint16_t opcode_pc;
-  uint8_t sprite_bug;
+ // uint8_t sprite_bug;
   uint32_t ticks_to_switchspeed;
   virtual void Initialize(Emu* emu) = 0;
   virtual void Deinitialize() = 0;
@@ -117,7 +117,8 @@ class CpuInterpreter : public Cpu {
  private: 
   typedef void (CpuInterpreter::*Instruction)();
   Instruction instructions[0x100];
-
+  void HandleInterrupts();
+  void ExecuteInstruction();
   void simulateSpriteBug(uint16_t value);
   inline void updateCpuFlagC(uint8_t a,uint8_t b,int mode) {
     if (mode == 0) {

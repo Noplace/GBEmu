@@ -1,0 +1,35 @@
+[workspace]
+members = ["core"]
+
+[package]
+name = "mooneye-gb"
+version = "0.2.0-pre"
+authors = ["Joonas Javanainen <joonas.javanainen@gmail.com>"]
+license = "GPL-3.0+"
+edition = "2018"
+
+[dependencies]
+arraydeque = "0.4"
+docopt = "1.0"
+failure = "0.1"
+gilrs = "0.7"
+glium = "0.25"
+imgui = "0.2"
+imgui-glium-renderer = "0.2"
+imgui-winit-support = "0.2"
+log = "0.4"
+mooneye-gb-core = { version = "0.2.0-pre", path = "core" }
+nalgebra = "0.21"
+num-traits = "0.2"
+serde = "1.0"
+serde_derive = "1.0"
+simplelog = "0.7"
+
+[dev-dependencies]
+criterion = "0.3"
+
+[profile.test]
+opt-level = 2
+
+[features]
+include-bootroms = ["mooneye-gb-core/include-bootroms"]

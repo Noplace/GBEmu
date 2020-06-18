@@ -338,7 +338,7 @@ void CpuRecompiler::Reset() {
   reg.PC = 0;
   ime = false;
   cpumode_ = CpuModeNormal;
-  sprite_bug = 0;
+  //sprite_bug = 0;
   block->cursor = 0;
   compiledMap.clear();
 }
@@ -355,7 +355,7 @@ void CpuRecompiler::Step() {
     return;
   } 
   if (cpumode_ == CpuModeNormal) {
-    if (sprite_bug!=0) --sprite_bug;
+    //if (sprite_bug!=0) --sprite_bug;
     opcode_pc = reg.PC;
     //if (opcode_pc == 0x100) {
       //if (emu_->mode() == EmuModeGBC) //hack
@@ -1160,7 +1160,7 @@ void CpuRecompiler::simulateSpriteBug(uint16_t value) {
     //auto oam = mem_->oam();
     //for (int i=8;i<0xA0;++i)
     //  oam[i] = rand()&0xFF;
-    sprite_bug = 0;
+    //sprite_bug = 0;
 
 
 

@@ -100,16 +100,16 @@ class Emu {
     memory_.Tick();
     if (speed == EmuSpeedNormal) {
       lcd_driver_.Tick();
-      
+      apu_.Tick();
     } else {
       static bool s = false;
       if (s == false) {
         lcd_driver_.Tick();
-        
+        apu_.Tick();
       }
       s = !s;
     }
-    apu_.Tick();
+    //apu_.Tick();
   }
   void MachineTick() {
     ClockTick();

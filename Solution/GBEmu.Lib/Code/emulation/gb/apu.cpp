@@ -168,7 +168,7 @@ void Apu::Tick() {
 
   maincounter = (maincounter+1) & 0x1F;
   //++ulencounterclock;
-  if (++frame_seq_clock == 8192*emu_->speed) {
+  if (++frame_seq_clock == 8192*1L) {
     switch (frame_seq_step) {
       case 0:LengthTick(); break;
       case 1: break;
@@ -403,7 +403,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
       channel1.reg4 = data;
       uint32_t x = channel1.reg3;
       x |= (channel1.reg4&0x7)<<8;
-      channel1.freqcounterload = ((2048-x)<<2)*emu_->speed; //*4
+      channel1.freqcounterload = ((2048-x)<<2)*1L; //*4
       
       //channel1freq = 131072.0f/(2048-x);
       if (channel1.reg4 & 0x80) {
@@ -413,7 +413,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
         channel1.envcounterload = (channel1.envelope.env_sweep);
         channel1.envcounter = channel1.envcounterload;
         channel1.sweepcounter = channel1.reg0.sweep_time;
-        channel1.sweepfreqcounter = ((x>>channel1.reg0.sweep_shift)<<2)*emu_->speed;
+        channel1.sweepfreqcounter = ((x>>channel1.reg0.sweep_shift)<<2)*1L;
         channel1.freqcounter = channel1.freqcounterload;
         
       
@@ -466,7 +466,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
       channel2.reg4 = data;
       uint32_t x = channel2.reg3;
       x |= (channel2.reg4&0x7)<<8;
-      channel2.freqcounterload = ((2048-x)<<2)*emu_->speed;
+      channel2.freqcounterload = ((2048-x)<<2)*1L;
       //channel2freq = 131072.0f/(2048-x);
       channel2.enable_length_clock = (data&0x40)==0x40;
       if (channel2.reg4 & 0x80) {
@@ -511,7 +511,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
       channel3.reg4 = data;
       uint32_t x = channel3.reg3;
       x |= (channel3.reg4&0x7)<<8;
-      channel3.freqcounterload = ((2048-x)<<1)*emu_->speed;
+      channel3.freqcounterload = ((2048-x)<<1)*1L;
       //if (nr34_&0x40)
         //channel3.soundlength_ms = 1000.0f * (256.0f-nr31_)*(1/256.0f);
       //channel3.enable_length_clock = data&0x40==0x40;
@@ -554,7 +554,7 @@ void Apu::Write(uint16_t address, uint8_t data) {
       const uint16_t divisors[8] = {8,16,32,48,64,80,96,112};
       auto divisor = divisors[channel4.reg3&0x7];
       auto shift = (channel4.reg3&0xF0)>>4;
-      channel4.freqcounterload = (divisor<<shift)*emu_->speed;
+      channel4.freqcounterload = (divisor<<shift)*1L;
       if (channel4.reg4 & 0x80) {
         if (channel4.dac_enable) //dac
           nr52_ |= 0x08;

@@ -66,7 +66,8 @@ struct CartridgeHeader {
 
 
   uint8_t cgb_flag() { return title[15]; } 
-  uint32_t rom_size_bytes() {
+
+  size_t rom_size_bytes() {
     if (rom_size < 10){
       return 0x8000 << rom_size;
     } else {
@@ -79,7 +80,7 @@ struct CartridgeHeader {
     return 0;
   }
  
-  uint32_t ram_size_bytes() {
+  size_t ram_size_bytes() {
     if (cartridge_type==5 || cartridge_type==6) return 512;
     const int ramsizes[6] = { 
       0x00000000, 
