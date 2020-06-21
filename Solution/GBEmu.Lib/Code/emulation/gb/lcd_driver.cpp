@@ -58,7 +58,9 @@ void LCDDriver::Initialize(Emu* emu) {
   memset(&cgb_bgpal,0xFF,sizeof(cgb_bgpal));
   memset(&cgb_sppal1,0,sizeof(cgb_sppal1));
   memset(&cgb_sppal2,0,sizeof(cgb_sppal2));
-  
+  enable_bg_ = true;
+  enable_window_ = true; 
+  enable_sprite_ = true;
   //auto ioports = emu_->memory()->ioports();
   //lcdc_ = ((LCDControlRegister*)&ioports[0x40]);
   //stat_ = ((LCDStatusRegister*)&ioports[0x41]);
@@ -144,7 +146,8 @@ void LCDDriver::Reset() {
   lyc = 0;
   scroll_x = scroll_y = 0;
   wx = wy = 0;
-  screen_counter_ = scanline_counter_ = 0;
+  screen_counter_ = scanline_dots_ = 0;
+  dot_delay_ = 0;
   vsync = 0;
   hsync = 0;
   sprite_bug_counter = 0;
@@ -175,6 +178,170 @@ void LCDDriver::DoHDMA() {
 
 }
 
+
+
+void LCDDriver::Tick() {
+  ++scanline_dots_; //line clock
+  ++screen_counter_;//screen clock
+
+  stat_.coincidence = lyc == ly;
+
+
+  //dma 
+  if (spritedma.start == true) { //launched
+
+  }
+
+
+  static auto mode0_counter = 0;
+  static auto mode1_counter = 0;
+  static auto mode2_counter = 0;
+  static auto mode3_counter = 0;
+
+
+  switch (stat_.mode) {
+  case 2:
+    
+    ++mode2_counter;
+    if (scanline_dots_ == 1) {
+      if (stat_.oam_int || (stat_.coincidence_inr && stat_.coincidence)) { //lyc interrupts occurs at start of mode 2
+        if (int48signal == 0) {
+          emu_->memory()->interrupt_flag() |= 2;
+          int48signal = 1;
+        }
+      }
+
+    }
+    if (scanline_dots_ == 80)
+      stat_.mode = 3;
+    break;
+  case 3:
+    ++mode3_counter;
+    {
+      static auto flag = lcdc_.bgdisplay;
+      if (flag != lcdc_.bgdisplay) {
+        //OutputDebugString("bg display changed during mode3\n");
+        flag = lcdc_.bgdisplay;
+      }
+    }
+
+    if (scanline_dots_ >= 80 && scanline_dots_ <= 160) {
+      if (sprite_bug_counter != 0) { //80 is 20 cycles if 114 is one scanline total cycles
+        if (lcdc_.lcd_enable == 1)
+          emu_->memory()->oam()[8 + (rand() % 152)] = rand() & 0xFF;
+        --sprite_bug_counter;
+      }
+    }
+
+
+    if (scanline_dots_ == 81+8) {// account for 8 extra cycles
+      sprite_bug_counter = 0;
+      pixel_counter_ = 0;
+      //RenderLine(0, 160);//will update mode3_extra_cycles_
+    }
+
+    
+    if (scanline_dots_ >= 89 && pixel_counter_ < 160) { //0 to 159
+      RenderLine(0, 160);
+    }
+
+    if (pixel_counter_ == 160) {
+      stat_.mode = 0;
+      pixel_counter_ = 0;
+    }
+
+
+    /*
+    if (scanline_dots_ >= 81 && scanline_dots_ <= 241) {
+      //sprite_bug_counter = 0;
+      //pixel_counter_ = 0;
+      RenderLine(0, 160);//will update mode3_extra_cycles_
+    }
+
+    if (scanline_dots_ == 252 + mode3_extra_cycles_) {
+      stat_.mode = 0;
+
+    }*/
+
+  break;
+  case 0:
+    ++mode0_counter;
+    /*if (sprite_bug_counter != 0 && lcdc_.lcd_enable == 1) {
+      emu_->memory()->oam()[8+(rand()%152)] = rand()&0xFF;
+      --sprite_bug_counter;
+    }*/
+    if (scanline_dots_ == 252 + mode3_extra_cycles_ + 1) {
+      if (stat_.hblank_int) {
+        if (int48signal == 0) {
+          emu_->memory()->interrupt_flag() |= 2;
+          int48signal = 1;
+        }
+      }
+    }
+
+    if (scanline_dots_ == 456) {
+
+      //DoHDMA();
+      if (ly == 143) {
+        stat_.mode = 1;//vblank period
+      }
+      else {
+        stat_.mode = 2;
+
+      }
+    }
+    break;
+  case 1: {
+    ++mode1_counter;
+    if (ly == 144 && scanline_dots_ == 1) {
+      emu_->memory()->interrupt_flag() |= 1;
+      if (stat_.vblank_int) { //either here or in mode 1 all the time//doubt it
+        if (int48signal == 0) {
+          emu_->memory()->interrupt_flag() |= 2;
+          int48signal = 1;
+        }
+      }
+    }
+    break;
+  }
+  }
+
+
+  //static auto mode0_lines = 0, mode1_lines = 0, mode2_lines = 0, mode3_lines = 0;
+
+  if (scanline_dots_ == 456) {
+
+
+    
+
+    //char debugstr[255];
+    //auto total = mode0_counter + mode1_counter + mode2_counter + mode3_counter;
+    //sprintf_s(debugstr, "cycles for line %d , %d %d %d %d = %d\n", ly,mode0_counter, mode1_counter, mode2_counter, mode3_counter, total);
+    //OutputDebugString(debugstr);
+    mode0_counter = mode1_counter = mode2_counter = mode3_counter = 0;
+
+    if (ly++ == 153 && scanline_dots_ == 456) {
+
+
+
+      //if (lcdc_.lcd_enable)
+      emu_->Render();
+      evenodd = !evenodd;
+      stat_.mode = 2;
+      ly = 0;
+      screen_counter_ = 0;
+      scanline_dots_ = 0;
+      
+    }
+    scanline_dots_ = 0;
+    int48signal = 0;
+  }
+
+
+
+}
+
+/*
 void LCDDriver::Tick() {
   ++scanline_counter_; //line clock
   ++screen_counter_;//screen clock
@@ -221,8 +388,16 @@ void LCDDriver::Tick() {
         }
       }
 
-      if (scanline_counter_ == 81) {
+
+      if (scanline_counter_ == 81 ) {
         sprite_bug_counter = 0;
+        pixel_counter_ = 0;
+        //RenderLine(0, 160);//will update mode3_extra_cycles_
+      }
+
+      if (scanline_counter_ >= 81 && scanline_counter_ <= 241) {
+        //sprite_bug_counter = 0;
+        //pixel_counter_ = 0;
         RenderLine(0,160);//will update mode3_extra_cycles_
       }
 
@@ -232,10 +407,10 @@ void LCDDriver::Tick() {
       }
       break;
     case 0:
-      /*if (sprite_bug_counter != 0 && lcdc_.lcd_enable == 1) {
-        emu_->memory()->oam()[8+(rand()%152)] = rand()&0xFF; 
-        --sprite_bug_counter;
-      }*/
+      //if (sprite_bug_counter != 0 && lcdc_.lcd_enable == 1) {
+      //  emu_->memory()->oam()[8+(rand()%152)] = rand()&0xFF; 
+      //  --sprite_bug_counter;
+      //}
       if (scanline_counter_ == 252+mode3_extra_cycles_+1) {
         if (stat_.hblank_int) {
           if (int48signal == 0) {
@@ -287,7 +462,7 @@ void LCDDriver::Tick() {
 
 
 
-}
+}*/
 
 uint8_t LCDDriver::Read(uint16_t address) {
 
@@ -349,10 +524,10 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       if (change) {
         if (lcdc_.lcd_enable) {
           screen_counter_ = 0;
-          scanline_counter_ = 4;//4-7 work
+          scanline_dots_ = 0;//4-7 work ,, check
         } else {
           screen_counter_ = 0;
-          scanline_counter_ = 0;
+          scanline_dots_ = 0;
         }
 
         ly = 0;
@@ -602,35 +777,38 @@ void LCDDriver::RenderWindowLine(int x0,int x1,ColorMapLine* cmline) {
   }
 }
 
+
+struct DMGSprite {
+  uint8_t y, x, tileindex;
+
+  union {
+    struct {
+      uint8_t unused : 4;
+      uint8_t pal : 1;
+      uint8_t xflip : 1;
+      uint8_t yflip : 1;
+      uint8_t priority : 1;
+      /* Bit7   OBJ-to-BG Priority (0=OBJ Above BG, 1=OBJ Behind BG color 1-3)
+       (Used for both BG and Window. BG color 0 is always behind OBJ)
+Bit6   Y flip          (0=Normal, 1=Vertically mirrored)
+Bit5   X flip          (0=Normal, 1=Horizontally mirrored)
+Bit4   Palette number  **Non CGB Mode Only** (0=OBP0, 1=OBP1)
+Bit3   Tile VRAM-Bank  **CGB Mode Only**     (0=Bank 0, 1=Bank 1)
+Bit2-0 Palette number  **CGB Mode Only**     (OBP0-7)
+*/
+    };
+    uint8_t raw;
+  }attr;
+
+};
+
 void LCDDriver::RenderSpriteLine(int x0,int x1,ColorMapLine* cmline) {
   uint8_t sprite_count = 10;
-  struct Sprite{
-    uint8_t y,x,tileindex;
 
-    union {
-      struct {
-        uint8_t unused:4;
-        uint8_t pal:1;
-        uint8_t xflip:1;
-        uint8_t yflip:1;
-        uint8_t priority:1;
-        /* Bit7   OBJ-to-BG Priority (0=OBJ Above BG, 1=OBJ Behind BG color 1-3)
-         (Used for both BG and Window. BG color 0 is always behind OBJ)
-  Bit6   Y flip          (0=Normal, 1=Vertically mirrored)
-  Bit5   X flip          (0=Normal, 1=Horizontally mirrored)
-  Bit4   Palette number  **Non CGB Mode Only** (0=OBP0, 1=OBP1)
-  Bit3   Tile VRAM-Bank  **CGB Mode Only**     (0=Bank 0, 1=Bank 1)
-  Bit2-0 Palette number  **CGB Mode Only**     (OBP0-7)
-*/
-      };
-      uint8_t raw;
-    }attr;
-
-  } ;
   mode3_extra_cycles_ = 0;
   if (lcdc_.sprite_enable == 1) {
     uint8_t* tiledata = &emu_->memory()->vram()[0x0000];
-    Sprite* sprites = (Sprite*)emu_->memory()->oam();
+    DMGSprite* sprites = (DMGSprite*)emu_->memory()->oam();
     //&&sprite_count!=0
     for (int j=0;j<40;++j) {
        int16_t spritey = sprites[j].y-16;
@@ -665,15 +843,233 @@ void LCDDriver::RenderSpriteLine(int x0,int x1,ColorMapLine* cmline) {
   }
 }
 
+void LCDDriver::RenderCGBBGPixel(ColorMapLine* cmline) {
+  uint8_t mapoffset = ((ly + scroll_y) & 0xFF) >> 3;
+  static uint8_t lineoffset =  ((scroll_x >> 3)) & 0x1F;
+  static auto y =  (ly + scroll_y) & 7;
+  static auto x =  scroll_x & 7;
+  const auto vram = emu_->memory()->vram();
+  const auto tiledata = &vram[lcdc_.tile_data == 0 ? 0x0800 : 0x0000];
+  const auto tilemap = &vram[lcdc_.bg_tile_map == 0 ? 0x1800 : 0x1C00];
+  const auto tileattr = &vram[lcdc_.bg_tile_map == 0 ? 0x3800 : 0x3C00];
+  auto incx = []() {
+    ++x;
+    if (x == 8) {
+      x = 0;
+      lineoffset = (lineoffset + 1) & 0x1F;
 
+    }
+  };
+
+  if (pixel_counter_ == 0 && scroll_x % 8 != 0) {
+
+    //++dot_delay_; //causes issues, in demotronic so far, check others
+    //return;
+  }
+
+  if (pixel_counter_ == 0) {
+      lineoffset = ((scroll_x >> 3)) & 0x1F;
+      y = (ly + scroll_y) & 7;
+      x = scroll_x & 7;
+  }
+
+  //int i = scanline_counter_ - 81;
+  //char debugstr[128];
+ // sprintf_s(debugstr, "scan line %d %d %d\n", i,x,scroll_x);
+  //OutputDebugString(debugstr);
+  {
+    auto attr = tileattr[(mapoffset << 5) + lineoffset];
+    auto palindex = attr & 0x7;
+
+    auto tileindex = tilemap[(mapoffset << 5) + lineoffset];
+    if ((lcdc_.tile_data == 0)) {
+      if (tileindex < 128) tileindex += 128;
+      else tileindex -= 128;
+    }
+    uint8_t* tile = &tiledata[(tileindex << 4) | ((attr & 0x8) << 10)];
+    if (attr & 0x40)
+      y = 7 - y;
+    uint8_t bgcolor;
+    bgcolor = (attr & 0x20) ? pixel((x)) : pixel((7 - x));
+
+    incx();
+
+
+    if (enable_bg_ == true) {
+      cmline[pixel_counter_].pixel = ((cgb_bgpal[(palindex << 3) | (bgcolor << 1) | 1] << 8) | cgb_bgpal[(palindex << 3) | (bgcolor << 1)]) & 0x7FFF;
+    }
+  
+
+    cmline[pixel_counter_].orgcol = bgcolor;
+    cmline[pixel_counter_].bgpriority = lcdc_.bgdisplay;
+    cmline[pixel_counter_].bgoveroam = (attr & 0x80) == 0x80;
+
+  }
+}
+
+//check
+void LCDDriver::RenderCGBWindowPixel(ColorMapLine* cmline) {
+  if (lcdc_.window_enable == 1) {
+    auto mapoffset = ((ly - wy) & 0xFF) >> 3;
+    static auto lineoffset = 0;
+    static auto y = (ly - wy) & 7;
+    static auto x = 0;
+    const auto vram = emu_->memory()->vram();
+    const auto tiledata = &vram[lcdc_.tile_data == 0 ? 0x0800 : 0x0000];
+    const auto tilemap = &vram[lcdc_.window_tile_map == 0 ? 0x1800 : 0x1C00];
+    const auto tileattr = &vram[lcdc_.window_tile_map == 0 ? 0x3800 : 0x3C00];
+
+
+    auto incx = []() {
+      ++x;
+      if (x == 8) {
+        x = 0;
+        lineoffset = (lineoffset + 1) & 0x1F;
+      }
+    };
+
+    if (pixel_counter_ == (wx - 7))  {
+      mapoffset = ((ly - wy) & 0xFF) >> 3;
+      lineoffset = 0;
+      y = (ly - wy) & 7;
+      x = 0;
+    }
+
+    if ((ly >= wy) && (wx >= 7 && wx <= 166)) {
+
+      //for (int i = (wx - 7); i < 160; ++i)
+      if (pixel_counter_>= (wx - 7) && pixel_counter_ < 160)  {
+        auto attr = tileattr[(mapoffset << 5) + lineoffset];
+        auto palindex = attr & 0x7;
+
+        auto tileindex = tilemap[(mapoffset << 5) + lineoffset];
+        if (lcdc_.tile_data == 0) {
+          if (tileindex < 128) tileindex += 128;
+          else tileindex -= 128;
+        }
+        uint8_t* tile = &tiledata[(tileindex << 4) | ((attr & 0x8) << 10)];
+        if (attr & 0x20)
+          y = 7 - y;
+        uint8_t bgcolor = pixel((7 - x));
+        if (attr & 0x10)
+          bgcolor = pixel((x));
+        incx();
+        
+        if (enable_window_ == true) {
+          cmline[pixel_counter_].pixel = ((cgb_bgpal[(palindex << 3) + (bgcolor << 1) + 1] << 8) | cgb_bgpal[(palindex << 3) + (bgcolor << 1)]) & 0x7FFF;
+        }
+        cmline[pixel_counter_].orgcol = bgcolor;
+        cmline[pixel_counter_].bgpriority = lcdc_.bgdisplay;
+        cmline[pixel_counter_].bgoveroam = (attr & 0x80) == 0x80;
+
+      }
+
+    }
+  }
+}
+
+
+struct GBCSprite {
+  uint8_t y, x, tileindex;
+
+  union {
+    struct {
+      uint8_t cgbpalnum : 3;
+      uint8_t vrambank : 1;
+      uint8_t pal : 1;
+      uint8_t xflip : 1;
+      uint8_t yflip : 1;
+      uint8_t priority : 1;
+      /* Bit7   OBJ-to-BG Priority (0=OBJ Above BG, 1=OBJ Behind BG color 1-3)
+       (Used for both BG and Window. BG color 0 is always behind OBJ)
+Bit6   Y flip          (0=Normal, 1=Vertically mirrored)
+Bit5   X flip          (0=Normal, 1=Horizontally mirrored)
+Bit4   Palette number  **Non CGB Mode Only** (0=OBP0, 1=OBP1)
+Bit3   Tile VRAM-Bank  **CGB Mode Only**     (0=Bank 0, 1=Bank 1)
+Bit2-0 Palette number  **CGB Mode Only**     (OBP0-7)
+*/
+    };
+    uint8_t raw;
+  }attr;
+
+};
+
+void LCDDriver::RenderCGBSpritePixel(ColorMapLine* cmline) {
+  auto vram = emu_->memory()->vram();
+  auto sprites = (GBCSprite*)emu_->memory()->oam();
+  uint8_t sprite_count = 10;
+
+
+
+  if (lcdc_.sprite_enable == 1) {
+    
+    //&&sprite_count!=0
+    for (int j = 0; j < 40; ++j) {
+      uint8_t* tiledata = &vram[0];
+      int16_t spritey = sprites[j].y - 16;
+      int16_t spritex = sprites[j].x - 8;
+      if (ly >= (spritey) && ly < (spritey + (8 << lcdc_.sprite_size))) { //same line
+        if (lcdc_.sprite_size) {
+          sprites[j].tileindex &= ~0x01;
+        }
+        const uint8_t* tile = &tiledata[(sprites[j].tileindex << 4) | (sprites[j].attr.vrambank << 13)];
+        uint8_t y = ly - spritey;
+
+        if (sprites[j].attr.yflip)
+          y = ((7 << lcdc_.sprite_size)) - y;
+
+        //for (int x = 0; x < 8; ++x) 
+        if (pixel_counter_ >= spritex && pixel_counter_ < (spritex + 8)) {
+          int x = pixel_counter_ - spritex;//offset
+          uint8_t p = 0;
+          if (sprites[j].attr.xflip) {
+            p = pixel((x));
+          }
+          else {
+            p = pixel((7 - x));
+          }
+          uint8_t* pal = sprites[j].attr.pal == 0 ? cgb_sppal1 : cgb_sppal2;
+
+          auto& cmp = cmline[pixel_counter_];
+
+          if ((((cmp.bgoveroam == false) && (cmp.bgpriority == true)) || (cmp.bgpriority == false))
+            && (sprites[j].attr.priority == 0 || (cmp.orgcol == 0)) && (p != 0) && ((x + spritex) >= 0)) {
+
+            if (enable_sprite_ == true) {
+              cmp.pixel = ((pal[(sprites[j].attr.cgbpalnum << 3) + (p << 1) + 1] << 8) | pal[(sprites[j].attr.cgbpalnum << 3) + (p << 1)]) & 0x7FFF;
+            }
+
+            if (x == 0) {
+              dot_delay_ += 3;//avg per sprite based on my calc
+            }
+          }
+
+        }
+
+        --sprite_count;
+        
+      }
+    }
+
+  }
+}
 
 void LCDDriver::RenderCGBBGLine(int x0,int x1,ColorMapLine* cmline) {
-
+  
+  //if (scanline_counter_ > 240)
+  //  return;
 
   uint8_t mapoffset = ((ly+scroll_y)&0xFF) >> 3;
-  uint8_t lineoffset = ((scroll_x>>3))&0x1F;
+   uint8_t lineoffset = ((scroll_x>>3))&0x1F;
   auto y = (ly + scroll_y) & 7;
-  auto x = scroll_x & 7;
+   auto x = scroll_x & 7;
+
+  if (scanline_dots_ == 81) {
+   // mapoffset = ((ly + scroll_y) & 0xFF) >> 3;
+    // lineoffset = ((scroll_x >> 3)) & 0x1F;
+    // y = (ly + scroll_y) & 7;
+    // x = scroll_x & 7;
+  }
   auto vram = emu_->memory()->vram();
 
 
@@ -690,6 +1086,10 @@ void LCDDriver::RenderCGBBGLine(int x0,int x1,ColorMapLine* cmline) {
   uint8_t* tilemap = &vram[lcdc_.bg_tile_map ==0?0x1800:0x1C00];
   uint8_t* tileattr =  &vram[lcdc_.bg_tile_map ==0?0x3800:0x3C00];
 
+  //int i = scanline_counter_ - 81;
+  //char debugstr[128];
+ // sprintf_s(debugstr, "scan line %d %d %d\n", i,x,scroll_x);
+  //OutputDebugString(debugstr);
   for (int i=0;i<160;++i) {
     auto attr = tileattr[(mapoffset<<5) + lineoffset];
     auto palindex = attr&0x7;
@@ -707,10 +1107,12 @@ void LCDDriver::RenderCGBBGLine(int x0,int x1,ColorMapLine* cmline) {
      
     incx();
 
-    cmline[i].pixel = ((cgb_bgpal[(palindex<<3)|(bgcolor<<1)|1]<<8)|cgb_bgpal[(palindex<<3)|(bgcolor<<1)])&0x7FFF;
-    cmline[i].orgcol = bgcolor;
-    cmline[i].bgpriority = lcdc_.bgdisplay;
-    cmline[i].bgoveroam = (attr&0x80)==0x80;
+    if (i < 160) {
+      cmline[i].pixel = ((cgb_bgpal[(palindex << 3) | (bgcolor << 1) | 1] << 8) | cgb_bgpal[(palindex << 3) | (bgcolor << 1)]) & 0x7FFF;
+      cmline[i].orgcol = bgcolor;
+      cmline[i].bgpriority = lcdc_.bgdisplay;
+      cmline[i].bgoveroam = (attr & 0x80) == 0x80;
+    }
   }
   
 }
@@ -769,34 +1171,11 @@ void LCDDriver::RenderCGBWindowLine(int x0,int x1,ColorMapLine* cmline) {
 
 void LCDDriver::RenderCGBSpriteLine(int x0,int x1,ColorMapLine* cmline) {
   uint8_t sprite_count = 10;
-  struct Sprite{
-    uint8_t y,x,tileindex;
 
-    union {
-      struct {
-        uint8_t cgbpalnum:3;
-        uint8_t vrambank:1;
-        uint8_t pal:1;
-        uint8_t xflip:1;
-        uint8_t yflip:1;
-        uint8_t priority:1;
-        /* Bit7   OBJ-to-BG Priority (0=OBJ Above BG, 1=OBJ Behind BG color 1-3)
-         (Used for both BG and Window. BG color 0 is always behind OBJ)
-  Bit6   Y flip          (0=Normal, 1=Vertically mirrored)
-  Bit5   X flip          (0=Normal, 1=Horizontally mirrored)
-  Bit4   Palette number  **Non CGB Mode Only** (0=OBP0, 1=OBP1)
-  Bit3   Tile VRAM-Bank  **CGB Mode Only**     (0=Bank 0, 1=Bank 1)
-  Bit2-0 Palette number  **CGB Mode Only**     (OBP0-7)
-*/
-      };
-      uint8_t raw;
-    }attr;
-
-  } ;
   mode3_extra_cycles_ = 0;
   if (lcdc_.sprite_enable == 1) {
     auto vram = emu_->memory()->vram();
-    Sprite* sprites = (Sprite*)emu_->memory()->oam();
+    GBCSprite* sprites = (GBCSprite*)emu_->memory()->oam();
     //&&sprite_count!=0
     for (int j=0;j<40;++j) {
       uint8_t* tiledata = &vram[0];
@@ -851,40 +1230,225 @@ void LCDDriver::RenderCGBSpriteLine(int x0,int x1,ColorMapLine* cmline) {
 }
 
 
+
+
+
+
+void LCDDriver::RenderDMGBGPixel(ColorMapLine* cmline) {
+  auto mapoffset = ((ly + scroll_y) & 0xFF) >> 3;
+  static auto lineoffset = ((scroll_x >> 3)) & 0x1F;
+  static auto y = (ly + scroll_y) & 7;
+  static auto x = scroll_x & 7;
+  const auto vram = emu_->memory()->vram();
+
+
+  auto incx = []() {
+    ++x;
+    if (x == 8) {
+      x = 0;
+      lineoffset = (lineoffset + 1) & 0x1F;
+    }
+  };
+
+  if (pixel_counter_ == 0) {
+    lineoffset = ((scroll_x >> 3)) & 0x1F;
+    y = (ly + scroll_y) & 7;
+    x = scroll_x & 7;
+  }
+
+  if (lcdc_.bgdisplay == 0) {
+    //for (int i=0;i<160;++i) {
+    cmline[pixel_counter_].pixel = 0;
+    //}
+  }
+  else {
+    uint8_t* tiledata = &emu_->memory()->vram()[lcdc_.tile_data == 0 ? 0x0800 : 0x0000];
+    uint8_t* bgtilemap = &vram[lcdc_.bg_tile_map == 0 ? 0x1800 : 0x1C00];
+
+    //for (int i = 0; i < 160; ++i) {
+    auto tileindex = bgtilemap[(mapoffset << 5) + lineoffset];
+    if (lcdc_.tile_data == 0) {
+      if (tileindex < 128) tileindex += 128;
+      else tileindex -= 128;
+    }
+    uint8_t* tile = &tiledata[(tileindex << 4)];
+    uint8_t bgcolor = pixel((7 - x));
+    incx();
+
+    if (enable_bg_) {
+      cmline[pixel_counter_].pixel = bg_pal[bgcolor];
+    }
+    else {
+      cmline[pixel_counter_].pixel = 0;
+    }
+
+    cmline[pixel_counter_].orgcol = bgcolor;
+
+  }
+}
+
+
+
+void LCDDriver::RenderDMGWindowPixel(ColorMapLine* cmline) {
+  if (lcdc_.window_enable == 1) {
+    auto mapoffset = ((ly - wy) & 0xFF) >> 3;
+    static auto lineoffset = 0;
+    static auto y = (ly - wy) & 7;
+    static auto x = 0;
+
+    auto incx = []() {
+      ++x;
+      if (x == 8) {
+        x = 0;
+        lineoffset = (lineoffset + 1) & 0x1F;
+      }
+    };
+
+    if (pixel_counter_ == 0) {
+      lineoffset = 0;
+      y = (ly - wy) & 7;
+      x = 0;
+    }
+
+    if ((ly >= wy) && (wx >= 7 && wx <= 166)) {
+      auto vram = emu_->memory()->vram();
+      uint8_t* tiledata = &vram[lcdc_.tile_data == 0 ? 0x0800 : 0x0000];
+      uint8_t* tilemap = &vram[lcdc_.window_tile_map == 0 ? 0x1800 : 0x1C00];
+      if (pixel_counter_ >= (wx - 7) && pixel_counter_ < 160) {
+        auto tileindex = tilemap[(mapoffset << 5) + lineoffset];
+        if (lcdc_.tile_data == 0) {
+          if (tileindex < 128) tileindex += 128;
+          else tileindex -= 128;
+        }
+        uint8_t* tile = &tiledata[(tileindex << 4)];
+        uint8_t bgcolor = pixel((7 - x));
+        incx();
+        if (enable_window_) {
+          cmline[pixel_counter_].pixel = bg_pal[bgcolor];
+        }
+        cmline[pixel_counter_].orgcol = bgcolor;
+      }
+    }
+  }
+}
+
+void LCDDriver::RenderDMGSpritePixel(ColorMapLine* cmline) {
+  uint8_t sprite_count = 10;
+
+ 
+  if (lcdc_.sprite_enable == 1) {
+    uint8_t* tiledata = &emu_->memory()->vram()[0x0000];
+    DMGSprite* sprites = (DMGSprite*)emu_->memory()->oam();
+    //&&sprite_count!=0
+    for (int j = 0; j < 40; ++j) {
+      int16_t spritey = sprites[j].y - 16;
+      int16_t spritex = sprites[j].x - 8;
+      if (ly >= (spritey) && ly < (spritey + (8 << lcdc_.sprite_size))) { //same line
+        if (lcdc_.sprite_size)
+          sprites[j].tileindex &= ~0x01;
+        uint8_t* tile = &tiledata[(sprites[j].tileindex << 4)];
+        uint8_t y = ly - spritey;
+        uint8_t* pal = sprites[j].attr.pal == 0 ? obj_pal1 : obj_pal2;
+        if (sprites[j].attr.yflip)
+          y = ((7 << lcdc_.sprite_size)) - y;
+
+        if (pixel_counter_ >= spritex && pixel_counter_ < (spritex + 8)) {
+          int x = pixel_counter_ - spritex;//offset
+          uint8_t p = 0;
+          if (sprites[j].attr.xflip) {
+            p = pixel((x));
+          }
+          else {
+            p = pixel((7 - x));
+          }
+
+          if (((p != 0) && ((sprites[j].attr.priority == 0) || (cmline[x + spritex].orgcol == 0))) &&
+            (x + spritex) >= 0) {
+
+            if (enable_sprite_ == true) {
+              cmline[x + spritex].pixel = pal[p];
+            }
+            if (x == 0) {
+              dot_delay_ += 3;//avg per sprite based on my calc
+            }
+          }
+        }
+
+        --sprite_count;
+       
+      }
+    }
+
+  }
+}
+
+//not using x0,x1
 void LCDDriver::RenderLine(int x0,int x1) {
   if (ly > 143)
     return; 
-  auto cmline = &colormap[ly<<8];
+  auto cmline = &colormap[ly << 8];
 
   //either display whole time if progressive, or based on ly if interlace
   if (((lcdscreenmode_==LCDScreenModeInterlace)&&((evenodd == 0 && !(ly%2))||(evenodd == 1 && (ly%2))))
     ||(lcdscreenmode_==LCDScreenModeProgressive)) {
 
     if (emu_->mode() == EmuModeGBC) {
-      RenderCGBBGLine(x0,x1,cmline);
-      RenderCGBWindowLine(x0,x1,cmline);
-      RenderCGBSpriteLine(x0,x1,cmline);
-      auto fbline = &frame_buffer[ly<<8];
-        for (int i=0;i<160;++i) { //256px per line
-         *fbline++ = bgr555torgb(cmline->pixel);
-         ++cmline;
-        }
-    } else {
-      
-      //RenderAllBGTiles();
-      RenderBGLine(x0,x1,cmline);
-      RenderWindowLine(x0,x1,cmline);
-      RenderSpriteLine(x0,x1,cmline);
 
-        auto fbline = &frame_buffer[ly<<8];
-        for (int i=0;i<160;++i) {//256px per line
-          *fbline++ =  dmg_colors[cmline->pixel];
+      //RenderCGBBGLine(x0,x1,cmline);
+      //RenderCGBWindowLine(x0, x1, cmline); 
+      //RenderCGBSpriteLine(x0,x1,cmline);
+      
+      if (dot_delay_ == 0) {
+        RenderCGBBGPixel(cmline);
+        RenderCGBWindowPixel(cmline);
+        RenderCGBSpritePixel(cmline);
+
+        ++pixel_counter_;
+      } else {
+        --dot_delay_;
+      }
+
+      
+      if (pixel_counter_ == 160) {
+        auto fbline = &frame_buffer[ly << 8];
+        for (int i = 0; i < 160; ++i) { //256px per line
+          *fbline++ = bgr555torgb(cmline->pixel);
           ++cmline;
         }
+      }
+
+
+    } else {
+      
+
+      if (dot_delay_ == 0) {
+        RenderDMGBGPixel(cmline);
+        RenderDMGWindowPixel(cmline);
+        RenderDMGSpritePixel(cmline);
+
+        ++pixel_counter_;
+      }
+      else {
+        --dot_delay_;
+      }
+
+
+      //RenderAllBGTiles();
+      //RenderBGLine(x0,x1,cmline);
+      //RenderWindowLine(x0,x1,cmline);
+      //RenderSpriteLine(x0,x1,cmline);
+      if (pixel_counter_ == 160) {
+        auto fbline = &frame_buffer[ly << 8];
+        for (int i = 0; i < 160; ++i) {//256px per line
+          *fbline++ = dmg_colors[cmline->pixel];
+          ++cmline;
+        }
+      }
     }
 
   }
 
+  
 }
 
 }

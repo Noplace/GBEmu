@@ -82,10 +82,13 @@ int WASAPI::Initialize(uint32_t sample_rate, uint8_t channels, uint8_t bits) {
   //CoTaskMemFree(closest_fmt);
   hr = audio_client->Initialize(AUDCLNT_SHAREMODE_EXCLUSIVE,0,hnsRequestedDuration,0,pwfx,NULL);
   if (FAILED(hr)) {
-    SafeRelease(&audio_client);
-    SafeRelease(&device);
-    SafeRelease(&device_enumurator);
-    return S_FALSE;
+    hr = audio_client->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, hnsRequestedDuration, 0, pwfx, NULL);
+    if (FAILED(hr)) {
+      SafeRelease(&audio_client);
+      SafeRelease(&device);
+      SafeRelease(&device_enumurator);
+      return S_FALSE;
+    }
   } 
 
   memcpy(&wave_format_,pwfx,sizeof(wave_format_));

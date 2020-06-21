@@ -275,7 +275,7 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\03-trigger.gb",&header);
 
 
-  //emu.cartridge()->LoadFile("..\\test\\Super Mario Land (World).gb",&header);
+  //emu.cartridge()->LoadFile("..\\..\\test\\Super Mario Land (World).gb",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\Pocket Camera (Japan) (Rev A).gb",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);//not original rom, problem with window
@@ -285,13 +285,13 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\Tamagotchi (USA, Europe).gb",&header);
   
 
-  emu.cartridge()->LoadFile("..\\..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);
+  //emu.cartridge()->LoadFile("..\\..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);//works as of 18/06/2020
   //emu.cartridge()->LoadFile("..\\..\\test\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\introcollection.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Mission Impossible (USA) (En,Fr,Es).gbc",&header);
-  //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
-  //emu.cartridge()->LoadFile("..\\..\\test\\Pokemon Silver.gbc",&header);
+  //emu.cartridge()->LoadFile("..\\..\\test\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
+  emu.cartridge()->LoadFile("..\\..\\test\\Pokemon Silver.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Grand Theft Auto.gbc",&header);
   
 
@@ -395,6 +395,14 @@ int DisplayWindow::OnCommand(WPARAM wParam,LPARAM lParam) {
 }
 
 int DisplayWindow::OnKeyDown(WPARAM wParam,LPARAM lParam) {
+
+  if (wParam == '1')
+    emu.lcd_driver()->ToggleBG();
+  if (wParam == '2')
+    emu.lcd_driver()->ToggleWindow();
+  if (wParam == '3')
+    emu.lcd_driver()->ToggleSprite();
+
   if (wParam == 'A')
     emu.Stop();
   if (wParam == 'B')
@@ -421,6 +429,8 @@ int DisplayWindow::OnKeyDown(WPARAM wParam,LPARAM lParam) {
 }
 
 int DisplayWindow::OnKeyUp(WPARAM wParam,LPARAM lParam) {
+
+
   if (wParam == 'Z')
     emu.memory()->JoypadRelease(emulation::gb::JoypadA);
   if (wParam == 'X')

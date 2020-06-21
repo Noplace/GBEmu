@@ -73,9 +73,20 @@ class LCDDriver : public Component {
   void Tick();
   uint8_t Read(uint16_t address);
   void    Write(uint16_t address, uint8_t data);
+
+  
   void RenderBGLine(int x0,int x1,ColorMapLine* cmline);
   void RenderWindowLine(int x0,int x1,ColorMapLine* cmline);
   void RenderSpriteLine(int x0,int x1,ColorMapLine* cmline);
+
+
+  void RenderDMGBGPixel(ColorMapLine* cmline);
+  void RenderDMGWindowPixel(ColorMapLine* cmline);
+  void RenderDMGSpritePixel(ColorMapLine* cmline);
+
+  void RenderCGBBGPixel(ColorMapLine* cmline);
+  void RenderCGBWindowPixel(ColorMapLine* cmline);
+  void RenderCGBSpritePixel(ColorMapLine* cmline);
 
   void RenderCGBBGLine(int x0,int x1,ColorMapLine* cmline);
   void RenderCGBWindowLine(int x0,int x1,ColorMapLine* cmline);
@@ -85,7 +96,42 @@ class LCDDriver : public Component {
   void UpdateCGBPalBasedonGBPal(int paltype);
   const LCDControlRegister& lcdc() { return lcdc_; }
   const LCDStatusRegister& stat() { return stat_; }
-  const uint32_t scanline_counter() { return scanline_counter_; }
+  const uint32_t scanline_counter() { return scanline_dots_; }
+
+
+  void EnableBG() {
+    enable_bg_ = true;
+  }
+
+  void DisableBG() {
+    enable_bg_ = false;
+  }
+  void ToggleBG() {
+    enable_bg_ = !enable_bg_;
+  }
+
+  void EnableWindow() {
+    enable_window_ = true;
+  }
+
+  void DisableWindow() {
+    enable_window_ = false;
+  }
+  void ToggleWindow() {
+    enable_window_ = !enable_window_;
+  }
+
+  void EnableSprite() {
+    enable_sprite_ = true;
+  }
+
+  void DisableSprite() {
+    enable_sprite_ = false;
+  }
+  void ToggleSprite() {
+    enable_sprite_ = !enable_sprite_;
+  }
+
  private:
    struct {
      uint8_t* oam;
@@ -127,9 +173,11 @@ class LCDDriver : public Component {
    uint8_t cgb_bgpal[64];
    uint8_t cgb_sppal1[64],cgb_sppal2[64];
    uint32_t mode3_extra_cycles_;
-   uint32_t screen_counter_,scanline_counter_;
+   uint32_t screen_counter_,scanline_dots_,pixel_counter_;
+   uint32_t dot_delay_;
    LCDScreenMode lcdscreenmode_;
    bool evenodd;
+   bool enable_bg_, enable_window_, enable_sprite_;
    double vsync,hsync;
 };
 
