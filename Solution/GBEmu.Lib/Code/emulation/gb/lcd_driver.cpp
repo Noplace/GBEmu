@@ -25,6 +25,60 @@ note: I have made two cgb sprite palletes for sake of easier code for the mono g
 namespace emulation {
 namespace gb {
   
+
+
+#define pixel(bit) (((tile[y<<1]>>(bit&0x7))&0x1)+((((tile[(y<<1)+1]>>(bit&0x7))<<1)&0x2)))
+
+
+struct DMGSprite {
+  uint8_t y, x, tileindex;
+
+  union {
+    struct {
+      uint8_t unused : 4;
+      uint8_t pal : 1;
+      uint8_t xflip : 1;
+      uint8_t yflip : 1;
+      uint8_t priority : 1;
+      /* Bit7   OBJ-to-BG Priority (0=OBJ Above BG, 1=OBJ Behind BG color 1-3)
+        (Used for both BG and Window. BG color 0 is always behind OBJ)
+Bit6   Y flip          (0=Normal, 1=Vertically mirrored)
+Bit5   X flip          (0=Normal, 1=Horizontally mirrored)
+Bit4   Palette number  **Non CGB Mode Only** (0=OBP0, 1=OBP1)
+Bit3   Tile VRAM-Bank  **CGB Mode Only**     (0=Bank 0, 1=Bank 1)
+Bit2-0 Palette number  **CGB Mode Only**     (OBP0-7)
+*/
+    };
+    uint8_t raw;
+  }attr;
+
+};
+
+struct GBCSprite {
+  uint8_t y, x, tileindex;
+
+  union {
+    struct {
+      uint8_t cgbpalnum : 3;
+      uint8_t vrambank : 1;
+      uint8_t pal : 1;
+      uint8_t xflip : 1;
+      uint8_t yflip : 1;
+      uint8_t priority : 1;
+      /* Bit7   OBJ-to-BG Priority (0=OBJ Above BG, 1=OBJ Behind BG color 1-3)
+        (Used for both BG and Window. BG color 0 is always behind OBJ)
+Bit6   Y flip          (0=Normal, 1=Vertically mirrored)
+Bit5   X flip          (0=Normal, 1=Horizontally mirrored)
+Bit4   Palette number  **Non CGB Mode Only** (0=OBP0, 1=OBP1)
+Bit3   Tile VRAM-Bank  **CGB Mode Only**     (0=Bank 0, 1=Bank 1)
+Bit2-0 Palette number  **CGB Mode Only**     (OBP0-7)
+*/
+    };
+    uint8_t raw;
+  }attr;
+
+};
+
 static inline uint32_t bgr555torgb(uint32_t src) {
   uint8_t r = (src&0x1F)<<3;
   uint8_t g = ((src>>5)&0x1F)<<3;
@@ -154,6 +208,7 @@ void LCDDriver::Reset() {
   mode3_extra_cycles_ = 0;
   cgb_bgpal_index=cgb_bgpal_data=cgb_sppal_index=cgb_sppal_data=0;
   int48signal = 0;
+  int40signal = 0;
 }
 /*todo variable time for mode 3 and 0
 mode 3:
@@ -198,17 +253,22 @@ void LCDDriver::Tick() {
   static auto mode2_counter = 0;
   static auto mode3_counter = 0;
 
+  if ((stat_.coincidence_inr && stat_.coincidence)) { //test
+    if (int48signal == 0) {
+      emu_->memory()->interrupt_flag() |= 2;
+      int48signal = 1;
+    }
+  }
+
 
   switch (stat_.mode) {
   case 2:
     
     ++mode2_counter;
     if (scanline_dots_ == 1) {
-      if (stat_.oam_int || (stat_.coincidence_inr && stat_.coincidence)) { //lyc interrupts occurs at start of mode 2
-        if (int48signal == 0) {
+      if (stat_.oam_int && int48signal == 0) { //|| (stat_.coincidence_inr && stat_.coincidence) lyc interrupts occurs at start of mode 2
           emu_->memory()->interrupt_flag() |= 2;
           int48signal = 1;
-        }
       }
 
     }
@@ -270,14 +330,12 @@ void LCDDriver::Tick() {
       emu_->memory()->oam()[8+(rand()%152)] = rand()&0xFF;
       --sprite_bug_counter;
     }*/
-    if (scanline_dots_ == 252 + mode3_extra_cycles_ + 1) {
-      if (stat_.hblank_int) {
-        if (int48signal == 0) {
-          emu_->memory()->interrupt_flag() |= 2;
-          int48signal = 1;
-        }
-      }
+    //if (scanline_dots_ == 252 + mode3_extra_cycles_ + 1) {
+    if (stat_.hblank_int && int48signal == 0) {
+      emu_->memory()->interrupt_flag() |= 2;
+      int48signal = 1;
     }
+    //}
 
     if (scanline_dots_ == 456) {
 
@@ -295,13 +353,12 @@ void LCDDriver::Tick() {
     ++mode1_counter;
     if (ly == 144 && scanline_dots_ == 1) {
       emu_->memory()->interrupt_flag() |= 1;
-      if (stat_.vblank_int) { //either here or in mode 1 all the time//doubt it
-        if (int48signal == 0) {
-          emu_->memory()->interrupt_flag() |= 2;
-          int48signal = 1;
-        }
-      }
     }
+    if ((stat_.vblank_int) && int48signal == 0) { //maybe with stat_.oam_int|| as per doc
+      emu_->memory()->interrupt_flag() |= 2;
+      int48signal = 1;
+    }
+
     break;
   }
   }
@@ -334,6 +391,7 @@ void LCDDriver::Tick() {
       
     }
     scanline_dots_ = 0;
+    int40signal = 0;
     int48signal = 0;
   }
 
@@ -526,6 +584,7 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
           screen_counter_ = 0;
           scanline_dots_ = 0;//4-7 work ,, check
         } else {
+          int48signal = 0;
           screen_counter_ = 0;
           scanline_dots_ = 0;
         }
@@ -666,8 +725,6 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
   }
 }
 
-#define pixel(bit) (((tile[y<<1]>>(bit&0x7))&0x1)+((((tile[(y<<1)+1]>>(bit&0x7))<<1)&0x2)))
-
 void LCDDriver::RenderAllBGTiles() {
   auto mapoffset = ((ly)&0xFF) >> 3;
   auto y = (ly) & 7;
@@ -777,30 +834,6 @@ void LCDDriver::RenderWindowLine(int x0,int x1,ColorMapLine* cmline) {
   }
 }
 
-
-struct DMGSprite {
-  uint8_t y, x, tileindex;
-
-  union {
-    struct {
-      uint8_t unused : 4;
-      uint8_t pal : 1;
-      uint8_t xflip : 1;
-      uint8_t yflip : 1;
-      uint8_t priority : 1;
-      /* Bit7   OBJ-to-BG Priority (0=OBJ Above BG, 1=OBJ Behind BG color 1-3)
-       (Used for both BG and Window. BG color 0 is always behind OBJ)
-Bit6   Y flip          (0=Normal, 1=Vertically mirrored)
-Bit5   X flip          (0=Normal, 1=Horizontally mirrored)
-Bit4   Palette number  **Non CGB Mode Only** (0=OBP0, 1=OBP1)
-Bit3   Tile VRAM-Bank  **CGB Mode Only**     (0=Bank 0, 1=Bank 1)
-Bit2-0 Palette number  **CGB Mode Only**     (OBP0-7)
-*/
-    };
-    uint8_t raw;
-  }attr;
-
-};
 
 void LCDDriver::RenderSpriteLine(int x0,int x1,ColorMapLine* cmline) {
   uint8_t sprite_count = 10;
@@ -969,30 +1002,6 @@ void LCDDriver::RenderCGBWindowPixel(ColorMapLine* cmline) {
 }
 
 
-struct GBCSprite {
-  uint8_t y, x, tileindex;
-
-  union {
-    struct {
-      uint8_t cgbpalnum : 3;
-      uint8_t vrambank : 1;
-      uint8_t pal : 1;
-      uint8_t xflip : 1;
-      uint8_t yflip : 1;
-      uint8_t priority : 1;
-      /* Bit7   OBJ-to-BG Priority (0=OBJ Above BG, 1=OBJ Behind BG color 1-3)
-       (Used for both BG and Window. BG color 0 is always behind OBJ)
-Bit6   Y flip          (0=Normal, 1=Vertically mirrored)
-Bit5   X flip          (0=Normal, 1=Horizontally mirrored)
-Bit4   Palette number  **Non CGB Mode Only** (0=OBP0, 1=OBP1)
-Bit3   Tile VRAM-Bank  **CGB Mode Only**     (0=Bank 0, 1=Bank 1)
-Bit2-0 Palette number  **CGB Mode Only**     (OBP0-7)
-*/
-    };
-    uint8_t raw;
-  }attr;
-
-};
 
 void LCDDriver::RenderCGBSpritePixel(ColorMapLine* cmline) {
   auto vram = emu_->memory()->vram();

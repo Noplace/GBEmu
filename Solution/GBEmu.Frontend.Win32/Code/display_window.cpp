@@ -285,16 +285,15 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\Tamagotchi (USA, Europe).gb",&header);
   
 
-  //emu.cartridge()->LoadFile("..\\..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);//works as of 18/06/2020
+  emu.cartridge()->LoadFile("..\\..\\test\\Demotronic Final Demo (PD) [C].gbc",&header);//works as of 18/06/2020
   //emu.cartridge()->LoadFile("..\\..\\test\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\introcollection.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Mission Impossible (USA) (En,Fr,Es).gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
-  emu.cartridge()->LoadFile("..\\..\\test\\Pokemon Silver.gbc",&header);
+  //emu.cartridge()->LoadFile("..\\..\\test\\Pokemon Silver.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Grand Theft Auto.gbc",&header);
-  
-
+  //emu.cartridge()->LoadFile("C:\\Users\\U11111\\Documents\\GitHub\\GBEmu\\test\\mooneye-gb-master\\mooneye-gb_hwtests\\acceptance\\ppu\\intr_2_mode0_timing.gb",&header);
   emu.Run();
 }
 
