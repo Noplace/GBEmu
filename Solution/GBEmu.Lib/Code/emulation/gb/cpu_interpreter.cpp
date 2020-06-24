@@ -347,7 +347,7 @@ void CpuInterpreter::HandleInterrupts() {
     else if (test & 0x2) {
       reg.PC = 0x0048; //lcdc status
       mem_->interrupt_flag() &= ~0x2;
-      //emu_->lcd_driver()->int48signal = 0;
+      emu_->lcd_driver()->int48signal = 0; //is this right?
     }
     else if (test & 0x4) {
       reg.PC = 0x0050; //timer overflow
@@ -393,19 +393,46 @@ void CpuInterpreter::Step() {
     }
 
   } else if (cpumode_ == CpuModeHalt) {
-    emu_->ClockTick();
+    
+    //cpu instr test fails halt without this, update: no need for this anymore
+    //emu_->ClockTick();
+    //if (ime) {
+    //  HandleInterrupts();
+    ////}
+
+
+    //not needed, below routine is better
+    //Wake();
+    /*uint8_t test = mem_->interrupt_enable() & mem_->interrupt_flag() & 0x1F;
+    if (test) {
+      cpumode_ = CpuModeNormal;
+      if (ime) {
+        HandleInterrupts();
+      } else {
+        ExecuteInstruction();
+        reg.PC = opcode_pc;
+      }
+
+    } else {
+      ExecuteInstruction();
+    }*/
+
+    //demotronic works with this
+    //
+    //emu_->ClockTick(); //clock can be here or below
     if (ime) {
       HandleInterrupts();
     }
     else {
       uint8_t test = mem_->interrupt_enable() & mem_->interrupt_flag() & 0x1F;
       if (test==0) {
+        emu_->ClockTick(); //clock can be here ot above
         //ime = false;
         //cpumode_ = CpuModeNormal;
-        ExecuteInstruction();
+        //ExecuteInstruction();
       } else {
         ExecuteInstruction();
-        reg.PC = opcode_pc ;
+        reg.PC = opcode_pc;
         cpumode_ = CpuModeNormal;
       }
     }

@@ -81,7 +81,7 @@ struct CartridgeHeader {
   }
  
   size_t ram_size_bytes() {
-    if (cartridge_type==5 || cartridge_type==6) return 512;
+    if (cartridge_type==5 || cartridge_type==6) return 256;//512x4bit
     const int ramsizes[6] = { 
       0x00000000, 
       0x00000800, // 2K

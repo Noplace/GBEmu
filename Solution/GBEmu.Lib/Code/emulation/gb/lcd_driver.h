@@ -176,6 +176,7 @@ class LCDDriver : public Component {
    uint32_t mode3_extra_cycles_;
    uint32_t screen_counter_,scanline_dots_,pixel_counter_;
    uint32_t dot_delay_;
+   uint8_t dma_reg_;
    LCDScreenMode lcdscreenmode_;
    bool evenodd;
    bool enable_bg_, enable_window_, enable_sprite_;

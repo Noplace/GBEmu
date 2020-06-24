@@ -60,7 +60,9 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
     //report error
     return;
   }
-  rom_ = new uint8_t[header->rom_size_bytes()];
+    rom_ = new uint8_t[1024*1024*2];
+
+  //rom_ = new uint8_t[header->rom_size_bytes()];
 
   auto copy_size = header->rom_size_bytes();
 
@@ -74,7 +76,7 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
   if (header->cgb_flag() == 0xC0 || header->cgb_flag() == 0x80) {
     //emu_->set_mode(EmuModeGBC); //force gbc
   } else {
-    //emu_->set_mode(EmuModeGB); //force original gb
+    emu_->set_mode(EmuMode::EmuModeGB); //force original gb
   }
 
   save_rtc = false;
@@ -189,6 +191,9 @@ char* mbc3_rtc_test() {
   emulation::gb::MBC3* mbc3 = (emulation::gb::MBC3*)emulation::gb::thisc->mbc;
 
   static char str[256];
-  sprintf_s(str,"timer:%I64d rtc0:%d,rtc1:%d,rtc2:%d",mbc3->rtc_timer,mbc3->rtc[0],mbc3->rtc[1],mbc3->rtc[2]);
+  int day = mbc3->rtc[3];
+  day |= mbc3->rtc[4] << 8;
+  day |= (mbc3->rtc[4]>>7) << 9;
+  sprintf_s(str,"timer:%I64d - days:%d hours:%d mins:%d secs:%d",mbc3->rtc_timer,day,mbc3->rtc[2], mbc3->rtc[1], mbc3->rtc[0]);
   return str;
 }

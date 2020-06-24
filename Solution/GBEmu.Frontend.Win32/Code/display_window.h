@@ -45,6 +45,7 @@ class DisplayWindow: public core::windows::Window {
   private:
     //std::thread* emu_th;
     //std::atomic_bool exit_signal_;
+    bool enable_stats_display;
     int display_mode;
     int machine_mode;
     uint32_t* output;
@@ -52,6 +53,7 @@ class DisplayWindow: public core::windows::Window {
     //graphics::GDI gfx;
     graphics::OpenGL gfx;
     emulation::gb::Emu emu;
+    emulation::gb::CartridgeHeader header;
     GLuint texture;
     dialogs::Options options;
     HINSTANCE instance;

@@ -21,14 +21,19 @@
 namespace emulation {
 namespace gb {
 
+
+const double gb_dmg_freq_hz = 4194304.0;
+const double gb_sgb_freq_hz = 4295454.0;
+const double gb_gbc_freq_hz = 8388608.0;
+
 const double default_gb_hz = 4194304.0; //(4.295454MHz for SGB, max. 8.4MHz for CGB)
 //const uint32_t hsync_hz = 9198; // Hz (9420 KHz for SGB)
 //const uint32_t vsync_hz = 59.730; // Hz (61.17 Hz for SGB)
 
-enum EmuMode { EmuModeGB,EmuModeGBC };
+enum class EmuMode { EmuModeGB,EmuModeGBC };
 
-enum EmuState { EmuStateRunning=1, EmuStateStopped =0};
-enum EmuSpeed {  EmuSpeedNormal = 1, EmuSpeedDouble = 2};
+enum class EmuState { EmuStateRunning=1, EmuStateStopped =0};
+enum class EmuSpeed {  EmuSpeedNormal = 1, EmuSpeedDouble = 2};
 
 
 class Emu {
@@ -58,7 +63,7 @@ class Emu {
     if (on_render != nullptr)
       this->on_render = on_render;
   } 
-  std::atomic<int> state;
+  std::atomic<EmuState> state;
   //int state;
   const double fps() { return timing.fps; }
   const double base_freq_hz() { return base_freq_hz_; }
@@ -72,23 +77,27 @@ class Emu {
       --cpu_->ticks_to_switchspeed;
        
       //document specified ticks before switch, hwoever test rom doesnt reflect, will have to recheck , leave commented for now
-      //if (cpu_->ticks_to_switchspeed == 0)
+      //uncommented again to check
+      if (cpu_->ticks_to_switchspeed == 0)
        {
         memory_.ioports()[0x4D] = 0;
 
-        if (speed == EmuSpeedDouble) {
+        if (speed == EmuSpeed::EmuSpeedDouble) {
           speed = EmuSpeed::EmuSpeedNormal;
           set_base_freq_hz(default_gb_hz * 1);
+
         }
-        else if (speed == EmuSpeedNormal) {
-          speed = EmuSpeedDouble;
+        else if (speed == EmuSpeed::EmuSpeedNormal) {
+          speed = EmuSpeed::EmuSpeedDouble;
           set_base_freq_hz(default_gb_hz * 2);
         }
+        cpu_->Wake();
+
 #ifdef _DEBUG    
         {
-          char str[25];
-          sprintf_s(str, "CPU Speed Change:%d\n", speed);
-          OutputDebugString(str);
+          //char str[25];
+          //sprintf_s(str, "CPU Speed Change:%d\n", speed);
+          //OutputDebugString(str);
         }
 #endif
 
@@ -98,7 +107,7 @@ class Emu {
     ++cpu_cycles_per_step_;
     timer_.Tick();
     memory_.Tick();
-    if (speed == EmuSpeedNormal) {
+    if (speed == EmuSpeed::EmuSpeedNormal) {
       lcd_driver_.Tick();
       apu_.Tick();
     } else {

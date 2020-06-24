@@ -97,6 +97,8 @@ class Cpu : public Component {
   void Wake() {
     cpumode_ = CpuModeNormal;
   }
+
+  CpuMode cpumode() { return cpumode_; }
  protected:
   double dt;
   CpuRegisters reg;

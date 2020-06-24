@@ -158,7 +158,7 @@ OBJ0
 OBJ1	 
 */
 void LCDDriver::UpdateCGBPalBasedonGBPal(int paltype) {
-  if (emu_->mode() != EmuModeGBC) return; //we should use a seperate flag to force mono to color regardless of gb mode/type
+  if (emu_->mode() != EmuMode::EmuModeGBC) return; //we should use a seperate flag to force mono to color regardless of gb mode/type
   if (emu_->cartridge()->header->cgb_flag() != 0x0) return;
   return;
   uint8_t* src;
@@ -207,6 +207,7 @@ void LCDDriver::Reset() {
   sprite_bug_counter = 0;
   mode3_extra_cycles_ = 0;
   cgb_bgpal_index=cgb_bgpal_data=cgb_sppal_index=cgb_sppal_data=0;
+  dma_reg_ = 0;
   int48signal = 0;
   int40signal = 0;
 }
@@ -214,6 +215,7 @@ void LCDDriver::Reset() {
 mode 3:
 between 4194304*0.00004137=173.51835648 and //172
 4194304*0.00007069=296.49534976 //296
+done,check
 */
 
 void LCDDriver::DoHDMA() {
@@ -253,25 +255,32 @@ void LCDDriver::Tick() {
   static auto mode2_counter = 0;
   static auto mode3_counter = 0;
 
-  if ((stat_.coincidence_inr && stat_.coincidence)) { //test
-    if (int48signal == 0) {
-      emu_->memory()->interrupt_flag() |= 2;
-      int48signal = 1;
+  //check this
+  if (screen_counter_ > 1) {
+    if (scanline_dots_ == 1) {
+      if ((stat_.coincidence_inr && stat_.coincidence)) { //test
+        if (int48signal == 0) {
+          emu_->memory()->interrupt_flag() |= 2;
+          int48signal = 1;
+        }
+      }
     }
   }
+
 
 
   switch (stat_.mode) {
   case 2:
     
     ++mode2_counter;
-    if (scanline_dots_ == 1) {
+    
       if (stat_.oam_int && int48signal == 0) { //|| (stat_.coincidence_inr && stat_.coincidence) lyc interrupts occurs at start of mode 2
           emu_->memory()->interrupt_flag() |= 2;
           int48signal = 1;
       }
 
-    }
+
+
     if (scanline_dots_ == 80)
       stat_.mode = 3;
     break;
@@ -366,6 +375,10 @@ void LCDDriver::Tick() {
 
   //static auto mode0_lines = 0, mode1_lines = 0, mode2_lines = 0, mode3_lines = 0;
 
+  if (scanline_dots_ == 5) {
+    int48signal = 0;
+  }
+
   if (scanline_dots_ == 456) {
 
 
@@ -392,7 +405,7 @@ void LCDDriver::Tick() {
     }
     scanline_dots_ = 0;
     int40signal = 0;
-    int48signal = 0;
+    int48signal = 0; //needed for demotronic to work correctly with lyc interrupt
   }
 
 
@@ -537,6 +550,8 @@ uint8_t LCDDriver::Read(uint16_t address) {
       return ly;
     case 0xFF45:
       return lyc;
+    case 0xFF46:
+      return dma_reg_;
     case 0xFF47:
       return bg_pallete_data;
     case 0xFF48:
@@ -612,13 +627,28 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       stat_.coincidence = 0;
       break;
     case 0xFF46: {
-      uint16_t srcaddr = data<<8;
-      //char str[25];
-      //sprintf(str,"sprite dma during mode %d\n",stat_.mode);
-      //OutputDebugString(str);
+      dma_reg_ = data;
+
+      char str[125];
+      //sprintf_s(str,"sprite dma during mode %d\n",stat_.mode);
+      sprintf_s(str, "dma initiated value %02x \n", data);
+      OutputDebugString(str);
+      
+      //test : put the dma routine in memory tick 
+      /*uint16_t srcaddr = data<<8;
       auto dest = emu_->memory()->oam();
       for (int i=0;i<160;++i)
         *dest++ = emu_->memory()->ClockedRead8(srcaddr++);
+        */
+      
+   
+      memset(&emu_->memory()->dma_request, 0, sizeof(emu_->memory()->dma_request));
+      emu_->memory()->dma_request.dest = emu_->memory()->oam();
+      emu_->memory()->dma_request.source_address = data << 8;
+      emu_->memory()->dma_request.transfer_counter = 161;
+      
+
+
       break;
     }
     case 0xFF47:
@@ -667,7 +697,7 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       hdma.dest.low = data;
       break;
     case 0xFF55:
-      if (emu_->mode() == EmuModeGBC) {
+      if (emu_->mode() == EmuMode::EmuModeGBC) {
         hdma.length = ((data&0x7F)+1)<<4;
 
         if (hdma.active) {
@@ -678,7 +708,6 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
             hdma.active = 0;
           }
         } else {
-
           hdma.mode = (data&0x80)>>7;
           if (hdma.mode == 0) { //GDMA
             auto src = emu_->memory()->GetMemoryPointer(hdma.src.raw&0xFFF0);
@@ -1401,7 +1430,7 @@ void LCDDriver::RenderLine(int x0,int x1) {
   if (((lcdscreenmode_==LCDScreenModeInterlace)&&((evenodd == 0 && !(ly%2))||(evenodd == 1 && (ly%2))))
     ||(lcdscreenmode_==LCDScreenModeProgressive)) {
 
-    if (emu_->mode() == EmuModeGBC) {
+    if (emu_->mode() == EmuMode::EmuModeGBC) {
 
       //RenderCGBBGLine(x0,x1,cmline);
       //RenderCGBWindowLine(x0, x1, cmline); 

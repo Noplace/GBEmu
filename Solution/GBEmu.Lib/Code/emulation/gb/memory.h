@@ -55,6 +55,15 @@ class Memory : public Component {
     joypadflags[key] = false;
   }
   void Tick();
+
+  struct  {
+    uint16_t source_address;
+    uint8_t clock_counter;
+    uint8_t transfer_counter;
+    uint8_t* dest;
+    bool pause;
+  } dma_request;
+
  private:
   uint8_t* memmap[16];
   const uint8_t* rom_;

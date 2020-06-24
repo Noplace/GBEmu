@@ -73,9 +73,10 @@ void OpenGL::Initialize(HWND window_handle,int width,int height) {
   e = glGetError();
   SetDisplaySize(width,height);
   
-  fontlistbase = 1000;
+  fontlistbase = glGenLists(255);//1000
   SelectObject(device_context_, GetStockObject (SYSTEM_FONT)); 
   wglUseFontBitmaps(device_context_, 0, 255, fontlistbase); 
+  //wglUseFontOutlines(device_context_, 0, 255, fontlistbase,0.1f,0.2f, WGL_FONT_POLYGONS,nullptr);
   init_ = true;
 }
 
@@ -116,11 +117,12 @@ void OpenGL::PrintText(int x,int y,const char* str,size_t len) {
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_LIGHTING);
 
-  glColor3ub(0xFF,0xFF,0xFF);
+  glColor3ub(0xFF,0,0xFF);
   glRasterPos2i(x,y);
+  glPushAttrib(GL_LIST_BIT);
   glListBase(fontlistbase);
   glCallLists((GLsizei)len, GL_UNSIGNED_BYTE, str);
-
+  glPopAttrib();
 
   glPopAttrib();
   glPopAttrib();
@@ -146,7 +148,7 @@ void OpenGL::Render() {
   // Release the device context
   //EndPaint(handle(), &ps);
   SwapBuffers(device_context_);
-glewInit();
+
 }
 
 

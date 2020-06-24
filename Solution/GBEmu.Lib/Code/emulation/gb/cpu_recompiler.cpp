@@ -739,7 +739,7 @@ void CpuRecompiler::STOP() {
   if (mem_->ioports()[0x4D] & 0x1) {
     //todo: recheck and fix
     //emu_->speed = ((mem_->ioports()[0x4D])>>7)+1;
-    if (emu_->speed == 2)
+    if (static_cast<int>(emu_->speed) == 2)
       emu_->set_base_freq_hz(default_gb_hz*2);
     else
       emu_->set_base_freq_hz(default_gb_hz);

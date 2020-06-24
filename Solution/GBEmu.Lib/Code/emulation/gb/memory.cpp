@@ -89,6 +89,7 @@ void Memory::Reset() {
   memset(joypadflags,0,sizeof(joypadflags));
   ioports_[0] = 0x0F;
   last_address = 0;
+  memset(&dma_request, 0, sizeof(dma_request));
    /*ioports_[0x05] = 0x00; // TIMA
    ioports_[0x06] = 0x00; // TMA
    ioports_[0x07] = 0x00; // TAC
@@ -215,9 +216,9 @@ uint8_t Memory::Read8(uint16_t address) {
 
   
   if (address >= 0x0000 && address <= 0x3FFF) {
-    if (emu_->mode() == EmuModeGB && ioports_[0x50] == 0 && address < 0x100) { 
+    if (emu_->mode() == EmuMode::EmuModeGB && ioports_[0x50] == 0 && address < 0x100) {
       result = dmgrom[address];
-    } else if (emu_->mode() == EmuModeGBC &&  ioports_[0x50] == 0 && (address < 0x100 || (address >= 0x200 && address <= 0x8FF))) { 
+    } else if (emu_->mode() == EmuMode::EmuModeGBC &&  ioports_[0x50] == 0 && (address < 0x100 || (address >= 0x200 && address <= 0x8FF))) {
         result = gbcrom[address];
       //char str[255];
       //sprintf(str,"read gbc rom at 0x%04x\n",address);
@@ -270,12 +271,12 @@ uint8_t Memory::Read8(uint16_t address) {
       result = 0xE0|ioports_[address&0xFF];
     }
     else  if (address == 0xFF4D) {
-      if (emu_->mode() == EmuModeGB) {
+      if (emu_->mode() == EmuMode::EmuModeGB) {
         result = 0XFF;//always FF in DMG
       }
-      else if (emu_->mode() == EmuModeGBC) {
+      else if (emu_->mode() == EmuMode::EmuModeGBC) {
         
-        result = ((emu_->speed << 6) & 0x80)|0x7F;
+        result = ((static_cast<int>(emu_->speed) << 6) & 0x80)|0x7F;
 
       }
     }
@@ -383,6 +384,25 @@ void Memory::ClockedWrite8(uint16_t address, uint8_t data) {
 }
 
 void Memory::Tick() {
+
+
+  //test dma
+  if (emu_->cpu()->cpumode() == CpuModeNormal && emu_->cpu()->ticks_to_switchspeed == 0) {
+    if (dma_request.transfer_counter != 0) {
+
+      ++dma_request.clock_counter;
+      if (dma_request.clock_counter == 4) { //every 4 clocks, one read write
+        if (dma_request.transfer_counter != 161) { //skip first 4 clocks
+          *dma_request.dest++ = Read8(dma_request.source_address++);
+        }
+        --dma_request.transfer_counter;
+        dma_request.clock_counter = 0;
+      }
+    }
+  }
+
+
+
   ioports_[0] |= 0x0F;
 
   if ((ioports_[0] & 0x10)==0) {

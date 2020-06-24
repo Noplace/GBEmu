@@ -118,10 +118,22 @@ class MBC3 : public MemoryBankController {
         latch_seq = 1;
       if (data == 0x01 && latch_seq == 1) {
         
-        rtc[0] = rtc_timer % 60;
-        rtc[1] = (rtc_timer/ 60) % 60;
-        rtc[2] = (rtc_timer / 60 / 60) % 24;
-        auto days = rtc_timer / 60 / 60 / 24;
+        auto n = rtc_timer;
+        int day = n / (24 * 3600);
+        n = n % (24 * 3600);
+        int hour = n / 3600;
+        n %= 3600;
+        int minutes = n / 60;
+        n %= 60;
+        int seconds = n;
+
+
+        rtc[0] = seconds;//rtc_timer % 60;
+        rtc[1] = minutes;//(rtc_timer/ 60) % 60;
+        rtc[2] = hour;//(rtc_timer / 60 / 60) % 24;
+        
+        auto days = day;//rtc_timer / 60 / 60 / 24;
+
         rtc[3] = days&0xFF;
         rtc[4] &= ~0x81;
         rtc[4] |= (days>>8)&0x1;
