@@ -267,7 +267,7 @@ void DisplayWindow::Init() {
     
   //halt
   
-   emu.cartridge()->LoadFile("..\\..\\test\\blargg\\halt_bug\\halt_bug.gb",&header);
+   //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\halt_bug\\halt_bug.gb",&header);
 
 
   //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\oam_bug\\oam_bug\\rom_singles\\7-timing_effect.gb", &header); //not ok
@@ -293,7 +293,7 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\Tamagotchi (USA, Europe).gb",&header);
   
 
-  //emu.cartridge()->LoadFile("..\\..\\test\\demos\\Demotronic Final Demo (PD) [C].gbc",&header);//works as of 18/06/2020
+  emu.cartridge()->LoadFile("..\\..\\test\\demos\\Demotronic Final Demo (PD) [C].gbc",&header);//works as of 18/06/2020
   //emu.cartridge()->LoadFile("..\\..\\test\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\introcollection.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
