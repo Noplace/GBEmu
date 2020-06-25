@@ -23,6 +23,7 @@
     <ClCompile Include="Code\audio\output\wasapi.cpp" />
     <ClCompile Include="Code\audio\output\xaudio.cpp" />
     <ClCompile Include="Code\audio\synth\quadrangular_wave.cpp" />
+    <ClCompile Include="Code\emulation\gb\debugger.cpp" />
     <ClCompile Include="Code\emulation\gb\apu.cpp" />
     <ClCompile Include="Code\emulation\gb\cartridge.cpp" />
     <ClCompile Include="Code\emulation\gb\cpu_interpreter.cpp" />
@@ -45,6 +46,7 @@
     <ClInclude Include="Code\emulation\gb\apu.h" />
     <ClInclude Include="Code\emulation\gb\cartridge.h" />
     <ClInclude Include="Code\emulation\gb\cpu.h" />
+    <ClInclude Include="Code\emulation\gb\debugger.h" />
     <ClInclude Include="Code\emulation\gb\emu.h" />
     <ClInclude Include="Code\emulation\gb\gb.h" />
     <ClInclude Include="Code\emulation\gb\lcd_driver.h" />

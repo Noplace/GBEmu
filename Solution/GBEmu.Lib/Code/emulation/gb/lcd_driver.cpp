@@ -629,10 +629,10 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
     case 0xFF46: {
       dma_reg_ = data;
 
-      char str[125];
+      //char str[125];
       //sprintf_s(str,"sprite dma during mode %d\n",stat_.mode);
-      sprintf_s(str, "dma initiated value %02x \n", data);
-      OutputDebugString(str);
+      //sprintf_s(str, "dma initiated value %02x \n", data);
+      //OutputDebugString(str);
       
       //test : put the dma routine in memory tick 
       /*uint16_t srcaddr = data<<8;
@@ -641,7 +641,6 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
         *dest++ = emu_->memory()->ClockedRead8(srcaddr++);
         */
       
-   
       memset(&emu_->memory()->dma_request, 0, sizeof(emu_->memory()->dma_request));
       emu_->memory()->dma_request.dest = emu_->memory()->oam();
       emu_->memory()->dma_request.source_address = data << 8;

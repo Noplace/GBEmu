@@ -60,6 +60,9 @@
     <ClCompile Include="Code\utilities\io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Code\emulation\gb\debugger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\audio\output\directsound.h">
@@ -156,6 +159,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\emulation\gb\mbc\mbc3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\emulation\gb\debugger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

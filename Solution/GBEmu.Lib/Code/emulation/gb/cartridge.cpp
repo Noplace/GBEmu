@@ -43,11 +43,11 @@ void Cartridge::Deinitialize() {
 
 void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
   emu_->Reset();
-  SafeDeleteArray(&rom_);
   if (mbc) {
     mbc->Deinitialize();
     delete mbc;
   }
+  SafeDeleteArray(&rom_);
   uint8_t* data;
   size_t length;
   core::io::ReadWholeFileBinary(filename,&data,length);
@@ -73,8 +73,11 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
   for (int i=0;i<16;++i) 
     hash += header->title[i];
 
-  if (header->cgb_flag() == 0xC0 || header->cgb_flag() == 0x80) {
-    //emu_->set_mode(EmuModeGBC); //force gbc
+
+  if (header->cgb_flag() == 0xC0 ) {
+    emu_->set_mode(EmuMode::EmuModeGBC); //force gbc
+  } else if (header->cgb_flag() == 0x80) {
+    //gbc optional, use user setting
   } else {
     emu_->set_mode(EmuMode::EmuModeGB); //force original gb
   }

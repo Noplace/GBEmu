@@ -95,7 +95,7 @@ class Cpu : public Component {
   virtual void Reset() = 0;
   virtual void Step() = 0;
   void Wake() {
-    cpumode_ = CpuModeNormal;
+    cpumode_ = CpuMode::CpuModeNormal;
   }
 
   CpuMode cpumode() { return cpumode_; }

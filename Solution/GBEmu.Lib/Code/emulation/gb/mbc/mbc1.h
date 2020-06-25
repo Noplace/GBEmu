@@ -58,16 +58,21 @@ class MBC1 : public MemoryBankController {
     } else if (address >= 0x4000 && address <= 0x7FFF) {
       return cartridge->rom()[(address&0x3FFF)+(rom_bank_number<<14)];
     } else if (address >= 0xA000 && address <= 0xBFFF) {
-      if ((eram_enable&0x0A)==0x0A && eram_size)
+
+
+      if ((eram_enable&0x0F)==0x0A && eram_size)
         return eram_[(address&0x1FFF)|(ram_bank_number<<13)];
       else
-        return 0;
+        return 0xFF; //0xFF considered unknown instead of 0
     }
     return 0;
   }
   void Write(uint16_t address, uint8_t data) {
    if (address >= 0x0000 && address <= 0x1FFF) {
-      eram_enable = data;
+     //char line[25];
+     eram_enable = data;
+     //sprintf_s(line,"eram enable 0x%02x\n", data);
+     //OutputDebugString(line);
     } else if (address >= 0x2000 && address <= 0x3FFF) {
       if (data == 0)
         data = 1;
@@ -79,7 +84,9 @@ class MBC1 : public MemoryBankController {
         //ram_bank_number = 0;
       } else {
         //rom_bank_number &= 0x1F;
-        ram_bank_number = data&3;
+        if ((data & 3) < max_ram_banks) {
+          ram_bank_number = data & 3;
+        }
       }
 
       cartridge->emu()->memory()->UpdateMemoryMap();
@@ -87,7 +94,7 @@ class MBC1 : public MemoryBankController {
        mode = data&1;
 
     } else if (address >= 0xA000 && address <= 0xBFFF) {
-      if ((eram_enable&0x0A)==0x0A && eram_size)
+      if ((eram_enable& 0x0F)==0x0A && eram_size)
         eram_[(address&0x1FFF)|(ram_bank_number<<13)] = data;
     }
   }

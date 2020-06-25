@@ -206,8 +206,7 @@ void Emu::thread_func(Emu* emu) {
   emu->set_base_freq_hz(emu->base_freq_hz_);
   //printThreadId();
   
-  while (emu->state== EmuState::EmuStateRunning) {
-  //while (emu->state==1) {
+  while (emu->state == EmuState::EmuStateRunning) {
     emu->Step();
   }
   

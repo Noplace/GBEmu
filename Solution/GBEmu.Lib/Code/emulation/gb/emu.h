@@ -72,13 +72,13 @@ class Emu {
   uint64_t cycles_per_second() { return cycles_per_second_; }
 
   void ClockTick() {
-
+    /* //will put it in stop instead
     if ((memory_.ioports()[0x4D] & 0x1) && cpu_->ticks_to_switchspeed != 0) {
       --cpu_->ticks_to_switchspeed;
        
       //document specified ticks before switch, hwoever test rom doesnt reflect, will have to recheck , leave commented for now
-      //uncommented again to check
-      if (cpu_->ticks_to_switchspeed == 0)
+      //uncommented again to check, demotronic requires ticks to countdown
+      //if (cpu_->ticks_to_switchspeed == 0)
        {
         memory_.ioports()[0x4D] = 0;
 
@@ -103,7 +103,7 @@ class Emu {
 
       }
     }
-
+    */
     ++cpu_cycles_per_step_;
     timer_.Tick();
     memory_.Tick();

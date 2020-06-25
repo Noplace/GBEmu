@@ -373,7 +373,12 @@ void CpuInterpreter::ExecuteInstruction() {
     //  reg.A = 0x11;
   //}
   opcode = mem_->ClockedRead8(reg.PC++);
+
+  //print_instruction(opcode_pc, opcode);
   (this->*(instructions[opcode]))();
+
+
+
 }
 
 void CpuInterpreter::Step() {
@@ -382,54 +387,77 @@ void CpuInterpreter::Step() {
   //StopAt(0x0100);
   //StopAt(0x0073);
   if (cpumode_ == CpuModeStop) {
-    emu_->cpu_cycles_per_step_ = 1;
+    
+    //(mem_->ioports()[0x4D] & 0x1) &&
+    if (ticks_to_switchspeed != 0) {
+      --ticks_to_switchspeed;
+
+      //document specified ticks before switch, hwoever test rom doesnt reflect, will have to recheck , leave commented for now
+      //uncommented again to check, demotronic requires ticks to countdown
+      if (ticks_to_switchspeed == 0)
+      {
+        mem_->ioports()[0x4D] = 0;
+
+        if (emu_->speed == EmuSpeed::EmuSpeedDouble) {
+          emu_->speed = EmuSpeed::EmuSpeedNormal;
+          emu_->set_base_freq_hz(default_gb_hz * 1);
+
+        } else if (emu_->speed == EmuSpeed::EmuSpeedNormal) {
+          emu_->speed = EmuSpeed::EmuSpeedDouble;
+          emu_->set_base_freq_hz(default_gb_hz * 2);
+        }
+        Wake();
+
+#ifdef _DEBUG    
+        {
+          char str[25];
+          sprintf_s(str, "CPU Speed Change:%d\n", emu_->speed);
+          OutputDebugString(str);
+        }
+#endif
+
+      }
+    }
+    
+    emu_->cpu_cycles_per_step_ = 0;
     return;
   } else  if (cpumode_ == CpuModeNormal) {
     //if (sprite_bug != 0) --sprite_bug;
     ExecuteInstruction();
 
+
+
+  } 
+  
+  
+  if (cpumode_ == CpuModeNormal) {
     if (ime) {
       HandleInterrupts();
     }
-
   } else if (cpumode_ == CpuModeHalt) {
     
     //cpu instr test fails halt without this, update: no need for this anymore
     //emu_->ClockTick();
     //if (ime) {
     //  HandleInterrupts();
-    ////}
+    //}
 
-
-    //not needed, below routine is better
-    //Wake();
-    /*uint8_t test = mem_->interrupt_enable() & mem_->interrupt_flag() & 0x1F;
-    if (test) {
-      cpumode_ = CpuModeNormal;
-      if (ime) {
-        HandleInterrupts();
-      } else {
-        ExecuteInstruction();
-        reg.PC = opcode_pc;
-      }
-
-    } else {
-      ExecuteInstruction();
-    }*/
-
+    
     //demotronic works with this
     //
-    //emu_->ClockTick(); //clock can be here or below
+    
     if (ime) {
+      emu_->ClockTick(); //clock can be here or below, needed here for games like silver
       HandleInterrupts();
     }
     else {
       uint8_t test = mem_->interrupt_enable() & mem_->interrupt_flag() & 0x1F;
-      if (test==0) {
+      if (test == 0) {
         emu_->ClockTick(); //clock can be here ot above
         //ime = false;
         //cpumode_ = CpuModeNormal;
         //ExecuteInstruction();
+        //Wake(); without this or above demotronic wont continue, but with them it doesnt operate right in beginning
       } else {
         ExecuteInstruction();
         reg.PC = opcode_pc;
@@ -737,7 +765,7 @@ void CpuInterpreter::STOP() {
 
 */
 
-    cpumode_ = CpuModeNormal;
+    //cpumode_ = CpuModeNormal;
   }
 }
 

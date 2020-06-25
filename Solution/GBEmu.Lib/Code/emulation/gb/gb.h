@@ -58,6 +58,7 @@ class Component {
 }
 }
 
+
 #include "cartridge.h"
 #include "memory.h"
 #include "lcd_driver.h"
@@ -65,3 +66,4 @@ class Component {
 #include "timer.h"
 #include "cpu.h"
 #include "emu.h"
+#include "debugger.h"

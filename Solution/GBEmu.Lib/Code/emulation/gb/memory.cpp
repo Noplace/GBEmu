@@ -385,7 +385,7 @@ void Memory::ClockedWrite8(uint16_t address, uint8_t data) {
 
 void Memory::Tick() {
 
-
+  
   //test dma
   if (emu_->cpu()->cpumode() == CpuModeNormal && emu_->cpu()->ticks_to_switchspeed == 0) {
     if (dma_request.transfer_counter != 0) {
@@ -400,7 +400,7 @@ void Memory::Tick() {
       }
     }
   }
-
+  
 
 
   ioports_[0] |= 0x0F;

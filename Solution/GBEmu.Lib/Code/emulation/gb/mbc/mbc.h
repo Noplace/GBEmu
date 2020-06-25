@@ -27,13 +27,19 @@ class MemoryBankController {
     battery_ = false;
     this->cartridge = cartridge;
     eram_size = cartridge->header->ram_size_bytes();
-    if (eram_size)
-       eram_ = new uint8_t[eram_size];
-    else
+    if (eram_size) {
+      max_ram_banks = max(eram_size / 0x2000,1);
+      eram_ = new uint8_t[eram_size];
+    }
+    else {
+      max_ram_banks = 0;
       eram_ = nullptr;
+    }
+
     rom_ = cartridge->rom();
     rom_bank_number = 1;
     ram_bank_number = 0;
+    max_ram_banks = 1;
   }
   virtual void Deinitialize() {
      SafeDeleteArray(&eram_); 
@@ -45,6 +51,7 @@ class MemoryBankController {
   uint8_t* eram() { return eram_; }
   uint16_t rom_bank_number;
   uint8_t ram_bank_number;
+  uint8_t max_ram_banks;
  protected:
   Cartridge* cartridge;
   uint8_t* rom_;

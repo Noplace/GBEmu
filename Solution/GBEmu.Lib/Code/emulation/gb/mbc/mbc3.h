@@ -92,13 +92,12 @@ class MBC3 : public MemoryBankController {
    
     if (address >= 0x0000 && address <= 0x1FFF) {
       
-      if (data & 0x0A)  {
+      if ((data & 0x0F) == 0x0A)  {
         ram_rtc_enable = true;
-      }
-
-      if (data == 0) {
+      } else {
         ram_rtc_enable = false;
       }
+
 
 
     } else if (address >= 0x2000 && address <= 0x3FFF) {
@@ -108,7 +107,10 @@ class MBC3 : public MemoryBankController {
     } else if (address >= 0x4000 && address <= 0x5FFF) {
       if (data>=0&&data<=3) {
         mode = MBC3ModeRAM;
-        ram_bank_number = data;
+        if ((data & 0x3) < max_ram_banks) {
+          ram_bank_number = data;
+        }
+
       } else if (data>=0x08&&data<=0x0C) {
         mode = MBC3ModeRTC;
         rtc_select = data-0x08;
