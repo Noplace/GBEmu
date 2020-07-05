@@ -161,8 +161,11 @@ float colours[] = {
 
 
 glGenVertexArrays (1, &vao);
+auto e = glGetError();
 glBindVertexArray (vao);
+e = glGetError();
 glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
+e = glGetError();
 glVertexPointer( 2, GL_FLOAT, sizeof(myVertex2D), (GLvoid*)offsetof( myVertex2D, x ) );
 glTexCoordPointer( 2, GL_FLOAT, sizeof(myVertex2D), (GLvoid*)offsetof( myVertex2D, u ) );
 
@@ -259,7 +262,7 @@ void DisplayWindow::Init() {
   
   //emu.cartridge()->LoadFile("..\\..\\test\\cpu_instrs\\cpu_instrs.gb",&header); //ok
   //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\instr_timing\\instr_timing\\instr_timing.gb",&header); //ok
-  //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\interrupt_time\\interrupt_time\\interrupt_time.gb", &header);//ok depends on switch speed routine, opposite of demotronic,GBC mode only
+  //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\interrupt_time\\interrupt_time\\interrupt_time.gb", &header);//ok 
   //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\mem_timing-2\\mem_timing-2\\mem_timing.gb",&header); //ok
 
     //emu.cartridge()->LoadFile("C:\\Users\\U11111\\Documents\\GitHub\\GBEmu\\test\\mooneye-gb-master\\mooneye-gb_hwtests\\acceptance\\halt_ime0_ei.gb", &header);//ok
@@ -270,7 +273,7 @@ void DisplayWindow::Init() {
    //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\halt_bug\\halt_bug.gb",&header);
 
 
-  //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\oam_bug\\oam_bug\\rom_singles\\7-timing_effect.gb", &header); //not ok
+  //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\oam_bug\\oam_bug\\rom_singles\\4-scanline_timing.gb", &header); //not ok
   //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\oam_bug\\oam_bug\\oam_bug.gb",&header);//not ok
   
 
@@ -293,13 +296,13 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\Tamagotchi (USA, Europe).gb",&header);
   
 
-  emu.cartridge()->LoadFile("..\\..\\test\\demos\\Demotronic Final Demo (PD) [C].gbc",&header);//works as of 18/06/2020
+  //emu.cartridge()->LoadFile("..\\..\\test\\demos\\Demotronic Final Demo (PD) [C].gbc",&header);//works as of 18/06/2020
   //emu.cartridge()->LoadFile("..\\..\\test\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\introcollection.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Mission Impossible (USA) (En,Fr,Es).gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\games\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
-  //emu.cartridge()->LoadFile("..\\..\\test\\games\\Pokemon Silver.gbc",&header);
+  emu.cartridge()->LoadFile("..\\..\\test\\games\\Pokemon Silver.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\Grand Theft Auto.gbc",&header);
   //rom writing error mbc5 check
   //emu.cartridge()->LoadFile("C:\\Users\\U11111\\Documents\\GitHub\\GBEmu\\test\\mooneye-gb-master\\mooneye-gb_hwtests\\acceptance\\oam_dma\\sources-GS.gb",&header);
@@ -516,8 +519,14 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
   //char title[200];
   //sprintf_s(title, "GBEmu - Freq\t: %0.2f Mhz\0", emu.frequency_mhz());
   //SetWindowText(handle(), title);
+  /*
+  PAINTSTRUCT ps;
+  BeginPaint(handle(), &ps);
+  FillRect(ps.hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
+  EndPaint(handle(), &ps);
 
-  glDisable( GL_TEXTURE_2D );
+  return S_OK;*/
+  //glDisable( GL_TEXTURE_2D );
   
   //glColor4ub(0x72,0x7E,0x01,0xFF);
   /*
@@ -528,17 +537,68 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
   glVertex2d(client_width_,client_height_);
   glVertex2d(0.0,client_height_);
   glEnd();*/
-
+  glClearColor(0.25f, 0.25f, 0.25f, 1);
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glColor4ub(255, 255, 255, 255);
+  glEnable(GL_TEXTURE_2D);
+  auto e = glGetError();
+  glBindTexture(GL_TEXTURE_2D, texture);
+   e = glGetError();
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256, 256, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, emu.lcd_driver()->frame_buffer);
+  e = glGetError();
+  glBegin(GL_QUADS);
+  glTexCoord2d(0.0, 0.0); glVertex2d(0.0, 0.0);
+  glTexCoord2d(0.625, 0.0); glVertex2d(client_width_, 0.0);
+  glTexCoord2d(0.625, 0.5625); glVertex2d(client_width_, client_height_);
+  glTexCoord2d(0.0, 0.5625); glVertex2d(0.0, client_height_);
+  glEnd();
 
-  
-  glUseProgram(prog);
+
+  if (enable_stats_display) {
+
+    char caption[1024];
+    int y = 1;
+    sprintf_s(caption, "FPS\t: %02.2f Hz\0", emu.fps());
+    gfx.PrintText(1, y += 14, caption, strlen(caption));
+    sprintf_s(caption, "Freq\t: %0.2f Mhz\0", emu.frequency_mhz());
+    gfx.PrintText(1, y += 14, caption, strlen(caption));
+    sprintf_s(caption, "CPS\t: %llu\0", emu.cycles_per_second());
+    gfx.PrintText(1, y += 14, caption, strlen(caption));
+    sprintf_s(caption, "Cartridge Type: 0x%02x", header.cartridge_type);
+    gfx.PrintText(1, y += 14, caption, strlen(caption));
+    sprintf_s(caption, "Emulation Mode: 0x%02x", emu.mode());
+    gfx.PrintText(1, y += 14, caption, strlen(caption));
+    sprintf_s(caption, "CGB Flag: 0x%02x", header.cgb_flag());
+    gfx.PrintText(1, y += 14, caption, strlen(caption));
+
+    if (header.cartridge_type >= 0x0F && header.cartridge_type <= 0x13) {
+      char* mbc3_rtc_test();
+      auto str = mbc3_rtc_test();
+      gfx.PrintText(0, y += 14, str, strlen(str));
+    }
+  }
+
+
+  //gfx.Render();
+  glFlush();
+  glFinish();
+  //gfx.Render();
+  //Sleep(15);
+  glDrawBuffer(GL_FRONT);
+  return S_OK;
+ 
   //auto err= glGetError();
 
-  glActiveTexture(texture);
+  glActiveTexture(GL_TEXTURE0);
+  e = glGetError();
   glBindTexture( GL_TEXTURE_2D, texture );
+  e = glGetError();
   glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,256,256,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,emu.lcd_driver()->frame_buffer);
-  //glBindTexture(GL_TEXTURE_2D,0);
+  e = glGetError();
+  glBindTexture(GL_TEXTURE_2D,0);
+  //glActiveTexture(0);
+   e = glGetError();
+
 
   auto loc = glGetUniformLocation(prog, "baseline_alpha");
   glUniform1f(loc,1.0f);
@@ -547,37 +607,18 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
 
   glEnableClientState( GL_VERTEX_ARRAY );
   glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-  glBindVertexArray (vao);
+
+   glUseProgram(prog);
+   e = glGetError();
+   glBindVertexArray(vao);
+   e = glGetError();
   glDrawArrays(GL_QUADS, 0, 4);
+  e = glGetError();
   glUseProgram(0);
-
-
+  e = glGetError();
   
 
-  if (enable_stats_display)
-  {
-    
-    char caption[1024];
-    int y = 1;
-    sprintf_s(caption, "FPS\t: %02.2f Hz\0", emu.fps());
-    gfx.PrintText(1, y+=14, caption, strlen(caption));
-    sprintf_s(caption, "Freq\t: %0.2f Mhz\0", emu.frequency_mhz());
-    gfx.PrintText(1, y+=14, caption, strlen(caption));
-    sprintf_s(caption, "CPS\t: %llu\0", emu.cycles_per_second());
-    gfx.PrintText(1, y += 14, caption, strlen(caption));
-    sprintf_s(caption,"Cartridge Type: 0x%02x", header.cartridge_type);
-    gfx.PrintText(1, y += 14, caption, strlen(caption));
-    sprintf_s(caption, "Emulation Mode: 0x%02x", emu.mode());
-    gfx.PrintText(1, y += 14, caption, strlen(caption));
-    sprintf_s(caption, "CGB Flag: 0x%02x", header.cgb_flag());
-    gfx.PrintText(1, y += 14, caption, strlen(caption));
-
-    if (header.cartridge_type >= 0x0F && header.cartridge_type <= 0x13) {
-     char* mbc3_rtc_test();
-      auto str = mbc3_rtc_test();
-      gfx.PrintText(0, y += 14, str, strlen(str));
-    }
-  }
+  
 
 
   /*const GLfloat texture_coordinates[] = {0, 1,
@@ -594,7 +635,11 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
 
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);*/
   //glDisableClientState(GL_VERTEX_ARRAY);
-  gfx.Render();
+  glFlush();
+  glFinish();
+  //gfx.Render();
+  //Sleep(15);
+  glDrawBuffer(GL_FRONT);
   return S_OK;
 
 

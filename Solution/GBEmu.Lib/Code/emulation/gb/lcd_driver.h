@@ -133,6 +133,10 @@ class LCDDriver : public Component {
     enable_sprite_ = !enable_sprite_;
   }
 
+  void CorruptOAMWrite(uint16_t address) {
+    auto index = address - 0xFE00;
+  }
+
  private:
    struct {
      uint8_t* oam;

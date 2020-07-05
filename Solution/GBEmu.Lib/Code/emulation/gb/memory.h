@@ -24,6 +24,74 @@ namespace gb {
 
 enum JoypadKeys { JoypadRight=0,JoypadLeft=1,JoypadUp=2,JoypadDown=3,JoypadA=4,JoypadB=5,JoypadSelect=6,JoypadStart=7};
 
+
+
+template<class A, class D>
+class HandlerFunctor {
+public:
+  virtual D operator()(const A address, const D data);
+};
+
+
+template<class addr_t, class val_t>
+class Handler {
+public:
+  std::function<val_t(addr_t, val_t)> func;
+  addr_t start, end;
+  uint8_t priority;
+
+  bool test(addr_t address) {
+    return address >= start && address <= end;
+  }
+};
+
+
+template<class addr_t, class val_t>
+class Bus {
+public:
+  Bus() {
+
+  }
+  ~Bus() {}
+  void Initialize() {
+    read_handlers.clear();
+    write_handlers.clear();
+  }
+
+  val_t Read(addr_t address) {
+    for (auto& h : read_handlers) {
+      if (h.test(address)) {
+        return (h.func)(address);
+      }
+    }
+  }
+     
+  void Write(addr_t address, val_t value) {
+    for (auto& h : write_handlers) {
+      if (h.test(address)) {
+        (h.func)(address, value);
+        return;
+      }
+    }
+  }
+  template<class F>
+  void RegisterRead(addr_t start, addr_t end, F func) {
+    Handler<addr_t, val_t> h{ func,start,end };
+    read_handlers.push_back(h);
+  }
+  template<class F>
+  void RegisterWrite(addr_t start, addr_t end, F func) {
+    Handler<addr_t, val_t> h{ func,start,end };
+    write_handlers.push_back(h);
+  }
+protected:
+  //std::unordered_map<size_t,Handler<addr_t>> handlers;
+  std::vector<Handler<addr_t, val_t>> read_handlers,write_handlers;
+  //Handler<addr_t> handlers[20];
+};
+
+
+
 class Memory : public Component {
  friend Cartridge;
  public:
@@ -65,6 +133,10 @@ class Memory : public Component {
   } dma_request;
 
  private:
+
+   uint8_t ReadROM0(uint16_t address, uint8_t );
+
+  Bus<uint16_t, uint8_t> bus;
   uint8_t* memmap[16];
   const uint8_t* rom_;
   uint8_t* vram_;

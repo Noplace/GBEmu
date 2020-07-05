@@ -28,6 +28,7 @@
 #include <functional>
 #include <thread>
 #include <atomic>
+#include <vector>
 #include "../../timer/timer2.h"
 //#include <WinCore/log/log_manager.h>
 #include "../../debug.h"

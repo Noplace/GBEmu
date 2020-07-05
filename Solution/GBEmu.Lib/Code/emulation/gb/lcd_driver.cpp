@@ -294,7 +294,7 @@ void LCDDriver::Tick() {
       }
     }
 
-    if (scanline_dots_ >= 80 && scanline_dots_ <= 160) {
+    if (scanline_dots_ >= 80 && scanline_dots_ < 160) {
       if (sprite_bug_counter != 0) { //80 is 20 cycles if 114 is one scanline total cycles
         if (lcdc_.lcd_enable == 1)
           emu_->memory()->oam()[8 + (rand() % 152)] = rand() & 0xFF;
@@ -597,7 +597,8 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       if (change) {
         if (lcdc_.lcd_enable) {
           screen_counter_ = 0;
-          scanline_dots_ = 0;//4-7 work ,, check
+          scanline_dots_ = 7;//4-7 work ,, check
+          sprite_bug_counter = 0;
         } else {
           int48signal = 0;
           screen_counter_ = 0;

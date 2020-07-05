@@ -37,13 +37,57 @@ General Memory Map
 #include "mbc/mbc.h"
 #include "rom.h"
 
+
+
+
+
 namespace emulation {
 namespace gb {
 
 
 
+
+  /*
+
+  class PPU {
+  public:
+    uint8_t write(uint32_t address, uint8_t data) {
+      std::cout << "possible?";
+      return 0;
+    }
+  };
+
+
+  class App {
+    PPU ppu;
+    Bus<uint32_t, uint8_t> bus;
+  public:
+    void run() {
+
+
+
+      auto f = [](uint32_t a, uint8_t d) {
+        std::cout << "hello";
+        return (uint8_t)0;
+      };
+      bus.Register(0x0000, 0x2000, [&](uint32_t address, uint8_t data) {
+
+        return ppu.write(address, data);
+        });
+
+      bus.Write(0x1000, 1);
+    }
+  };*/
+
+
+
 void Memory::Initialize(Emu* emu) {
   Component::Initialize(emu);
+
+  bus.Initialize();
+
+  bus.RegisterRead(0x0000, 0x3FFF,std::bind(&Memory::ReadROM0,this, std::placeholders::_1, std::placeholders::_2));
+
   vram_ = new uint8_t[0x4000];
   wram_ = new uint8_t[0x8000];
   memset(vram_,0,0x4000);
@@ -163,9 +207,28 @@ uint8_t* Memory::GetMemoryPointer(uint16_t address) {
   return nullptr;
 }
 
+
+uint8_t Memory::ReadROM0(uint16_t address, uint8_t ) {
+  uint8_t result = 0;
+  if (emu_->mode() == EmuMode::EmuModeGB && ioports_[0x50] == 0 && address < 0x100) {
+    result = dmgrom[address];
+  } else if (emu_->mode() == EmuMode::EmuModeGBC && ioports_[0x50] == 0 && (address < 0x100 || (address >= 0x200 && address <= 0x8FF))) {
+    result = gbcrom[address];
+    //char str[255];
+    //sprintf(str,"read gbc rom at 0x%04x\n",address);
+    //OutputDebugString(str);
+  } else {
+    result = emu_->cartridge()->Read(address);
+  }
+  return result;
+}
+
 uint8_t Memory::Read8(uint16_t address) {
   uint8_t result = 0;
 
+
+
+  //return bus.Read(address);
   /*
   memory map concept
   if ((address >= 0x8000 && address <= 0x9FFF)&&(emu_->lcd_driver()->stat().mode == 3)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
@@ -240,7 +303,16 @@ uint8_t Memory::Read8(uint16_t address) {
   } else if (address >= 0xA000 && address <= 0xBFFF) {
     result = emu_->cartridge()->Read(address);//emu_->cartridge()->eram()[address&0x1FFF];
   } else if (address >= 0xC000 && address <= 0xCFFF) {
+
+
     result = wram_[address&0x0FFF];
+
+    if (address == 0xCEA8) {
+      char str[255];
+      sprintf_s(str,"read 0x%04x = 0x%02x\n",address,result);
+      OutputDebugString(str);
+    }
+
   } else if (address >= 0xD000 && address <= 0xDFFF) {
     result = wram_[(address&0x0FFF)+(0x1000*wram_select)];
   } else if (address >= 0xE000 && address <= 0xFDFF) {
@@ -268,7 +340,7 @@ uint8_t Memory::Read8(uint16_t address) {
     } else if (address >= 0xFF04 && address <= 0xFF07) {
       result = emu_->timer()->Read(address);
     } else if (address == 0xFF0F) {
-      result = 0xE0|ioports_[address&0xFF];
+      result = 0xE0|ioports_[address&0x7F];
     }
     else  if (address == 0xFF4D) {
       if (emu_->mode() == EmuMode::EmuModeGB) {
@@ -281,7 +353,7 @@ uint8_t Memory::Read8(uint16_t address) {
       }
     }
     else {
-      result = ioports_[address&0xFF];
+      result = ioports_[address&0x7F];
     }
   } else if (address >= 0xFF80 && address <= 0xFFFE) {
     result = hram_[address-0xFF80];
@@ -310,6 +382,11 @@ void Memory::Write8(uint16_t address, uint8_t data) {
   } else if (address >= 0xA000 && address <= 0xBFFF) {
     emu_->cartridge()->Write(address,data);
   } else if (address >= 0xC000 && address <= 0xCFFF) {
+    if (address == 0xCEA8) {
+      char str[255];
+      sprintf_s(str, "write 0x%04x = 0x%02x\n", address, data);
+      OutputDebugString(str);
+    }
      wram_[(address&0x0FFF)] = data;
   } else if (address >= 0xD000 && address <= 0xDFFF) {
      wram_[(address&0x0FFF)+(0x1000*wram_select)] = data;
@@ -352,7 +429,7 @@ void Memory::Write8(uint16_t address, uint8_t data) {
       emu_->lcd_driver()->Write(address,data);
     } else if (address >= 0xFF68 && address <= 0xFF6C) { //color pallete
       emu_->lcd_driver()->Write(address,data);
-    } else if ((address&0xFF) == 0x70) { //FF70 - SVBK - CGB Mode Only - WRAM Bank
+    } else if (address == 0xFF70) { //FF70 - SVBK - CGB Mode Only - WRAM Bank
       ioports_[address& 0x7F]=data;
       wram_select = data&0x3;
       if (wram_select == 0) 
