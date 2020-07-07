@@ -44,7 +44,7 @@ class MBC2 : public MemoryBankController {
     } else if (address >= 0x4000 && address <= 0x7FFF) {
       return &cartridge->rom()[(address&0x3FFF)+(rom_bank_number<<14)];
     } else if (address >= 0xA000 && address <= 0xA1FF) {
-      if ((eram_enable&0x0A)==0x0A)
+      if ((eram_enable&0x0F)==0x0A)
         return &eram_[address&0x1FF];
       else
         return nullptr;
@@ -55,25 +55,32 @@ class MBC2 : public MemoryBankController {
     if (address >= 0x0000 && address <= 0x3FFF) {
       return cartridge->rom()[address];
     } else if (address >= 0x4000 && address <= 0x7FFF) {
-      return cartridge->rom()[(address&0x3FFF)+(rom_bank_number<<14)];
-    } else if (address >= 0xA000 && address <= 0xA1FF) {
-      if ((eram_enable&0x0A)==0x0A)
-        return eram_[address&0x1FF]&0x0F;
+      return cartridge->rom()[(address&0x3FFF)+((rom_bank_number%max_rom_banks)<<14)];
+    } else if (address >= 0xA000 && address <= 0xBFFF) {
+      if ((eram_enable&0x0F)==0x0A)
+        return eram_[address&0x1FF]|0xF0;
       else
-        return 0;
+        return 0xFF;
     } 
     return 0;
   }
   void Write(uint16_t address, uint8_t data) {
-   if (address >= 0x0000 && address <= 0x1FFF) {
-      if ((address&0x0100) == 0)
+   if (address >= 0x0000 && address <= 0x3FFF) {
+     if ((address & 0x0100) == 0) {
         eram_enable = data;
-    } else if (address >= 0x2000 && address <= 0x3FFF) {
+        //rom_bank_number = 0;
+      }
+        
+    /*} else if (address >= 0x2000 && address <= 0x3FFF) {*/
       if ((address&0x0100) == 0x0100) {
         rom_bank_number = data&0x0F;
+        //eram_enable = 0;
       }
-    } else if (address >= 0xA000 && address <= 0xA1FF) {
-      if ((eram_enable&0x0A)==0x0A)
+
+      if (rom_bank_number == 0)
+        rom_bank_number = 1;
+    } else if (address >= 0xA000 && address <= 0xBFFF) {
+      if ((eram_enable&0x0F)==0x0A)
         eram_[address&0x1FF]=data;
     } 
   }

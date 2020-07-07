@@ -27,7 +27,7 @@ class MBC5 : public MemoryBankController {
     MemoryBankController::Initialize(cartridge);
     eram_enable = 0;
     eram_enable = 0;
-    rom_bank_number = 0;
+    rom_bank_number = 1;
     ram_bank_number = 0;
     switch(cartridge->header->cartridge_type) {
       case 0x1B:battery_ = true; break;
@@ -54,35 +54,46 @@ class MBC5 : public MemoryBankController {
     }
     return 0;
   }
+
   uint8_t Read(uint16_t address) {
     if (address >= 0x0000 && address <= 0x3FFF) {
       return rom_[address];
     } else if (address >= 0x4000 && address <= 0x7FFF) {
-      return rom_[(address&0x3FFF)|((rom_bank_number)<<14)];
+      //if (rom_bank_number >= max_rom_banks)
+       // return 0;
+      return rom_[(address&0x3FFF)|((rom_bank_number%max_rom_banks)<<14)];
     } else if (address >= 0xA000 && address <= 0xBFFF) {
-      if ((eram_enable&0x0A)==0x0A && eram_size)
+      if ((eram_enable&0x0F)==0x0A && eram_size)
         return eram_[(address&0x1FFF)|(ram_bank_number<<13)];//*0x2000
       else
-        return 0;
+        return 0xFF;
     }
     return 0;
   }
+  //still not right
   void Write(uint16_t address, uint8_t data) {
    if (address >= 0x0000 && address <= 0x1FFF) {
       eram_enable = data;
     } else if (address >= 0x2000 && address <= 0x2FFF) {
-      rom_bank_number = (rom_bank_number&0xFF00)|data;
+      char str[25];
+      sprintf_s(str, "rom select low %02x\n", data);
+      OutputDebugString(str);
+      auto r = (rom_bank_number&0xFF00)|data;
+     // if (r < max_rom_banks)
+        rom_bank_number = r;
     } else if (address >= 0x3000 && address <= 0x3FFF) {
-      rom_bank_number = ((data&0x1)<<8)|(rom_bank_number&0xFF);
-    }else if (address >= 0x4000 && address <= 0x5FFF) {
-
-        ram_bank_number = data&0xF;
-      
+      char str[25];
+      sprintf_s(str, "rom select high %02x\n", data);
+      OutputDebugString(str);
+      auto r =  ((data & 0x1) << 8) | (rom_bank_number & 0xFF);
+     // if (r < max_rom_banks)
+        rom_bank_number = r;
+    } else if (address >= 0x4000 && address <= 0x5FFF) {
+      ram_bank_number = data&0xF;
     } else if (address >= 0x6000 && address <= 0x7FFF) {
-     
 
     } else if (address >= 0xA000 && address <= 0xBFFF) {
-      if ((eram_enable&0x0A)==0x0A && eram_size)
+      if ((eram_enable&0x0F)==0x0A && eram_size)
         eram_[(address&0x1FFF)|(ram_bank_number<<13)] = data;
     }
   }

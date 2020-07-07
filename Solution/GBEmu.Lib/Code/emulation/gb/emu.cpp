@@ -165,6 +165,7 @@ double Emu::Step() {
   timing.span_accumulator += timing.time_span;
   cartridge()->MBCStep(timing.time_span);
   while (timing.span_accumulator >= timing.step_dt) {
+    
     cpu_cycles_per_step_ = 0;
     cpu_->Step();
     timing.span_accumulator -= timing.step_dt * cpu_cycles_per_step_;

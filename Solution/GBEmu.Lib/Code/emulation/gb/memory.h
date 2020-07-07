@@ -61,9 +61,13 @@ public:
   val_t Read(addr_t address) {
     for (auto& h : read_handlers) {
       if (h.test(address)) {
-        return (h.func)(address);
+        return (h.func)(address,0);
       }
     }
+
+    char str[50];
+    sprintf_s(str,"unknown read at 0x%04x\n",address);
+    OutputDebugString(str);
   }
      
   void Write(addr_t address, val_t value) {
@@ -93,9 +97,9 @@ protected:
 
 
 class Memory : public Component {
- friend Cartridge;
- public:
-  Memory(){}
+  friend Cartridge;
+public:
+  Memory() {}
   ~Memory() {}
   void Initialize(Emu* emu);
   void Deinitialize();
@@ -110,11 +114,11 @@ class Memory : public Component {
   uint8_t* oam() { return oam_; }
   uint8_t* ioports() { return ioports_; }
   inline uint8_t& interrupt_enable() { return interrupt_enable_register_; }
-  inline uint8_t& interrupt_flag() {  return ioports_[0x0F]; }
+  inline uint8_t& interrupt_flag() { return ioports_[0x0F]; }
   uint16_t ClockedRead16(uint16_t address) {
     uint16_t nn;
     nn = ClockedRead8(address);
-    nn |= ClockedRead8(address+1)<<8;
+    nn |= ClockedRead8(address + 1) << 8;
     return nn;
   }
   void JoypadPress(JoypadKeys key);
@@ -124,7 +128,7 @@ class Memory : public Component {
   }
   void Tick();
 
-  struct  {
+  struct {
     uint16_t source_address;
     uint8_t clock_counter;
     uint8_t transfer_counter;
@@ -132,12 +136,18 @@ class Memory : public Component {
     bool pause;
   } dma_request;
 
- private:
+private:
 
-   uint8_t ReadROM0(uint16_t address, uint8_t );
+  uint8_t ReadROM0(uint16_t address);
+  uint8_t ReadROMX(uint16_t address);
+  uint8_t ReadVRAM(uint16_t address);
+  uint8_t ReadSRAM(uint16_t address);
+  uint8_t ReadWRAM0(uint16_t address);
+  uint8_t ReadWRAMX(uint16_t address);
+  uint8_t ReadWRAMEcho(uint16_t address);
 
   Bus<uint16_t, uint8_t> bus;
-  uint8_t* memmap[16];
+  //uint8_t* memmap[16];
   const uint8_t* rom_;
   uint8_t* vram_;
   uint8_t* wram_;

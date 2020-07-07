@@ -60,11 +60,14 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
     //report error
     return;
   }
-    rom_ = new uint8_t[1024*1024*2];
+
+
+  auto copy_size = max(header->rom_size_bytes(),length);
+  rom_ = new uint8_t[copy_size];
 
   //rom_ = new uint8_t[header->rom_size_bytes()];
 
-  auto copy_size = header->rom_size_bytes();
+  
 
   memcpy(rom_, data, length);// header->rom_size_bytes());
   this->header = (CartridgeHeader*)&rom_[0x100];

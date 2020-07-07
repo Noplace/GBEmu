@@ -25,7 +25,7 @@ class MBC3 : public MemoryBankController {
  public:
   void Initialize(Cartridge* cartridge) {
     MemoryBankController::Initialize(cartridge);
-    rom_bank_number = 0;
+    rom_bank_number = 1;
     ram_bank_number = 0;
     mode = MBC3ModeRAM;
     
@@ -55,7 +55,7 @@ class MBC3 : public MemoryBankController {
     if (address >= 0x0000 && address <= 0x3FFF) {
       return &rom_[address];
     } else if (address >= 0x4000 && address <= 0x7FFF) {
-      return &rom_[(address&0x3FFF)|((rom_bank_number)<<14)];
+      return &rom_[(address&0x3FFF)|((rom_bank_number % max_rom_banks)<<14)];
     } else if (address >= 0xA000 && address <= 0xBFFF) {
 
 
@@ -74,16 +74,16 @@ class MBC3 : public MemoryBankController {
     if (address >= 0x0000 && address <= 0x3FFF) {
       return rom_[address];
     } else if (address >= 0x4000 && address <= 0x7FFF) {
-      return rom_[(address&0x3FFF)|((rom_bank_number)<<14)];
+      return rom_[(address&0x3FFF)|((rom_bank_number%max_rom_banks)<<14)];
     } else if (address >= 0xA000 && address <= 0xBFFF) {
 
       if (ram_rtc_enable == true && mode == MBC3ModeRAM && eram_size)
-        return eram_[(address&0x1FFF)|(ram_bank_number<<13)];
+        return eram_[(address&0x1FFF)|((ram_bank_number%max_ram_banks)<<13)];
       
       if (ram_rtc_enable == true && mode == MBC3ModeRTC)
         return rtc[rtc_select];
 
-      return 0;
+      return 0xFF;
     }
     return 0;
   }
@@ -107,9 +107,9 @@ class MBC3 : public MemoryBankController {
     } else if (address >= 0x4000 && address <= 0x5FFF) {
       if (data>=0&&data<=3) {
         mode = MBC3ModeRAM;
-        if ((data & 0x3) < max_ram_banks) {
+       // if ((data & 0x3) < max_ram_banks) {
           ram_bank_number = data;
-        }
+        //}
 
       } else if (data>=0x08&&data<=0x0C) {
         mode = MBC3ModeRTC;
@@ -146,7 +146,7 @@ class MBC3 : public MemoryBankController {
 
     } else if (address >= 0xA000 && address <= 0xBFFF) {
       if (ram_rtc_enable == true && mode== MBC3ModeRAM && eram_size)
-        eram_[(address&0x1FFF)|(ram_bank_number<<13)] = data;
+        eram_[(address&0x1FFF)|((ram_bank_number%max_ram_banks)<<13)] = data;
       
       if (ram_rtc_enable == true && mode== MBC3ModeRTC)
         rtc[rtc_select] = data;

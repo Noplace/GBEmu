@@ -136,8 +136,15 @@ class LCDDriver : public Component {
   void CorruptOAMWrite(uint16_t address) {
     auto index = address - 0xFE00;
   }
-
+  void BeginRenderLine();
+  void EndRenderLine();
  private:
+   ColorMapLine* cmline;
+   bool render_line;
+   struct {
+     uint8_t lineoffset;
+     int x, y;
+   }bgparams;
    struct {
      uint8_t* oam;
      bool start;

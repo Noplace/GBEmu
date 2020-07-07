@@ -86,7 +86,135 @@ void Memory::Initialize(Emu* emu) {
 
   bus.Initialize();
 
-  bus.RegisterRead(0x0000, 0x3FFF,std::bind(&Memory::ReadROM0,this, std::placeholders::_1, std::placeholders::_2));
+  bus.RegisterRead(0x0000, 0x3FFF,std::bind(&Memory::ReadROM0,this, std::placeholders::_1));
+  bus.RegisterRead(0x4000, 0x7FFF, std::bind(&Cartridge::Read, emu_->cartridge(), std::placeholders::_1));
+  bus.RegisterRead(0x8000, 0x9FFF, std::bind(&Memory::ReadVRAM, this, std::placeholders::_1));
+  bus.RegisterRead(0xA000, 0xBFFF, std::bind(&Cartridge::Read, emu_->cartridge(), std::placeholders::_1));
+  bus.RegisterRead(0xC000, 0xCFFF, std::bind(&Memory::ReadWRAM0,this, std::placeholders::_1));
+  bus.RegisterRead(0xD000, 0xDFFF, std::bind(&Memory::ReadWRAMX, this, std::placeholders::_1));
+  bus.RegisterRead(0xE000, 0xFDFF, std::bind(&Memory::ReadWRAMEcho, this, std::placeholders::_1));
+
+
+
+
+
+
+  bus.RegisterRead(0xFE00, 0xFE9F, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    if ((emu_->lcd_driver()->stat().mode & 0x2) && (emu_->lcd_driver()->lcdc().lcd_enable == 1))
+      result = 0xFF;
+    else
+      result = oam_[address - 0xFE00];
+    return result;
+    });
+
+
+  bus.RegisterRead(0xFEA0, 0xFEFF, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    
+    return result;
+    });
+
+
+  bus.RegisterRead(0xFF00, 0xFF03, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    result = ioports_[address & 0x7F];
+    return result;
+    });
+
+  bus.RegisterRead(0xFF04, 0xFF07, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    result = emu_->timer()->Read(address);
+    return result;
+    });
+
+  bus.RegisterRead(0xFF08, 0xFF0E, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    result = ioports_[address & 0x7F];
+    return result;
+    });
+
+  bus.RegisterRead(0xFF0F, 0xFF0F, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    result = 0xE0 | ioports_[address & 0x7F];
+    return result;
+    });
+
+
+  bus.RegisterRead(0xFF10, 0xFF3F, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    result = emu_->apu()->Read(address);
+    return result;
+    });
+
+  bus.RegisterRead(0xFF40, 0xFF4C, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    result = emu_->lcd_driver()->Read(address);
+    return result;
+    });
+
+
+
+  bus.RegisterRead(0xFF4D, 0xFF4D, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    if (emu_->mode() == EmuMode::EmuModeGB) {
+      result = 0XFF;//always FF in DMG
+    } else if (emu_->mode() == EmuMode::EmuModeGBC) {
+
+      result = ((static_cast<int>(emu_->speed) << 6) & 0x80) | 0x7F;
+
+    }
+    return result;
+    });
+
+  bus.RegisterRead(0xFF4E, 0xFF50, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    result = ioports_[address & 0x7F];
+    return result;
+    });
+
+  bus.RegisterRead(0xFF51, 0xFF55, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    result = emu_->lcd_driver()->Read(address);
+    return result;
+    });
+
+  bus.RegisterRead(0xFF56, 0xFF67, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    result = ioports_[address & 0x7F];
+    return result;
+    });
+
+  bus.RegisterRead(0xFF68, 0xFF6C, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    result = emu_->lcd_driver()->Read(address);
+    return result;
+    });
+
+  bus.RegisterRead(0xFF6D, 0xFF7F, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    result = ioports_[address & 0x7F];
+    return result;
+    });
+
+
+  bus.RegisterRead(0xFF80, 0xFFFE, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    result = hram_[address - 0xFF80];
+    return result;
+    });
+
+  bus.RegisterRead(0xFFFF, 0xFFFF, [&](uint32_t address, uint8_t) {
+    uint8_t result = 0;
+    result = interrupt_enable_register_;
+    return result;
+    });
+
+
+    
+     // 
+    
+ 
 
   vram_ = new uint8_t[0x4000];
   wram_ = new uint8_t[0x8000];
@@ -106,9 +234,10 @@ void Memory::UpdateMemoryMap() {
   if (mbc != nullptr) {
     rom_bank_number = mbc->rom_bank_number;
     ram_bank_number = mbc->ram_bank_number;
-    memmap[0x0A] = &mbc->eram()[ram_bank_number<<13];
-    memmap[0x0B] = &mbc->eram()[0x1000|(ram_bank_number<<13)];
+    //memmap[0x0A] = &mbc->eram()[ram_bank_number<<13];
+    //memmap[0x0B] = &mbc->eram()[0x1000|(ram_bank_number<<13)];
   }
+  /*
   memmap[0x00] = (uint8_t*)&rom_[0x0000];
   memmap[0x01] = (uint8_t*)&rom_[0x1000];
   memmap[0x02] = (uint8_t*)&rom_[0x2000];
@@ -123,7 +252,7 @@ void Memory::UpdateMemoryMap() {
   memmap[0x0C] = &wram_[0];
   memmap[0x0D] = &wram_[(wram_select<<12)];
   memmap[0x0E] = &wram_[0];
-  memmap[0x0F] = &wram_[(wram_select<<12)];
+  memmap[0x0F] = &wram_[(wram_select<<12)];*/
 }
 
 void Memory::Reset() {
@@ -208,7 +337,7 @@ uint8_t* Memory::GetMemoryPointer(uint16_t address) {
 }
 
 
-uint8_t Memory::ReadROM0(uint16_t address, uint8_t ) {
+uint8_t Memory::ReadROM0(uint16_t address ) {
   uint8_t result = 0;
   if (emu_->mode() == EmuMode::EmuModeGB && ioports_[0x50] == 0 && address < 0x100) {
     result = dmgrom[address];
@@ -223,12 +352,59 @@ uint8_t Memory::ReadROM0(uint16_t address, uint8_t ) {
   return result;
 }
 
+uint8_t Memory::ReadROMX(uint16_t address) {
+  uint8_t result = 0;
+  return result;
+}
+
+uint8_t Memory::ReadVRAM(uint16_t address) {
+  uint8_t result = 0;
+  if ((emu_->lcd_driver()->stat().mode == 3) && (emu_->lcd_driver()->lcdc().lcd_enable == 1))
+    result = 0xFF;
+  else
+    result = this->vram_[(address & 0x1FFF) | (vram_select << 13)];
+  return result;
+}
+
+uint8_t Memory::ReadSRAM(uint16_t address) {
+  uint8_t result = 0;
+
+  return result;
+}
+
+
+
+
+
+uint8_t Memory::ReadWRAM0(uint16_t address) {
+  uint8_t result = 0;
+  result = wram_[address & 0x0FFF];
+  return result;
+}
+
+
+uint8_t Memory::ReadWRAMX(uint16_t address) {
+  uint8_t result = 0;
+  result = wram_[(address & 0x0FFF) + (0x1000 * wram_select)];
+  return result;
+}
+
+uint8_t Memory::ReadWRAMEcho(uint16_t address) {
+  uint8_t result = 0;
+  if ((address & 0xF000) == 0xE000)
+    result = wram_[address & 0x0FFF];
+  else if ((address & 0xF000) == 0xF000)
+    result = wram_[(address & 0x0FFF) + (0x1000 * wram_select)];
+  return result;
+}
+
+
 uint8_t Memory::Read8(uint16_t address) {
   uint8_t result = 0;
 
 
 
-  //return bus.Read(address);
+  return bus.Read(address);
   /*
   memory map concept
   if ((address >= 0x8000 && address <= 0x9FFF)&&(emu_->lcd_driver()->stat().mode == 3)&&(emu_->lcd_driver()->lcdc().lcd_enable==1))
@@ -383,9 +559,9 @@ void Memory::Write8(uint16_t address, uint8_t data) {
     emu_->cartridge()->Write(address,data);
   } else if (address >= 0xC000 && address <= 0xCFFF) {
     if (address == 0xCEA8) {
-      char str[255];
-      sprintf_s(str, "write 0x%04x = 0x%02x\n", address, data);
-      OutputDebugString(str);
+      //char str[255];
+      //sprintf_s(str, "write 0x%04x = 0x%02x\n", address, data);
+      //OutputDebugString(str);
     }
      wram_[(address&0x0FFF)] = data;
   } else if (address >= 0xD000 && address <= 0xDFFF) {

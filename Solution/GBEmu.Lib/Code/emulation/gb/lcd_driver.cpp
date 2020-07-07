@@ -28,6 +28,7 @@ namespace gb {
 
 
 #define pixel(bit) (((tile[y<<1]>>(bit&0x7))&0x1)+((((tile[(y<<1)+1]>>(bit&0x7))<<1)&0x2)))
+#define pixel2(bit,y) (((tile[y<<1]>>(bit&0x7))&0x1)+((((tile[(y<<1)+1]>>(bit&0x7))<<1)&0x2)))
 
 
 struct DMGSprite {
@@ -221,7 +222,7 @@ done,check
 void LCDDriver::DoHDMA() {
   if (hdma.mode == 1 && hdma.active == 1) {
     uint16_t offset = 0;
-
+    
     auto src = emu_->memory()->GetMemoryPointer(hdma.src.raw&0xFFF0);
     auto dest = emu_->memory()->GetMemoryPointer(0x8000|(hdma.dest.raw&0x1FF0));
     memcpy(dest,src,0x10);
@@ -270,7 +271,7 @@ void LCDDriver::Tick() {
 
 
   switch (stat_.mode) {
-  case 2:
+  case 2://searching oam
     
     ++mode2_counter;
     
@@ -284,7 +285,7 @@ void LCDDriver::Tick() {
     if (scanline_dots_ == 80)
       stat_.mode = 3;
     break;
-  case 3:
+  case 3://trnsfer data to LCD
     ++mode3_counter;
     {
       static auto flag = lcdc_.bgdisplay;
@@ -307,14 +308,36 @@ void LCDDriver::Tick() {
       sprite_bug_counter = 0;
       pixel_counter_ = 0;
       //RenderLine(0, 160);//will update mode3_extra_cycles_
+      BeginRenderLine();
+     
     }
 
     
     if (scanline_dots_ >= 89 && pixel_counter_ < 160) { //0 to 159
-      RenderLine(0, 160);
+      //RenderLine(0, 160);
+
+      if (dot_delay_ == 0) {
+        if (render_line == true) {
+          
+          if (emu_->mode() == EmuMode::EmuModeGBC) {
+            RenderCGBBGPixel(cmline);
+            RenderCGBWindowPixel(cmline);
+            RenderCGBSpritePixel(cmline);
+          } else {
+            RenderDMGBGPixel(cmline);
+            RenderDMGWindowPixel(cmline);
+            RenderDMGSpritePixel(cmline);
+          }
+        }
+        ++pixel_counter_;
+      } else {
+        --dot_delay_;
+      }
+
     }
 
     if (pixel_counter_ == 160) {
+      EndRenderLine();
       stat_.mode = 0;
       pixel_counter_ = 0;
     }
@@ -333,7 +356,9 @@ void LCDDriver::Tick() {
     }*/
 
   break;
-  case 0:
+  case 0://hblank
+    if (mode0_counter == 0)
+      DoHDMA();
     ++mode0_counter;
     /*if (sprite_bug_counter != 0 && lcdc_.lcd_enable == 1) {
       emu_->memory()->oam()[8+(rand()%152)] = rand()&0xFF;
@@ -358,7 +383,7 @@ void LCDDriver::Tick() {
       }
     }
     break;
-  case 1: {
+  case 1: { //vblank
     ++mode1_counter;
     if (ly == 144 && scanline_dots_ == 1) {
       emu_->memory()->interrupt_flag() |= 1;
@@ -715,11 +740,14 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
             memcpy(dest,src,hdma.length);
             hdma.dest.raw += hdma.length;
             hdma.src.raw += hdma.length;
+            OutputDebugString("start gdma\n");
           } else { //HDMA
             hdma.active = 1;
             hdma.ff55 = data & 0x7F;
-            if (stat_.mode == 0)
-              DoHDMA();
+            OutputDebugString("start hdma\n");
+            //check
+            //if (stat_.mode == 0)
+           //   DoHDMA();
           }
 
         }
@@ -907,18 +935,18 @@ void LCDDriver::RenderSpriteLine(int x0,int x1,ColorMapLine* cmline) {
 
 void LCDDriver::RenderCGBBGPixel(ColorMapLine* cmline) {
   uint8_t mapoffset = ((ly + scroll_y) & 0xFF) >> 3;
-  static uint8_t lineoffset =  ((scroll_x >> 3)) & 0x1F;
-  static auto y =  (ly + scroll_y) & 7;
-  static auto x =  scroll_x & 7;
+  //static uint8_t lineoffset =  ((scroll_x >> 3)) & 0x1F;
+  //static auto y =  (ly + scroll_y) & 7;
+  //static auto x =  scroll_x & 7;
   const auto vram = emu_->memory()->vram();
   const auto tiledata = &vram[lcdc_.tile_data == 0 ? 0x0800 : 0x0000];
   const auto tilemap = &vram[lcdc_.bg_tile_map == 0 ? 0x1800 : 0x1C00];
   const auto tileattr = &vram[lcdc_.bg_tile_map == 0 ? 0x3800 : 0x3C00];
-  auto incx = []() {
-    ++x;
-    if (x == 8) {
-      x = 0;
-      lineoffset = (lineoffset + 1) & 0x1F;
+  auto incx = [&]() {
+    ++bgparams.x;
+    if (bgparams.x == 8) {
+      bgparams.x = 0;
+      bgparams.lineoffset = (bgparams.lineoffset + 1) & 0x1F;
 
     }
   };
@@ -930,9 +958,9 @@ void LCDDriver::RenderCGBBGPixel(ColorMapLine* cmline) {
   }
 
   if (pixel_counter_ == 0) {
-      lineoffset = ((scroll_x >> 3)) & 0x1F;
-      y = (ly + scroll_y) & 7;
-      x = scroll_x & 7;
+    bgparams.lineoffset = ((scroll_x >> 3)) & 0x1F;
+    bgparams.y = (ly + scroll_y) & 7;
+    bgparams.x = scroll_x & 7;
   }
 
   //int i = scanline_counter_ - 81;
@@ -940,19 +968,19 @@ void LCDDriver::RenderCGBBGPixel(ColorMapLine* cmline) {
  // sprintf_s(debugstr, "scan line %d %d %d\n", i,x,scroll_x);
   //OutputDebugString(debugstr);
   {
-    auto attr = tileattr[(mapoffset << 5) + lineoffset];
+    auto attr = tileattr[(mapoffset << 5) + bgparams.lineoffset];
     auto palindex = attr & 0x7;
 
-    auto tileindex = tilemap[(mapoffset << 5) + lineoffset];
+    auto tileindex = tilemap[(mapoffset << 5) + bgparams.lineoffset];
     if ((lcdc_.tile_data == 0)) {
       if (tileindex < 128) tileindex += 128;
       else tileindex -= 128;
     }
     uint8_t* tile = &tiledata[(tileindex << 4) | ((attr & 0x8) << 10)];
     if (attr & 0x40)
-      y = 7 - y;
+      bgparams.y = 7 - bgparams.y;
     uint8_t bgcolor;
-    bgcolor = (attr & 0x20) ? pixel((x)) : pixel((7 - x));
+    bgcolor = (attr & 0x20) ? pixel2((bgparams.x), bgparams.y) : pixel2((7 - bgparams.x), bgparams.y);
 
     incx();
 
@@ -1418,6 +1446,45 @@ void LCDDriver::RenderDMGSpritePixel(ColorMapLine* cmline) {
     }
 
   }
+}
+
+
+void LCDDriver::BeginRenderLine() {
+  render_line = false;
+  if (ly > 143) {
+    
+    return;
+  }
+
+  cmline = &colormap[ly << 8];
+   
+
+  if (((lcdscreenmode_ == LCDScreenModeInterlace) && ((evenodd == 0 && !(ly % 2)) || (evenodd == 1 && (ly % 2))))
+    || (lcdscreenmode_ == LCDScreenModeProgressive)) {
+
+    //if (emu_->mode() == EmuMode::EmuModeGBC) {
+      render_line = true;
+    //}
+  }
+}
+
+void LCDDriver::EndRenderLine() {
+  render_line = false;
+  auto fbline = &frame_buffer[ly << 8];
+
+
+  if (emu_->mode() == EmuMode::EmuModeGBC) {
+    for (int i = 0; i < 160; ++i) { //256px per line
+      *fbline++ = bgr555torgb(cmline->pixel);
+      ++cmline;
+    }
+  } else {
+    for (int i = 0; i < 160; ++i) {//256px per line
+      *fbline++ = dmg_colors[cmline->pixel];
+      ++cmline;
+    }
+  }
+
 }
 
 //not using x0,x1
