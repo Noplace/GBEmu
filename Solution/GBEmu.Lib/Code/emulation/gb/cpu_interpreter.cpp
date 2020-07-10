@@ -31,22 +31,12 @@ namespace gb {
 
 #define MachineCycle { Tick();Tick();Tick();Tick(); }
 
-CpuInterpreter::CpuInterpreter() : instructions{ &CpuInterpreter::NOP,
-&CpuInterpreter::LDrd16<RegBC>,
-&CpuInterpreter::LD$rr<RegBC,RegA>,
-&CpuInterpreter::INC_16bit<RegBC>,
-&CpuInterpreter::INC_8bit<RegB,0>,
-&CpuInterpreter::DEC_8bit<RegB,0>,
-&CpuInterpreter::LD<RegB,0,10>,
-&CpuInterpreter::RLCA,
-&CpuInterpreter::LDa16SP,
-&CpuInterpreter::ADD_16bit<RegHL,RegBC>,
-&CpuInterpreter::LDr$r<RegA,RegBC>,
-&CpuInterpreter::DEC_16bit<RegBC>,
-&CpuInterpreter::INC_8bit<RegC,0>,
-&CpuInterpreter::DEC_8bit<RegC,0>,
-&CpuInterpreter::LD<RegC,0,10>,
-&CpuInterpreter::RRCA,
+CpuInterpreter::CpuInterpreter() : 
+  instructions{ 
+    &CpuInterpreter::NOP,               &CpuInterpreter::LDrd16<RegBC>,         &CpuInterpreter::LD$rr<RegBC,RegA>, &CpuInterpreter::INC_16bit<RegBC>,
+    &CpuInterpreter::INC_8bit<RegB,0>,  &CpuInterpreter::DEC_8bit<RegB,0>,      &CpuInterpreter::LD<RegB,0,10>,     &CpuInterpreter::RLCA,
+    &CpuInterpreter::LDa16SP,           &CpuInterpreter::ADD_16bit<RegHL,RegBC>,&CpuInterpreter::LDr$r<RegA,RegBC>, &CpuInterpreter::DEC_16bit<RegBC>,
+    &CpuInterpreter::INC_8bit<RegC,0>,  &CpuInterpreter::DEC_8bit<RegC,0>,      &CpuInterpreter::LD<RegC,0,10>,     &CpuInterpreter::RRCA,
 
 &CpuInterpreter::STOP,
 &CpuInterpreter::LDrd16<RegDE>,
@@ -302,278 +292,7 @@ CpuInterpreter::CpuInterpreter() : instructions{ &CpuInterpreter::NOP,
 &CpuInterpreter::ILLEGAL,
 &CpuInterpreter::CP_d8,
 &CpuInterpreter::RST } {
-  /*instructions[0x00] = &CpuInterpreter::NOP;
-  instructions[0x01] = &CpuInterpreter::LDrd16<RegBC>;
-  instructions[0x02] = &CpuInterpreter::LD$rr<RegBC,RegA>;
-  instructions[0x03] = &CpuInterpreter::INC_16bit<RegBC>;
-  instructions[0x04] = &CpuInterpreter::INC_8bit<RegB,0>;
-  instructions[0x05] = &CpuInterpreter::DEC_8bit<RegB,0>;
-  instructions[0x06] = &CpuInterpreter::LD<RegB,0,10>;
-  instructions[0x07] = &CpuInterpreter::RLCA;
-  instructions[0x08] = &CpuInterpreter::LDa16SP;
-  instructions[0x09] = &CpuInterpreter::ADD_16bit<RegHL,RegBC>;
-  instructions[0x0A] = &CpuInterpreter::LDr$r<RegA,RegBC>;
-  instructions[0x0B] = &CpuInterpreter::DEC_16bit<RegBC>;
-  instructions[0x0C] = &CpuInterpreter::INC_8bit<RegC,0>;
-  instructions[0x0D] = &CpuInterpreter::DEC_8bit<RegC,0>;
-  instructions[0x0E] = &CpuInterpreter::LD<RegC,0,10>;
-  instructions[0x0F] = &CpuInterpreter::RRCA;
-
-  instructions[0x10] = &CpuInterpreter::STOP;
-  instructions[0x11] = &CpuInterpreter::LDrd16<RegDE>;
-  instructions[0x12] = &CpuInterpreter::LD$rr<RegDE,RegA>;
-  instructions[0x13] = &CpuInterpreter::INC_16bit<RegDE>;
-  instructions[0x14] = &CpuInterpreter::INC_8bit<RegD,0>;
-  instructions[0x15] = &CpuInterpreter::DEC_8bit<RegD,0>;
-  instructions[0x16] = &CpuInterpreter::LD<RegD,0,10>;
-  instructions[0x17] = &CpuInterpreter::RLA;
-  instructions[0x18] = &CpuInterpreter::JR;
-  instructions[0x19] = &CpuInterpreter::ADD_16bit<RegHL,RegDE>;
-  instructions[0x1A] = &CpuInterpreter::LDr$r<RegA,RegDE>;
-  instructions[0x1B] = &CpuInterpreter::DEC_16bit<RegDE>;
-  instructions[0x1C] = &CpuInterpreter::INC_8bit<RegE,0>;
-  instructions[0x1D] = &CpuInterpreter::DEC_8bit<RegE,0>;
-  instructions[0x1E] = &CpuInterpreter::LD<RegE,0,10>;
-  instructions[0x1F] = &CpuInterpreter::RRA;
   
-  instructions[0x20] = &CpuInterpreter::JR_cc<CpuFlagsZ,1>;
-  instructions[0x21] = &CpuInterpreter::LDrd16<RegHL>;
-  instructions[0x22] = &CpuInterpreter::LDI$regreg<RegHL,RegA>;
-  instructions[0x23] = &CpuInterpreter::INC_16bit<RegHL>;
-  instructions[0x24] = &CpuInterpreter::INC_8bit<RegH,0>;
-  instructions[0x25] = &CpuInterpreter::DEC_8bit<RegH,0>;
-  instructions[0x26] = &CpuInterpreter::LD<RegH,0,10>;
-  instructions[0x27] = &CpuInterpreter::DAA;
-  instructions[0x28] = &CpuInterpreter::JR_cc<CpuFlagsZ,0>;
-  instructions[0x29] = &CpuInterpreter::ADD_16bit<RegHL,RegHL>;
-  instructions[0x2A] = &CpuInterpreter::LDIreg$reg<RegA,RegHL>;
-  instructions[0x2B] = &CpuInterpreter::DEC_16bit<RegHL>;
-  instructions[0x2C] = &CpuInterpreter::INC_8bit<RegL,0>;
-  instructions[0x2D] = &CpuInterpreter::DEC_8bit<RegL,0>;
-  instructions[0x2E] = &CpuInterpreter::LD<RegL,0,10>;
-  instructions[0x2F] = &CpuInterpreter::CPL;
-
-  instructions[0x30] = &CpuInterpreter::JR_cc<CpuFlagsC,1>;
-  instructions[0x31] = &CpuInterpreter::LDrd16<RegSP>;
-  instructions[0x32] = &CpuInterpreter::LDD$regreg<RegHL,RegA>;
-  instructions[0x33] = &CpuInterpreter::INC_16bit<RegSP>;
-  instructions[0x34] = &CpuInterpreter::INC_8bit<RegHL,1>;
-  instructions[0x35] = &CpuInterpreter::DEC_8bit<RegHL,1>;
-  instructions[0x36] = &CpuInterpreter::LD<RegHL,0,11>;
-  instructions[0x37] = &CpuInterpreter::SCF;
-  instructions[0x38] = &CpuInterpreter::JR_cc<CpuFlagsC,0>;
-  instructions[0x39] = &CpuInterpreter::ADD_16bit<RegHL,RegSP>;
-  instructions[0x3A] = &CpuInterpreter::LDDreg$reg<RegA,RegHL>;
-  instructions[0x3B] = &CpuInterpreter::DEC_16bit<RegSP>;
-  instructions[0x3C] = &CpuInterpreter::INC_8bit<RegA,0>;
-  instructions[0x3D] = &CpuInterpreter::DEC_8bit<RegA,0>;
-  instructions[0x3E] = &CpuInterpreter::LD<RegA,0,10>;
-  instructions[0x3F] = &CpuInterpreter::CCF;
-
-  instructions[0x40] = &CpuInterpreter::LDrr<RegB,RegB>;
-  instructions[0x41] = &CpuInterpreter::LDrr<RegB,RegC>;
-  instructions[0x42] = &CpuInterpreter::LDrr<RegB,RegD>;
-  instructions[0x43] = &CpuInterpreter::LDrr<RegB,RegE>;
-  instructions[0x44] = &CpuInterpreter::LDrr<RegB,RegH>;
-  instructions[0x45] = &CpuInterpreter::LDrr<RegB,RegL>;
-  instructions[0x46] = &CpuInterpreter::LDr$r<RegB,RegHL>;
-  instructions[0x47] = &CpuInterpreter::LDrr<RegB,RegA>;
-  instructions[0x48] = &CpuInterpreter::LDrr<RegC,RegB>;
-  instructions[0x49] = &CpuInterpreter::LDrr<RegC,RegC>;
-  instructions[0x4A] = &CpuInterpreter::LDrr<RegC,RegD>;
-  instructions[0x4B] = &CpuInterpreter::LDrr<RegC,RegE>;
-  instructions[0x4C] = &CpuInterpreter::LDrr<RegC,RegH>;
-  instructions[0x4D] = &CpuInterpreter::LDrr<RegC,RegL>;
-  instructions[0x4E] = &CpuInterpreter::LDr$r<RegC,RegHL>;
-  instructions[0x4F] = &CpuInterpreter::LDrr<RegC,RegA>;
-
-  instructions[0x50] = &CpuInterpreter::LDrr<RegD,RegB>;
-  instructions[0x51] = &CpuInterpreter::LDrr<RegD,RegC>;
-  instructions[0x52] = &CpuInterpreter::LDrr<RegD,RegD>;
-  instructions[0x53] = &CpuInterpreter::LDrr<RegD,RegE>;
-  instructions[0x54] = &CpuInterpreter::LDrr<RegD,RegH>;
-  instructions[0x55] = &CpuInterpreter::LDrr<RegD,RegL>;
-  instructions[0x56] = &CpuInterpreter::LDr$r<RegD,RegHL>;
-  instructions[0x57] = &CpuInterpreter::LDrr<RegD,RegA>;
-  instructions[0x58] = &CpuInterpreter::LDrr<RegE,RegB>;
-  instructions[0x59] = &CpuInterpreter::LDrr<RegE,RegC>;
-  instructions[0x5A] = &CpuInterpreter::LDrr<RegE,RegD>;
-  instructions[0x5B] = &CpuInterpreter::LDrr<RegE,RegE>;
-  instructions[0x5C] = &CpuInterpreter::LDrr<RegE,RegH>;
-  instructions[0x5D] = &CpuInterpreter::LDrr<RegE,RegL>;
-  instructions[0x5E] = &CpuInterpreter::LDr$r<RegE,RegHL>;
-  instructions[0x5F] = &CpuInterpreter::LDrr<RegE,RegA>;
-
-  instructions[0x60] = &CpuInterpreter::LDrr<RegH,RegB>;
-  instructions[0x61] = &CpuInterpreter::LDrr<RegH,RegC>;
-  instructions[0x62] = &CpuInterpreter::LDrr<RegH,RegD>;
-  instructions[0x63] = &CpuInterpreter::LDrr<RegH,RegE>;
-  instructions[0x64] = &CpuInterpreter::LDrr<RegH,RegH>;
-  instructions[0x65] = &CpuInterpreter::LDrr<RegH,RegL>;
-  instructions[0x66] = &CpuInterpreter::LDr$r<RegH,RegHL>;
-  instructions[0x67] = &CpuInterpreter::LDrr<RegH,RegA>;
-  instructions[0x68] = &CpuInterpreter::LDrr<RegL,RegB>;
-  instructions[0x69] = &CpuInterpreter::LDrr<RegL,RegC>;
-  instructions[0x6A] = &CpuInterpreter::LDrr<RegL,RegD>;
-  instructions[0x6B] = &CpuInterpreter::LDrr<RegL,RegE>;
-  instructions[0x6C] = &CpuInterpreter::LDrr<RegL,RegH>;
-  instructions[0x6D] = &CpuInterpreter::LDrr<RegL,RegL>;
-  instructions[0x6E] = &CpuInterpreter::LDr$r<RegL,RegHL>;
-  instructions[0x6F] = &CpuInterpreter::LDrr<RegL,RegA>;
-
-  instructions[0x70] = &CpuInterpreter::LD$rr<RegHL,RegB>;
-  instructions[0x71] = &CpuInterpreter::LD$rr<RegHL,RegC>;
-  instructions[0x72] = &CpuInterpreter::LD$rr<RegHL,RegD>;
-  instructions[0x73] = &CpuInterpreter::LD$rr<RegHL,RegE>;
-  instructions[0x74] = &CpuInterpreter::LD$rr<RegHL,RegH>;
-  instructions[0x75] = &CpuInterpreter::LD$rr<RegHL,RegL>;
-  instructions[0x76] = &CpuInterpreter::HALT;
-  instructions[0x77] = &CpuInterpreter::LD$rr<RegHL,RegA>;
-  instructions[0x78] = &CpuInterpreter::LDrr<RegA,RegB>;
-  instructions[0x79] = &CpuInterpreter::LDrr<RegA,RegC>;
-  instructions[0x7A] = &CpuInterpreter::LDrr<RegA,RegD>;
-  instructions[0x7B] = &CpuInterpreter::LDrr<RegA,RegE>;
-  instructions[0x7C] = &CpuInterpreter::LDrr<RegA,RegH>;
-  instructions[0x7D] = &CpuInterpreter::LDrr<RegA,RegL>;
-  instructions[0x7E] = &CpuInterpreter::LDr$r<RegA,RegHL>;
-  instructions[0x7F] = &CpuInterpreter::LDrr<RegA,RegA>;
-
-  instructions[0x80] = &CpuInterpreter::ADD<RegA,RegB,0>;
-  instructions[0x81] = &CpuInterpreter::ADD<RegA,RegC,0>;
-  instructions[0x82] = &CpuInterpreter::ADD<RegA,RegD,0>;
-  instructions[0x83] = &CpuInterpreter::ADD<RegA,RegE,0>;
-  instructions[0x84] = &CpuInterpreter::ADD<RegA,RegH,0>;
-  instructions[0x85] = &CpuInterpreter::ADD<RegA,RegL,0>;
-  instructions[0x86] = &CpuInterpreter::ADD<RegA,RegHL,1>;
-  instructions[0x87] = &CpuInterpreter::ADD<RegA,RegA,0>;
-  instructions[0x88] = &CpuInterpreter::ADC<RegA,RegB,0>;
-  instructions[0x89] = &CpuInterpreter::ADC<RegA,RegC,0>;
-  instructions[0x8A] = &CpuInterpreter::ADC<RegA,RegD,0>;
-  instructions[0x8B] = &CpuInterpreter::ADC<RegA,RegE,0>;
-  instructions[0x8C] = &CpuInterpreter::ADC<RegA,RegH,0>;
-  instructions[0x8D] = &CpuInterpreter::ADC<RegA,RegL,0>;
-  instructions[0x8E] = &CpuInterpreter::ADC<RegA,RegHL,1>;
-  instructions[0x8F] = &CpuInterpreter::ADC<RegA,RegA,0>;
-
-  instructions[0x90] = &CpuInterpreter::SUB<RegA,RegB,0>;
-  instructions[0x91] = &CpuInterpreter::SUB<RegA,RegC,0>;
-  instructions[0x92] = &CpuInterpreter::SUB<RegA,RegD,0>;
-  instructions[0x93] = &CpuInterpreter::SUB<RegA,RegE,0>;
-  instructions[0x94] = &CpuInterpreter::SUB<RegA,RegH,0>;
-  instructions[0x95] = &CpuInterpreter::SUB<RegA,RegL,0>;
-  instructions[0x96] = &CpuInterpreter::SUB<RegA,RegHL,1>;
-  instructions[0x97] = &CpuInterpreter::SUB<RegA,RegA,0>;
-  instructions[0x98] = &CpuInterpreter::SBC<RegA,RegB,0>;
-  instructions[0x99] = &CpuInterpreter::SBC<RegA,RegC,0>;
-  instructions[0x9A] = &CpuInterpreter::SBC<RegA,RegD,0>;
-  instructions[0x9B] = &CpuInterpreter::SBC<RegA,RegE,0>;
-  instructions[0x9C] = &CpuInterpreter::SBC<RegA,RegH,0>;
-  instructions[0x9D] = &CpuInterpreter::SBC<RegA,RegL,0>;
-  instructions[0x9E] = &CpuInterpreter::SBC<RegA,RegHL,1>;
-  instructions[0x9F] = &CpuInterpreter::SBC<RegA,RegA,0>;
-
-  instructions[0xA0] = &CpuInterpreter::AND<RegA,RegB,0>;
-  instructions[0xA1] = &CpuInterpreter::AND<RegA,RegC,0>;
-  instructions[0xA2] = &CpuInterpreter::AND<RegA,RegD,0>;
-  instructions[0xA3] = &CpuInterpreter::AND<RegA,RegE,0>;
-  instructions[0xA4] = &CpuInterpreter::AND<RegA,RegH,0>;
-  instructions[0xA5] = &CpuInterpreter::AND<RegA,RegL,0>;
-  instructions[0xA6] = &CpuInterpreter::AND<RegA,RegHL,1>;
-  instructions[0xA7] = &CpuInterpreter::AND<RegA,RegA,0>;
-  instructions[0xA8] = &CpuInterpreter::XOR<RegA,RegB,0>;
-  instructions[0xA9] = &CpuInterpreter::XOR<RegA,RegC,0>;
-  instructions[0xAA] = &CpuInterpreter::XOR<RegA,RegD,0>;
-  instructions[0xAB] = &CpuInterpreter::XOR<RegA,RegE,0>;
-  instructions[0xAC] = &CpuInterpreter::XOR<RegA,RegH,0>;
-  instructions[0xAD] = &CpuInterpreter::XOR<RegA,RegL,0>;
-  instructions[0xAE] = &CpuInterpreter::XOR<RegA,RegHL,1>;
-  instructions[0xAF] = &CpuInterpreter::XOR<RegA,RegA,0>;
-
-  instructions[0xB0] = &CpuInterpreter::OR<RegA,RegB,0>;
-  instructions[0xB1] = &CpuInterpreter::OR<RegA,RegC,0>;
-  instructions[0xB2] = &CpuInterpreter::OR<RegA,RegD,0>;
-  instructions[0xB3] = &CpuInterpreter::OR<RegA,RegE,0>;
-  instructions[0xB4] = &CpuInterpreter::OR<RegA,RegH,0>;
-  instructions[0xB5] = &CpuInterpreter::OR<RegA,RegL,0>;
-  instructions[0xB6] = &CpuInterpreter::OR<RegA,RegHL,1>;
-  instructions[0xB7] = &CpuInterpreter::OR<RegA,RegA,0>;
-  instructions[0xB8] = &CpuInterpreter::CP_reg<RegB>;
-  instructions[0xB9] = &CpuInterpreter::CP_reg<RegC>;
-  instructions[0xBA] = &CpuInterpreter::CP_reg<RegD>;
-  instructions[0xBB] = &CpuInterpreter::CP_reg<RegE>;
-  instructions[0xBC] = &CpuInterpreter::CP_reg<RegH>;
-  instructions[0xBD] = &CpuInterpreter::CP_reg<RegL>;
-  instructions[0xBE] = &CpuInterpreter::CP_HL;
-  instructions[0xBF] = &CpuInterpreter::CP_reg<RegA>;
-  
-  instructions[0xC0] = &CpuInterpreter::RET_cc<CpuFlagsZ,1>;
-  instructions[0xC1] = &CpuInterpreter::POP<RegBC>;
-  instructions[0xC2] = &CpuInterpreter::JP_cc<CpuFlagsZ,1>;
-  instructions[0xC3] = &CpuInterpreter::JP;
-  instructions[0xC4] = &CpuInterpreter::CALL_cc<CpuFlagsZ,1>;
-  instructions[0xC5] = &CpuInterpreter::PUSH<RegBC>;
-  instructions[0xC6] = &CpuInterpreter::ADD<RegA,0,2>;
-  instructions[0xC7] = &CpuInterpreter::RST;
-  instructions[0xC8] = &CpuInterpreter::RET_cc<CpuFlagsZ,0>;
-  instructions[0xC9] = &CpuInterpreter::RET;
-  instructions[0xCA] = &CpuInterpreter::JP_cc<CpuFlagsZ,0>;
-  instructions[0xCB] = &CpuInterpreter::PREFIX_CB;
-  instructions[0xCC] = &CpuInterpreter::CALL_cc<CpuFlagsZ,0>;
-  instructions[0xCD] = &CpuInterpreter::CALL;
-  instructions[0xCE] = &CpuInterpreter::ADC<RegA,0,2>;
-  instructions[0xCF] = &CpuInterpreter::RST;
-
-  instructions[0xD0] = &CpuInterpreter::RET_cc<CpuFlagsC,1>;
-  instructions[0xD1] = &CpuInterpreter::POP<RegDE>;
-  instructions[0xD2] = &CpuInterpreter::JP_cc<CpuFlagsC,1>;
-  instructions[0xD3] = &CpuInterpreter::ILLEGAL;
-  instructions[0xD4] = &CpuInterpreter::CALL_cc<CpuFlagsC,1>;
-  instructions[0xD5] = &CpuInterpreter::PUSH<RegDE>;
-  instructions[0xD6] = &CpuInterpreter::SUB<RegA,0,2>;
-  instructions[0xD7] = &CpuInterpreter::RST;
-  instructions[0xD8] = &CpuInterpreter::RET_cc<CpuFlagsC,0>;
-  instructions[0xD9] = &CpuInterpreter::RETI;
-  instructions[0xDA] = &CpuInterpreter::JP_cc<CpuFlagsC,0>;
-  instructions[0xDB] = &CpuInterpreter::ILLEGAL;
-  instructions[0xDC] = &CpuInterpreter::CALL_cc<CpuFlagsC,0>;
-  instructions[0xDD] = &CpuInterpreter::ILLEGAL;
-  instructions[0xDE] = &CpuInterpreter::SBC<RegA,0,2>;
-  instructions[0xDF] = &CpuInterpreter::RST;
-  
-  instructions[0xE0] = &CpuInterpreter::LD<0,RegA,12>;
-  instructions[0xE1] = &CpuInterpreter::POP<RegHL>;
-  instructions[0xE2] = &CpuInterpreter::LD$FF00rr<RegC,RegA>;
-  instructions[0xE3] = &CpuInterpreter::ILLEGAL;
-  instructions[0xE4] = &CpuInterpreter::ILLEGAL;
-  instructions[0xE5] = &CpuInterpreter::PUSH<RegHL>;
-  instructions[0xE6] = &CpuInterpreter::AND<RegA,0,2>;
-  instructions[0xE7] = &CpuInterpreter::RST;
-  instructions[0xE8] = &CpuInterpreter::ADD_SPr8;
-  instructions[0xE9] = &CpuInterpreter::JP_HL;
-  instructions[0xEA] = &CpuInterpreter::LD<0,RegA,14>;
-  instructions[0xEB] = &CpuInterpreter::ILLEGAL;
-  instructions[0xEC] = &CpuInterpreter::ILLEGAL;
-  instructions[0xED] = &CpuInterpreter::ILLEGAL;
-  instructions[0xEE] = &CpuInterpreter::XOR<RegA,0,2>;
-  instructions[0xEF] = &CpuInterpreter::RST;
-
-  instructions[0xF0] = &CpuInterpreter::LD<RegA,0,13>;
-  instructions[0xF1] = &CpuInterpreter::POP<RegAF>;
-  instructions[0xF2] = &CpuInterpreter::LDr$FF00r<RegA,RegC>;
-  instructions[0xF3] = &CpuInterpreter::DI;
-  instructions[0xF4] = &CpuInterpreter::ILLEGAL;
-  instructions[0xF5] = &CpuInterpreter::PUSH<RegAF>;
-  instructions[0xF6] = &CpuInterpreter::OR<RegA,0,2>;
-  instructions[0xF7] = &CpuInterpreter::RST;
-  instructions[0xF8] = &CpuInterpreter::LDHLSPr8;
-  instructions[0xF9] = &CpuInterpreter::LDSPHL;
-  instructions[0xFA] = &CpuInterpreter::LD<RegA,0,15>;
-  instructions[0xFB] = &CpuInterpreter::EI;
-  instructions[0xFC] = &CpuInterpreter::ILLEGAL;
-  instructions[0xFD] = &CpuInterpreter::ILLEGAL;
-  instructions[0xFE] = &CpuInterpreter::CP_d8;
-  instructions[0xFF] = &CpuInterpreter::RST;*/
-  //-checked above
 }
 
 CpuInterpreter::~CpuInterpreter() {
@@ -717,20 +436,24 @@ void CpuInterpreter::Step() {
     //
     
     if (ime) {
-      emu_->ClockTick(); //clock can be here or below, needed here for games like silver
+      //switch to clocktick if this not working
+      emu_->MachineTick(); 
       HandleInterrupts();
     }
     else {
       uint8_t test = mem_->interrupt_enable() & mem_->interrupt_flag() & 0x1F;
       if (test == 0) {
-        emu_->ClockTick(); //clock can be here ot above
-        //ime = false;
-        //cpumode_ = CpuModeNormal;
-        //ExecuteInstruction();
-        //Wake(); without this or above demotronic wont continue, but with them it doesnt operate right in beginning
+
+        cpumode_ = CpuModeNormal;
       } else {
-        ExecuteInstruction();
-        reg.PC = opcode_pc;
+        //strange check, how to fix for both proper halt bug and demotronic
+        //char str[55];
+       // sprintf_s(str, "PC %04x , IE %x IF %x\n", reg.PC, mem_->interrupt_enable(), mem_->interrupt_flag());
+        //OutputDebugString(str);
+
+        opcode_pc = reg.PC;
+        opcode = mem_->ClockedRead8(reg.PC);
+        (this->*(instructions[opcode]))();
         cpumode_ = CpuModeNormal;
       }
     }

@@ -103,9 +103,8 @@ public:
   ~Memory() {}
   void Initialize(Emu* emu);
   void Deinitialize();
-  void UpdateMemoryMap();
   void Reset();
-  uint8_t* GetMemoryPointer(uint16_t address);
+ // uint8_t* GetMemoryPointer(uint16_t address);
   uint8_t Read8(uint16_t address);
   void    Write8(uint16_t address, uint8_t data);
   uint8_t ClockedRead8(uint16_t address);

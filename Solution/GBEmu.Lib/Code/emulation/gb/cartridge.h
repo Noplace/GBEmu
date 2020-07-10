@@ -114,11 +114,13 @@ class Cartridge : public Component {
   void Write(uint16_t address, uint8_t data);
   void MBCStep(double dt);
   MemoryBankController* mbc;
+  bool cart_loaded() { return cart_loaded_; }
  private:
   uint8_t* rom_;
   char cartridge_filename[256];
   char cartridge_path[1024];
   bool save_rtc;
+  bool cart_loaded_;
 };
 
 

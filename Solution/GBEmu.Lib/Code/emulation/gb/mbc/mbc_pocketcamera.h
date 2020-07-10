@@ -74,7 +74,7 @@ class MBCPocketCamera : public MemoryBankController {
        return rom_[address];
      }
      else if (address >= 0x4000 && address <= 0x7FFF) {
-       return rom_[(address & 0x3FFF) | ((rom_bank_number) << 14)];
+       return rom_[(address & 0x3FFF) | ((rom_bank_number % max_rom_banks) << 14)];
      }
      else if (address >= 0xA000 && address <= 0xBFFF) {
 
@@ -124,7 +124,7 @@ class MBCPocketCamera : public MemoryBankController {
      }
      else if (address >= 0xA000 && address <= 0xBFFF) {
        
-       if ((eram_enable & 0x0A) == 0x0A && mode == MBCPocketCameraModeRAM && eram_size) {
+       if ((eram_enable & 0x0F) == 0x0A && mode == MBCPocketCameraModeRAM && eram_size) {
          eram_[(address & 0x1FFF) | (ram_bank_number << 13)] = data;
        }
 

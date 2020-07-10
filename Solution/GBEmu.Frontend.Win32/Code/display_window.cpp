@@ -265,12 +265,12 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\interrupt_time\\interrupt_time\\interrupt_time.gb", &header);//ok 
   //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\mem_timing-2\\mem_timing-2\\mem_timing.gb",&header); //ok
 
-    //emu.cartridge()->LoadFile("C:\\Users\\U11111\\Documents\\GitHub\\GBEmu\\test\\mooneye-gb-master\\mooneye-gb_hwtests\\acceptance\\halt_ime0_ei.gb", &header);//ok
+  //emu.cartridge()->LoadFile("..\\..\\test\\mooneye\\roms\\acceptance\\halt_ime0_ei.gb", &header);//ok
   
     
   //halt
   
-   //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\halt_bug\\halt_bug.gb",&header);
+   emu.cartridge()->LoadFile("..\\..\\test\\blargg\\halt_bug\\halt_bug.gb",&header);//ok
 
 
   //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\oam_bug\\oam_bug\\rom_singles\\4-scanline_timing.gb", &header); //not ok
@@ -279,7 +279,7 @@ void DisplayWindow::Init() {
 
   //mbc tests
   //emu.cartridge()->LoadFile("..\\..\\test\\other\\mbctest\\mbctest.gb", &header); //ok
-  emu.cartridge()->LoadFile("..\\..\\test\\mooneye\\roms\\emulator-only\\mbc1\\rom_1Mb.gb",&header);//not ok
+  //emu.cartridge()->LoadFile("..\\..\\test\\mooneye\\roms\\emulator-only\\mbc1\\rom_1Mb.gb",&header);//not ok
 
   //emu.cartridge()->LoadFile("..\\..\\test\\SPRITE.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\opus5.gb",&header);
@@ -297,14 +297,14 @@ void DisplayWindow::Init() {
   
   //hdma
   //emu.cartridge()->LoadFile("..\\..\\test\\gbc-hw-tests\\dma\\hdma_halt\\hdma_halt.gbc", &header);
-  
+  //emu.cartridge()->LoadFile("..\\..\\test\\demos\\pht-mr.gbc", &header);
   //emu.cartridge()->LoadFile("..\\..\\test\\demos\\Demotronic Final Demo (PD) [C].gbc",&header);//works as of 18/06/2020
   //emu.cartridge()->LoadFile("..\\..\\test\\demos\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\introcollection.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\games\\Mission Impossible (USA) (En,Fr,Es).gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\games\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
-  //emu.cartridge()->LoadFile("..\\..\\test\\games\\Pokemon - Silver Version (UE) [C][!].gbc",&header);
+// emu.cartridge()->LoadFile("..\\..\\test\\games\\Pokemon - Silver Version (UE) [C][!].gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\games\\Grand Theft Auto.gbc",&header);
   //rom writing error mbc5 check
   //emu.cartridge()->LoadFile("C:\\Users\\U11111\\Documents\\GitHub\\GBEmu\\test\\mooneye-gb-master\\mooneye-gb_hwtests\\acceptance\\oam_dma\\sources-GS.gb",&header);
@@ -425,6 +425,9 @@ int DisplayWindow::OnKeyDown(WPARAM wParam,LPARAM lParam) {
     emu.Stop();
   if (wParam == 'B')
     emu.Run();
+
+  if (wParam == VK_F5)
+    emu.Step();
 
   if (wParam == 'Z')
     emu.memory()->JoypadPress(emulation::gb::JoypadA);

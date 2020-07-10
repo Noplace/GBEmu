@@ -63,6 +63,9 @@
     <ClCompile Include="Code\emulation\gb\debugger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Code\emulation\gb\lcd_driver_old.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\audio\output\directsound.h">

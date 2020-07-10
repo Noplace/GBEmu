@@ -185,7 +185,8 @@ class LCDDriver : public Component {
    uint8_t cgb_bgpal[64];
    uint8_t cgb_sppal1[64],cgb_sppal2[64];
    uint32_t mode3_extra_cycles_;
-   uint32_t screen_counter_,scanline_dots_,pixel_counter_;
+   uint32_t screen_counter_,scanline_dots_;
+   int pixel_counter_;
    uint32_t dot_delay_;
    uint8_t dma_reg_;
    LCDScreenMode lcdscreenmode_;

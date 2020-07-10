@@ -61,8 +61,11 @@ class MBC1 : public MemoryBankController {
       }
 
     } else if (address >= 0x4000 && address <= 0x7FFF) {
-
-        return cartridge->rom()[address | ((((bank_select2 << 5) | bank_select1) % max_rom_banks) << 14)];
+      //char line[50];
+      //sprintf_s(line, "rom read  0x%04x,%04x\n",  ((((bank_select2 << 5) % max_rom_banks) | bank_select1) << 14), (address & 0x3FFF));
+      //OutputDebugString(line);
+      auto bc = ((((bank_select2 << 5)  | bank_select1)%max_rom_banks) << 14);
+        return cartridge->rom()[(address&0x3FFF) | bc];
 
 
       //return cartridge->rom()[(address&0x3FFF)+((rom_bank_number % max_rom_banks) <<14)];
@@ -85,15 +88,20 @@ class MBC1 : public MemoryBankController {
       //sprintf_s(line,"eram enable 0x%02x\n", data);
       //OutputDebugString(line);
     } else if (address >= 0x2000 && address <= 0x3FFF) {
-      if (data == 0)
-        data = 1;
+
       bank_select1 = data & 0x1F;
+      if (bank_select1 == 0)
+        bank_select1 = 1;
      // rom_bank_number = (rom_bank_number & ~0x1F) | (data & 0x1F);
-      sprintf_s(line, "rom bank low %02x =  0x%04x\n", data, rom_bank_number);
-      OutputDebugString(line);
-      cartridge->emu()->memory()->UpdateMemoryMap();
+      //rom_bank_number = ((((bank_select2 << 5) ) | bank_select1) );
+      //sprintf_s(line, "rom bank low %02x =  0x%08x\n", bank_select1, rom_bank_number<<14);
+      //OutputDebugString(line);
+   
     } else if (address >= 0x4000 && address <= 0x5FFF) {
       bank_select2 = data & 0x3;
+      //rom_bank_number = ((((bank_select2 << 5) ) | bank_select1) );
+      //sprintf_s(line, "rom bank high %x %02x =  0x%08x\n",mode, bank_select2, rom_bank_number<<14);
+      //OutputDebugString(line);
       if (mode == 0) {
         //rom_bank_number = (rom_bank_number&~0xFFE0)|((data&0x3)<<5); //FFE0 because of 16bit var, instead of 0x60
 
@@ -109,7 +117,8 @@ class MBC1 : public MemoryBankController {
 
     } else if (address >= 0x6000 && address <= 0x7FFF) {
       mode = data & 1;
-
+      sprintf_s(line, "mode change %x %x\n", mode, data);
+      OutputDebugString(line);
     } else if (address >= 0xA000 && address <= 0xBFFF) {
       if ((eram_enable & 0x0F) == 0x0A && eram_size)
         eram_[(address & 0x1FFF) | ((ram_bank_number % max_ram_banks) << 13)] = data;

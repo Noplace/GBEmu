@@ -27,7 +27,7 @@ inline void printThreadId() {
   {
     char str[50];
     std::hash<std::thread::id> hasher;
-    sprintf_s(str, "thread id:%x\n", hasher(std::this_thread::get_id()));
+    sprintf_s(str, "thread id:%zx\n", hasher(std::this_thread::get_id()));
     OutputDebugString(str);
   }
 }
@@ -68,6 +68,7 @@ void Emu::Deinitialize() {
 
 
 void Emu::Run() {
+  if (cartridge_.cart_loaded() == false) return;
   if (thread!=nullptr && state != EmuState::EmuStateStopped) return;
   //state = 1;
   frequency_mhz_ = 0;
@@ -141,6 +142,7 @@ void Emu::Reset() {
   cpu_cycles_ = 0;
   last_cpu_cycles_ = 0;
   speed = EmuSpeed::EmuSpeedNormal;
+  set_base_freq_hz(default_gb_hz * 1.0);
   //Run();
 }
 
@@ -165,7 +167,7 @@ double Emu::Step() {
   timing.span_accumulator += timing.time_span;
   cartridge()->MBCStep(timing.time_span);
   while (timing.span_accumulator >= timing.step_dt) {
-    
+  //{ 
     cpu_cycles_per_step_ = 0;
     cpu_->Step();
     timing.span_accumulator -= timing.step_dt * cpu_cycles_per_step_;

@@ -39,9 +39,11 @@ void Cartridge::Deinitialize() {
   }
   SafeDelete(&mbc);
   core::io::DestroyFileBuffer(&rom_);
+  cart_loaded_ = false;
 }
 
 void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
+  cart_loaded_ = false;
   emu_->Reset();
   if (mbc) {
     mbc->Deinitialize();
@@ -130,6 +132,8 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
 
   mbc->Initialize(this);
   emu_->memory()->rom_ = emu_->cartridge()->rom();
+
+  cart_loaded_ = true;
 }
 
 void Cartridge::LoadRam() {

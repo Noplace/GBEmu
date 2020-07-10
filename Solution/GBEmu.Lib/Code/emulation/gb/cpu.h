@@ -348,7 +348,7 @@ class CpuRecompiler : public Cpu {
 
   inline void updateCpuFlagZREC(uint8_t* r)
   {
-      using namespace reccore::intel;
+      /*using namespace reccore::intel;
       IA32 ia32(&e);
       ia32.MOV(DL,EA("[disp32]",int32_t(&reg.F.raw)));
       ia32.AND(DL,127);
@@ -358,7 +358,7 @@ class CpuRecompiler : public Cpu {
       ia32.SHL(AL,7);    
       ia32.OR(AL,EA(DL));
       ia32.MOV(EA("[disp32]",int32_t(&reg.F.raw)),AL);
-
+      */
   }
 
 
@@ -386,7 +386,7 @@ class CpuRecompiler : public Cpu {
 
   template<uint8_t dest,uint8_t src,int mode>
   inline void arithmeticModeREC() { //AL,DL
-    using namespace reccore::intel;
+   /* using namespace reccore::intel;
     IA32 ia32(&e);
     anycast<uint8_t (Memory::*)(uint16_t),void*> cast1;
     cast1.a =  &Memory::ClockedRead8;
@@ -418,7 +418,7 @@ class CpuRecompiler : public Cpu {
 
       ia32.MOV(AL,EA("[disp32]",int32_t(&reg.raw8[dest])));//a
 
-    }
+    }*/
   }
 
 
