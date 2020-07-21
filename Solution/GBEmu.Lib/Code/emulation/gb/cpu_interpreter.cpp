@@ -443,17 +443,31 @@ void CpuInterpreter::Step() {
     else {
       uint8_t test = mem_->interrupt_enable() & mem_->interrupt_flag() & 0x1F;
       if (test == 0) {
-
+        //demotronic and halt bug work because of this, but the intro of demotronic is uneven, i guess not done with halt yet.
         cpumode_ = CpuModeNormal;
+
+        //fixes uneven demotronic but is not right
+        //emu_->ClockTick(); //clock can be here ot above
+
+
+        //ime = false;
+        //cpumode_ = CpuModeNormal;
+        //ExecuteInstruction();
+        //Wake();
+      
       } else {
         //strange check, how to fix for both proper halt bug and demotronic
         //char str[55];
-       // sprintf_s(str, "PC %04x , IE %x IF %x\n", reg.PC, mem_->interrupt_enable(), mem_->interrupt_flag());
+        //sprintf_s(str, "PC %04x , IE %x IF %x\n", reg.PC, mem_->interrupt_enable(), mem_->interrupt_flag());
         //OutputDebugString(str);
-
+        //ExecuteInstruction();
         opcode_pc = reg.PC;
         opcode = mem_->ClockedRead8(reg.PC);
         (this->*(instructions[opcode]))();
+        //reg.PC = opcode_pc;
+        //ExecuteInstruction();
+       // reg.PC = opcode_pc;
+        //emu_->MachineTick();
         cpumode_ = CpuModeNormal;
       }
     }

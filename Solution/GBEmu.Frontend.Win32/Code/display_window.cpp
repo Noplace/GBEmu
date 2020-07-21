@@ -267,10 +267,13 @@ void DisplayWindow::Init() {
 
   //emu.cartridge()->LoadFile("..\\..\\test\\mooneye\\roms\\acceptance\\halt_ime0_ei.gb", &header);//ok
   
-    
+  //timer
+  emu.cartridge()->LoadFile("..\\..\\test\\mooneye\\roms\\acceptance\\timer\\rapid_toggle.gb", &header);//not ok
+
+
   //halt
   
-   emu.cartridge()->LoadFile("..\\..\\test\\blargg\\halt_bug\\halt_bug.gb",&header);//ok
+   //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\halt_bug\\halt_bug.gb",&header);//ok
 
 
   //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\oam_bug\\oam_bug\\rom_singles\\4-scanline_timing.gb", &header); //not ok
@@ -279,7 +282,7 @@ void DisplayWindow::Init() {
 
   //mbc tests
   //emu.cartridge()->LoadFile("..\\..\\test\\other\\mbctest\\mbctest.gb", &header); //ok
-  //emu.cartridge()->LoadFile("..\\..\\test\\mooneye\\roms\\emulator-only\\mbc1\\rom_1Mb.gb",&header);//not ok
+  //emu.cartridge()->LoadFile("..\\..\\test\\mooneye\\roms\\emulator-only\\mbc5\\rom_32Mb.gb",&header);//not ok
 
   //emu.cartridge()->LoadFile("..\\..\\test\\SPRITE.gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\opus5.gb",&header);
@@ -304,6 +307,7 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\games\\Mission Impossible (USA) (En,Fr,Es).gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\games\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
+   //emu.cartridge()->LoadFile("..\\..\\test\\games\\Alone in the Dark - The New Nightmare (U) (M3) [C][!].gbc", &header);
 // emu.cartridge()->LoadFile("..\\..\\test\\games\\Pokemon - Silver Version (UE) [C][!].gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\games\\Grand Theft Auto.gbc",&header);
   //rom writing error mbc5 check

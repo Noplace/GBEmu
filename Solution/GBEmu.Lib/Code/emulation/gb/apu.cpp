@@ -168,20 +168,50 @@ void Apu::Tick() {
 
   maincounter = (maincounter+1) & 0x1F;
   //++ulencounterclock;
+
+  // doesnt work proper, check 
+  /*
+  0 - 160
+    1 - 192
+    2 - 224
+    3 - 0
+    4 - 32
+    5 - 64
+    6 - 96
+    7 - 128
+    */
+  /*
+  switch (emu_->timer()->div) {
+    case 160:LengthTick(); break; //0
+    case 192:break; //1
+    case 224: channel1.SweepTick(); break; //2
+    case 0:break; //3
+    case 32: LengthTick();  break;//4
+    case 64:break;//5
+    case 96:channel1.SweepTick();  break; //6
+    case 128:EnvelopeTick();  break;//7
+  }*/
+  
+  
   if (++frame_seq_clock == 8192*1L) {
+    //char str[25];
+    //sprintf_s(str, "%d - %d\n", frame_seq_step, emu_->timer()->div);
+    //OutputDebugString(str);
     switch (frame_seq_step) {
       case 0:LengthTick(); break;
       case 1: break;
-      case 2:LengthTick(); channel1.SweepTick(); break;
+      case 2: channel1.SweepTick(); break;
       case 3: break;
       case 4:LengthTick();  break;
       case 5: break;
-      case 6:LengthTick(); channel1.SweepTick();break;
+      case 6: channel1.SweepTick();break;
       case 7:EnvelopeTick(); break;
     }
 
     frame_seq_step = ++frame_seq_step & 0x7;
     frame_seq_clock = 0;
+
+
   }
  
 

@@ -34,10 +34,13 @@ class Timer : public Component {
   void Check();
   uint8_t Read(uint16_t address);
   void  Write(uint16_t address, uint8_t data);
- private:
-  uint64_t counter1,counter2,tima_max;
-  uint8_t div,tma,tac;
+
+  uint16_t counter1;
+  uint64_t counter2, tima_max;
+  uint8_t div, tma, tac;
   uint16_t tima;
+ private:
+
 };
 
 }

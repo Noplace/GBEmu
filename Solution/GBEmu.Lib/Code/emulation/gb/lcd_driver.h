@@ -57,6 +57,7 @@ struct ColorMapLine {
   uint8_t orgcol;
   bool bgpriority;
   bool bgoveroam;
+  bool windowoveroam;
 };
 
 class LCDDriver : public Component {
@@ -180,6 +181,7 @@ class LCDDriver : public Component {
    uint8_t obj_pallete1_data;
    uint8_t obj_pallete2_data;
    uint8_t lcdmode_;
+   uint8_t cgb_bgpal_rindex, cgb_bgpal_windex;
    uint8_t cgb_bgpal_index,cgb_bgpal_data,cgb_sppal_index,cgb_sppal_data;
    uint8_t pallock_;
    uint8_t cgb_bgpal[64];

@@ -80,9 +80,10 @@ int WASAPI::Initialize(uint32_t sample_rate, uint8_t channels, uint8_t bits) {
   //hr = audio_client->IsFormatSupported(AUDCLNT_SHAREMODE_SHARED,(WAVEFORMATEX*)&fmt,pclosest_fmt);
   //hr = audio_client->IsFormatSupported(AUDCLNT_SHAREMODE_SHARED,(WAVEFORMATEX*)&fmt,NULL);
   //CoTaskMemFree(closest_fmt);
-  hr = audio_client->Initialize(AUDCLNT_SHAREMODE_EXCLUSIVE,0,hnsRequestedDuration,0,pwfx,NULL);
+  hr = audio_client->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, hnsRequestedDuration, 0, pwfx, NULL);
+
   if (FAILED(hr)) {
-    hr = audio_client->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, hnsRequestedDuration, 0, pwfx, NULL);
+    hr = audio_client->Initialize(AUDCLNT_SHAREMODE_EXCLUSIVE, 0, hnsRequestedDuration, 0, pwfx, NULL);
     if (FAILED(hr)) {
       SafeRelease(&audio_client);
       SafeRelease(&device);

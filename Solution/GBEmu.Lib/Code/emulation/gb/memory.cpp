@@ -173,6 +173,12 @@ void Memory::Initialize(Emu* emu) {
   bus.RegisterRead(0xFF4E, 0xFF50, [&](uint32_t address, uint8_t) {
     uint8_t result = 0;
     result = ioports_[address & 0x7F];
+
+    if (address == 0xFF4F) {
+      result |= 0xFE;
+    }
+
+
     return result;
     });
 

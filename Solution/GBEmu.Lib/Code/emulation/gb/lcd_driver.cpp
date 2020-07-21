@@ -207,7 +207,7 @@ void LCDDriver::Reset() {
   hsync = 0;
   sprite_bug_counter = 0;
   mode3_extra_cycles_ = 0;
-  cgb_bgpal_index=cgb_bgpal_data=cgb_sppal_index=cgb_sppal_data=0;
+  cgb_bgpal_index= cgb_bgpal_rindex= cgb_bgpal_windex=cgb_bgpal_data=cgb_sppal_index=cgb_sppal_data=0;
   dma_reg_ = 0;
   int48signal = 0;
   int40signal = 0;
@@ -489,7 +489,7 @@ uint8_t LCDDriver::Read(uint16_t address) {
     case 0xFF68:
       return cgb_bgpal_index;
     case 0xFF69:
-      return  cgb_bgpal_data;
+      return  cgb_bgpal[cgb_bgpal_rindex];
     case 0xFF6A:
       return  cgb_sppal_index;
     case 0xFF6B:
@@ -653,12 +653,14 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
 
     case 0xFF68:
       cgb_bgpal_index = data;
+      cgb_bgpal_rindex = cgb_bgpal_index & 0x3F;
+      cgb_bgpal_windex = cgb_bgpal_index & 0x3F;
       break;
     case 0xFF69:
       cgb_bgpal_data = data;
-      cgb_bgpal[cgb_bgpal_index&0x3F] = data;
+      cgb_bgpal[cgb_bgpal_windex&0x3F] = data;
       if (cgb_bgpal_index&0x80)
-        ++cgb_bgpal_index;
+        ++cgb_bgpal_windex;
       break;
     case 0xFF6A:
       cgb_sppal_index = data;
@@ -677,7 +679,7 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
 
 
 void LCDDriver::RenderCGBBGPixel(ColorMapLine* cmline) {
-  uint8_t mapoffset = ((ly + scroll_y) & 0xFF) >> 3;
+  uint8_t mapoffset = ((ly + scroll_y) & 0xFF) >> 3; //was & 0xFF, check
   //static uint8_t lineoffset =  ((scroll_x >> 3)) & 0x1F;
   //static auto y =  (ly + scroll_y) & 7;
   //static auto x =  scroll_x & 7;
@@ -793,7 +795,9 @@ void LCDDriver::RenderCGBWindowPixel(ColorMapLine* cmline) {
         }
         cmline[pixel_counter_].orgcol = bgcolor;
         cmline[pixel_counter_].bgpriority = lcdc_.bgdisplay;
-        cmline[pixel_counter_].bgoveroam = (attr & 0x80) == 0x80;
+        
+          cmline[pixel_counter_].bgoveroam = (attr & 0x80) == 0x80;//check
+        cmline[pixel_counter_].windowoveroam = (attr & 0x80) == 0x80;//check
 
       }
 
@@ -807,14 +811,14 @@ void LCDDriver::RenderCGBSpritePixel(ColorMapLine* cmline) {
   auto vram = emu_->memory()->vram();
   auto sprites = (GBCSprite*)emu_->memory()->oam();
   uint8_t sprite_count = 10;
-
+  uint8_t* tiledata = &vram[0];
 
 
   if (lcdc_.sprite_enable == 1) {
     
     //&&sprite_count!=0
     for (int j = 0; j < 40; ++j) {
-      uint8_t* tiledata = &vram[0];
+      
       int16_t spritey = sprites[j].y - 16;
       int16_t spritex = sprites[j].x - 8;
       if (ly >= (spritey) && ly < (spritey + (8 << lcdc_.sprite_size))) { //same line
@@ -841,11 +845,12 @@ void LCDDriver::RenderCGBSpritePixel(ColorMapLine* cmline) {
 
           auto& cmp = cmline[pixel_counter_];
 
-          if ((((cmp.bgoveroam == false) && (cmp.bgpriority == true)) || (cmp.bgpriority == false))
+          if ( (  ((cmp.bgoveroam == false) && (cmp.bgpriority == true)) || (cmp.bgpriority == false))
             && (sprites[j].attr.priority == 0 || (cmp.orgcol == 0)) && (p != 0) && ((x + spritex) >= 0)) {
 
             if (enable_sprite_ == true) {
-              cmp.pixel = ((pal[(sprites[j].attr.cgbpalnum << 3) + (p << 1) + 1] << 8) | pal[(sprites[j].attr.cgbpalnum << 3) + (p << 1)]) & 0x7FFF;
+              cmp.pixel =  ((pal[(sprites[j].attr.cgbpalnum << 3) + (p << 1) + 1] << 8) | pal[(sprites[j].attr.cgbpalnum << 3) + (p << 1)]) & 0x7FFF;
+             // cmp.pixel = cmp.bgoveroam * 0xFF00 + lcdc_.bgdisplay * 0xFF;
             }
 
             if (x == 0) {

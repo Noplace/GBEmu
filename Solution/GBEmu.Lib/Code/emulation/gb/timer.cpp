@@ -40,22 +40,66 @@ void Timer::Reset() {
   tima_max = 0;
 }
 
+bool enable_timer_irq = false;
+int timer_irq_delay = 0;
+bool prev_do_count = false;
 void Timer::Tick() {
-   
-  if (++counter1 == (4194304/16384)) {
-    counter1 = 0;
-    ++div;
-  }
-  if ((tac&0x4)==0)return;
-  if (++counter2 == tima_max) {
-    if (++tima > 0xFF) {
+
+  if (enable_timer_irq == true) {
+    if (--timer_irq_delay == 0) {
+      enable_timer_irq = false;
       emu_->memory()->interrupt_flag() |= 0x4;
       emu_->cpu()->Wake();
       tima = tma;
     }
-
-    counter2 = 0;
   }
+
+  ++counter1;
+  div = ((counter1) >> 8) & 0xFF;
+  /*if (++counter1 == (4194304/16384)) {
+    counter1 = 0;
+    ++div;
+  }*/
+
+  //
+  auto x = 0;
+  switch (tac & 0x3) {
+    case 0: x = 9; break;
+    case 1: x = 3; break;
+    case 2: x = 5; break;
+    case 3: x = 7; break;
+  }
+
+
+  bool do_count = ((counter1 >> x) & 1) & ((tac >> 2) & 1);
+  bool inv_do_count = !do_count;
+  if (inv_do_count & prev_do_count) {
+    if (++tima > 0xFF) {
+      timer_irq_delay = 4;
+      enable_timer_irq = true;
+      //emu_->memory()->interrupt_flag() |= 0x4;
+      //emu_->cpu()->Wake();
+      //tima = tma;
+
+    }
+  }
+
+  prev_do_count = do_count;
+
+    /*if (++counter2 >= tima_max) {
+
+      if ((tac & 0x4) != 0) {
+        if (++tima > 0xFF) {
+          emu_->memory()->interrupt_flag() |= 0x4;
+          emu_->cpu()->Wake();
+          tima = tma;
+
+        }
+      }
+      counter2 -= tima_max;
+    
+    
+  }*/
 }
 
 void Timer::Check() {
@@ -84,20 +128,23 @@ void Timer::Write(uint16_t address, uint8_t data) {
   switch (address) {
     case 0xFF04:
       div = 0;
+      counter1 = 0;
+      
       break;
     case 0xFF05:
       tima = data;
+      counter2 = 0;
       break;
     case 0xFF06:
       tma = data;
       break;
     case 0xFF07:
       tac = data;
-      switch(tac&0x3) {
-      case 0: tima_max = 4194304/4096 ; break;
-        case 1: tima_max = 4194304/262144; break;
-          case 2: tima_max = 4194304/65536 ; break;
-            case 3: tima_max = 4194304/16384 ; break;
+      switch (tac & 0x3) {
+        case 0: tima_max = emu_->base_freq_hz() / 4096; break;
+        case 1: tima_max = emu_->base_freq_hz() / 262144; break;
+        case 2: tima_max = emu_->base_freq_hz() / 65536; break;
+        case 3: tima_max = emu_->base_freq_hz() / 16384; break;
       }
 
       break;
