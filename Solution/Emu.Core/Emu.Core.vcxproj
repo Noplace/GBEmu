@@ -19,68 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Code\audio\output\directsound.cpp" />
-    <ClCompile Include="Code\audio\output\wasapi.cpp" />
-    <ClCompile Include="Code\audio\output\xaudio.cpp" />
-    <ClCompile Include="Code\audio\synth\quadrangular_wave.cpp" />
-    <ClCompile Include="Code\emulation\gb\debugger.cpp" />
-    <ClCompile Include="Code\emulation\gb\apu.cpp" />
-    <ClCompile Include="Code\emulation\gb\cartridge.cpp" />
-    <ClCompile Include="Code\emulation\gb\cpu_interpreter.cpp" />
-    <ClCompile Include="Code\emulation\gb\cpu_recompiler.cpp" />
-    <ClCompile Include="Code\emulation\gb\emu.cpp" />
-    <ClCompile Include="Code\emulation\gb\lcd_driver.cpp" />
-    <ClCompile Include="Code\emulation\gb\lcd_driver_old.cpp" />
-    <ClCompile Include="Code\emulation\gb\memory.cpp" />
-    <ClCompile Include="Code\emulation\gb\timer.cpp" />
-    <ClCompile Include="Code\utilities\windows\application.cpp" />
-    <ClCompile Include="Code\utilities\windows\window.cpp" />
+    <ClInclude Include="Code\audio\output\interface.h" />
+    <ClInclude Include="Code\emulation\emulator.h" />
+    <ClInclude Include="Code\utilities\hash_table.h" />
+    <ClInclude Include="Code\utilities\io.h" />
+    <ClInclude Include="Code\utilities\ring_buffer.h" />
+    <ClInclude Include="Code\utilities\timer.h" />
+    <ClInclude Include="Code\utilities\types.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\audio\output\directsound.h" />
-    <ClInclude Include="Code\audio\output\wasapi.h" />
-    <ClInclude Include="Code\audio\output\xaudio.h" />
-    <ClInclude Include="Code\audio\synth\lowpass.h" />
-    <ClInclude Include="Code\audio\synth\quadrangular_wave.h" />
-    <ClInclude Include="Code\emulation\gb\apu.h" />
-    <ClInclude Include="Code\emulation\gb\cartridge.h" />
-    <ClInclude Include="Code\emulation\gb\cpu.h" />
-    <ClInclude Include="Code\emulation\gb\debugger.h" />
-    <ClInclude Include="Code\emulation\gb\emu.h" />
-    <ClInclude Include="Code\emulation\gb\gb.h" />
-    <ClInclude Include="Code\emulation\gb\lcd_driver.h" />
-    <ClInclude Include="Code\emulation\gb\mbc\mbc.h" />
-    <ClInclude Include="Code\emulation\gb\mbc\mbc1.h" />
-    <ClInclude Include="Code\emulation\gb\mbc\mbc2.h" />
-    <ClInclude Include="Code\emulation\gb\mbc\mbc3.h" />
-    <ClInclude Include="Code\emulation\gb\mbc\mbc5.h" />
-    <ClInclude Include="Code\emulation\gb\mbc\mbc_pocketcamera.h" />
-    <ClInclude Include="Code\emulation\gb\mbc\mbc_tama5.h" />
-    <ClInclude Include="Code\emulation\gb\mbc\none.h" />
-    <ClInclude Include="Code\emulation\gb\memory.h" />
-    <ClInclude Include="Code\emulation\gb\rom.h" />
-    <ClInclude Include="Code\emulation\gb\timer.h" />
-    <ClInclude Include="Code\utilities\windows\application.h" />
-    <ClInclude Include="Code\utilities\windows\base.h" />
-    <ClInclude Include="Code\utilities\windows\window.h" />
-    <ClInclude Include="Code\utilities\windows\windows.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\RecCore\Lib\RecCore.vcxproj">
-      <Project>{df0830fe-a835-4cbe-a01e-cc993304528d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\RecCore\Lib\RecCore.vcxproj">
-      <Project>{df0830fe-a835-4cbe-a01e-cc993304528d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Emu.Core\Emu.Core.vcxproj">
-      <Project>{bdedc5e8-151f-46d3-9458-4b2501f68bcb}</Project>
-    </ProjectReference>
+    <ClCompile Include="Code\emulation\emulator.cpp" />
+    <ClCompile Include="Code\utilities\io.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0040b0d2-0741-4a38-a489-4acff5e58814}</ProjectGuid>
-    <RootNamespace>GBEmuLib</RootNamespace>
+    <ProjectGuid>{bdedc5e8-151f-46d3-9458-4b2501f68bcb}</ProjectGuid>
+    <RootNamespace>EmuCore</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -101,14 +56,14 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>NotSet</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>NotSet</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -140,13 +95,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>c:\users\khalid\documents\github\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>c:\users\khalid\documents\github\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <IntDir>$(SolutionDir)..\Output\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -156,16 +107,12 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <ProjectReference>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -192,7 +139,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -209,7 +156,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>

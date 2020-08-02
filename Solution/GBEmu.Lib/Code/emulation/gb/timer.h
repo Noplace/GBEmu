@@ -37,10 +37,12 @@ class Timer : public Component {
 
   uint16_t counter1;
   uint64_t counter2, tima_max;
-  uint8_t div, tma, tac;
+  uint8_t div, tma, tac, tac_div_shift;
   uint16_t tima;
  private:
-
+   bool enable_timer_irq = false;
+   int timer_irq_delay = 0;
+   bool prev_do_count = false;
 };
 
 }

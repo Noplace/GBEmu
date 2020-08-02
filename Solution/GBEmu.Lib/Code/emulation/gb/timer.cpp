@@ -40,9 +40,8 @@ void Timer::Reset() {
   tima_max = 0;
 }
 
-bool enable_timer_irq = false;
-int timer_irq_delay = 0;
-bool prev_do_count = false;
+
+
 void Timer::Tick() {
 
   if (enable_timer_irq == true) {
@@ -56,30 +55,18 @@ void Timer::Tick() {
 
   ++counter1;
   div = ((counter1) >> 8) & 0xFF;
-  /*if (++counter1 == (4194304/16384)) {
-    counter1 = 0;
-    ++div;
-  }*/
-
-  //
-  auto x = 0;
-  switch (tac & 0x3) {
-    case 0: x = 9; break;
-    case 1: x = 3; break;
-    case 2: x = 5; break;
-    case 3: x = 7; break;
-  }
 
 
-  bool do_count = ((counter1 >> x) & 1) & ((tac >> 2) & 1);
+
+  bool do_count = ((counter1 >> tac_div_shift) & 1) & ((tac >> 2) & 1);
   bool inv_do_count = !do_count;
   if (inv_do_count & prev_do_count) {
-    if (++tima > 0xFF) {
+    ++tima;
+    //if tima == rapid works, but other test fail
+    if (tima > 0xFF && enable_timer_irq == false) {
       timer_irq_delay = 4;
       enable_timer_irq = true;
-      //emu_->memory()->interrupt_flag() |= 0x4;
-      //emu_->cpu()->Wake();
-      //tima = tma;
+      tima = 0;
 
     }
   }
@@ -141,10 +128,10 @@ void Timer::Write(uint16_t address, uint8_t data) {
     case 0xFF07:
       tac = data;
       switch (tac & 0x3) {
-        case 0: tima_max = emu_->base_freq_hz() / 4096; break;
-        case 1: tima_max = emu_->base_freq_hz() / 262144; break;
-        case 2: tima_max = emu_->base_freq_hz() / 65536; break;
-        case 3: tima_max = emu_->base_freq_hz() / 16384; break;
+      case 0: tac_div_shift = 9; tima_max = emu_->base_freq_hz() / 4096; break;
+      case 1: tac_div_shift = 3; tima_max = emu_->base_freq_hz() / 262144; break;
+      case 2: tac_div_shift = 5; tima_max = emu_->base_freq_hz() / 65536; break;
+      case 3: tac_div_shift = 7; tima_max = emu_->base_freq_hz() / 16384; break;
       }
 
       break;

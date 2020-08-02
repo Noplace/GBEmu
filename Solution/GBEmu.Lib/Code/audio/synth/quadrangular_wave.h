@@ -19,7 +19,7 @@
 #pragma once
 
 #include "../../utilities/windows/windows.h"
-#include "../../utilities/types.h"
+#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
 
 typedef float real_t;
 #define PI  3.14159265358979323846f

@@ -718,8 +718,10 @@ void LCDDriver::RenderCGBBGPixel(ColorMapLine* cmline) {
 
     auto tileindex = tilemap[(mapoffset << 5) + bgparams.lineoffset];
     if ((lcdc_.tile_data == 0)) {
-      if (tileindex < 128) tileindex += 128;
-      else tileindex -= 128;
+     //same as commented
+        tileindex = (~tileindex & 0x80) | (tileindex & 0x7F);
+      //if (tileindex < 128) tileindex += 128;
+      //else tileindex -= 128;
     }
     uint8_t* tile = &tiledata[(tileindex << 4) | ((attr & 0x8) << 10)];
     if (attr & 0x40)

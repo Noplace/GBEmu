@@ -18,7 +18,7 @@
 *****************************************************************************************************************/
 #pragma once
 
-#include "../hash_table.h"
+#include <GBEmu/Solution/Emu.Core/Code/utilities/hash_table.h>
 
 namespace core {
 namespace windows {

@@ -18,7 +18,7 @@
 *****************************************************************************************************************/
 #pragma once
 
-#include "../../utilities/io.h"
+#include <GBEmu/Solution/Emu.Core/Code/utilities/io.h>
 
 namespace emulation {
 namespace gb {

@@ -107,6 +107,7 @@ class Emu {
     ++cpu_cycles_per_step_;
     timer_.Tick();
     memory_.Tick();
+    
     if (speed == EmuSpeed::EmuSpeedNormal) {
       lcd_driver_.Tick();
       apu_.Tick();

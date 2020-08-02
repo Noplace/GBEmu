@@ -19,7 +19,9 @@
 #pragma once
 
 //#pragma warning( disable:4800 )
-#include "../../utilities/types.h"
+#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
+#include <GBEmu/Solution/Emu.Core/Code/utilities/timer.h>
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #define _USE_MATH_DEFINES
@@ -29,7 +31,7 @@
 #include <thread>
 #include <atomic>
 #include <vector>
-#include "../../timer/timer2.h"
+
 //#include <WinCore/log/log_manager.h>
 #include "../../debug.h"
 

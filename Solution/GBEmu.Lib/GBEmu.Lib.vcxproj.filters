@@ -57,9 +57,6 @@
     <ClCompile Include="Code\utilities\windows\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Code\utilities\io.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Code\emulation\gb\debugger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -69,9 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\audio\output\directsound.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\audio\output\interface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\audio\output\wasapi.h">
@@ -119,9 +113,6 @@
     <ClInclude Include="Code\emulation\gb\timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\timer\timer2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Code\utilities\windows\application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -132,18 +123,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\utilities\windows\windows.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\utilities\hash_table.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\utilities\io.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\utilities\ring_buffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\utilities\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\emulation\gb\mbc\mbc5.h">

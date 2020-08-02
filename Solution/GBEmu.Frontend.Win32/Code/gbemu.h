@@ -20,7 +20,6 @@
 
 #include "debug.h"
 #include "../../GBEmu.Lib/Code/utilities/windows/windows.h"
-#include "../../GBEmu.Lib/Code/timer/timer2.h"
 #include <Shellapi.h>
 #include <thread>
 #include <atomic>

@@ -268,7 +268,7 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\..\\test\\mooneye\\roms\\acceptance\\halt_ime0_ei.gb", &header);//ok
   
   //timer
-  emu.cartridge()->LoadFile("..\\..\\test\\mooneye\\roms\\acceptance\\timer\\rapid_toggle.gb", &header);//not ok
+  //emu.cartridge()->LoadFile("..\\..\\test\\mooneye\\roms\\acceptance\\timer\\rapid_toggle.gb", &header);//not ok
 
 
   //halt
@@ -305,7 +305,7 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\..\\test\\demos\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\introcollection.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
-  //emu.cartridge()->LoadFile("..\\..\\test\\games\\Mission Impossible (USA) (En,Fr,Es).gbc",&header);
+  emu.cartridge()->LoadFile("..\\..\\test\\games\\Mission Impossible (USA) (En,Fr,Es).gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\games\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
    //emu.cartridge()->LoadFile("..\\..\\test\\games\\Alone in the Dark - The New Nightmare (U) (M3) [C][!].gbc", &header);
 // emu.cartridge()->LoadFile("..\\..\\test\\games\\Pokemon - Silver Version (UE) [C][!].gbc",&header);

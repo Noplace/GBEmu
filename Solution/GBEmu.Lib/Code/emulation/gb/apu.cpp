@@ -192,11 +192,20 @@ void Apu::Tick() {
     case 128:EnvelopeTick();  break;//7
   }*/
   
+  static uint8_t prev_div = 0;
+  auto div_bit = 0b00010000;
+
+  //if (emu_->speed == EmuSpeed::EmuSpeedDouble)
+  //  div_bit = 0b00100000;
+
+  if ((prev_div & div_bit) == div_bit && (emu_->timer()->div & div_bit) == 0) {
   
-  if (++frame_seq_clock == 8192*1L) {
-    //char str[25];
-    //sprintf_s(str, "%d - %d\n", frame_seq_step, emu_->timer()->div);
-    //OutputDebugString(str);
+
+
+  //if (++frame_seq_clock == 8192*1L) {
+   // char str[25];
+   // sprintf_s(str, "%d - %d\n", frame_seq_step, emu_->timer()->div);
+   // OutputDebugString(str);
     switch (frame_seq_step) {
       case 0:LengthTick(); break;
       case 1: break;
@@ -213,6 +222,8 @@ void Apu::Tick() {
 
 
   }
+
+  prev_div = emu_->timer()->div;
  
 
   

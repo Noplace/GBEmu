@@ -19,9 +19,9 @@
 #pragma once
 
 #include "../../utilities/windows/windows.h"
-#include "../../utilities/types.h"
+#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
 #include <XAudio2.h>
-#include "interface.h"
+#include <GBEmu/Solution/Emu.Core/Code/audio/output/interface.h>
 
 namespace audio {
 namespace output {
