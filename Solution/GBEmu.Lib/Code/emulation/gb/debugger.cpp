@@ -300,8 +300,10 @@ void print_instruction(uint16_t pc, uint8_t opcode) {
   
   char line[256];
   sprintf_s(line, "0x%04x %s\n", pc, instruction_names[opcode]);
+  //void OutputDebugString2(const char* str);
   OutputDebugString(line);
 }
+
 
 
 }

@@ -87,9 +87,7 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\U11111\Documents\GitHub;$(IncludePath)</IncludePath>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>c:\users\khalid\documents\github\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
@@ -103,15 +101,16 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AssemblerOutput>All</AssemblerOutput>
+      <AssemblerOutput>NoListing</AssemblerOutput>
       <WarningLevel>Level3</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <BrowseInformation>true</BrowseInformation>
       <CallingConvention>Cdecl</CallingConvention>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(SolutionDir)..\Output\Listing\</AssemblerListingLocation>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>dxguid.lib;dsound.lib;VCOMPD.LIB;%(AdditionalDependencies)</AdditionalDependencies>
@@ -163,7 +162,7 @@
       <StructMemberAlignment>16Bytes</StructMemberAlignment>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
-      <AssemblerOutput>All</AssemblerOutput>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <AdditionalDependencies>dxguid.lib;dsound.lib;VCOMP.LIB;%(AdditionalDependencies)</AdditionalDependencies>
@@ -197,17 +196,41 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Code\display_window2.cpp" />
     <ClCompile Include="Code\gbemu.cpp" />
     <ClCompile Include="Code\console.cpp" />
     <ClCompile Include="Code\dialogs\options.cpp" />
     <ClCompile Include="Code\display_window.cpp" />
+    <ClInclude Include="Code\display_window2.h" />
+    <ClInclude Include="Code\graphics\d3d11.h" />
+    <ClInclude Include="Code\imgui\imconfig.h" />
+    <ClInclude Include="Code\imgui\imgui.h" />
+    <ClInclude Include="Code\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="Code\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="Code\imgui\imgui_internal.h" />
+    <ClInclude Include="Code\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Code\imgui\imstb_textedit.h" />
+    <ClInclude Include="Code\imgui\imstb_truetype.h" />
+    <ClInclude Include="Code\utilities\windows\application.h" />
+    <ClInclude Include="Code\utilities\windows\base.h" />
+    <ClInclude Include="Code\utilities\windows\window.h" />
+    <ClInclude Include="Code\utilities\windows\windows.h" />
     <Text Include="README">
       <FileType>Text</FileType>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </Text>
     <ClInclude Include="Code\dialogs\options.h" />
+    <ClCompile Include="Code\graphics\d3d11.cpp" />
     <ClCompile Include="Code\graphics\eagle.cpp" />
     <ClCompile Include="Code\graphics\HQ2x.cpp" />
+    <ClCompile Include="Code\imgui\imgui.cpp" />
+    <ClCompile Include="Code\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Code\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Code\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Code\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Code\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Code\utilities\windows\application.cpp" />
+    <ClCompile Include="Code\utilities\windows\window.cpp" />
     <ClCompile Include="Code\winmain.cpp" />
     <ClCompile Include="Code\graphics\gdi.cpp" />
     <ClCompile Include="Code\graphics\opengl.cpp" />

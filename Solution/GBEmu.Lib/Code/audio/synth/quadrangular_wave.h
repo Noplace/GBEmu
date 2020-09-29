@@ -18,8 +18,9 @@
 *****************************************************************************************************************/
 #pragma once
 
-#include "../../utilities/windows/windows.h"
+//#include "../../utilities/windows/windows.h"
 #include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
+#include <corecrt_math.h>
 
 typedef float real_t;
 #define PI  3.14159265358979323846f

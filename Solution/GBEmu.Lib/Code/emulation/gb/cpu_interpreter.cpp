@@ -404,6 +404,9 @@ void CpuInterpreter::Step() {
           OutputDebugString(str);
         }
 #endif
+        char str[25];
+        sprintf_s(str, "CPU Speed Change:%d\n", emu_->speed);
+        emu_->log_output(str);
 
       }
     }

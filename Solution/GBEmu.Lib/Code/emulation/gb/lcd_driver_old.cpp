@@ -567,11 +567,11 @@ void LCDDriver::RenderLine(int x0, int x1) {
 
     if (emu_->mode() == EmuMode::EmuModeGBC) {
 
-      //RenderCGBBGLine(x0,x1,cmline);
-      //RenderCGBWindowLine(x0, x1, cmline); 
-      //RenderCGBSpriteLine(x0,x1,cmline);
+      RenderCGBBGLine(x0,x1,cmline);
+      RenderCGBWindowLine(x0, x1, cmline); 
+      RenderCGBSpriteLine(x0,x1,cmline);
 
-      if (dot_delay_ == 0) {
+     /* if (dot_delay_ == 0) {
         RenderCGBBGPixel(cmline);
         RenderCGBWindowPixel(cmline);
         RenderCGBSpritePixel(cmline);
@@ -579,7 +579,7 @@ void LCDDriver::RenderLine(int x0, int x1) {
         ++pixel_counter_;
       } else {
         --dot_delay_;
-      }
+      }*/
 
 
       if (pixel_counter_ == 160) {
@@ -594,7 +594,7 @@ void LCDDriver::RenderLine(int x0, int x1) {
     } else {
 
 
-      if (dot_delay_ == 0) {
+      /*if (dot_delay_ == 0) {
         RenderDMGBGPixel(cmline);
         RenderDMGWindowPixel(cmline);
         RenderDMGSpritePixel(cmline);
@@ -602,13 +602,13 @@ void LCDDriver::RenderLine(int x0, int x1) {
         ++pixel_counter_;
       } else {
         --dot_delay_;
-      }
+      }*/
 
 
       //RenderAllBGTiles();
-      //RenderBGLine(x0,x1,cmline);
-      //RenderWindowLine(x0,x1,cmline);
-      //RenderSpriteLine(x0,x1,cmline);
+      RenderBGLine(x0,x1,cmline);
+      RenderWindowLine(x0,x1,cmline);
+      RenderSpriteLine(x0,x1,cmline);
       if (pixel_counter_ == 160) {
         auto fbline = &frame_buffer[ly << 8];
         for (int i = 0; i < 160; ++i) {//256px per line

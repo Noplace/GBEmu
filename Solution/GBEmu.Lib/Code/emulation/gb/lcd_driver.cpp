@@ -28,7 +28,7 @@ namespace gb {
 
 
 #define pixel(bit) (((tile[y<<1]>>(bit&0x7))&0x1)+((((tile[(y<<1)+1]>>(bit&0x7))<<1)&0x2)))
-#define pixel2(bit,y) (((tile[y<<1]>>(bit&0x7))&0x1)+((((tile[(y<<1)+1]>>(bit&0x7))<<1)&0x2)))
+#define pixel2(bit,y) (((tile[y<<1]>>((7-bit)&0x7))&0x1)+((((tile[(y<<1)+1]>>((7-bit)&0x7))<<1)&0x2)))
 
 
 struct DMGSprite {
@@ -80,11 +80,18 @@ Bit2-0 Palette number  **CGB Mode Only**     (OBP0-7)
 
 };
 
-static inline uint32_t bgr555torgb(uint32_t src) {
+static inline uint32_t bgr555toargb(uint32_t src) {
   uint8_t r = (src&0x1F)<<3;
   uint8_t g = ((src>>5)&0x1F)<<3;
   uint8_t b = ((src>>10)&0x1F)<<3;
   return 0xff000000|(r<<16)|(g<<8)|(b);
+}
+
+static inline uint32_t bgr555torgba(uint32_t src) {
+  uint8_t r = (src & 0x1F) << 3;
+  uint8_t g = ((src >> 5) & 0x1F) << 3;
+  uint8_t b = ((src >> 10) & 0x1F) << 3;
+  return  (r << 24) | (g << 16) | (b << 8) | 0xff;
 }
 
 static inline uint32_t rgbtobgr555(uint32_t src) {
@@ -97,7 +104,8 @@ static inline uint32_t rgbtobgr555(uint32_t src) {
 
 //const uint32_t pal32[4] = {0xffffffff,0xffAAAAAA,0xff545454,0xff000000};
 //const uint32_t dmg_colors[4] = {0x00000000,0x54000000,0xAA000000,0xFF000000};
-const uint32_t dmg_colors[4] = { 0x00000000,0x54000000,0xAA000000,0xFF000000 };
+//const uint32_t dmg_colors[4] = { 0x00000000,0x54000000,0xAA000000,0xFF000000 };
+const uint32_t dmg_colors[4] = { 0xFF000000,0xFF545454,0xFFAAAAAA,0xFFFFFFFF };
 
 
 
@@ -105,7 +113,9 @@ void LCDDriver::Initialize(Emu* emu) {
   Component::Initialize(emu);
   frame_buffer = new uint32_t[256*256];
   colormap = new ColorMapLine[256*256];
+  
   memset(frame_buffer,0,256*256*4);
+
   memset(colormap,0,256*256*4);
   lcdscreenmode_ = LCDScreenModeProgressive;
   memset(&hdma,0,sizeof(hdma));
@@ -207,7 +217,7 @@ void LCDDriver::Reset() {
   hsync = 0;
   sprite_bug_counter = 0;
   mode3_extra_cycles_ = 0;
-  cgb_bgpal_index= cgb_bgpal_rindex= cgb_bgpal_windex=cgb_bgpal_data=cgb_sppal_index=cgb_sppal_data=0;
+  cgb_bgpal_index = cgb_sppal_rindex = cgb_bgpal_index= cgb_bgpal_rindex= cgb_bgpal_windex=cgb_bgpal_data=cgb_sppal_index=cgb_sppal_data=0;
   dma_reg_ = 0;
   int48signal = 0;
   int40signal = 0;
@@ -395,11 +405,18 @@ void LCDDriver::Tick() {
     ++mode1_counter;
     if (ly == 144 && scanline_dots_ == 1) {
       emu_->memory()->interrupt_flag() |= 1;
+
+      if ((stat_.vblank_int) && int48signal == 0) { //maybe with stat_.oam_int|| as per doc
+        emu_->memory()->interrupt_flag() |= 2;
+        int48signal = 1;
+      }
+    } else {
+      if ((stat_.oam_int ) && int48signal == 0) { //maybe with stat_.oam_int|| as per doc
+        emu_->memory()->interrupt_flag() |= 2;
+        int48signal = 1;
+      }
     }
-    if ((stat_.vblank_int) && int48signal == 0) { //maybe with stat_.oam_int|| as per doc
-      emu_->memory()->interrupt_flag() |= 2;
-      int48signal = 1;
-    }
+
 
     break;
   }
@@ -493,7 +510,7 @@ uint8_t LCDDriver::Read(uint16_t address) {
     case 0xFF6A:
       return  cgb_sppal_index;
     case 0xFF6B:
-      return cgb_sppal_data;
+      return  cgb_sppal1[cgb_sppal_rindex];//cgb_sppal_data;
     case 0xFF6C:
       return pallock_;
   }
@@ -633,11 +650,11 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
 
             hdma.dest.raw += hdma.length;
             hdma.src.raw += hdma.length;
-            OutputDebugString("done gdma\n");
+            emu_->log_output("done gdma\n");
           } else { //HDMA
             hdma.active = 1;
             hdma.ff55 = data & 0x7F;
-            OutputDebugString("start hdma\n");
+            emu_->log_output("start hdma\n");
             //check
             //if (stat_.mode == 0)
            //   DoHDMA();
@@ -664,12 +681,14 @@ void LCDDriver::Write(uint16_t address, uint8_t data) {
       break;
     case 0xFF6A:
       cgb_sppal_index = data;
+      cgb_sppal_rindex = cgb_sppal_index & 0x3F;
+      cgb_sppal_windex = cgb_sppal_index & 0x3F;
       break;
     case 0xFF6B:
       cgb_sppal_data = data;
-      cgb_sppal1[cgb_sppal_index&0x3F] = cgb_sppal2[cgb_sppal_index&0x3F] = data;
+      cgb_sppal1[cgb_sppal_windex& 0x3F] = cgb_sppal2[cgb_sppal_windex& 0x3F] = data;
       if (cgb_sppal_index&0x80)
-        ++cgb_sppal_index;
+        ++cgb_sppal_windex;
       break;
     case 0xFF6C:
       pallock_ = data;
@@ -715,23 +734,48 @@ void LCDDriver::RenderCGBBGPixel(ColorMapLine* cmline) {
   {
     auto attr = tileattr[(mapoffset << 5) + bgparams.lineoffset];
     auto palindex = attr & 0x7;
+    int tileindex = 0;
+    //auto tileindex = tilemap[(mapoffset << 5) + bgparams.lineoffset];
 
-    auto tileindex = tilemap[(mapoffset << 5) + bgparams.lineoffset];
+    //int8_t tileoffset = tilemap[(mapoffset << 5) + bgparams.lineoffset];
+
+    auto vram_select = (attr & 0x8)>>3;
     if ((lcdc_.tile_data == 0)) {
+    //if (vram_select==0) {
      //same as commented
-        tileindex = (~tileindex & 0x80) | (tileindex & 0x7F);
-      //if (tileindex < 128) tileindex += 128;
-      //else tileindex -= 128;
+      //char diff[25];
+      //sprintf_s(diff, "ti1 %d , ti2 %d\n", (~tileindex & 0x80) | (tileindex & 0x7F), 128 + tileoffset);
+      //OutputDebugString(diff);
+      //tileindex = (~tileindex & 0x80) | (tileindex & 0x7F);
+
+      //tileindex = 128 + tileoffset;
+     // tileindex = (~tileindex & 0x80) | (tileindex & 0x7F);
+      
+      //if ((tileoffset & 0x80) == 0x80) 
+      //  tileindex = 128 + (tileoffset&0x7f);
+      //else 
+      //  tileindex = 128 - (tileoffset & 0x7f);
+     
+      tileindex = static_cast<int8_t>(tilemap[(mapoffset << 5) + bgparams.lineoffset]);
+      tileindex += 128;
+    } else {
+      tileindex = tilemap[(mapoffset << 5) + bgparams.lineoffset];
     }
-    uint8_t* tile = &tiledata[(tileindex << 4) | ((attr & 0x8) << 10)];
-    if (attr & 0x40)
-      bgparams.y = 7 - bgparams.y;
+
+    uint8_t* tile = &tiledata[(tileindex << 4) | (vram_select << 13)];
+    int x = bgparams.x; int y = bgparams.y;
+    if ((attr & 0x40) == 0x40)
+      y = 7 - bgparams.y;
+    if ((attr & 0x20) == 0x20)
+      x = 7 - bgparams.x;
+
+
     uint8_t bgcolor;
-    bgcolor = (attr & 0x20) ? pixel2((bgparams.x), bgparams.y) : pixel2((7 - bgparams.x), bgparams.y);
+    bgcolor = pixel2(x, y);
 
     incx();
 
-
+    
     if (enable_bg_ == true) {
       cmline[pixel_counter_].pixel = ((cgb_bgpal[(palindex << 3) | (bgcolor << 1) | 1] << 8) | cgb_bgpal[(palindex << 3) | (bgcolor << 1)]) & 0x7FFF;
     }
@@ -1046,12 +1090,12 @@ void LCDDriver::EndRenderLine() {
 
   if (emu_->mode() == EmuMode::EmuModeGBC) {
     for (int i = 0; i < 160; ++i) { //256px per line
-      *fbline++ = bgr555torgb(cmline->pixel);
+      *fbline++ =  bgr555toargb(cmline->pixel);
       ++cmline;
     }
   } else {
     for (int i = 0; i < 160; ++i) {//256px per line
-      *fbline++ = dmg_colors[cmline->pixel];
+      *fbline++ =  dmg_colors[cmline->pixel];
       ++cmline;
     }
   }

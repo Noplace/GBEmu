@@ -46,16 +46,20 @@ void Emu::Initialize(double base_freq_hz) {
   cpu_ = new CpuInterpreter();
   cpu_->Initialize(this);
   apu_.Initialize(this);
+  disassembler_.Initialize(this);
   thread = null;
   state = EmuState::EmuStateStopped;
   cpu_cycles_ = 0;
   last_cpu_cycles_ = 0;
   mode_ = EmuMode::EmuModeGB;
   speed = EmuSpeed::EmuSpeedNormal;
+
+
 }
 
 void Emu::Deinitialize() {
   Stop();
+  disassembler_.Deinitialize();
   apu_.Deinitialize();
   cpu_->Deinitialize();
   SafeDelete(&cpu_);
@@ -132,6 +136,53 @@ void Emu::Pause() {
   Stop();
 }
 
+
+void Emu::SkipBootROM() {
+  //cpu_->cpumode
+  //AF = $01B0
+    //BC = $0013
+    //DE = $00D8
+    //HL = $014D
+    //Stack Pointer = $FFFE
+
+  
+  
+    memory_.Write8(0xFF50, 0x11);//observed value GBC
+    memory_.Write8(0xFF05, 0x00); //TIMA
+    memory_.Write8(0xFF06, 0x00); //TMA
+    memory_.Write8(0xFF07, 0x00); //TAC
+    memory_.Write8(0xFF10, 0x80); //NR10
+    memory_.Write8(0xFF11, 0xBF); //NR11
+    memory_.Write8(0xFF12, 0xF3); //NR12
+    memory_.Write8(0xFF14, 0xBF); //NR14
+    memory_.Write8(0xFF16, 0x3F); //NR21
+    memory_.Write8(0xFF17, 0x00); //NR22
+    memory_.Write8(0xFF19, 0xBF); //NR24
+    memory_.Write8(0xFF1A, 0x7F); //NR30
+    memory_.Write8(0xFF1B, 0xFF); //NR31
+    memory_.Write8(0xFF1C, 0x9F); //NR32
+    memory_.Write8(0xFF1E, 0xBF); //NR33
+    memory_.Write8(0xFF20, 0xFF); //NR41
+    memory_.Write8(0xFF21, 0x00); //NR42
+    memory_.Write8(0xFF22, 0x00); //NR43
+    memory_.Write8(0xFF23, 0xBF); //NR30
+    memory_.Write8(0xFF24, 0x77); //NR50
+    memory_.Write8(0xFF25, 0xF3); //NR51
+    memory_.Write8(0xFF26, 0xF1);// -GB, $F0 - SGB; NR52
+    memory_.Write8(0xFF40,0x91);//LCDC
+    memory_.Write8(0xFF42,0x00);//SCY
+    memory_.Write8(0xFF43,0x00);//SCX
+    memory_.Write8(0xFF45,0x00);//LYC
+    memory_.Write8(0xFF47,0xFC);//BGP
+    memory_.Write8(0xFF48,0xFF);//OBP0
+    memory_.Write8(0xFF49,0xFF);//OBP1
+    memory_.Write8(0xFF4A,0x00);//WY
+    memory_.Write8(0xFF4B,0x00);//WX
+    memory_.Write8(0xFFFF,0x00);//IE
+
+    cpu_->SkipBootROM();
+}
+
 void Emu::Reset() {
   Stop();
   timer_.Reset();
@@ -143,6 +194,9 @@ void Emu::Reset() {
   last_cpu_cycles_ = 0;
   speed = EmuSpeed::EmuSpeedNormal;
   set_base_freq_hz(default_gb_hz * 1.0);
+
+
+  SkipBootROM();
   //Run();
 }
 
@@ -167,7 +221,7 @@ double Emu::Step() {
   timing.span_accumulator += timing.time_span;
   cartridge()->MBCStep(timing.time_span);
   while (timing.span_accumulator >= timing.step_dt) {
-  //{ 
+  
     cpu_cycles_per_step_ = 0;
     cpu_->Step();
     timing.span_accumulator -= timing.step_dt * cpu_cycles_per_step_;

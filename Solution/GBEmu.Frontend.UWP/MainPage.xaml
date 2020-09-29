@@ -1,41 +1,14 @@
 ﻿<Page
-    x:Class="GBEmu.Frontend.UWP.MainPage"
+    x:Class="GBEmu_Frontend_UWP.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:GBEmu.Frontend.UWP"
+    xmlns:local="using:GBEmu_Frontend_UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
- RequestedTheme="Dark"
-    Background="{StaticResource SystemAccentColor}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition />
-        </Grid.RowDefinitions>
+    <Grid>
 
-        <Grid x:Name="AppTitleBar" Background="Transparent">
-            <!-- Width of the padding columns is set in LayoutMetricsChanged handler. -->
-            <!-- Using padding columns instead of Margin ensures that the background
-                 paints the area under the caption control buttons (for transparent buttons). -->
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
-                <ColumnDefinition/>
-                <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
-            </Grid.ColumnDefinitions>
-            <Image Source="Assets/Square44x44Logo.png" 
-                   Grid.Column="1" HorizontalAlignment="Left" 
-                   Width="20" Height="20" Margin="12,0"/>
-            <TextBlock Text="Custom Title Bar" 
-                       Grid.Column="1" 
-                       Style="{StaticResource CaptionTextBlockStyle}" 
-                       Margin="44,8,0,0"/>
-        </Grid>
-
-        <!-- This Button has a higher z-order than MyTitleBar, 
-             so it receives user input. -->
-        <Button x:Name="TitleBarButton" Content="Button in the title bar"
-                HorizontalAlignment="Right"/>
     </Grid>
 </Page>

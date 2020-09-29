@@ -22,8 +22,8 @@
 #include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
 #include <GBEmu/Solution/Emu.Core/Code/utilities/timer.h>
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+//#define WIN32_LEAN_AND_MEAN
+//#include <windows.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <memory.h>
@@ -31,6 +31,8 @@
 #include <thread>
 #include <atomic>
 #include <vector>
+#include <condition_variable>
+#include <mutex>
 
 //#include <WinCore/log/log_manager.h>
 #include "../../debug.h"
@@ -45,6 +47,7 @@ class Apu;
 class Cpu;
 class MemoryBankController;
 class Timer;
+class Disassembler;
 class Component {
  public:
   virtual void Initialize(Emu* emu) {
@@ -68,5 +71,6 @@ class Component {
 #include "apu.h"
 #include "timer.h"
 #include "cpu.h"
+#include "disassembler.h"
 #include "emu.h"
 #include "debugger.h"

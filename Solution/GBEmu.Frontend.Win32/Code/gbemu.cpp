@@ -50,8 +50,8 @@ int GBEmu::Run() {
       TranslateMessage(&msg);
       DispatchMessage(&msg);
     } else {
-      //display_window_.Step(); 
-      std::this_thread::sleep_for(std::chrono::milliseconds(1));
+      display_window_.Step(); 
+      
     }
   } while(msg.message!=WM_QUIT);
 

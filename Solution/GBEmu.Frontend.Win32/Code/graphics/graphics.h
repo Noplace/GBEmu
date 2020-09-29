@@ -16,8 +16,7 @@
 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE            *
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
-#ifndef UISYSTEM_GRAPHICS_GRAPHICS_H
-#define UISYSTEM_GRAPHICS_GRAPHICS_H
+#pragma once
 
 namespace graphics {
 
@@ -51,6 +50,11 @@ inline RGBQUAD Color(BYTE r,BYTE g,BYTE b) {
   c.rgbBlue = b;
   return c;
 }
+
+inline void RGBQUAD_to_float_rgba(RGBQUAD c, float* out) {
+  out[0] = c.rgbRed / 255.0f; out[1] = c.rgbBlue / 255.0f; out[2] = c.rgbGreen / 255.0f; out[3] = 1.0f;
+}
+
 
 inline double interpolate_int(int a,int b,double s) {
   return a + s*(b-a);
@@ -96,5 +100,3 @@ class Graphics {
 };
 
 }
-
-#endif

@@ -15,16 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Code\audio\output\directsound.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Code\audio\output\wasapi.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\audio\output\xaudio.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\audio\synth\quadrangular_wave.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Code\emulation\gb\apu.cpp">
@@ -51,33 +42,24 @@
     <ClCompile Include="Code\emulation\gb\timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Code\utilities\windows\application.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\utilities\windows\window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Code\emulation\gb\debugger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Code\emulation\gb\lcd_driver_old.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Code\audio\synth\quadrangular_wave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\emulation\gb\disassembler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\audio\output\directsound.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Code\audio\output\wasapi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\audio\output\xaudio.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Code\audio\synth\lowpass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\audio\synth\quadrangular_wave.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\emulation\gb\mbc\mbc.h">
@@ -113,18 +95,6 @@
     <ClInclude Include="Code\emulation\gb\timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\utilities\windows\application.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\utilities\windows\base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\utilities\windows\window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\utilities\windows\windows.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Code\emulation\gb\mbc\mbc5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -144,6 +114,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\emulation\gb\debugger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\audio\synth\quadrangular_wave.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\emulation\gb\disassembler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

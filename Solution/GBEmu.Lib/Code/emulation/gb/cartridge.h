@@ -105,6 +105,7 @@ class Cartridge : public Component {
   void Initialize(Emu* emu);
   void Deinitialize();
   void LoadFile(const char* filename, CartridgeHeader* header);
+  void LoadMemory(uint8_t* data, size_t length);
   void LoadRam();
   void SaveRam();
   Emu* emu() { return emu_; }

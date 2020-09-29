@@ -42,7 +42,25 @@ void Cartridge::Deinitialize() {
   cart_loaded_ = false;
 }
 
+
 void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
+  uint8_t* data;
+  size_t length;
+  core::io::ReadWholeFileBinary(filename, &data, length);
+  const char* a = strrchr(filename, '\\');
+  memset(cartridge_path, 0, sizeof(cartridge_path));
+  strncpy_s(cartridge_path, filename, a - filename + 1);
+  cartridge_path[a - filename + 1] = '\0';
+  strcpy_s(cartridge_filename, a + 1);
+  LoadMemory(data, length);
+  memcpy(header , this->header, 0x50);
+  core::io::DestroyFileBuffer(&data);
+
+}
+
+void Cartridge::LoadMemory(uint8_t* data, size_t length) {
+  
+
   cart_loaded_ = false;
   emu_->Reset();
   if (mbc) {
@@ -50,21 +68,20 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
     delete mbc;
   }
   SafeDeleteArray(&rom_);
-  uint8_t* data;
-  size_t length;
-  core::io::ReadWholeFileBinary(filename,&data,length);
+
+  CartridgeHeader lheader;
   if (data == nullptr) {
-    header = nullptr;
+    //header = nullptr;
     return;
   }
-  memcpy(header,data+0x100,0x50);
-  if (header->rom_size_bytes() == 0) {
+  memcpy(&lheader,data+0x100,0x50);
+  if (lheader.rom_size_bytes() == 0) {
     //report error
     return;
   }
 
 
-  auto copy_size = max(header->rom_size_bytes(),length);
+  auto copy_size = max(lheader.rom_size_bytes(),length);
   rom_ = new uint8_t[copy_size];
 
   //rom_ = new uint8_t[header->rom_size_bytes()];
@@ -123,12 +140,7 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
     default:
       DebugBreak();
   }
-  core::io::DestroyFileBuffer(&data);
-  const char* a = strrchr(filename,'\\');
-  memset(cartridge_path,0,sizeof(cartridge_path));
-  strncpy_s(cartridge_path,filename,a-filename+1);
-  cartridge_path[a-filename+1] = '\0';
-  strcpy_s(cartridge_filename,a+1);
+
 
   mbc->Initialize(this);
   emu_->memory()->rom_ = emu_->cartridge()->rom();

@@ -18,7 +18,7 @@
 *****************************************************************************************************************/
 #define _CRTDBG_MAP_ALLOC
 
-#ifdef _DEBUG
+#ifdef _XDEBUG
 #include <stdlib.h>
 #include <crtdbg.h>
 

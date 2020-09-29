@@ -19,7 +19,7 @@
 #pragma once
 
 #include "../../audio/output/wasapi.h"
-#include "../../audio/output/directsound.h"
+//#include "../../audio/output/directsound.h"
 #include "../../audio/synth/quadrangular_wave.h"
 
 namespace emulation {
@@ -171,6 +171,7 @@ class Apu : public Component {
     return output_;
   }
   void set_output(audio::output::Interface* output) { output_ = output; }
+  short* output_buffer() const { return output_buffer_; }
  private:
   short* output_buffer_;
   audio::output::Interface* output_;

@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="71ea0700-9e08-42c2-b122-c6802d94f4fc"
+    Name="26d4848e-e546-4f8d-96da-856739d0162b"
     Publisher="CN=U11111"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="71ea0700-9e08-42c2-b122-c6802d94f4fc" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="26d4848e-e546-4f8d-96da-856739d0162b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>GBEmu.Frontend.UWP</DisplayName>
@@ -30,7 +30,7 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="GBEmu.Frontend.UWP.App">
+      EntryPoint="GBEmu_Frontend_UWP.App">
       <uap:VisualElements
         DisplayName="GBEmu.Frontend.UWP"
         Square150x150Logo="Assets\Square150x150Logo.png"
@@ -40,6 +40,16 @@
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.fileOpenPicker">
+          <uap:FileOpenPicker>
+            <uap:SupportedFileTypes>
+              <uap:FileType>.gb</uap:FileType>
+              <uap:FileType>.gbc</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileOpenPicker>
+        </uap:Extension>
+      </Extensions>
     </Application>
   </Applications>
 

@@ -86,14 +86,14 @@ void Memory::Initialize(Emu* emu) {
   vram_ = new uint8_t[0x4000];
   wram_ = new uint8_t[0x8000];
   memset(vram_, 0, 0x4000);
-
+  interrupt_enable_register_ = 0;
   bus.Initialize();
 
-  bus.RegisterRead(0x0000, 0x3FFF,std::bind(&Memory::ReadROM0,this, std::placeholders::_1));
+  bus.RegisterRead(0x0000, 0x3FFF, std::bind(&Memory::ReadROM0, this, std::placeholders::_1));
   bus.RegisterRead(0x4000, 0x7FFF, std::bind(&Cartridge::Read, emu_->cartridge(), std::placeholders::_1));
   bus.RegisterRead(0x8000, 0x9FFF, std::bind(&Memory::ReadVRAM, this, std::placeholders::_1));
   bus.RegisterRead(0xA000, 0xBFFF, std::bind(&Cartridge::Read, emu_->cartridge(), std::placeholders::_1));
-  bus.RegisterRead(0xC000, 0xCFFF, std::bind(&Memory::ReadWRAM0,this, std::placeholders::_1));
+  bus.RegisterRead(0xC000, 0xCFFF, std::bind(&Memory::ReadWRAM0, this, std::placeholders::_1));
   bus.RegisterRead(0xD000, 0xDFFF, std::bind(&Memory::ReadWRAMX, this, std::placeholders::_1));
   bus.RegisterRead(0xE000, 0xFDFF, std::bind(&Memory::ReadWRAMEcho, this, std::placeholders::_1));
 
@@ -128,6 +128,7 @@ void Memory::Initialize(Emu* emu) {
   bus.RegisterRead(0xFF04, 0xFF07, [&](uint32_t address, uint8_t) {
     uint8_t result = 0;
     result = emu_->timer()->Read(address);
+    ioports_[address & 0x7F] = result;
     return result;
     });
 
@@ -140,6 +141,7 @@ void Memory::Initialize(Emu* emu) {
   bus.RegisterRead(0xFF0F, 0xFF0F, [&](uint32_t address, uint8_t) {
     uint8_t result = 0;
     result = 0xE0 | ioports_[address & 0x7F];
+
     return result;
     });
 
@@ -147,12 +149,14 @@ void Memory::Initialize(Emu* emu) {
   bus.RegisterRead(0xFF10, 0xFF3F, [&](uint32_t address, uint8_t) {
     uint8_t result = 0;
     result = emu_->apu()->Read(address);
+    ioports_[address & 0x7F] = result;
     return result;
     });
 
   bus.RegisterRead(0xFF40, 0xFF4C, [&](uint32_t address, uint8_t) {
     uint8_t result = 0;
     result = emu_->lcd_driver()->Read(address);
+    ioports_[address & 0x7F] = result;
     return result;
     });
 
@@ -167,6 +171,7 @@ void Memory::Initialize(Emu* emu) {
       result = ((static_cast<int>(emu_->speed) << 6) & 0x80) | 0x7F;
 
     }
+    ioports_[address & 0x7F] = result;
     return result;
     });
 
@@ -178,13 +183,14 @@ void Memory::Initialize(Emu* emu) {
       result |= 0xFE;
     }
 
-
+    
     return result;
     });
 
   bus.RegisterRead(0xFF51, 0xFF55, [&](uint32_t address, uint8_t) {
     uint8_t result = 0;
     result = emu_->lcd_driver()->Read(address);
+    ioports_[address & 0x7F] = result;
     return result;
     });
 
@@ -197,6 +203,7 @@ void Memory::Initialize(Emu* emu) {
   bus.RegisterRead(0xFF68, 0xFF6C, [&](uint32_t address, uint8_t) {
     uint8_t result = 0;
     result = emu_->lcd_driver()->Read(address);
+    ioports_[address & 0x7F] = result;
     return result;
     });
 
@@ -495,7 +502,9 @@ uint8_t Memory::Read8(uint16_t address) {
 
 void Memory::Write8(uint16_t address, uint8_t data) {
   bus.Write(address, data);
-  
+  //char str[25];
+  //sprintf_s(str, "write %04x %02x\n", address, data);
+  //emu_->log_output(str);
 }
 
 uint8_t Memory::ClockedRead8(uint16_t address) {

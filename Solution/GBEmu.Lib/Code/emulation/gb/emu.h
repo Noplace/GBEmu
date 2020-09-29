@@ -40,7 +40,11 @@ class Emu {
  public:
   uint64_t cpu_cycles_,last_cpu_cycles_,cpu_cycles_per_step_;
   EmuSpeed speed;
-  Emu():cpu_cycles_(0),last_cpu_cycles_(0),cpu_cycles_per_step_(0) {}
+  Emu():cpu_cycles_(0),last_cpu_cycles_(0),cpu_cycles_per_step_(0) {
+    set_log_output([](const char* str) {
+      OutputDebugString(str);
+      });
+  }
   ~Emu() {}
   void Initialize(double base_freq_hz);
   void Deinitialize();
@@ -50,6 +54,7 @@ class Emu {
   void Pause();
   void Reset();
   void Render();
+  void SkipBootROM();
   EmuMode mode() { return mode_; }
   void set_mode(EmuMode mode) { mode_= mode; }
   Cartridge* cartridge() { return &cartridge_; }
@@ -58,11 +63,17 @@ class Emu {
   LCDDriver* lcd_driver() { return &lcd_driver_; }
   Apu* apu() { return &apu_; }
   Timer* timer() { return &timer_; }
+  Disassembler* disassembler() { return &disassembler_; }
   std::function <void ()> on_render;
+  std::function <void(const char* str)> log_output;
   void set_on_render(const  std::function <void ()>& on_render) {
     if (on_render != nullptr)
       this->on_render = on_render;
   } 
+  void set_log_output(const  std::function <void(const char*)>& log_output) {
+    if (log_output != nullptr)
+      this->log_output = log_output;
+  }
   std::atomic<EmuState> state;
   //int state;
   const double fps() { return timing.fps; }
@@ -110,12 +121,12 @@ class Emu {
     
     if (speed == EmuSpeed::EmuSpeedNormal) {
       lcd_driver_.Tick();
-      apu_.Tick();
+      //apu_.Tick();
     } else {
       static bool s = false;
       if (s == false) {
         lcd_driver_.Tick();
-        apu_.Tick();
+        //apu_.Tick();
       }
       s = !s;
     }
@@ -133,6 +144,7 @@ class Emu {
   utilities::Timer utimer;
   Cartridge cartridge_;
   Cpu* cpu_;
+  Disassembler disassembler_;
   Memory memory_;
   LCDDriver lcd_driver_;
   Apu apu_;

@@ -18,6 +18,7 @@
 *****************************************************************************************************************/
 #include "wasapi.h"
 
+#pragma comment(lib, "Ole32.lib")
 
 namespace audio {
 namespace output {

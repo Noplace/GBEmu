@@ -17,7 +17,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
 #pragma once
-#include "../../utilities/windows/windows.h"
+//#include "../../utilities/windows/windows.h"
 #include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
 #include <objbase.h>
 #pragma warning(push)

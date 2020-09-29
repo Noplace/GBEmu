@@ -18,8 +18,8 @@
 *****************************************************************************************************************/
 #pragma once
 
-#include "debug.h"
-#include "../../GBEmu.Lib/Code/utilities/windows/windows.h"
+
+#include "utilities/windows/windows.h"
 #include <Shellapi.h>
 #include <thread>
 #include <atomic>
@@ -29,7 +29,7 @@
 #include "resource.h"
 #include "dialogs/options.h"
 #include "display_window.h"
-
+#include "display_window2.h"
 
 namespace app {
 

@@ -97,8 +97,17 @@ class Cpu : public Component {
   void Wake() {
     cpumode_ = CpuMode::CpuModeNormal;
   }
+  void SkipBootROM() {
+    reg.AF = 0x1180;// 0x01B0;
+    reg.BC = 0x0000;// 0x0013;
+    reg.DE = 0xff56;// 0x00D8;
+    reg.HL = 0x000d;//0x014D;
+    reg.SP =  0xFFFE;
+    reg.PC = 0x0100;
 
+  }
   CpuMode cpumode() { return cpumode_; }
+  const CpuRegisters& regs() { return reg; }
  protected:
   double dt;
   CpuRegisters reg;
@@ -116,6 +125,8 @@ class CpuInterpreter : public Cpu {
   void Deinitialize();
   void Reset();
   void Step();
+
+
  private: 
   typedef void (CpuInterpreter::*Instruction)();
   Instruction instructions[0x100];

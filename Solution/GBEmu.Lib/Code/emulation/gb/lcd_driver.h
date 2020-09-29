@@ -182,10 +182,12 @@ class LCDDriver : public Component {
    uint8_t obj_pallete2_data;
    uint8_t lcdmode_;
    uint8_t cgb_bgpal_rindex, cgb_bgpal_windex;
+   uint8_t cgb_sppal_rindex, cgb_sppal_windex;
    uint8_t cgb_bgpal_index,cgb_bgpal_data,cgb_sppal_index,cgb_sppal_data;
    uint8_t pallock_;
    uint8_t cgb_bgpal[64];
-   uint8_t cgb_sppal1[64],cgb_sppal2[64];
+   uint8_t cgb_sppal1[64];
+   uint8_t cgb_sppal2[64];
    uint32_t mode3_extra_cycles_;
    uint32_t screen_counter_,scanline_dots_;
    int pixel_counter_;
