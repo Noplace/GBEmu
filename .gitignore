@@ -218,3 +218,7 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 *.db
+Solution/.vs/GBEmu/v15/Server/sqlite3/db.lock
+Solution/.vs/GBEmu/v15/Server/sqlite3/storage.ide
+Solution/.vs/GBEmu/v15/Server/sqlite3/storage.ide-shm
+Solution/.vs/GBEmu/v15/Server/sqlite3/storage.ide-wal
