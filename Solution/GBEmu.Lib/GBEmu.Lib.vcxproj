@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\audio\output\directsound.cpp" />
     <ClCompile Include="Code\audio\output\wasapi.cpp" />
     <ClCompile Include="Code\audio\synth\quadrangular_wave.cpp" />
     <ClCompile Include="Code\emulation\gb\debugger.cpp" />
@@ -34,6 +35,7 @@
     <ClCompile Include="Code\emulation\gb\timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\audio\output\directsound.h" />
     <ClInclude Include="Code\audio\output\wasapi.h" />
     <ClInclude Include="Code\audio\synth\lowpass.h" />
     <ClInclude Include="Code\audio\synth\quadrangular_wave.h" />

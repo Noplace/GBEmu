@@ -54,6 +54,9 @@
     <ClCompile Include="Code\emulation\gb\disassembler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Code\audio\output\directsound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\audio\output\wasapi.h">
@@ -120,6 +123,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\emulation\gb\disassembler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\audio\output\directsound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

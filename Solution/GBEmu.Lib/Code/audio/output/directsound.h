@@ -18,7 +18,8 @@
 *****************************************************************************************************************/
 #pragma once
 
-#include "../../utilities/windows/windows.h"
+//#include "../../utilities/windows/windows.h"
+#include <Windows.h>
 #include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
 #include <mmreg.h>
 #include <dsound.h>

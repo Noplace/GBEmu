@@ -19,8 +19,9 @@
 #pragma once
 
 //#pragma warning( disable:4800 )
-#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
-#include <GBEmu/Solution/Emu.Core/Code/utilities/timer.h>
+#include "../../../../Emu.Core/Code/utilities/types.h"
+#include "../../../../Emu.Core/Code/utilities/timer.h"
+//#include <GBEmu/Solution/Emu.Core/Code/utilities/timer.h>
 
 //#define WIN32_LEAN_AND_MEAN
 //#include <windows.h>

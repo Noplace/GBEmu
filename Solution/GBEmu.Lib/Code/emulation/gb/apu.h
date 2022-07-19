@@ -19,7 +19,7 @@
 #pragma once
 
 #include "../../audio/output/wasapi.h"
-//#include "../../audio/output/directsound.h"
+#include "../../audio/output/directsound.h"
 #include "../../audio/synth/quadrangular_wave.h"
 
 namespace emulation {
