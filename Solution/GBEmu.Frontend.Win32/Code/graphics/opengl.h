@@ -21,7 +21,7 @@
 
 #include <windows.h>
 #define GLEW_STATIC
-#include <GL/glew.h>
+#include <gl/glew.h>
 #include "graphics.h"
 #include "shader.h"
 

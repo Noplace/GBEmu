@@ -1,19 +1,23 @@
-//in vec3 colour;
+in vec2 LVertexPos2D;
 uniform sampler2D texture1;
-//Texture coordinate
-//in vec2 texCoord;
 
 out vec4 frag_colour;
-
-
 uniform float baseline_alpha;
 uniform float baseline_alpha2;
 
+[vertex]
+void main () {
+  //colour = vertex_colour;
+  //texCoord = LTexCoord;
+  gl_TexCoord[0] = gl_MultiTexCoord0;
+  gl_Position = gl_ModelViewProjectionMatrix  * vec4(LVertexPos2D,0.0, 1.0);
+}
 
-//Final color
-//out vec4 gl_FragColor;
 
 
+
+
+[fragment]
 void main () {
 
   vec4 color =  texture2D(texture1, gl_TexCoord[0].st);// * vec4 (1.0, 1.0, 1.0, baseline_alpha);
@@ -39,24 +43,3 @@ void main () {
 
 }
 
-
-/*
-
-
-const float dotSpace = 4.0;
-const float dotSize = 2.0;
-
-const float sinPer = 3.141592 / dotSpace;
-const float frac = dotSize / dotSpace;
-
-void main( )
-{
-   vec2 fragCoord = gl_TexCoord[0].xy;
-	vec4 color =  texture2D(texture1, gl_TexCoord[0].st);// * vec4 (1.0, 1.0, 1.0, baseline_alpha);
-
-    float varyX = (abs(sin(sinPer * fragCoord.x)) - frac);
-    float varyY = (abs(sin(sinPer * fragCoord.y)) - frac);
-    float pointX = floor(fragCoord.x / dotSpace) * dotSpace + (0.5 * dotSpace);
-    float pointY = floor(fragCoord.y / dotSpace) * dotSpace + (0.5 * dotSpace);
-	frag_colour = (texture(texture1, vec2(pointX, pointY) / vec2(256,256)) * varyX * varyY) * (2.0/frac);
-}*/

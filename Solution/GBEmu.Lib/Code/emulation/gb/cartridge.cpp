@@ -43,10 +43,12 @@ void Cartridge::Deinitialize() {
 }
 
 
-void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
+int Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
   uint8_t* data;
   size_t length;
   core::io::ReadWholeFileBinary(filename, &data, length);
+  if (data == null)
+    return S_FALSE;
   const char* a = strrchr(filename, '\\');
   memset(cartridge_path, 0, sizeof(cartridge_path));
   strncpy_s(cartridge_path, filename, a - filename + 1);
@@ -55,7 +57,7 @@ void Cartridge::LoadFile(const char* filename, CartridgeHeader* header) {
   LoadMemory(data, length);
   memcpy(header , this->header, 0x50);
   core::io::DestroyFileBuffer(&data);
-
+  return S_OK;
 }
 
 void Cartridge::LoadMemory(uint8_t* data, size_t length) {

@@ -19,7 +19,8 @@
 #pragma once
 
 //#include "../../utilities/windows/windows.h"
-#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
+//#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
+#include "..\..\..\..\Emu.Core\Code\utilities\types.h"
 #include <corecrt_math.h>
 
 typedef float real_t;

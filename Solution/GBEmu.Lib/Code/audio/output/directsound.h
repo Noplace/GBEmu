@@ -20,13 +20,15 @@
 
 //#include "../../utilities/windows/windows.h"
 #include <Windows.h>
-#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
+//#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
+#include "..\..\..\..\Emu.Core\Code\utilities\types.h"
 #include <mmreg.h>
 #include <dsound.h>
 #include <atomic>
 #include <thread>
 #include <mutex>
-#include <GBEmu/Solution/Emu.Core/Code/audio/output/interface.h>
+//#include <GBEmu/Solution/Emu.Core/Code/audio/output/interface.h>
+#include "..\..\..\..\Emu.Core\Code\audio\output\interface.h"
 
 namespace audio {
 namespace output {

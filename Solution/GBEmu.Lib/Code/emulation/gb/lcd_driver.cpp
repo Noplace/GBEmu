@@ -105,7 +105,9 @@ static inline uint32_t rgbtobgr555(uint32_t src) {
 //const uint32_t pal32[4] = {0xffffffff,0xffAAAAAA,0xff545454,0xff000000};
 //const uint32_t dmg_colors[4] = {0x00000000,0x54000000,0xAA000000,0xFF000000};
 //const uint32_t dmg_colors[4] = { 0x00000000,0x54000000,0xAA000000,0xFF000000 };
-const uint32_t dmg_colors[4] = { 0xFF000000,0xFF545454,0xFFAAAAAA,0xFFFFFFFF };
+//const uint32_t dmg_colors[4] = { 0xFF000000,0xFF545454,0xFFAAAAAA,0xFFFFFFFF };
+//const uint32_t dmg_colors[4] = { 0xFF0f380f,0xFF306230,0xFF8bac0f,0xFF9bbc0f };
+const uint32_t dmg_colors[4] = { 0xFF9bbc0f,0xFF8bac0f,0xFF306230,0xFF0f380f };
 
 
 

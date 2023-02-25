@@ -20,7 +20,8 @@
 
 
 #include <d3d11.h>
-#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
+//#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
+#include "../../../Emu.Core/Code/utilities/types.h"
 #include "graphics.h"
 
 namespace graphics {

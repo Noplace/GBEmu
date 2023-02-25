@@ -18,7 +18,8 @@
 *****************************************************************************************************************/
 #pragma once
 
-#include <GBEmu/Solution/Emu.Core/Code/utilities/io.h>
+//#include <GBEmu/Solution/Emu.Core/Code/utilities/io.h>
+#include "..\..\..\..\Emu.Core\Code\utilities\io.h"
 
 namespace emulation {
 namespace gb {
@@ -104,7 +105,7 @@ class Cartridge : public Component {
   ~Cartridge() {  }
   void Initialize(Emu* emu);
   void Deinitialize();
-  void LoadFile(const char* filename, CartridgeHeader* header);
+  int LoadFile(const char* filename, CartridgeHeader* header);
   void LoadMemory(uint8_t* data, size_t length);
   void LoadRam();
   void SaveRam();

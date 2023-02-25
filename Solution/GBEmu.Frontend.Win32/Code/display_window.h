@@ -41,7 +41,8 @@ class DisplayWindow: public core::windows::Window {
     int OnDropFiles(WPARAM wParam,LPARAM lParam);
     int OnResize(WPARAM wparam, LPARAM lparam);
     int OnPaint(WPARAM wParam,LPARAM lParam);
-    int Render();
+    int RenderNormal1();
+    int RenderWithShaders1();
   private:
     //std::thread* emu_th;
     //std::atomic_bool exit_signal_;
@@ -54,9 +55,23 @@ class DisplayWindow: public core::windows::Window {
     graphics::OpenGL gfx;
     emulation::gb::Emu emu;
     emulation::gb::CartridgeHeader header;
-    GLuint texture;
+   
     dialogs::Options options;
     HINSTANCE instance;
+
+
+
+    GLuint texture;
+    GLuint vertex_shader, fragment_shader, prog;
+    GLuint points_vbo;
+    GLuint vao;
+    GLint baseline_alpha_loc;
+    GLint texture1_loc;
+
+    int SetupShaders();
+    int SetupVertexBuffer();
+    int SetVertexBufferSize(float w, float h);
+
 };
 
 }

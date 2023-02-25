@@ -17,8 +17,8 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
 #pragma once
-#include <RecCore/Lib/reccore.h>
-
+//#include <RecCore/Lib/reccore.h>
+#include "..\..\..\..\..\..\RecCore\Lib\reccore.h"
 namespace emulation {
 namespace gb {
 

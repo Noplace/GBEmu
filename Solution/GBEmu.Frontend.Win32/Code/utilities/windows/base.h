@@ -23,6 +23,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 //#include <stdint.h>
-#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
-
+//#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
+#include "../../../../Emu.Core/Code/utilities/types.h"
 #endif

@@ -28,6 +28,11 @@ void hq2x_filter_render(
   unsigned width, unsigned height
 );
 
+//GLuint colours_vbo = 0;
+struct myVertex2D {
+  float x, y, u, v;
+};
+
 
 void dotmatrix_sim(uint32_t* inbuf,uint32_t* outbuf) {
 
@@ -79,109 +84,6 @@ std::string ReadTextFile(const char* filename)
   return lines;*/
 }
 
-GLuint vertex_shader, fragment_shader, prog;
-void setShaders() {
-
-	const char *vs,*fs;
-
-	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);	
-
-  auto vsFile = ReadTextFile("vs.glsl");
-  auto fsFile = ReadTextFile("fs.glsl");
-  
-  vs = vsFile.c_str();
-  fs = fsFile.c_str();
-
-	const char * vv = vs;
-	const char * ff = fs;
-
-	glShaderSource(vertex_shader, 1, &vv,NULL);
-auto e = glGetError();
-	glShaderSource(fragment_shader, 1, &ff,NULL);
-e = glGetError();
-	//free(vs);free(fs);
-
-	glCompileShader(vertex_shader);
-e = glGetError();
-	glCompileShader(fragment_shader);
-e = glGetError();
-
-	prog = glCreateProgram();
-e = glGetError();
-	glAttachShader(prog,vertex_shader);
-	glAttachShader(prog,fragment_shader);
-//glBindAttribLocation (prog, 0, "vertex_position");
-//glBindAttribLocation (prog, 1, "vertex_colour");
-	glLinkProgram(prog);
-
-
-}
-GLuint points_vbo = 0;
-GLuint vao = 0;
-//GLuint colours_vbo = 0;
-struct myVertex2D  {
-  float x,y,u,v;
-};
-
-void setVBsize(float w, float h) {
-  if (points_vbo == 0)
-    return;
-  glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
-
-  myVertex2D points[] = {
-    {0.0f, 0.0f,  0.0f, 0.0f},
-    {w,    0.0f,  0.625f, 0.0f},
-    {w,    h,     0.625f, 0.5625f},
-    {0.0f, h,     0.0f, 0.5625f},
-  };
-        //glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
-        //glTexCoord2d(0.625,0.0); glVertex2d(client_width_,0.0);
-        ///glTexCoord2d(0.625,0.5625); glVertex2d(client_width_,client_height_);
-        //glTexCoord2d(0.0,0.5625); glVertex2d(0.0,client_height_);
-
-    glBufferData (GL_ARRAY_BUFFER, sizeof (myVertex2D) * 4, points, GL_STATIC_DRAW);
-}
-
-
-void setupVB() {
-  glGenBuffers (1, &points_vbo);
-  setVBsize(20,20);
-
-float colours[] = {
-  1.0f, 1.0f,  0.0f,
-  0.0f, 1.0f,  0.0f,
-  0.0f, 0.0f,  1.0f,
-  1.0f, 1.0f,  1.0f,
-};
-
-//glGenBuffers (1, &colours_vbo);
-//glBindBuffer (GL_ARRAY_BUFFER, colours_vbo);
-//glBufferData (GL_ARRAY_BUFFER, 3 * sizeof (float) * 4, colours, GL_STATIC_DRAW);
-
-
-glGenVertexArrays (1, &vao);
-auto e = glGetError();
-glBindVertexArray (vao);
-e = glGetError();
-glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
-e = glGetError();
-glVertexPointer( 2, GL_FLOAT, sizeof(myVertex2D), (GLvoid*)offsetof( myVertex2D, x ) );
-glTexCoordPointer( 2, GL_FLOAT, sizeof(myVertex2D), (GLvoid*)offsetof( myVertex2D, u ) );
-
-
-        //Enable vertex and texture coordinate arrays
-        glEnableClientState( GL_VERTEX_ARRAY );
-        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-//glVertexAttribPointer (0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-//glBindBuffer (GL_ARRAY_BUFFER, colours_vbo);
-//glVertexAttribPointer (1, 4, GL_FLOAT, GL_FALSE, 0, NULL);
-//glEnableVertexAttribArray (0);
-//glEnableVertexAttribArray (1);
-
-glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-}
 
 
 
@@ -202,6 +104,20 @@ DisplayWindow::~DisplayWindow() {
 void DisplayWindow::Init() {
   output = new uint32_t[512*512];
   dotmatrix_output = new uint32_t[256*256*6*6];
+  {
+
+    texture = 0;
+    vertex_shader = 0;
+    fragment_shader = 0;
+    prog = 0;
+    points_vbo = 0;
+    vao = 0;
+    baseline_alpha_loc = 0;
+    texture1_loc = 0;
+  }
+
+
+
 //  exit_signal_ = false;
   PrepareClass("GBEmu");
   window_class.hIcon = static_cast<HICON>(LoadImage(instance, MAKEINTRESOURCE(IDI_ICON1),IMAGE_ICON,32,32,LR_DEFAULTSIZE));
@@ -211,6 +127,9 @@ void DisplayWindow::Init() {
   SetMenu(LoadMenu(instance, MAKEINTRESOURCE(IDR_MENU1)));
   DragAcceptFiles(handle(),true);
   enable_stats_display = false;
+
+
+
   gfx.Initialize(handle(),0,0);
   HWND windowhandle = handle();
   emu.set_on_render([windowhandle]() {
@@ -241,8 +160,8 @@ void DisplayWindow::Init() {
   delete fsFile;
   delete vsFile;
 }*/
-  setShaders();
-  setupVB();
+  SetupShaders();
+  SetupVertexBuffer();
 
 
   //settings setup
@@ -289,10 +208,11 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\03-trigger.gb",&header);
 
 
-  //emu.cartridge()->LoadFile("..\\..\\test\\games\\Super Mario Land (World).gb",&header);
+  auto load_result = emu.cartridge()->LoadFile("..\\..\\test\\games\\Super Mario Land (World).gb",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\Pocket Camera (Japan) (Rev A).gb",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
-  //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);//not original rom, problem with window
+  //auto load_result = emu.cartridge()->LoadFile("..\\..\\test\\games\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);//not original rom, problem with window
+
   //emu.cartridge()->LoadFile("..\\test\\Final Fantasy Legend, The (U) [!].gb",&header); 
   //emu.cartridge()->LoadFile("D:\\Personal\\Dev\\GB\\roms\\Kirby's Dream Land (USA, Europe).gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Tamagotchi 3.gb",&header);
@@ -301,7 +221,7 @@ void DisplayWindow::Init() {
   //hdma
   //emu.cartridge()->LoadFile("..\\..\\test\\gbc-hw-tests\\dma\\hdma_halt\\hdma_halt.gbc", &header);
   //emu.cartridge()->LoadFile("..\\..\\test\\demos\\pht-mr.gbc", &header);
-  emu.cartridge()->LoadFile("..\\..\\test\\demos\\Demotronic Final Demo (PD) [C].gbc",&header);//works as of 18/06/2020
+  //emu.cartridge()->LoadFile("..\\..\\test\\demos\\Demotronic Final Demo (PD) [C].gbc",&header);//works as of 18/06/2020
   //emu.cartridge()->LoadFile("..\\..\\test\\demos\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\introcollection.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
@@ -312,8 +232,132 @@ void DisplayWindow::Init() {
   //emu.cartridge()->LoadFile("..\\test\\games\\Grand Theft Auto.gbc",&header);
   //rom writing error mbc5 check
   //emu.cartridge()->LoadFile("C:\\Users\\U11111\\Documents\\GitHub\\GBEmu\\test\\mooneye-gb-master\\mooneye-gb_hwtests\\acceptance\\oam_dma\\sources-GS.gb",&header);
-  emu.Run();
+  
+
+  if (load_result != S_OK) {
+    MessageBox(handle(), "File Not Found.", "Error", MB_OK | MB_ICONWARNING);
+  }
+  else {
+    //OnCommand(ID_MODE_GBC, 0);
+    emu.Run();
+  }
 }
+
+
+
+int DisplayWindow::SetupShaders() {
+
+  const char* vs, * fs;
+
+  vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+  fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+  auto vsFile = ReadTextFile("vs.glsl");
+  auto fsFile = ReadTextFile("fs.glsl");
+
+  vs = vsFile.c_str();
+  fs = fsFile.c_str();
+
+  const char* vv = vs;
+  const char* ff = fs;
+
+  glShaderSource(vertex_shader, 1, &vv, NULL);
+  auto e = glGetError();
+  glShaderSource(fragment_shader, 1, &ff, NULL);
+  e = glGetError();
+  //free(vs);free(fs);
+
+  glCompileShader(vertex_shader);
+  e = glGetError();
+  glCompileShader(fragment_shader);
+  e = glGetError();
+
+  prog = glCreateProgram();
+  e = glGetError();
+  glAttachShader(prog, vertex_shader);
+  e = glGetError();
+  glAttachShader(prog, fragment_shader);
+  e = glGetError();
+  //glBindAttribLocation (prog, 0, "vertex_position");
+  //glBindAttribLocation (prog, 1, "vertex_colour");
+  glLinkProgram(prog);
+  e = glGetError();
+
+
+  glLinkProgram(prog);
+  e = glGetError();
+  baseline_alpha_loc = glGetUniformLocation(prog, "baseline_alpha");
+  e = glGetError();
+  texture1_loc = glGetUniformLocation(prog, "texture1");
+  e = glGetError();
+
+  return S_OK;
+}
+
+int DisplayWindow::SetVertexBufferSize(float w, float h) {
+  if (points_vbo == 0)
+    return S_FALSE;
+  glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
+
+  myVertex2D points[] = {
+    {0.0f, 0.0f,  0.0f, 0.0f},
+    {w,    0.0f,  0.625f, 0.0f},
+    {w,    h,     0.625f, 0.5625f},
+    {0.0f, h,     0.0f, 0.5625f},
+  };
+  //glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
+  //glTexCoord2d(0.625,0.0); glVertex2d(client_width_,0.0);
+  ///glTexCoord2d(0.625,0.5625); glVertex2d(client_width_,client_height_);
+  //glTexCoord2d(0.0,0.5625); glVertex2d(0.0,client_height_);
+
+  glBufferData(GL_ARRAY_BUFFER, sizeof(myVertex2D) * 4, points, GL_STATIC_DRAW);
+
+  return S_OK;
+}
+
+
+int DisplayWindow::SetupVertexBuffer() {
+  glGenBuffers(1, &points_vbo);
+  SetVertexBufferSize(20, 20);
+
+  float colours[] = {
+    1.0f, 1.0f,  0.0f,
+    0.0f, 1.0f,  0.0f,
+    0.0f, 0.0f,  1.0f,
+    1.0f, 1.0f,  1.0f,
+  };
+
+  //glGenBuffers (1, &colours_vbo);
+  //glBindBuffer (GL_ARRAY_BUFFER, colours_vbo);
+  //glBufferData (GL_ARRAY_BUFFER, 3 * sizeof (float) * 4, colours, GL_STATIC_DRAW);
+
+
+  glGenVertexArrays(1, &vao);
+  auto e = glGetError();
+  glBindVertexArray(vao);
+  e = glGetError();
+  glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
+  e = glGetError();
+  glVertexPointer(2, GL_FLOAT, sizeof(myVertex2D), (GLvoid*)offsetof(myVertex2D, x));
+  glTexCoordPointer(2, GL_FLOAT, sizeof(myVertex2D), (GLvoid*)offsetof(myVertex2D, u));
+
+
+  //Enable vertex and texture coordinate arrays
+  glEnableClientState(GL_VERTEX_ARRAY);
+  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+  //glVertexAttribPointer (0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+  //glBindBuffer (GL_ARRAY_BUFFER, colours_vbo);
+  //glVertexAttribPointer (1, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+  //glEnableVertexAttribArray (0);
+  //glEnableVertexAttribArray (1);
+
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+  return S_OK;
+}
+
+
 
 void DisplayWindow::ResetTiming() {
   
@@ -362,7 +406,7 @@ int DisplayWindow::OnCommand(WPARAM wParam,LPARAM lParam) {
       CheckMenuItem(menu_,ID_VIDEO_EAGLE512X480,MF_UNCHECKED);
       SetClientSize(320,288);
       gfx.SetDisplaySize(320,288);
-      setVBsize(320,288);
+      SetVertexBufferSize(320,288);
       display_mode = ID_VIDEO_STD320X288;
     }
 
@@ -371,7 +415,7 @@ int DisplayWindow::OnCommand(WPARAM wParam,LPARAM lParam) {
       CheckMenuItem(menu_,ID_VIDEO_STD320X288,MF_UNCHECKED);
       SetClientSize(640,288*2);
       gfx.SetDisplaySize(640,288*2);
-      setVBsize(640, 288 * 2);
+      SetVertexBufferSize(640, 288 * 2);
       display_mode = ID_VIDEO_EAGLE512X480;
     }
 
@@ -390,7 +434,8 @@ int DisplayWindow::OnCommand(WPARAM wParam,LPARAM lParam) {
     
 
     if (LOWORD(wParam)==ID_FILE_EXIT) {
-      PostQuitMessage(0);
+      DestroyWindow(handle());
+     // PostQuitMessage(0);
     }
 
     if (LOWORD(wParam)==ID_MACHINE_RESET) {
@@ -510,20 +555,7 @@ int DisplayWindow::OnDropFiles(WPARAM wParam,LPARAM lParam) {
   return 0;
 }
 
-int DisplayWindow::Render() {
-  return 0;
-}
-
-int DisplayWindow::OnResize(WPARAM wparam, LPARAM lparam) {
-  gfx.SetDisplaySize(LOWORD(lparam),HIWORD(lparam));
-  client_width_ = LOWORD(lparam);
-  client_height_ = HIWORD(lparam);
-  setVBsize((float)client_width_, (float)client_height_);
-  return 0;
-}
-
-int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
-  if (emu.state == emulation::gb::EmuState::EmuStateStopped) return 0;
+int DisplayWindow::RenderNormal1() {
 
   //char title[200];
   //sprintf_s(title, "GBEmu - Freq\t: %0.2f Mhz\0", emu.frequency_mhz());
@@ -536,7 +568,7 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
 
   return S_OK;*/
   //glDisable( GL_TEXTURE_2D );
-  
+
   //glColor4ub(0x72,0x7E,0x01,0xFF);
   /*
   glColor4ub(0, 255,0, 0x8E);
@@ -546,14 +578,16 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
   glVertex2d(client_width_,client_height_);
   glVertex2d(0.0,client_height_);
   glEnd();*/
+  //ScaleImageEagle2X(emu.lcd_driver()->frame_buffer, 256, 256, output);
+  dotmatrix_sim(emu.lcd_driver()->frame_buffer, dotmatrix_output);
   glClearColor(0.25f, 0.25f, 0.25f, 1);
-  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glColor4ub(255, 255, 255, 255);
   glEnable(GL_TEXTURE_2D);
   auto e = glGetError();
   glBindTexture(GL_TEXTURE_2D, texture);
-   e = glGetError();
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256, 256, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, emu.lcd_driver()->frame_buffer);
+  e = glGetError();
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256*6, 256*6, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, dotmatrix_output);//emu.lcd_driver()->frame_buffer);
   e = glGetError();
   glBegin(GL_QUADS);
   glTexCoord2d(0.0, 0.0); glVertex2d(0.0, 0.0);
@@ -595,39 +629,54 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
   //Sleep(15);
   glDrawBuffer(GL_FRONT);
   return S_OK;
- 
-  //auto err= glGetError();
+
+}
+
+
+int DisplayWindow::RenderWithShaders1() {
+  auto e = glGetError();
+  /*glLinkProgram(prog);
+  auto e = glGetError();
+  auto baseline_alpha_loc = glGetUniformLocation(prog, "baseline_alpha");
+  e = glGetError();
+  auto texture1_loc = glGetUniformLocation(prog, "texture1");
+  e = glGetError();*/
+
+
+  glUseProgram(prog);
+  e = glGetError();
+  glUniform1f(baseline_alpha_loc, 1.0f);
+  e = glGetError();
+
+  glUniform1i(texture1_loc, 0);
+  e = glGetError();
 
   glActiveTexture(GL_TEXTURE0);
+   e = glGetError();
+  glBindTexture(GL_TEXTURE_2D, texture);
   e = glGetError();
-  glBindTexture( GL_TEXTURE_2D, texture );
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256, 256, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, emu.lcd_driver()->frame_buffer);
   e = glGetError();
-  glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,256,256,0,GL_BGRA_EXT,GL_UNSIGNED_BYTE,emu.lcd_driver()->frame_buffer);
-  e = glGetError();
-  glBindTexture(GL_TEXTURE_2D,0);
+  glBindTexture(GL_TEXTURE_2D, texture);
   //glActiveTexture(0);
-   e = glGetError();
+  e = glGetError();
 
 
-  auto loc = glGetUniformLocation(prog, "baseline_alpha");
-  glUniform1f(loc,1.0f);
-  loc = glGetUniformLocation(prog, "texture1");
-  glUniform1i(loc,0);
+  
+  glEnableClientState(GL_VERTEX_ARRAY);
+  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-  glEnableClientState( GL_VERTEX_ARRAY );
-  glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-
-   glUseProgram(prog);
-   e = glGetError();
-   glBindVertexArray(vao);
-   e = glGetError();
+  //glUseProgram(prog);
+  //e = glGetError();
+  glBindVertexArray(vao);
+  e = glGetError();
   glDrawArrays(GL_QUADS, 0, 4);
   e = glGetError();
-  glUseProgram(0);
-  e = glGetError();
-  
+  //glUseProgram(0);
+  //e = glGetError();
 
-  
+
+
 
 
   /*const GLfloat texture_coordinates[] = {0, 1,
@@ -644,13 +693,36 @@ int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
 
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);*/
   //glDisableClientState(GL_VERTEX_ARRAY);
+
+
+
   glFlush();
   glFinish();
   //gfx.Render();
   //Sleep(15);
   glDrawBuffer(GL_FRONT);
   return S_OK;
+}
 
+int DisplayWindow::OnResize(WPARAM wparam, LPARAM lparam) {
+  gfx.SetDisplaySize(LOWORD(lparam),HIWORD(lparam));
+  client_width_ = LOWORD(lparam);
+  client_height_ = HIWORD(lparam);
+  SetVertexBufferSize((float)client_width_, (float)client_height_);
+  return 0;
+}
+
+int DisplayWindow::OnPaint(WPARAM wparam, LPARAM lparam) {
+  if (emu.state == emulation::gb::EmuState::EmuStateStopped) return 0;
+
+  //return RenderNormal1();
+  
+
+  
+   RenderWithShaders1();
+  //older
+
+   return S_OK;
 
   glEnable( GL_TEXTURE_2D );
   glColor3ub(0xFF,0xFF,0xFF);

@@ -27,6 +27,7 @@ namespace GBEmu_Frontend_UWP
     private:
         bool _contentLoaded;
     
+        class MainPage_obj1_Bindings;
     
     };
 }

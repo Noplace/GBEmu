@@ -18,14 +18,16 @@
 *****************************************************************************************************************/
 #pragma once
 //#include "../../utilities/windows/windows.h"
-#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
+//#include <GBEmu/Solution/Emu.Core/Code/utilities/types.h>
+#include "..\..\..\..\Emu.Core\Code\utilities\types.h"
 #include <objbase.h>
 #pragma warning(push)
 #pragma warning(disable : 4201)
 #include <mmdeviceapi.h>
 #include <audiopolicy.h>
 #pragma warning(pop)
-#include <GBEmu/Solution/Emu.Core/Code/audio/output/interface.h>
+//#include <GBEmu/Solution/Emu.Core/Code/audio/output/interface.h>
+#include "..\..\..\..\Emu.Core\Code\audio\output\interface.h"
 
 namespace audio {
 namespace output {

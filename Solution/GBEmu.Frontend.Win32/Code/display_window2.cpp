@@ -44,13 +44,13 @@ static auto vector_getter = [](void* vec, int idx, const char** out_text) {
 bool Combo(const char* label, int* currIndex, std::vector<std::string>& values) {
   if (values.empty()) { return false; }
   return Combo(label, currIndex, vector_getter,
-    static_cast<void*>(&values), values.size());
+    static_cast<void*>(&values), (int)values.size());
 }
 
 bool ListBox(const char* label, int* currIndex, std::vector<std::string>& values) {
   if (values.empty()) { return false; }
   return ListBox(label, currIndex, vector_getter,
-    static_cast<void*>(&values), values.size());
+    static_cast<void*>(&values), (int)values.size());
 }
 
 }
@@ -279,7 +279,7 @@ void DisplayWindow2::GuiGameWindow() {
   graphics_.context()->Map(pTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &sr);
   memcpy(sr.pData, emu.lcd_driver()->frame_buffer, 256 * 256 * 4);
   graphics_.context()->Unmap(pTexture, 0);
-  ImGuiWindowFlags flags;
+  //ImGuiWindowFlags flags;
   ImGui::Image((void*)out_srv, ImVec2(160 * 2, 144 * 2), ImVec2(0, 0), ImVec2(160 / 256.0f, 144 / 256.0f));
   ImGui::End();
 }

@@ -121,12 +121,12 @@ class Emu {
     
     if (speed == EmuSpeed::EmuSpeedNormal) {
       lcd_driver_.Tick();
-      //apu_.Tick();
+      apu_.Tick();
     } else {
       static bool s = false;
       if (s == false) {
         lcd_driver_.Tick();
-        //apu_.Tick();
+        apu_.Tick();
       }
       s = !s;
     }
