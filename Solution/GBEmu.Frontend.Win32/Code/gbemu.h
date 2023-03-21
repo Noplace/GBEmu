@@ -42,7 +42,7 @@ class GBEmu : core::windows::Application {
     explicit GBEmu(HINSTANCE instance , LPSTR command_line, int show_command);
     ~GBEmu();
     int Run();
-    DisplayWindow& display_window() {
+    DisplayWindow2& display_window() {
       return display_window_;
     }
     static GBEmu* Current() {
@@ -51,7 +51,7 @@ class GBEmu : core::windows::Application {
   protected:
     static GBEmu* current_app_;
   private:
-    DisplayWindow display_window_;
+    DisplayWindow2 display_window_;
 };
 
 

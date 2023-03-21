@@ -181,7 +181,7 @@ void DisplayWindow2::Init() {
   //emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\03-trigger.gb",&header);
 
 
-  //emu.cartridge()->LoadFile("..\\..\\test\\games\\Super Mario Land (World).gb",&header);
+  emu.cartridge()->LoadFile("..\\..\\test\\games\\Super Mario Land (World).gb",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\Pocket Camera (Japan) (Rev A).gb",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);//not original rom, problem with window
@@ -200,7 +200,11 @@ void DisplayWindow2::Init() {
   //emu.cartridge()->LoadFile("..\\..\\test\\games\\Mission Impossible (USA) (En,Fr,Es).gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\games\\Legend of Zelda, The - Link's Awakening DX (USA, Europe).gbc",&header);
    //emu.cartridge()->LoadFile("..\\..\\test\\games\\Alone in the Dark - The New Nightmare (U) (M3) [C][!].gbc", &header);
- emu.cartridge()->LoadFile("..\\..\\test\\games\\Pokemon - Silver Version (UE) [C][!].gbc",&header);
+ 
+  //check bug in menu
+  //emu.cartridge()->LoadFile("..\\..\\test\\games\\Pokemon - Silver Version (UE) [C][!].gbc",&header);
+
+
   //emu.cartridge()->LoadFile("..\\test\\games\\Grand Theft Auto.gbc",&header);
   //rom writing error mbc5 check
   //emu.cartridge()->LoadFile("C:\\Users\\U11111\\Documents\\GitHub\\GBEmu\\test\\mooneye-gb-master\\mooneye-gb_hwtests\\acceptance\\oam_dma\\sources-GS.gb",&header);
@@ -273,14 +277,16 @@ void DisplayWindow2::ResetTiming() {
 void DisplayWindow2::GuiGameWindow() {
 
   auto r = ImGui::Begin("Game");
-
+  auto w = ImGui::GetContentRegionAvail();
+  auto h = ImGui::GetWindowHeight() - ImGui::GetFrameHeight();
+  //ImGui::SetWindowPos()
   //can be in on render but have to think about multithread
   D3D11_MAPPED_SUBRESOURCE sr;
   graphics_.context()->Map(pTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &sr);
   memcpy(sr.pData, emu.lcd_driver()->frame_buffer, 256 * 256 * 4);
   graphics_.context()->Unmap(pTexture, 0);
   //ImGuiWindowFlags flags;
-  ImGui::Image((void*)out_srv, ImVec2(160 * 2, 144 * 2), ImVec2(0, 0), ImVec2(160 / 256.0f, 144 / 256.0f));
+  ImGui::Image((void*)out_srv, ImVec2(w.x, w.y), ImVec2(0, 0), ImVec2(160 / 256.0f, 144 / 256.0f));
   ImGui::End();
 }
 
@@ -385,29 +391,31 @@ void DisplayWindow2::GuiAPUWindow() {
       int32_t wave_left[256] = {0};
       memset(wave_left, 0, 256 * 4);
       uint32_t wave_left_pos = 0;
-      int32_t wave_left_sample = 0;
+      double wave_left_sample = 0;
       int32_t wave_right[256] = { 0 };
       memset(wave_right, 0, 256 * 4);
       uint32_t wave_right_pos = 0;
-      int32_t wave_right_sample = 0;
+      double wave_right_sample = 0;
       int acc = 0;
 
       for (int i = 0; i < 4410; ++i) {
-        auto l = sound_buf[(i * 2)];
-        auto r = sound_buf[(i * 2)+1];
+        double l =  sound_buf[(i * 2)] / 32767.0;
+        double r = sound_buf[(i * 2) + 1] / 32767.0;;// / 256;
         wave_left_sample += l;
         wave_right_sample += r;
         if (acc++ == 17) {
-          wave_left[wave_left_pos++] = wave_left_sample / 17;
-          wave_right[wave_right_pos++] = wave_right_sample / 17;
+          wave_left[wave_left_pos++] = int32_t(( wave_left_sample / 17.0)*128.0);
+          wave_right[wave_right_pos++] = int32_t(( wave_right_sample / 17.0)*128.0);
+          wave_right_sample = 0;
+          wave_left_sample = 0;
           acc = 0;
         }
       }
 
       for (int i = 0; i< 256; ++i) {
-        auto y = wave_left[i] + 128;
+        auto y = ((wave_right[i] + wave_left[i])/2) +128;
         y = max(y, 0);
-        y = min(y, 127);
+        y = min(y, 255);
         uint32_t* dest_line = &dest_buffer[y * 256];
         dest_line[i] = 0xFFFFFFFF;
 
@@ -492,8 +500,8 @@ void DisplayWindow2::Step() {
     GuiGameWindow();
     //GuiVRAMWindow();
     GuiOptionsWindow();
-    //GuiAPUWindow();
-    GuiDebuggerWindow();
+    GuiAPUWindow();
+    //GuiDebuggerWindow();
 
   /*
   {
