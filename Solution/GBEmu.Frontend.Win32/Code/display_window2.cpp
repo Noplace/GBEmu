@@ -181,7 +181,8 @@ void DisplayWindow2::Init() {
   //emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\03-trigger.gb",&header);
 
 
-  emu.cartridge()->LoadFile("..\\..\\test\\games\\Super Mario Land (World).gb",&header);
+  emu.cartridge()->LoadFile("..\\..\\test\\other\\rtc3test.gb", &header);
+  //emu.cartridge()->LoadFile("..\\..\\test\\games\\Super Mario Land (World).gb",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\Pocket Camera (Japan) (Rev A).gb",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
   //emu.cartridge()->LoadFile("..\\test\\Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb",&header);//not original rom, problem with window
@@ -277,17 +278,20 @@ void DisplayWindow2::ResetTiming() {
 void DisplayWindow2::GuiGameWindow() {
 
   auto r = ImGui::Begin("Game");
-  auto w = ImGui::GetContentRegionAvail();
-  auto h = ImGui::GetWindowHeight() - ImGui::GetFrameHeight();
-  //ImGui::SetWindowPos()
-  //can be in on render but have to think about multithread
-  D3D11_MAPPED_SUBRESOURCE sr;
-  graphics_.context()->Map(pTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &sr);
-  memcpy(sr.pData, emu.lcd_driver()->frame_buffer, 256 * 256 * 4);
-  graphics_.context()->Unmap(pTexture, 0);
-  //ImGuiWindowFlags flags;
-  ImGui::Image((void*)out_srv, ImVec2(w.x, w.y), ImVec2(0, 0), ImVec2(160 / 256.0f, 144 / 256.0f));
-  ImGui::End();
+  if (r) {
+      auto w = ImGui::GetContentRegionAvail();
+      auto h = ImGui::GetWindowHeight() - ImGui::GetFrameHeight();
+      //ImGui::SetWindowPos()
+      //can be in on render but have to think about multithread
+      D3D11_MAPPED_SUBRESOURCE sr;
+      graphics_.context()->Map(pTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &sr);
+      memcpy(sr.pData, emu.lcd_driver()->frame_buffer, 256 * 256 * 4);
+      graphics_.context()->Unmap(pTexture, 0);
+      //ImGuiWindowFlags flags;
+      ImGui::Image((void*)out_srv, ImVec2(w.x, w.y), ImVec2(0, 0), ImVec2(160 / 256.0f, 144 / 256.0f));
+      
+      ImGui::End();
+  }
 }
 
 void DisplayWindow2::GuiVRAMWindow() {
@@ -436,16 +440,20 @@ void DisplayWindow2::GuiAPUWindow() {
 
 
 void DisplayWindow2::GuiDebuggerWindow() {
-  if (ImGui::Begin("Console Output")) {
+    
+    if (ImGui::Begin("Console Output")) {
     //const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon" };
-   // static int item_current = 1;
+    // static int item_current = 1;
     //ImGui::ListBox("listbox\n(single select)", &item_current, items, IM_ARRAYSIZE(items), 4);
-    ImGui::BeginChild("Log");
-    ImGui::TextUnformatted(log.begin(), log.end());
-    ImGui::SetScrollHereY(1.0f);
-    ImGui::EndChild();
-  }
-  ImGui::End();
+        if (ImGui::BeginChild("Log")) {
+            ImGui::TextUnformatted(log.begin(), log.end());
+            ImGui::SetScrollHereY(1.0f);
+            ImGui::EndChild();
+        }
+        ImGui::End();
+    }
+  
+  return;
 
   if (ImGui::Begin("Disassembler")) {
     //const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon" };
@@ -454,9 +462,9 @@ void DisplayWindow2::GuiDebuggerWindow() {
     ImGui::BeginChild("ROM0");
     ImGui::ListBox("listbox", &diassembler_index, disassembly);
     ImGui::EndChild();
-    
+    ImGui::End();
   }
-  ImGui::End();
+  
 
 
   if (ImGui::Begin("Debugger")) {
@@ -499,9 +507,9 @@ void DisplayWindow2::Step() {
   
     GuiGameWindow();
     //GuiVRAMWindow();
-    GuiOptionsWindow();
-    GuiAPUWindow();
-    //GuiDebuggerWindow();
+    //GuiOptionsWindow();
+    //GuiAPUWindow();
+    GuiDebuggerWindow();
 
   /*
   {
