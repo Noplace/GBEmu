@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Code/gbemu.h"
+#include "../GBEmu.Lib/Code/emulation/gb/gb.h"
 namespace GBEmu_WRC
 {
 
