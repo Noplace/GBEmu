@@ -325,6 +325,7 @@ void CpuInterpreter::HandleInterrupts() {
     emu_->MachineTick();
     emu_->MachineTick();
     emu_->MachineTick();
+
     ime = false;
     cpumode_ = CpuModeNormal;
     pushPC();

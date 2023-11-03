@@ -17,7 +17,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                         *
 *****************************************************************************************************************/
 #include "gb.h"
-
+#include <stdio.h>
 /*
 note: I have made two cgb sprite palletes for sake of easier code for the mono game -> color conversion
 */
@@ -259,9 +259,10 @@ void LCDDriver::DoHDMA() {
 
 
 void LCDDriver::Tick() {
+  if (lcdc_.lcd_enable == 0) return; // needed to run pokemon silver, hopefully having it here instead of somewhere else is correct
   ++scanline_dots_; //line clock
   ++screen_counter_;//screen clock
-
+ 
   stat_.coincidence = lyc == ly;
 
 
@@ -405,7 +406,14 @@ void LCDDriver::Tick() {
     break;
   case 1: { //vblank
     ++mode1_counter;
+ 
+    
     if (ly == 144 && scanline_dots_ == 1) {
+
+      //char logstr[200];
+    //sprintf_s(logstr, "vblank ticks %d\n",temp_vticks);
+    //emu_->log_output(logstr);
+  
       emu_->memory()->interrupt_flag() |= 1;
 
       if ((stat_.vblank_int) && int48signal == 0) { //maybe with stat_.oam_int|| as per doc

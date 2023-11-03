@@ -87,11 +87,13 @@ namespace emulation {
                 else if (address >= 0xA000 && address <= 0xBFFF) {
 
                     if (ram_rtc_enable == true && mode == MBC3ModeRAM && eram_size) {
-                        sprintf_s(logstr, "MBC 3 read @ $%04x = $%02x (RAM)\n", address, eram_[(address & 0x1FFF) | (ram_bank_number << 13)]);
+                        
+                        //sprintf_s(logstr, "MBC 3 read @ $%04x = $%02x (RAM)\n", address, eram_[(address & 0x1FFF) | (ram_bank_number << 13)]);
                         //cartridge->emu()->log_output(logstr);
+
                         return eram_[(address & 0x1FFF) | (ram_bank_number << 13)];
                     } else  if (ram_rtc_enable == true && mode == MBC3ModeRTC) {
-                        sprintf_s(logstr, "MBC 3 read @ %d = $%02x (RTC)\n", rtc_select, rtc[rtc_select]);
+                        //sprintf_s(logstr, "MBC 3 read @ %d = $%02x (RTC)\n", rtc_select, rtc[rtc_select]);
                         //cartridge->emu()->log_output(logstr);
                         //return rtc[rtc_select];
                       
@@ -125,8 +127,8 @@ namespace emulation {
                         ram_rtc_enable = false;
                     }
 
-                    sprintf_s(logstr, "MBC 3 0x0000-0x1FFF Write: 0x%x\n", data);
-                    cartridge->emu()->log_output(logstr);
+                    //sprintf_s(logstr, "MBC 3 0x0000-0x1FFF Write: 0x%x\n", data);
+                   // cartridge->emu()->log_output(logstr);
 
                 }
                 else if (address >= 0x2000 && address <= 0x3FFF) {
@@ -134,7 +136,7 @@ namespace emulation {
                     if (rom_bank_number == 0)
                         rom_bank_number = 1;
                     rom_bank_number = rom_bank_number & (max_rom_banks - 1);
-                    sprintf_s(logstr, "MBC 3 rom_bank_number  0x%x\n", rom_bank_number);
+                    //sprintf_s(logstr, "MBC 3 rom_bank_number  0x%x\n", rom_bank_number);
                     //cartridge->emu()->log_output(logstr);
                 }
                 else if (address >= 0x4000 && address <= 0x5FFF) {
@@ -215,12 +217,12 @@ namespace emulation {
                 else if (address >= 0xA000 && address <= 0xBFFF) {
                     if (ram_rtc_enable == true && mode == MBC3ModeRAM && eram_size) {
                         eram_[(address & 0x1FFF) | (ram_bank_number << 13)] = data;
-                        sprintf_s(logstr, "MBC 3 write @ $%04x = $%02x (RAM)\n", address, data);
-                        cartridge->emu()->log_output(logstr);
+                        //sprintf_s(logstr, "MBC 3 write @ $%04x = $%02x (RAM)\n", address, data);
+                        //cartridge->emu()->log_output(logstr);
                     }
                     else if (ram_rtc_enable == true && mode == MBC3ModeRTC) {
-                        sprintf_s(logstr, "MBC 3 write @ %d = $%02x (RTC)\n", rtc_select, data);
-                        cartridge->emu()->log_output(logstr);
+                        //sprintf_s(logstr, "MBC 3 write @ %d = $%02x (RTC)\n", rtc_select, data);
+                        //cartridge->emu()->log_output(logstr);
                         //rtc[rtc_select] = data;
                         /*switch (rtc_select) {
                             case 0: rtc[rtc_select] = data & 0x3F; break;
@@ -231,11 +233,11 @@ namespace emulation {
                         }*/
                         
                         switch (rtc_select) {
-                        case 0: time_second = data; break;
-                        case 1: time_minute = data ; break;
-                        case 2: time_hour = data ; break;
-                        case 3: time_day = data ; break;
-                        case 4: time_control = data;  break;
+                        case 0: time_second = rtc[0] = data & 0x3F; timecounter = 0; break;
+                        case 1: time_minute = rtc[1]= data & 0x3F; break;
+                        case 2: time_hour = rtc[2]=data & 0x1F; break;
+                        case 3: time_day = rtc[3] = data & 0xFF; break;
+                        case 4: time_control = rtc[4] = data & 0xC1;  break;
                         }
 
                         //normal way, commented for testing
@@ -262,12 +264,13 @@ namespace emulation {
             }
 
             void Step(double dt) {
+              if ((time_control & 0x40) == 0x40) return;//halt
                 timecounter += dt;
                 if (timecounter >= 1000.0) { // 1sec ////32768Hz, for original gameboy
                     timecounter -= 1000.0;
 
 
-                    if ((time_control & 0x40) == 0x40) return;//halt
+                   
                     if (++time_second == 60) { //sec
                         if (++time_minute == 60) { //min
                             if (++time_hour == 24) { //hour
@@ -332,8 +335,8 @@ namespace emulation {
                 n %= 60;
                 time_second = n;
 
-                sprintf_s(logstr, "rtc_timer new value = %d time = %d,%d,%d,%d\n", rtc_timer, time_day, time_hour, time_minute, time_second);
-                cartridge->emu()->log_output(logstr);
+                //sprintf_s(logstr, "rtc_timer new value = %d time = %d,%d,%d,%d\n", rtc_timer, time_day, time_hour, time_minute, time_second);
+                //cartridge->emu()->log_output(logstr);
             }
 
             bool ram_rtc_enable;

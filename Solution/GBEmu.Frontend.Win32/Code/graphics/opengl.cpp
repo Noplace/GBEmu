@@ -20,7 +20,7 @@
 
 #pragma comment(lib,"opengl32")
 #pragma comment(lib,"glu32")
-#pragma comment(lib,"glew32s")
+#pragma comment(lib,"glew32")
 
 namespace graphics {
 

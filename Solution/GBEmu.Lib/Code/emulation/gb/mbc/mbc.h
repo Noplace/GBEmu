@@ -39,7 +39,7 @@ class MemoryBankController {
       eram_ = nullptr;
     }
 
-    sprintf_s(logstr, "MBC max_ram_banks %08x\n", max_ram_banks);
+    sprintf_s(logstr, "MBC max_ram_banks $%08x\n", max_ram_banks);
     cartridge->emu()->log_output(logstr);
 
     rom_ = cartridge->rom();
@@ -47,7 +47,7 @@ class MemoryBankController {
     ram_bank_number = 0;
     
     max_rom_banks = cartridge->header->rom_size_bytes() / 0x4000;
-    sprintf_s(logstr, "MBC max_rom_banks %08x\n", max_rom_banks);
+    sprintf_s(logstr, "MBC max_rom_banks $%08x\n", max_rom_banks);
     cartridge->emu()->log_output(logstr);
   }
   virtual void Deinitialize() {

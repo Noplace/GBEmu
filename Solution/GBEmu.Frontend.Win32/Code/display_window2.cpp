@@ -62,7 +62,9 @@ namespace app {
   std::vector<std::string> disassembly;
   int diassembler_index = 0;
   void OutputDebugString2(const char* str) {
+#ifdef DEBUG
     log.append(str);
+#endif
   }
 
 DisplayWindow2::DisplayWindow2() : Window() {
@@ -106,7 +108,9 @@ void DisplayWindow2::Init() {
 
   });
   emu.set_log_output([](const char* str) {
+#ifdef _DEBUG
     log.append(str);
+#endif
   });
 
   machine_freq = emulation::gb::default_gb_hz;
@@ -153,7 +157,7 @@ void DisplayWindow2::Init() {
   
   //emu.cartridge()->LoadFile("..\\..\\test\\cpu_instrs\\cpu_instrs.gb",&header); //ok
   //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\instr_timing\\instr_timing\\instr_timing.gb",&header); //ok
-  //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\interrupt_time\\interrupt_time\\interrupt_time.gb", &header);//ok 
+ // emu.cartridge()->LoadFile("..\\..\\test\\blargg\\interrupt_time\\interrupt_time\\interrupt_time.gb", &header);//ok 
   //emu.cartridge()->LoadFile("..\\..\\test\\blargg\\mem_timing-2\\mem_timing-2\\mem_timing.gb",&header); //ok
 
   //emu.cartridge()->LoadFile("..\\..\\test\\mooneye\\roms\\acceptance\\halt_ime0_ei.gb", &header);//ok
@@ -181,7 +185,9 @@ void DisplayWindow2::Init() {
   //emu.cartridge()->LoadFile("..\\test\\cgb_sound\\cgb_sound\\rom_singles\\03-trigger.gb",&header);
 
 
-  emu.cartridge()->LoadFile("..\\..\\test\\other\\rtc3test.gb", &header);
+  //emu.cartridge()->LoadFile("..\\..\\test\\other\\rtc3test.gb", &header); //all passed
+
+  // 
   //emu.cartridge()->LoadFile("..\\..\\test\\games\\Super Mario Land (World).gb",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\Pocket Camera (Japan) (Rev A).gb",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\Pokemon - Blue Version (UE) [S][!].gb",&header);
@@ -203,7 +209,7 @@ void DisplayWindow2::Init() {
    //emu.cartridge()->LoadFile("..\\..\\test\\games\\Alone in the Dark - The New Nightmare (U) (M3) [C][!].gbc", &header);
  
   //check bug in menu
-  //emu.cartridge()->LoadFile("..\\..\\test\\games\\Pokemon - Silver Version (UE) [C][!].gbc",&header);
+  emu.cartridge()->LoadFile("..\\..\\test\\games\\Pokemon - Silver Version (UE) [C][!].gbc",&header);
 
 
   //emu.cartridge()->LoadFile("..\\test\\games\\Grand Theft Auto.gbc",&header);
