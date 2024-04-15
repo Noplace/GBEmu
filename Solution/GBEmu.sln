@@ -50,7 +50,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GBEmu.Console.Test", "GBEmu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MonoGame", "MonoGame", "{B065B790-FEFC-48A1-AF8C-91FC828FAC58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GBEmu.Frontend.MonoGame", "GBEmu.Frontend.MonoGame\GBEmu.Frontend.MonoGame.csproj", "{C4C32B19-83AF-4098-8426-DCEB160537D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GBEmu.Frontend.MonoGame", "GBEmu.Frontend.MonoGame\GBEmu.Frontend.MonoGame.csproj", "{C4C32B19-83AF-4098-8426-DCEB160537D3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maui", "Maui", "{EE0DD519-63FA-4325-AF26-562C836D89C4}"
 EndProject
