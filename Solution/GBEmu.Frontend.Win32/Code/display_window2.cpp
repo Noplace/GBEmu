@@ -200,7 +200,7 @@ void DisplayWindow2::Init() {
   //hdma
   //emu.cartridge()->LoadFile("..\\..\\test\\gbc-hw-tests\\dma\\hdma_halt\\hdma_halt.gbc", &header);
   //emu.cartridge()->LoadFile("..\\..\\test\\demos\\pht-mr.gbc", &header);
-  //emu.cartridge()->LoadFile("..\\..\\test\\demos\\Demotronic Final Demo (PD) [C].gbc",&header);//works as of 18/06/2020
+  emu.cartridge()->LoadFile("..\\..\\test\\demos\\Demotronic Final Demo (PD) [C].gbc",&header);//works as of 18/06/2020
   //emu.cartridge()->LoadFile("..\\..\\test\\demos\\Game Boy Color Promotional Demo (USA, Europe).gbc",&header);
   //emu.cartridge()->LoadFile("..\\..\\test\\introcollection.gbc",&header);
   //emu.cartridge()->LoadFile("..\\test\\pht-mr.gbc",&header);
@@ -209,7 +209,8 @@ void DisplayWindow2::Init() {
    //emu.cartridge()->LoadFile("..\\..\\test\\games\\Alone in the Dark - The New Nightmare (U) (M3) [C][!].gbc", &header);
  
   //check bug in menu
-  emu.cartridge()->LoadFile("..\\..\\test\\games\\Pokemon - Silver Version (UE) [C][!].gbc",&header);
+  //emu.cartridge()->LoadFile("..\\..\\test\\games\\Pokemon - Silver Version (UE) [C][!].gbc",&header);
+  //emu.cartridge()->LoadFile("..\\..\\test\\games\\Tyrannosaurus Tex (USA) (Proto).gbc", &header);
 
 
   //emu.cartridge()->LoadFile("..\\test\\games\\Grand Theft Auto.gbc",&header);

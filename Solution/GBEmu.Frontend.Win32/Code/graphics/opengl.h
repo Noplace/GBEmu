@@ -21,7 +21,8 @@
 
 #include <windows.h>
 #define GLEW_STATIC
-#include <gl/glew.h>
+//#include <gl/glew.h>
+#include "../../vcpkg_installed/x64-windows-static/x64-windows-static/include/GL/glew.h"
 #include "graphics.h"
 #include "shader.h"
 
