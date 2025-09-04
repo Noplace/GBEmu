@@ -18,7 +18,7 @@
 *****************************************************************************************************************/
 #pragma once
 //#include <RecCore/Lib/reccore.h>
-#include "..\..\..\..\..\..\RecCore\Lib\reccore.h"
+//#include "..\..\..\..\..\..\RecCore\Lib\reccore.h"
 namespace emulation {
 namespace gb {
 
@@ -327,8 +327,8 @@ class CpuRecompiler : public Cpu {
   typedef void (CpuRecompiler::*Instruction)();
   Instruction instructions[0x100];
 
-  reccore::CodeBlock* block;
-  reccore::Emitter e;
+  //reccore::CodeBlock* block;
+  //reccore::Emitter e;
 
   void simulateSpriteBug(uint16_t value);
   inline void updateCpuFlagC(uint8_t a,uint8_t b,int mode) {

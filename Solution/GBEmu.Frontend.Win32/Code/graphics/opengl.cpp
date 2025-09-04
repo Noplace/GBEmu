@@ -20,7 +20,7 @@
 
 #pragma comment(lib,"opengl32")
 #pragma comment(lib,"glu32")
-#pragma comment(lib,"glew32")
+#pragma comment(lib,".\\vcpkg_installed\\x64-windows-static\\x64-windows-static\\lib\\glew32.lib")
 
 namespace graphics {
 

@@ -402,6 +402,13 @@ Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {141C017B-1FD5-4F83-9E3E-877BE82F908F}
 	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		GBEmu.Frontend.Uno\GBEmu.Frontend.Uno.Shared\GBEmu.Frontend.Uno.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
+		GBEmu.Frontend.Uno\GBEmu.Frontend.Uno.Shared\GBEmu.Frontend.Uno.Shared.projitems*{70122e0a-8a3a-45f1-8e12-b7c3bc866278}*SharedItemsImports = 5
+		GBEmu.Frontend.Uno\GBEmu.Frontend.Uno.Shared\GBEmu.Frontend.Uno.Shared.projitems*{96e71907-6e12-4e85-9a07-bcd348186b12}*SharedItemsImports = 5
+		GBEmu.Frontend.Uno\GBEmu.Frontend.Uno.Shared\GBEmu.Frontend.Uno.Shared.projitems*{c5aca0f2-4ab2-4538-b0e0-267b01f496c8}*SharedItemsImports = 5
+		GBEmu.Frontend.Uno\GBEmu.Frontend.Uno.Shared\GBEmu.Frontend.Uno.Shared.projitems*{e08a6f42-cb0c-4b2f-94c9-deb9d1fdb173}*SharedItemsImports = 5
+	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = TMS.vsmdi
 	EndGlobalSection
